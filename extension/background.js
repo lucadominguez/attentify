@@ -48,6 +48,7 @@ let daemonPort = null;
 let daemonConnected = false;
 let lastSyncAt = 0;
 let lastError = '';
+let syncStep = '';   // human-readable progress message
 let bypassScores = {};
 let bypassAttempts = [];
 
@@ -61,6 +62,7 @@ async function discoverPort() {
   // Try last-known port first (fast path)
   const cached = await chrome.storage.local.get('daemonPort');
   if (cached.daemonPort) {
+    syncStep = `Trying last-known port :${cached.daemonPort}…`;
     if (await pingPort(cached.daemonPort)) {
       daemonPort = cached.daemonPort;
       return daemonPort;
@@ -68,12 +70,14 @@ async function discoverPort() {
   }
   // Scan all ports
   for (const p of DAEMON_PORTS) {
+    syncStep = `Scanning port :${p}…`;
     if (await pingPort(p)) {
       daemonPort = p;
       await chrome.storage.local.set({ daemonPort: p });
       return p;
     }
   }
+  syncStep = '';
   daemonPort = null;
   await chrome.storage.local.remove('daemonPort');
   return null;
@@ -95,21 +99,25 @@ async function pingPort(port) {
 // ── Rule sync ─────────────────────────────────────────────────────────────────
 
 async function syncRules() {
+  syncStep = 'Locating daemon…';
   if (!daemonPort) await discoverPort();
 
   if (!daemonPort) {
     daemonConnected = false;
+    syncStep = '';
     lastError = 'Daemon not found on ports 9119–9123. Is the app running?';
     await loadRulesFromStorage();
     return;
   }
 
+  syncStep = `Fetching rules from :${daemonPort}…`;
   try {
     const res = await fetch(`http://127.0.0.1:${daemonPort}/content-rules`, {
       signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
+    syncStep = 'Applying rules to tabs…';
     const data = await res.json();
     const fresh = data.rules || [];
 
@@ -122,6 +130,7 @@ async function syncRules() {
     daemonConnected = true;
     lastSyncAt = Date.now();
     lastError = '';
+    syncStep = 'Connected';
     await chrome.storage.local.set({ daemonConnected: true, lastSyncAt });
 
     // Heartbeat
@@ -132,6 +141,7 @@ async function syncRules() {
 
   } catch (e) {
     daemonConnected = false;
+    syncStep = '';
     lastError = `Sync failed: ${e.message || e}`;
     daemonPort = null;
     await chrome.storage.local.set({ daemonConnected: false, daemonPort: null });
@@ -153,9 +163,23 @@ async function pushRulesToTabs() {
   const enabled = rules.filter(r => r.enabled);
   const tabs = await chrome.tabs.query({});
   for (const tab of tabs) {
-    if (tab.id > 0) {
-      chrome.tabs.sendMessage(tab.id, { type: 'rules:update', rules: enabled }).catch(() => {});
-    }
+    if (!tab.id || tab.id <= 0) continue;
+    const url = tab.url || '';
+    // Skip chrome:// and extension pages — can't inject there
+    if (url.startsWith('chrome://') || url.startsWith('chrome-extension://') || url.startsWith('about:') || url.startsWith('edge://')) continue;
+
+    // Try sending to existing content script first
+    chrome.tabs.sendMessage(tab.id, { type: 'rules:update', rules: enabled }, () => {
+      if (chrome.runtime.lastError) {
+        // Content script not running (tab was open before extension loaded/reloaded)
+        // Inject it now using the scripting API
+        chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] })
+          .then(() => {
+            chrome.tabs.sendMessage(tab.id, { type: 'rules:update', rules: enabled }).catch(() => {});
+          })
+          .catch(() => {});
+      }
+    });
   }
 }
 
@@ -302,6 +326,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             daemonPort,
             lastError,
             lastSyncAt,
+            syncStep,
             rules: rules.length,
             enabledRules: rules.filter(r => r.enabled).length,
             bypassScores: d.bypassScores || {},

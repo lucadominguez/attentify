@@ -7,21 +7,44 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
+
+  <!-- Header -->
   <div class="header">
     <span class="brand">PRODUCTIVITY DAEMON</span>
     <div id="status-dot" class="status-dot"></div>
   </div>
 
+  <!-- Sync progress bar -->
+  <div class="progress-track">
+    <div id="progress-fill" class="progress-fill"></div>
+  </div>
+
+  <!-- Status line -->
   <div id="status-text" class="subtitle">Connecting…</div>
 
+  <!-- Update banner (hidden by default) -->
   <div id="update-banner" class="update-banner" style="display:none"></div>
 
+  <!-- Current tab live status -->
+  <div id="tab-status" class="tab-status" style="display:none">
+    <div class="tab-status-row">
+      <span id="tab-domain" class="tab-domain"></span>
+      <span id="tab-hidden-count" class="tab-hidden-count"></span>
+    </div>
+    <div id="tab-warn" class="tab-warn" style="display:none">
+      Content script not active on this tab —
+      <button id="reload-tab-btn" class="inline-btn">Reload tab</button>
+    </div>
+  </div>
+
+  <!-- Rules section -->
   <div class="section-label">ELEMENT RULES</div>
 
   <div id="rules-list" class="rules-list">
     <div class="placeholder">Loading…</div>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     <span class="footer-stat"><span id="bypass-total">0</span> bypass attempts</span>
     <div class="footer-btns">
