@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productivity Daemon</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="header">
+    <span class="brand">PRODUCTIVITY DAEMON</span>
+    <div id="status-dot" class="status-dot"></div>
+  </div>
+
+  <div id="status-text" class="subtitle">Connecting…</div>
+
+  <div class="section-label">ELEMENT RULES</div>
+
+  <div id="rules-list" class="rules-list">
+    <div class="placeholder">Loading…</div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-stat"><span id="bypass-total">0</span> bypass attempts</span>
+    <button id="sync-btn" class="sync-btn">↻ Sync</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
