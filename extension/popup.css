@@ -35,8 +35,10 @@ body {
   background: rgba(255,255,255,0.15);
   flex-shrink: 0;
 }
-.status-dot.on  { background: #00e676; box-shadow: 0 0 6px #00e676; }
-.status-dot.off { background: rgba(255,255,255,0.15); }
+.status-dot.on       { background: #00e676; box-shadow: 0 0 6px #00e676; }
+.status-dot.off      { background: #ff4444; box-shadow: 0 0 4px rgba(255,68,68,0.4); }
+.status-dot.checking { background: #ffaa00; animation: blink 0.8s infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .subtitle {
   padding: 5px 14px 8px;
