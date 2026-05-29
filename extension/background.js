@@ -333,14 +333,68 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       lastSyncAt = 0;
       syncRules().then(() => sendResponse({ ok: true, connected: daemonConnected, daemonPort, lastError }));
       return true;
+
+    case 'get:update-info':
+      checkForUpdates(msg.force || false).then(info => sendResponse({ info }));
+      return true;
   }
 });
+
+// ── Update checker ────────────────────────────────────────────────────────────
+
+const GITHUB_MANIFEST_URL =
+  'https://raw.githubusercontent.com/lucadominguez/Browser-Daemon/master/extension/manifest.json';
+const GITHUB_RELEASES_URL =
+  'https://github.com/lucadominguez/Browser-Daemon/releases/latest';
+const GITHUB_ZIP_URL =
+  'https://github.com/lucadominguez/Browser-Daemon/archive/refs/heads/master.zip';
+const UPDATE_CHECK_TTL = 60 * 60 * 1000; // re-check at most once per hour
+
+async function checkForUpdates(force = false) {
+  const cached = await chrome.storage.local.get(['updateInfo', 'updateCheckedAt']);
+  if (!force && cached.updateCheckedAt && Date.now() - cached.updateCheckedAt < UPDATE_CHECK_TTL) {
+    return cached.updateInfo || null;
+  }
+
+  try {
+    const res = await fetch(GITHUB_MANIFEST_URL, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return null;
+    const remote = await res.json();
+    const current = chrome.runtime.getManifest().version;
+    const available = remote.version !== current && isNewer(remote.version, current);
+    const info = {
+      currentVersion: current,
+      latestVersion: remote.version,
+      updateAvailable: available,
+      downloadUrl: GITHUB_ZIP_URL,
+      releasesUrl: GITHUB_RELEASES_URL,
+      checkedAt: Date.now(),
+    };
+    await chrome.storage.local.set({ updateInfo: info, updateCheckedAt: Date.now() });
+    return info;
+  } catch (_) {
+    return null;
+  }
+}
+
+function isNewer(remote, current) {
+  const r = remote.split('.').map(Number);
+  const c = current.split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    if ((r[i] || 0) > (c[i] || 0)) return true;
+    if ((r[i] || 0) < (c[i] || 0)) return false;
+  }
+  return false;
+}
 
 // ── Periodic sync via alarms (keeps SW alive, handles reconnect) ──────────────
 
 chrome.alarms.create('syncRules', { periodInMinutes: 1 });
+chrome.alarms.create('checkUpdate', { periodInMinutes: 60 });
+
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'syncRules') syncRules().catch(() => {});
+  if (alarm.name === 'syncRules')   syncRules().catch(() => {});
+  if (alarm.name === 'checkUpdate') checkForUpdates().catch(() => {});
 });
 
 // ── Utility ───────────────────────────────────────────────────────────────────
@@ -353,9 +407,10 @@ function matchPattern(url, pattern) {
 // ── Boot — restore state from storage then attempt sync ───────────────────────
 
 chrome.storage.local.get(['rules', 'daemonPort', 'bypassScores', 'bypassAttempts']).then(d => {
-  if (d.rules)          rules         = d.rules;
-  if (d.daemonPort)     daemonPort    = d.daemonPort;
-  if (d.bypassScores)   bypassScores  = d.bypassScores;
+  if (d.rules)          rules          = d.rules;
+  if (d.daemonPort)     daemonPort     = d.daemonPort;
+  if (d.bypassScores)   bypassScores   = d.bypassScores;
   if (d.bypassAttempts) bypassAttempts = d.bypassAttempts;
   syncRules().catch(() => loadRulesFromStorage());
+  checkForUpdates().catch(() => {});
 });

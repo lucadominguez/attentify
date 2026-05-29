@@ -27,6 +27,21 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+async function checkUpdate(force = false) {
+  const res = await ask({ type: 'get:update-info', force });
+  const info = res?.info;
+  const banner = document.getElementById('update-banner');
+  if (info?.updateAvailable) {
+    banner.innerHTML =
+      `⬆ Update available: v${escHtml(info.latestVersion)} &nbsp;` +
+      `<a href="${escHtml(info.downloadUrl)}" target="_blank" class="update-link">Download ZIP</a>` +
+      ` &nbsp;<a href="${escHtml(info.releasesUrl)}" target="_blank" class="update-link">Releases</a>`;
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
 async function refresh() {
   // Show "checking" state immediately so the popup doesn't look frozen
   document.getElementById('status-dot').className = 'status-dot checking';
@@ -132,6 +147,18 @@ document.getElementById('sync-btn').addEventListener('click', async () => {
   btn.disabled = false;
 });
 
+// ── Check for update button ───────────────────────────────────────────────────
+
+document.getElementById('check-update-btn').addEventListener('click', async () => {
+  const btn = document.getElementById('check-update-btn');
+  btn.textContent = 'Checking…';
+  btn.disabled = true;
+  await checkUpdate(true);
+  btn.textContent = 'Check update';
+  btn.disabled = false;
+});
+
 // ── Load ──────────────────────────────────────────────────────────────────────
 
 refresh().catch(console.error);
+checkUpdate().catch(console.error);

@@ -140,27 +140,51 @@ body {
   background: #00c8ff;
 }
 
+/* ── Update banner ── */
+.update-banner {
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(255,170,0,0.08);
+  border-bottom: 1px solid rgba(255,170,0,0.2);
+  font-size: 10px;
+  color: #ffaa00;
+  font-family: 'Courier New', monospace;
+}
+.update-link {
+  color: #00c8ff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0,200,255,0.3);
+}
+.update-link:hover { color: #fff; border-color: #fff; }
+
+/* ── Footer ── */
 .footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 14px;
+  padding: 7px 14px;
   border-top: 1px solid rgba(0,200,255,0.1);
 }
 
 .footer-stat { font-size: 10px; color: rgba(226,232,240,0.3); font-family: 'Courier New', monospace; }
 #bypass-total { color: rgba(226,232,240,0.55); }
 
-.sync-btn {
+.footer-btns { display: flex; gap: 6px; }
+
+.footer-btn {
   background: transparent;
-  border: 1px solid rgba(0,200,255,0.2);
-  color: rgba(0,200,255,0.55);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(226,232,240,0.4);
   padding: 3px 8px;
   border-radius: 3px;
   cursor: pointer;
   font-size: 10px;
   font-family: 'Courier New', monospace;
   transition: all 0.12s;
+  white-space: nowrap;
 }
-.sync-btn:hover { background: rgba(0,200,255,0.08); border-color: rgba(0,200,255,0.4); color: #00c8ff; }
-.sync-btn:disabled { opacity: 0.4; cursor: default; }
+.footer-btn:hover   { background: rgba(255,255,255,0.05); color: rgba(226,232,240,0.7); }
+.footer-btn:disabled { opacity: 0.35; cursor: default; }
+.footer-btn.accent  { border-color: rgba(0,200,255,0.2); color: rgba(0,200,255,0.55); }
+.footer-btn.accent:hover { background: rgba(0,200,255,0.08); border-color: rgba(0,200,255,0.4); color: #00c8ff; }
