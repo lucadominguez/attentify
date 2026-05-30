@@ -186,6 +186,8 @@ function addLog(type, msg, detail = '') {
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
+const RULES_VERSION = 2; // bump when predefined rules change significantly
+
 let rules = [], bypassScores = {}, bypassAttempts = [], elementStats = {};
 let daemonPort = null, daemonConnected = false, lastSyncAt = 0, lastDaemonError = '';
 let bootAt = Date.now();
@@ -195,14 +197,36 @@ const DAEMON_PORTS = [9119, 9120, 9121, 9122, 9123];
 
 async function bootstrap() {
   addLog('boot', 'Extension started');
-  const d = await chrome.storage.local.get(['rules', 'daemonPort', 'bypassScores', 'bypassAttempts', 'elementStats']);
+  const d = await chrome.storage.local.get(['rules', 'rulesVersion', 'daemonPort', 'bypassScores', 'bypassAttempts', 'elementStats']);
 
   if (d.rules && d.rules.length > 0) {
     rules = d.rules;
-    addLog('storage', `Loaded ${rules.length} rules`, `${rules.filter(r=>r.enabled).length} enabled`);
+
+    // Migration: if rules are from an older version, update selectors and
+    // enable high-severity predefined rules that are still at the old default (off)
+    if ((d.rulesVersion || 0) < RULES_VERSION) {
+      const predefinedById = Object.fromEntries(PREDEFINED_RULES.map(r => [r.id, r]));
+      rules = rules.map(r => {
+        const fresh = predefinedById[r.id];
+        if (!fresh) return r;
+        return {
+          ...r,
+          selectors:              fresh.selectors,            // always update selectors
+          urlPatterns:            fresh.urlPatterns,
+          antiBypassSearchTerms:  fresh.antiBypassSearchTerms,
+          // Enable if predefined says it should be ON and user hasn't explicitly enabled it
+          enabled: r.enabled || fresh.enabled,
+        };
+      });
+      await chrome.storage.local.set({ rules, rulesVersion: RULES_VERSION });
+      const nowOn = rules.filter(r => r.enabled).length;
+      addLog('storage', `Migrated to rules v${RULES_VERSION}`, `${nowOn} rules now enabled`);
+    } else {
+      addLog('storage', `Loaded ${rules.length} rules`, `${rules.filter(r=>r.enabled).length} enabled`);
+    }
   } else {
     rules = PREDEFINED_RULES.map(r => ({ ...r }));
-    await chrome.storage.local.set({ rules });
+    await chrome.storage.local.set({ rules, rulesVersion: RULES_VERSION });
     const enabledCount = rules.filter(r => r.enabled).length;
     addLog('storage', `First run — ${rules.length} rules installed`, `${enabledCount} enabled by default (YouTube Shorts, Instagram Reels, TikTok FYP, Facebook Reels)`);
   }
@@ -471,22 +495,18 @@ async function chatViaDaemon(text, port) {
 
 async function chatDirect(messages, system, apiKey, port) {
   try {
-    const isOR = apiKey.startsWith('sk-or-');
-    const url  = isOR ? 'https://openrouter.ai/api/v1/messages' : 'https://api.anthropic.com/v1/messages';
+    // Always use OpenRouter — simpler, one API key, free tier available
+    const url = 'https://openrouter.ai/api/v1/messages';
     const headers = {
       'Content-Type': 'application/json',
       'anthropic-version': '2023-06-01',
+      'Authorization': `Bearer ${apiKey}`,
+      'HTTP-Referer': 'https://productivitydaemon.app',
+      'X-Title': 'Productivity Daemon',
     };
-    if (isOR) {
-      headers['Authorization'] = `Bearer ${apiKey}`;
-      headers['HTTP-Referer']  = 'https://productivitydaemon.app';
-      headers['X-Title']       = 'Productivity Daemon';
-    } else {
-      headers['x-api-key'] = apiKey;
-    }
 
     const body = JSON.stringify({
-      model: isOR ? 'anthropic/claude-haiku-4-5' : 'claude-haiku-4-5-20251001',
+      model: 'anthropic/claude-haiku-4-5',
       max_tokens: 1024,
       stream: true,
       system,

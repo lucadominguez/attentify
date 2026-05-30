@@ -343,10 +343,10 @@ async function initChat() {
     modeLabel.textContent = '· via daemon';
     chatDot.className = 'status-dot on';
   } else if (apiKey) {
-    modeLabel.textContent = '· direct API';
+    modeLabel.textContent = '· OpenRouter';
     chatDot.className = 'status-dot standalone';
   } else {
-    modeLabel.textContent = '· needs API key';
+    modeLabel.textContent = '· needs OpenRouter key';
     chatDot.className = 'status-dot off';
   }
 
@@ -362,8 +362,8 @@ async function initChat() {
 
 document.getElementById('api-key-save-btn').addEventListener('click', async () => {
   const key = document.getElementById('api-key-input').value.trim();
-  if (!key.startsWith('sk-')) {
-    document.getElementById('api-key-err').textContent = 'Key must start with sk-ant- or sk-or-';
+  if (!key.startsWith('sk-or-')) {
+    document.getElementById('api-key-err').textContent = 'OpenRouter keys start with sk-or- — get one at openrouter.ai/keys';
     document.getElementById('api-key-err').style.display = 'block';
     return;
   }
@@ -515,7 +515,7 @@ async function sendChat() {
     if (msg.type === 'error') {
       removeTypingIndicator();
       if (msg.message === 'no_key') {
-        addSysMsg('No API key set — please enter one above.');
+        addSysMsg('No OpenRouter key set — enter one above. Get it free at openrouter.ai/keys');
         document.getElementById('api-key-panel').style.display = 'block';
       } else if (msg.message === 'daemon_fail') {
         // Retry with direct API
