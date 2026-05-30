@@ -165,4 +165,6 @@
 
   init();
   document.addEventListener('DOMContentLoaded', () => { applyRules(); ensureObserver(); });
+  // Tell background we're alive
+  send({ type: 'content:ready' });
 })();

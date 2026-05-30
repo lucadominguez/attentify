@@ -8,48 +8,51 @@
 </head>
 <body>
 
-  <!-- Header -->
   <div class="header">
-    <span class="brand">PRODUCTIVITY DAEMON</span>
+    <span class="brand">PRODUCTIVITY DAEMON <span id="version-label" class="version"></span></span>
     <div id="status-dot" class="status-dot"></div>
   </div>
 
-  <!-- Sync progress bar -->
-  <div class="progress-track">
-    <div id="progress-fill" class="progress-fill"></div>
-  </div>
+  <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
 
-  <!-- Status line -->
-  <div id="status-text" class="subtitle">Connecting…</div>
+  <div id="status-text" class="subtitle">Loading…</div>
 
-  <!-- Update banner (hidden by default) -->
   <div id="update-banner" class="update-banner" style="display:none"></div>
 
-  <!-- Current tab live status -->
-  <div id="tab-status" class="tab-status" style="display:none">
-    <div class="tab-status-row">
-      <span id="tab-domain" class="tab-domain"></span>
-      <span id="tab-hidden-count" class="tab-hidden-count"></span>
+  <!-- ── Diagnostics ── -->
+  <div class="section-label">DIAGNOSTICS</div>
+  <div id="diag-panel" class="diag-panel"></div>
+
+  <!-- ── Current tab ── -->
+  <div id="tab-section" style="display:none">
+    <div class="section-label">
+      ACTIVE TAB: <span id="tab-domain-label" style="color:rgba(0,200,255,0.7);font-size:9px"></span>
     </div>
-    <div id="tab-warn" class="tab-warn" style="display:none">
-      Content script not active on this tab —
-      <button id="reload-tab-btn" class="inline-btn">Reload tab</button>
-    </div>
+    <div id="tab-detail" class="tab-detail"></div>
   </div>
 
-  <!-- Rules section -->
-  <div class="section-label">ELEMENT RULES</div>
-
+  <!-- ── Rules ── -->
+  <div class="section-label">
+    ELEMENT RULES
+    <span id="rules-summary" class="rules-summary"></span>
+  </div>
   <div id="rules-list" class="rules-list">
     <div class="placeholder">Loading…</div>
   </div>
 
-  <!-- Footer -->
+  <!-- ── Activity log ── -->
+  <div class="section-label collapsible" id="log-toggle">
+    ACTIVITY LOG <span id="log-arrow">▸</span>
+  </div>
+  <div id="log-panel" class="log-panel" style="display:none"></div>
+
+  <!-- ── Footer ── -->
   <div class="footer">
-    <span class="footer-stat"><span id="bypass-total">0</span> bypass attempts</span>
+    <span class="footer-stat"><span id="bypass-total">0</span> bypasses · <span id="elements-total">0</span> hidden</span>
     <div class="footer-btns">
-      <button id="check-update-btn" class="footer-btn">Check update</button>
-      <button id="sync-btn" class="footer-btn accent">↻ Sync</button>
+      <button id="test-btn"         class="footer-btn">⚡ Test</button>
+      <button id="check-update-btn" class="footer-btn">↑ Update</button>
+      <button id="sync-btn"         class="footer-btn accent">↻ Sync</button>
     </div>
   </div>
 
