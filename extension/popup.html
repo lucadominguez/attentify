@@ -8,54 +8,86 @@
 </head>
 <body>
 
+<!-- ══════════════════════ MAIN VIEW ══════════════════════ -->
+<div id="main-view">
+
   <div class="header">
     <span class="brand">PRODUCTIVITY DAEMON <span id="version-label" class="version"></span></span>
-    <div id="status-dot" class="status-dot"></div>
+    <div class="header-actions">
+      <button id="chat-btn" class="icon-btn" title="AI Assistant">✦</button>
+      <div id="status-dot" class="status-dot"></div>
+    </div>
   </div>
 
   <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
-
   <div id="status-text" class="subtitle">Loading…</div>
 
   <div id="update-banner" class="update-banner" style="display:none"></div>
 
-  <!-- ── Diagnostics ── -->
+  <!-- Diagnostics -->
   <div class="section-label">DIAGNOSTICS</div>
   <div id="diag-panel" class="diag-panel"></div>
 
-  <!-- ── Current tab ── -->
+  <!-- Active tab -->
   <div id="tab-section" style="display:none">
-    <div class="section-label">
-      ACTIVE TAB: <span id="tab-domain-label" style="color:rgba(0,200,255,0.7);font-size:9px"></span>
-    </div>
+    <div class="section-label">ACTIVE TAB: <span id="tab-domain-label" class="tab-domain-hl"></span></div>
     <div id="tab-detail" class="tab-detail"></div>
   </div>
 
-  <!-- ── Rules ── -->
+  <!-- Rules -->
   <div class="section-label">
-    ELEMENT RULES
-    <span id="rules-summary" class="rules-summary"></span>
+    ELEMENT RULES <span id="rules-summary" class="rules-summary"></span>
+    <button id="modify-rules-btn" class="pill-btn" style="float:right;margin-top:-1px">Modify Rules</button>
   </div>
-  <div id="rules-list" class="rules-list">
-    <div class="placeholder">Loading…</div>
-  </div>
+  <div id="rules-list" class="rules-list"><div class="placeholder">Loading…</div></div>
 
-  <!-- ── Activity log ── -->
-  <div class="section-label collapsible" id="log-toggle">
-    ACTIVITY LOG <span id="log-arrow">▸</span>
-  </div>
+  <!-- Log -->
+  <div class="section-label collapsible" id="log-toggle">ACTIVITY LOG <span id="log-arrow">▸</span></div>
   <div id="log-panel" class="log-panel" style="display:none"></div>
 
-  <!-- ── Footer ── -->
   <div class="footer">
     <span class="footer-stat"><span id="bypass-total">0</span> bypasses · <span id="elements-total">0</span> hidden</span>
     <div class="footer-btns">
       <button id="test-btn"         class="footer-btn">⚡ Test</button>
-      <button id="check-update-btn" class="footer-btn">↑ Update</button>
+      <button id="check-update-btn" class="footer-btn">↑</button>
       <button id="sync-btn"         class="footer-btn accent">↻ Sync</button>
     </div>
   </div>
 
-  <script src="popup.js"></script>
+</div>
+
+<!-- ══════════════════════ CHAT VIEW ══════════════════════ -->
+<div id="chat-view" style="display:none">
+
+  <div class="chat-header">
+    <button id="chat-back-btn" class="icon-btn">← Back</button>
+    <span class="chat-title">AI ASSISTANT <span id="chat-mode-label" class="chat-mode"></span></span>
+    <div id="chat-status-dot" class="status-dot" style="width:6px;height:6px"></div>
+  </div>
+
+  <div class="progress-track"><div id="chat-progress-fill" class="progress-fill"></div></div>
+
+  <!-- API key setup (shown when no key) -->
+  <div id="api-key-panel" style="display:none" class="api-key-panel">
+    <p class="api-key-hint">Enter your Anthropic API key to use AI chat standalone.<br>Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+    <div class="api-key-row">
+      <input id="api-key-input" type="password" placeholder="sk-ant-..." class="api-key-input">
+      <button id="api-key-save-btn" class="pill-btn accent">Save</button>
+    </div>
+    <p id="api-key-err" class="api-key-err" style="display:none"></p>
+  </div>
+
+  <!-- Messages -->
+  <div id="chat-messages" class="chat-messages"></div>
+
+  <!-- Input -->
+  <div class="chat-input-row">
+    <textarea id="chat-input" class="chat-input" placeholder="Ask me to block something, or describe a problem…" rows="2"></textarea>
+    <button id="chat-send-btn" class="chat-send-btn">↑</button>
+  </div>
+
+</div>
+
+<script src="popup.js"></script>
 </body>
 </html>

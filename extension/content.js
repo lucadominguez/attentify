@@ -1,27 +1,18 @@
-// Productivity Daemon — Content Script v0.2.0
-// Injects CSS, watches DOM mutations, detects SPA nav, reports bypasses.
-// Also handles get:tab-status so the popup can see exactly what's being hidden.
+// Productivity Daemon — Content Script v0.5.0
 (function () {
   'use strict';
-
-  // Guard against double-injection (scripting API can inject into tabs that
-  // already have the content_scripts version running)
   if (window.__pdInjected) return;
   window.__pdInjected = true;
 
   let activeRules = [];
   const STYLE_ID = 'pd-element-blocker';
-  const HIDE = '{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;overflow:hidden!important;pointer-events:none!important;}';
+  const HIDE = '{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;overflow:hidden!important;pointer-events:none!important;max-height:0!important;}';
 
-  function getDomain() {
-    return location.hostname.replace(/^www\./, '');
-  }
+  function getDomain() { return location.hostname.replace(/^www\./, ''); }
 
   function rulesForPage() {
     const d = getDomain();
-    return activeRules.filter(
-      r => r.enabled && (r.domain === d || d.endsWith('.' + r.domain))
-    );
+    return activeRules.filter(r => r.enabled && (r.domain === d || d.endsWith('.' + r.domain)));
   }
 
   // ── CSS injection ─────────────────────────────────────────────────────────────
@@ -33,36 +24,28 @@
       el.id = STYLE_ID;
       (document.head || document.documentElement).appendChild(el);
     }
-    if (rules.length === 0) { el.textContent = ''; return 0; }
+    if (rules.length === 0) { el.textContent = ''; return; }
+    el.textContent = rules.flatMap(r => r.selectors.map(s => `${s} ${HIDE}`)).join('\n');
 
-    el.textContent = rules.flatMap(r => r.selectors.map(s => s + ' ' + HIDE)).join('\n');
-
-    let total = 0;
-    const ruleIds = [];
+    let total = 0; const ruleIds = [];
     for (const rule of rules) {
-      let n = countElements(rule.selectors);
+      const n = countEls(rule.selectors);
       if (n > 0) { total += n; ruleIds.push(rule.id); }
     }
     if (total > 0) send({ type: 'element:blocked', ruleIds, count: total });
-    return total;
   }
 
-  function countElements(selectors) {
+  function countEls(selectors) {
     let n = 0;
-    for (const sel of selectors) {
-      try { n += document.querySelectorAll(sel).length; } catch (_) {}
-    }
+    for (const s of selectors) { try { n += document.querySelectorAll(s).length; } catch (_) {} }
     return n;
   }
 
-  function applyRules() {
-    return injectStyles(rulesForPage());
-  }
+  function applyRules() { injectStyles(rulesForPage()); }
 
-  // ── MutationObserver ──────────────────────────────────────────────────────────
+  // ── MutationObserver + periodic re-apply (catches SPA re-renders) ─────────────
 
-  let observer = null;
-  let throttled = false;
+  let observer = null, throttled = false;
 
   function ensureObserver() {
     if (observer) return;
@@ -74,59 +57,48 @@
     observer.observe(document.documentElement, { childList: true, subtree: true });
   }
 
+  // Periodic safety net — SPAs sometimes batch-render outside MutationObserver timing
+  setInterval(applyRules, 3000);
+
   // ── SPA URL detection ─────────────────────────────────────────────────────────
 
   let lastUrl = location.href;
   setInterval(() => {
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      applyRules();
-      checkUrlBypass(location.href);
-    }
+    if (location.href === lastUrl) return;
+    lastUrl = location.href;
+    applyRules();
+    checkUrlBypass(location.href);
   }, 500);
 
   function checkUrlBypass(url) {
     for (const rule of rulesForPage()) {
-      for (const pattern of (rule.urlPatterns || [])) {
-        if (matchPattern(url, pattern)) {
-          send({ type: 'bypass:detected', ruleId: rule.id, method: 'url_navigation', url, timestamp: Date.now() });
-        }
+      for (const p of (rule.urlPatterns || [])) {
+        if (matchPattern(url, p)) send({ type: 'bypass:detected', ruleId: rule.id, method: 'url_navigation', url, timestamp: Date.now() });
       }
     }
   }
 
-  // ── Messaging ─────────────────────────────────────────────────────────────────
+  // ── Messages ──────────────────────────────────────────────────────────────────
 
-  function send(msg) {
-    try { chrome.runtime.sendMessage(msg).catch(() => {}); } catch (_) {}
-  }
+  function send(msg) { try { chrome.runtime.sendMessage(msg).catch(() => {}); } catch (_) {} }
 
-  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((msg, _s, sendResponse) => {
     if (msg.type === 'rules:update') {
       activeRules = msg.rules || [];
       applyRules();
       if (activeRules.length > 0) ensureObserver();
-      return;
     }
-
     if (msg.type === 'get:tab-status') {
       const pageRules = rulesForPage();
       const elementCounts = {};
       let totalHidden = 0;
-      for (const rule of pageRules) {
-        const n = countElements(rule.selectors);
-        elementCounts[rule.id] = n;
+      for (const r of pageRules) {
+        const n = countEls(r.selectors);
+        elementCounts[r.id] = n;
         totalHidden += n;
       }
-      sendResponse({
-        domain: getDomain(),
-        activeRuleIds: pageRules.map(r => r.id),
-        elementCounts,
-        totalHidden,
-        styleInjected: !!document.getElementById(STYLE_ID),
-        rulesLoaded: activeRules.length,
-      });
-      return true; // keep channel open for async response
+      sendResponse({ domain: getDomain(), activeRuleIds: pageRules.map(r => r.id), elementCounts, totalHidden, styleInjected: !!document.getElementById(STYLE_ID), rulesLoaded: activeRules.length });
+      return true;
     }
   });
 
@@ -139,23 +111,11 @@
         activeRules = res.rules || [];
         applyRules();
         if (activeRules.length > 0) ensureObserver();
-        // Check for mobile/iframe bypass only after rules are loaded
-        checkSpecialCaseBypasses();
+        if (location.hostname === 'm.youtube.com')
+          send({ type: 'bypass:detected', ruleId: 'youtube-shorts', method: 'mobile_redirect', url: location.href, timestamp: Date.now() });
       });
     } catch (_) {}
-  }
-
-  function checkSpecialCaseBypasses() {
-    if (location.hostname === 'm.youtube.com') {
-      send({ type: 'bypass:detected', ruleId: 'youtube-shorts', method: 'mobile_redirect', url: location.href, timestamp: Date.now() });
-    }
-    if (window !== window.top) {
-      const d = getDomain();
-      const matched = activeRules.filter(r => r.enabled && (r.domain === d || d.endsWith('.' + r.domain)));
-      if (matched.length > 0) {
-        send({ type: 'bypass:detected', ruleId: matched[0].id, method: 'iframe_embed', url: location.href, timestamp: Date.now() });
-      }
-    }
+    send({ type: 'content:ready' });
   }
 
   function matchPattern(url, pattern) {
@@ -165,6 +125,4 @@
 
   init();
   document.addEventListener('DOMContentLoaded', () => { applyRules(); ensureObserver(); });
-  // Tell background we're alive
-  send({ type: 'content:ready' });
 })();
