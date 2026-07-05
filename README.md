@@ -1,8 +1,8 @@
 # Browser-Daemon
 
-**Chrome extension companion for [Productivity Daemon](https://github.com/lucadominguez/Daemon-Testing-Version-1)**
+**Chrome extension companion for [Attentify](https://github.com/lucadominguez/Daemon-Testing-Version-1)**
 
-Surgically removes addictive UI elements (YouTube Shorts, Instagram Reels, TikTok FYP, etc.) while leaving the useful parts of those sites intact. Communicates with the Productivity Daemon desktop app for rule sync, AI-powered bypass detection, and escalation.
+Surgically removes addictive UI elements (YouTube Shorts, Instagram Reels, TikTok FYP, etc.) while leaving the useful parts of those sites intact. Communicates with the Attentify desktop app for rule sync, AI-powered bypass detection, and escalation.
 
 ---
 
@@ -21,7 +21,7 @@ Your current blocker is all-or-nothing — block YouTube and you lose tutorials 
 ## Architecture
 
 ```
-Productivity Daemon (desktop app)
+Attentify (desktop app)
   ContentRuleEngine  ←──  manages rules, bypass scores, escalation
   AgentService       ←──  AI check-ins when bypass score hits threshold
   Debug API :9119    ←──  HTTP bridge to extension
@@ -42,7 +42,7 @@ The extension has **no AI of its own** — all intelligence delegates to the dae
 
 ### Requirements
 - Chrome or Edge (Chromium)
-- [Productivity Daemon](https://github.com/lucadominguez/Daemon-Testing-Version-1) desktop app running as Administrator
+- [Attentify](https://github.com/lucadominguez/Daemon-Testing-Version-1) desktop app running as Administrator
 
 ### Load as unpacked extension (development)
 
@@ -51,7 +51,7 @@ The extension has **no AI of its own** — all intelligence delegates to the dae
 3. Enable **Developer mode** (top-right toggle)
 4. Click **Load unpacked** → select the `extension/` folder
 5. Pin the extension from the toolbar puzzle-piece icon
-6. Start the Productivity Daemon desktop app — the extension connects automatically
+6. Start the Attentify desktop app — the extension connects automatically
 
 ### Connecting to the daemon
 
@@ -190,5 +190,5 @@ README.md          This file
 
 ## Related
 
-- **Productivity Daemon desktop app:** [Daemon-Testing-Version-1](https://github.com/lucadominguez/Daemon-Testing-Version-1)
+- **Attentify desktop app:** [Daemon-Testing-Version-1](https://github.com/lucadominguez/Daemon-Testing-Version-1)
 - Design doc: `.hermes/plans/2026-05-29_browser-extension-design.md` in the daemon repo

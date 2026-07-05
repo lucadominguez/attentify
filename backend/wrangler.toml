@@ -1,0 +1,36 @@
+name = "attentify-cloud"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+workers_dev = true
+
+# Serve the API (and the GET /download/win installer route) on a custom domain.
+# Requires attentify.ai to be a zone in this Cloudflare account; on `wrangler deploy`
+# Wrangler provisions the DNS record + edge cert for api.attentify.ai automatically.
+[[routes]]
+pattern = "api.attentify.ai"
+custom_domain = true
+
+# Non-secret config (override per-environment as needed)
+[vars]
+SITE_URL = "https://attentify.ai"
+STRIPE_PRICE_ID = "price_1Te4T74HbvDyQQl1XKQBhM7Q"   # $5/mo (Stripe TEST mode)
+
+# D1 database binding. Create it once with:
+#   wrangler d1 create pd-cloud
+# then paste the returned database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "pd-cloud"
+database_id = "a1272762-59ef-462c-80ce-3382e5adff91"
+
+# R2 bucket holding the public installer download (served via GET /download/win).
+# Create it once with:  wrangler r2 bucket create pd-downloads
+[[r2_buckets]]
+binding = "DOWNLOADS"
+bucket_name = "pd-downloads"
+
+# Secrets are NOT stored here. Set them with `wrangler secret put <NAME>`:
+#   OPENROUTER_KEY         provider key used for the managed AI proxy
+#   STRIPE_SECRET          sk_live_... / sk_test_...
+#   STRIPE_WEBHOOK_SECRET  whsec_... (from the webhook endpoint you create)
+#   ADMIN_TOKEN            long random string guarding /v1/admin/*

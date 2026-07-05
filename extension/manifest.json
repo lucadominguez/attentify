@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Productivity Daemon — Element Blocker",
-  "version": "0.6.0",
-  "description": "Surgically remove addictive UI elements. Works standalone or enhanced by the Productivity Daemon desktop app.",
-  "permissions": ["storage", "tabs", "webNavigation", "scripting"],
+  "name": "Attentify — Element Blocker",
+  "version": "0.11.0",
+  "description": "Surgically remove addictive UI elements, with AI that reads your browsing context. Works standalone or enhanced by the Attentify desktop app.",
+  "permissions": ["storage", "tabs", "webNavigation", "scripting", "alarms", "sidePanel"],
   "host_permissions": [
     "<all_urls>",
     "http://127.0.0.1:*/*",
     "https://api.anthropic.com/*",
-    "https://openrouter.ai/*"
+    "https://openrouter.ai/*",
+    "https://api.github.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -20,8 +21,10 @@
     "all_frames": true
   }],
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "Productivity Daemon"
+    "default_title": "Attentify (click to open panel)"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
   },
   "incognito": "split"
 }

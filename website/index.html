@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attentify: The AI that protects your attention</title>
+<meta name="description" content="The AI that protects your attention. Just tell it what your goals are and it does the rest. That's it, no setup required. An anti-mind-virus that removes the feeds, Shorts and Reels engineered to hijack you. Free your mind. Local-first, free, open source.">
+<meta property="og:title" content="Attentify: The AI that protects your attention">
+<meta property="og:description" content="Tell it your goals, it does the rest. No setup. An anti-mind-virus for the attention economy, so you can free your mind. Live demo runs right in your browser.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3 29 16 16 29 3 16Z' fill='none' stroke='%2327d3ff' stroke-width='2.6' stroke-linejoin='round'/><path d='M16 10.5 21.5 16 16 21.5 10.5 16Z' fill='%2327d3ff'/></svg>">
+</head>
+<body>
+
+<!-- aurora background -->
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ══════════════ NAV ══════════════ -->
+<header class="nav" id="nav">
+  <a class="brand" href="#top">
+    <svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path class="lm-o" d="M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z"/><circle class="lm-o" cx="16" cy="15.6" r="4" fill="none"/><circle class="lm-i" cx="16" cy="15.6" r="1.9"/></svg>
+    <span class="brand-name">ATTENTIFY</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#app-demo">Live demo</a>
+    <a href="#features">What you get</a>
+    <a href="#how">How it works</a>
+    <a href="#compare">Compare</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener" class="nav-gh" title="GitHub">★ GitHub</a>
+  </nav>
+  <a href="auth.html" class="btn btn-sm btn-glass nav-cta" id="navSignIn">Sign in</a>
+  <a href="#download" class="btn btn-sm btn-primary nav-cta">Download</a>
+  <button class="nav-burger" id="burger" aria-label="Menu">≡</button>
+</header>
+
+<main id="top">
+
+<!-- ══════════════ HERO (live app first) ══════════════ -->
+<section class="hero-lead" id="app-demo">
+  <div class="hero-lead-head">
+    <div class="hero-eyebrow"><span class="live-dot"></span> Running live below · no install</div>
+    <h1 class="hero-title">The AI that guards<br>your <span class="grad">attention</span>.</h1>
+    <p class="hero-sub">
+      Tell it what you're working on. It quietly strips out the feeds, Shorts and rage-bait
+      built to hijack you, and leaves the web you actually need.
+    </p>
+    <p class="hero-proof">
+      <span class="hero-stars">★★★★★</span>
+      <span>"I forgot it was even running. The junk is just <em>gone</em>." <span class="hero-proof-by">Early users are getting their afternoons back.</span></span>
+    </p>
+  </div>
+
+  <!-- flip between the desktop app and the browser extension -->
+  <div class="prev-switch">
+    <button class="ps-btn on" data-prev="app">Desktop app</button>
+    <button class="ps-btn" data-prev="ext">Browser extension</button>
+  </div>
+
+  <!-- DESKTOP APP PREVIEW -->
+  <div class="preview-pane" data-pane="app">
+    <div class="appwin reveal">
+      <!-- Neutral demo container bar — no window controls here; the app inside
+           renders its own native (Windows) title bar, so duplicating controls
+           would show two sets at once. -->
+      <div class="aw-bar">
+        <svg class="aw-logo" viewBox="0 0 28 28" aria-hidden="true"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg>
+        <span class="aw-title">Attentify</span>
+        <span class="aw-badge"><span class="ctx-dot"></span> Live demo · sample data</span>
+        <button class="aw-pop" onclick="window.open('./app/index.html','_blank','noopener')" title="Open full screen">⛶ Full screen</button>
+      </div>
+      <iframe class="aw-frame" src="./app/index.html" title="Attentify, live in-browser demo" loading="eager"></iframe>
+    </div>
+    <p class="appdemo-foot">The real app, running right here in your browser on sample data. Open the <b>Assistant</b>,
+       tell it what you want to focus on, and watch it work. There's nothing to install, and nothing you do here leaves this page.</p>
+  </div>
+
+  <!-- BROWSER EXTENSION PREVIEW (AI reasoning side panel + live blocking / circumvention) -->
+  <div class="preview-pane hidden" data-pane="ext">
+    <div class="extwin reveal">
+      <!-- realistic browser chrome -->
+      <div class="bchrome">
+        <div class="btabs">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <div class="btab active" id="demo-tab"><span class="btab-fav" id="demo-fav"></span><span id="demo-tabtitle">reddit.com</span> <span class="btab-x">×</span></div>
+          <div class="btab"><span class="btab-fav"></span>Docs · the work</div>
+          <span class="btab-add">+</span>
+        </div>
+        <div class="btoolbar">
+          <span class="bnav">‹</span><span class="bnav">›</span><span class="bnav">⟳</span>
+          <div class="bomni">
+            <svg viewBox="0 0 24 24" class="lock"><path d="M6 10V7a6 6 0 1112 0v3h1a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1v-9a1 1 0 011-1h1zm2 0h8V7a4 4 0 10-8 0v3z"/></svg>
+            <span class="bomni-host" id="demo-host">reddit.com</span><span class="bomni-path" id="demo-path"></span>
+            <span class="bstar">☆</span>
+          </div>
+          <span class="bpinned" title="Attentify is guarding this browser">
+            <svg viewBox="0 0 24 24" class="pdshield"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
+            <span class="bpin-badge" id="demo-badge">1</span>
+          </span>
+          <span class="bmenu">⋮</span>
+        </div>
+      </div>
+
+      <div class="extwin-body">
+        <!-- LEFT: the Attentify side panel, showing the AI's live reasoning as a flowchart -->
+        <aside class="ai-think">
+          <div class="ai-th-head">
+            <svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path class="lm-o" d="M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z"/><circle class="lm-o" cx="16" cy="15.6" r="4" fill="none"/><circle class="lm-i" cx="16" cy="15.6" r="1.9"/></svg>
+            <div class="ai-th-id"><b>Attentify</b><span id="demo-status">watching</span></div>
+            <span class="ai-th-live"><i></i> live</span>
+          </div>
+          <div class="ai-th-goal">Your goal <b>Deep work until 5:00 PM &middot; no social or short-form video</b></div>
+          <div class="flow" id="demo-flow" aria-label="Attentify reasoning"></div>
+        </aside>
+
+        <!-- MAIN: the page being blocked -->
+        <div class="block-stage" id="demo-stage"></div>
+      </div>
+    </div>
+    <p class="appdemo-foot">This is Attentify thinking out loud. It blocks a distracting site, then when you try a back
+       door, a different URL, an old-domain alias, a mirror site, it recognises the pattern as an attempt to get around it
+       and blocks the alternatives <b>before</b> you reach them. The panel on the left is its live reasoning.</p>
+  </div>
+
+  <div class="hero-cta center" id="download-hero">
+    <a class="btn btn-primary btn-lg dl" data-os="win"
+       href="https://attentify-cloud.ludomi2502.workers.dev/download/win">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M3 5.1 10.5 4v7.5H3V5.1zM3 12.5h7.5V20L3 18.9v-6.4zM11.5 3.85 21 2.5v9H11.5V3.85zM11.5 12.5H21V21.5l-9.5-1.35V12.5z"/></svg>
+      <span><b>Download for Windows</b><small>Windows 10/11 · 64-bit · free</small></span>
+    </a>
+    <a class="btn btn-glass btn-lg" href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener">Add the browser extension</a>
+  </div>
+  <p class="hero-trustline">No setup · no account · nothing leaves your device · free &amp; open source · macOS soon</p>
+</section>
+
+<!-- logos / trust strip -->
+<section class="strip">
+  <span>Works on</span>
+  <b>YouTube</b><b>Instagram</b><b>TikTok</b><b>X / Twitter</b><b>Reddit</b><b>Facebook</b><b>LinkedIn</b>
+  <span>and takes out the parts that hijack you, while keeping what you came for.</span>
+</section>
+
+<!-- ══════════════ STATS ══════════════ -->
+<section class="stats">
+  <div class="stat reveal"><b data-count="500" data-suffix="ms" data-prefix="&lt;">&lt;500ms</b><span>to act after a page loads</span></div>
+  <div class="stat reveal"><b data-count="0" data-suffix="kb">0kb</b><span>of your data ever uploaded</span></div>
+  <div class="stat reveal"><b data-count="11" data-suffix="+">11+</b><span>sites cleaned up out of the box</span></div>
+  <div class="stat reveal"><b data-count="100" data-suffix="%">100%</b><span>open source &amp; auditable</span></div>
+</section>
+
+<!-- ══════════════ FEATURES (what's in it for you) ══════════════ -->
+<section class="section" id="features">
+  <div class="sec-head reveal">
+    <span class="kicker">What's in it for you</span>
+    <h2>Get your time, your focus and <span class="grad">your head back.</span></h2>
+    <p>These apps were built by hundreds of engineers to capture your attention. This is the AI that
+       fights on your side instead. Here's what that actually does for you.</p>
+  </div>
+
+  <div class="grid features">
+    <article class="card reveal">
+      <div class="ico-box brain">◐</div>
+      <h3>Say it once. It handles the rest.</h3>
+      <p>Type something like <em>"I'm writing all afternoon, keep me off social"</em> and you're done.
+         There's nothing to configure and no blocklist to keep up. The AI sets the whole thing up for you. <b>Zero setup on your end.</b></p>
+    </article>
+    <article class="card reveal">
+      <div class="ico-box scalpel">⌖</div>
+      <h3>Keep the useful web, lose the bait.</h3>
+      <p>It only pulls out the engineered traps like Shorts, Reels and the For-You feed, so you still
+         get your tutorials, your DMs and your subscriptions. <b>You never have to give up a site you actually need.</b></p>
+    </article>
+    <article class="card reveal">
+      <div class="ico-box guard">⚇</div>
+      <h3>It catches you before you spiral.</h3>
+      <p>The on-device AI notices <em>why</em> you opened a page and how far you're drifting, then steps in
+         the moment you start doom-scrolling. <b>You stop losing whole evenings you never meant to give away.</b></p>
+    </article>
+    <article class="card reveal">
+      <div class="ico-box heal">↻</div>
+      <h3>Set it and actually forget it.</h3>
+      <p>It fixes itself when sites change, and gets a little firmer if you keep trying to sneak around it.
+         A gentle nudge first, then something stronger. <b>It won't quietly stop working on you.</b></p>
+    </article>
+    <article class="card reveal">
+      <div class="ico-box title">⛒</div>
+      <h3>Ban the stuff that hooks you, by name.</h3>
+      <p>Tell it <em>"no music videos, no rage bait, no gym influencers"</em> in plain English and it's
+         gone from your feed before you ever click. <b>Your feed finally stops knowing your weak spots.</b></p>
+    </article>
+    <article class="card reveal">
+      <div class="ico-box local">⬡</div>
+      <h3>Nobody's watching but you.</h3>
+      <p>Everything runs on your own machine. No account, no tracking, nothing uploaded. It's an
+         anti-mind-virus, not another data leak. <b>You free your mind without handing over your privacy.</b></p>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
+<section class="section how" id="how">
+  <div class="sec-head reveal">
+    <span class="kicker">No setup required</span>
+    <h2>Tell it your goal. <span class="grad">That's the whole job.</span></h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="step-n">1</div>
+      <h3>Install in a click</h3>
+      <p>Grab the Windows app, or just add the browser extension. They find each other on their own,
+         and the extension works fine all by itself. No account, no sign-up.</p></div>
+    <div class="step-line reveal"></div>
+    <div class="step reveal"><div class="step-n">2</div>
+      <h3>Tell it what you want</h3>
+      <p>Say it in plain English: <em>"help me write until 5pm,"</em> <em>"no more doom-scrolling,"</em>
+         <em>"kill Shorts but keep my subscriptions."</em> The AI turns it into protection for you.</p></div>
+    <div class="step-line reveal"></div>
+    <div class="step reveal"><div class="step-n">3</div>
+      <h3>Get your head back</h3>
+      <p>It runs quietly, adapts to how distracted you look, heals itself when sites change, and catches
+         you when you try to wriggle out. You just notice the noise is gone.</p></div>
+  </div>
+</section>
+
+<!-- ══════════════ COMPARE ══════════════ -->
+<section class="section" id="compare">
+  <div class="sec-head reveal">
+    <span class="kicker">The honest comparison</span>
+    <h2>What the others can't do.</h2>
+  </div>
+  <div class="table-wrap reveal">
+    <table class="compare">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th class="us">Attentify</th>
+          <th>Freedom / Cold&nbsp;Turkey</th>
+          <th>Basic blocker extensions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Removes only the addictive parts of a site</td><td class="us">✓ Surgical</td><td>✗ Whole-site only</td><td>~ Some elements</td></tr>
+        <tr><td>AI understands <em>why</em> you're there</td><td class="us">✓</td><td>✗</td><td>✗</td></tr>
+        <tr><td>Adapts blocking to how distracted you look</td><td class="us">✓ Real-time</td><td>✗ Fixed schedule</td><td>✗</td></tr>
+        <tr><td>Block individual videos by title</td><td class="us">✓ Pre-emptive</td><td>✗</td><td>✗</td></tr>
+        <tr><td>Self-heals when SPA sites re-render</td><td class="us">✓ &lt;0.5s</td><td>n/a</td><td>✗ Often breaks</td></tr>
+        <tr><td>100% local, no data uploaded</td><td class="us">✓</td><td>~ Account required</td><td>~ Varies</td></tr>
+        <tr><td>No account / sign-up</td><td class="us">✓</td><td>✗</td><td>~</td></tr>
+        <tr><td>Open source &amp; auditable</td><td class="us">✓</td><td>✗</td><td>~</td></tr>
+        <tr><td>Price</td><td class="us">Free</td><td>$3 to $10/mo</td><td>Free to paid</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════ DESKTOP DAEMON ══════════════ -->
+<section class="section daemon-sec" id="daemon">
+  <div class="daemon-grid">
+    <div class="reveal">
+      <span class="kicker">The desktop app</span>
+      <h2>The extension cleans your browser. <span class="grad">The app runs the whole show.</span></h2>
+      <p class="lead">Add the optional Windows app and everything levels up. It's a focus engine for your
+         whole computer, and the browser just plugs right into it.</p>
+      <ul class="check-list">
+        <li><b>It works across your whole system.</b> Starts with a gentle nudge and moves up to a timed block if you keep pushing.</li>
+        <li><b>A real assistant, not just toggles.</b> Ask it to "block just Shorts, keep tutorials" and it writes the rule and syncs it for you.</li>
+        <li><b>One brain everywhere.</b> Your rules and what it's learned stay in sync across the browser and the desktop.</li>
+        <li><b>It stays out of your way.</b> Runs in the background and finds the extension on its own. Nothing to configure.</li>
+      </ul>
+      <div class="daemon-cta">
+        <a class="btn btn-primary dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">Download for Windows</a>
+        <a class="btn btn-glass" href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener">Get the extension</a>
+      </div>
+    </div>
+    <div class="daemon-card reveal">
+      <div class="term-bar"><i></i><i></i><i></i><span>attentify · agent</span></div>
+      <div class="chat">
+        <div class="msg you">Block YouTube Shorts but keep my subscriptions and tutorials.</div>
+        <div class="msg ai"><span class="ai-tag">attentify</span>Done. I set up a rule so the Shorts shelf, the player and <code>/shorts/*</code> are gone. Everything else on YouTube stays exactly as it is. Synced to your browser.</div>
+        <div class="msg you">I keep opening music videos when I should be working.</div>
+        <div class="msg ai"><span class="ai-tag">attentify</span>Got it. I'll hide videos whose titles look like music videos, and I'll flag it when you start to drift. Want me to step in harder after the third slip?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ TESTIMONIALS (proof before the ask) ══════════════ -->
+<section class="section" id="love">
+  <div class="sec-head reveal">
+    <span class="kicker">Early users</span>
+    <h2>People are getting their afternoons back.</h2>
+  </div>
+  <div class="grid quotes">
+    <blockquote class="reveal"><p>"Every other blocker I tried, I turned off within a week because it killed sites I needed. This one I forgot was even running. The junk is just <em>gone</em>."</p><footer><span class="av">M</span> Maya R. · designer</footer></blockquote>
+    <blockquote class="reveal"><p>"The intent thing is uncanny. When I'm researching it leaves YouTube alone, but the second I start doom-scrolling the feed evaporates."</p><footer><span class="av">D</span> Devin K. · PhD student</footer></blockquote>
+    <blockquote class="reveal"><p>"Told the assistant 'no music videos' and it just… handled it. Feed and watch page, instantly. Felt like magic."</p><footer><span class="av">S</span> Sam O. · engineer</footer></blockquote>
+  </div>
+</section>
+
+<!-- ══════════════ PRICING ══════════════ -->
+<section class="section" id="pricing">
+  <div class="sec-head reveal">
+    <span class="kicker">Pricing</span>
+    <h2>Free, because focus shouldn't be <span class="grad">a subscription.</span></h2>
+    <p>The whole thing is open source. The optional cloud tier is for people who want managed AI and
+       cross-device sync without bringing their own key.</p>
+  </div>
+  <div class="grid pricing">
+    <article class="price-card reveal">
+      <div class="pc-name">Local</div>
+      <div class="pc-price">$0<span>/forever</span></div>
+      <p class="pc-tag">Everything that matters, on your machine.</p>
+      <ul>
+        <li>✓ Surgical element removal</li>
+        <li>✓ Title &amp; topic blocking</li>
+        <li>✓ On-device intent heuristics</li>
+        <li>✓ Mac, Windows &amp; browser</li>
+        <li>✓ Bring your own AI key (optional)</li>
+        <li>✓ 100% private, open source</li>
+      </ul>
+      <a href="#download" class="btn btn-primary btn-block">Get it free</a>
+    </article>
+    <article class="price-card featured reveal">
+      <div class="pc-flag">Most popular</div>
+      <div class="pc-name">Cloud</div>
+      <div class="pc-price">$4<span>/mo</span></div>
+      <p class="pc-tag">Managed AI and sync, zero setup.</p>
+      <ul>
+        <li>✓ Everything in Local</li>
+        <li>✓ Managed AI intent engine (no key)</li>
+        <li>✓ Cross-device rule &amp; intent sync</li>
+        <li>✓ Weekly focus insights</li>
+        <li>✓ Shared blocklists &amp; presets</li>
+        <li>✓ Priority support</li>
+      </ul>
+      <a href="#" class="btn btn-primary btn-block" id="cloud-buy-btn">Get Cloud for $5/mo</a>
+    </article>
+    <article class="price-card reveal">
+      <div class="pc-name">Teams</div>
+      <div class="pc-price">Let's talk</div>
+      <p class="pc-tag">Focus culture for whole orgs.</p>
+      <ul>
+        <li>✓ Everything in Cloud</li>
+        <li>✓ Org-wide presets &amp; policy</li>
+        <li>✓ Aggregate, anonymised insights</li>
+        <li>✓ SSO &amp; deployment tooling</li>
+        <li>✓ Dedicated support</li>
+      </ul>
+      <a href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener" class="btn btn-glass btn-block">Contact us</a>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════════ PLATFORMS ══════════════ -->
+<section class="section platforms" id="platforms">
+  <div class="sec-head reveal">
+    <span class="kicker">Windows &amp; Mac</span>
+    <h2>Native on every desktop.</h2>
+    <p>Attentify follows each platform's own window design — so it feels at home whether you're on Windows or a Mac.</p>
+  </div>
+
+  <div class="plat-grid">
+    <!-- Windows mockup: square frame, controls on the right -->
+    <figure class="plat reveal">
+      <div class="pwin pwin--win">
+        <div class="pbar pbar--win">
+          <span class="pbar-left"><svg class="pbar-logo" viewBox="0 0 28 28"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg> Attentify</span>
+          <span class="wctl"><i class="wmin"></i><i class="wmax"></i><i class="wcls"></i></span>
+        </div>
+        <div class="pbody"><div class="pmock">
+          <div class="pm-side"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="pm-main">
+            <div class="pm-score">82<small>Focus score</small></div>
+            <div class="pm-row"><span></span><span></span><span></span></div>
+          </div>
+        </div></div>
+      </div>
+      <figcaption><b>Windows</b> · square frame, controls on the right</figcaption>
+    </figure>
+
+    <!-- Mac mockup: rounded frame, traffic lights on the left -->
+    <figure class="plat reveal">
+      <div class="pwin pwin--mac">
+        <div class="pbar pbar--mac">
+          <span class="mlights"><i class="mr"></i><i class="my"></i><i class="mg"></i></span>
+          <span class="pbar-mid">Attentify</span>
+          <span class="pbar-spacer"></span>
+        </div>
+        <div class="pbody"><div class="pmock">
+          <div class="pm-side"><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="pm-main">
+            <div class="pm-score">82<small>Focus score</small></div>
+            <div class="pm-row"><span></span><span></span><span></span></div>
+          </div>
+        </div></div>
+      </div>
+      <figcaption><b>macOS</b> · rounded frame, traffic lights on the left <span class="soon">coming soon</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ══════════════ DOWNLOAD ══════════════ -->
+<section class="section download" id="download">
+  <div class="dl-card reveal">
+    <h2>Reclaim your attention. <span class="grad">Today.</span></h2>
+    <p>Free, private, and running in about a minute.</p>
+    <div class="dl-main">
+      <a class="btn btn-primary btn-lg dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M3 5.1 10.5 4v7.5H3V5.1zM3 12.5h7.5V20L3 18.9v-6.4zM11.5 3.85 21 2.5v9H11.5V3.85zM11.5 12.5H21V21.5l-9.5-1.35V12.5z"/></svg>
+        <span><b>Download for Windows</b><small>Windows 10/11 · 64-bit · free</small></span>
+      </a>
+    </div>
+    <p class="dl-ext">Prefer browser-only? <a href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener">Add the extension for Chrome &amp; Edge →</a></p>
+    <p class="dl-soon">macOS app coming soon.</p>
+  </div>
+</section>
+
+<!-- ══════════════ FAQ ══════════════ -->
+<section class="section faq" id="faq">
+  <div class="sec-head reveal"><span class="kicker">FAQ</span><h2>Good questions.</h2></div>
+  <div class="faq-list reveal">
+    <details><summary>Is it really free?</summary><p>Yes. The app and extension are open source and free forever. The optional <b>Cloud</b> tier ($5/mo) adds managed AI (so you don't need an API key of your own), automatic site blocking and analytics. You never need it to get the full local experience.</p></details>
+    <details><summary>Do you see my browsing or send my data anywhere?</summary><p>No. Everything runs locally. There's no account and no tracking. If you turn on the AI intent engine you can run the offline version, or bring your own AI key. In that case only a tiny, anonymous summary goes to <em>your</em> AI provider, and never to us.</p></details>
+    <details><summary>How is this different from Freedom or Cold Turkey?</summary><p>Those block whole sites or apps on a schedule. Attentify takes out only the addictive parts, like the Shorts shelf and the For-You feed, so you keep the useful web. And it adapts in real time to whether you're actually focused.</p></details>
+    <details><summary>Do I need the desktop app?</summary><p>No. The browser extension works completely on its own. The Windows app adds system-wide nudges and an assistant that writes the rules for you, and the two sync automatically when both are running.</p></details>
+    <details><summary>Which browsers and sites are supported?</summary><p>Any Chromium browser (Chrome, Edge, Brave, Arc). It comes with built-in rules for YouTube, Instagram, TikTok, X, Reddit, Facebook and LinkedIn, and you can add any site just by asking in plain English.</p></details>
+    <details><summary>Won't I just turn it off?</summary><p>That's exactly why it isn't all-or-nothing. Because it removes the junk and not the tools you need, there's far less reason to switch it off. And if you do start sneaking around it, Attentify notices and gently steps in.</p></details>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <div class="brand"><svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path class="lm-o" d="M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z"/><circle class="lm-o" cx="16" cy="15.6" r="4" fill="none"/><circle class="lm-i" cx="16" cy="15.6" r="1.9"/></svg><span class="brand-name">ATTENTIFY</span></div>
+      <p>An anti-mind-virus for the attention economy. Local-first, open source, and quietly on your side.</p>
+    </div>
+    <div class="foot-col"><h4>Product</h4>
+      <a href="#app-demo">Live demo</a><a href="#features">Features</a><a href="#compare">Compare</a><a href="#pricing">Pricing</a></div>
+    <div class="foot-col"><h4>Download</h4>
+      <a class="dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">Windows app</a>
+      <a href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener">Browser extension</a>
+      <a href="#app-demo">App demo</a></div>
+    <div class="foot-col"><h4>Open source</h4>
+      <a href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener">Extension repo</a>
+      <a href="https://github.com/lucadominguez/Daemon-Testing-Version-1" target="_blank" rel="noopener">Desktop app repo</a>
+      <a href="#faq">FAQ</a></div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span id="year"></span> Attentify. Built for focus.</span>
+    <span class="foot-made">Made local-first · No trackers on this page either.</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+  // If the visitor already has a website session, point "Sign in" at their dashboard.
+  if (localStorage.getItem('attentify_session')) {
+    var el = document.getElementById('navSignIn');
+    if (el) { el.textContent = 'Dashboard'; el.setAttribute('href', 'dashboard.html'); }
+  }
+</script>
+</body>
+</html>

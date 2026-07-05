@@ -1,0 +1,5 @@
+{
+  "main": "native-host.js",
+  "output": "sea-prep.blob",
+  "disableExperimentalSEAWarning": true
+}

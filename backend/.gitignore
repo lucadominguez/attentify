@@ -1,0 +1,16 @@
+# Secrets — NEVER commit these (leading cause of Stripe key compromise)
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+*.key
+.env
+.env.*
+
+# Tooling / build
+node_modules/
+.wrangler/
+dist/
+.agents/
+
+# OS
+.DS_Store

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Productivity Daemon — Native Messaging Host (optional)
+// Attentify — Native Messaging Host (optional)
 // Bridges Chrome's native messaging protocol (stdin/stdout length-prefixed JSON)
 // to the daemon's HTTP debug API. Use if you want native messaging instead of
 // the extension's built-in HTTP polling (more responsive, no CORS).

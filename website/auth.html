@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · Attentify</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><path d=%27M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%272.4%27 stroke-linejoin=%27round%27/><circle cx=%2716%27 cy=%2715.6%27 r=%274%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%271.8%27/><circle cx=%2716%27 cy=%2715.6%27 r=%271.9%27 fill=%27%2327d3ff%27/></svg>">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main style="max-width:440px;margin:0 auto;padding:80px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+  <div class="dl-card">
+    <a href="/" style="display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:18px;text-decoration:none">
+      <svg width="26" height="26" viewBox="0 0 28 28"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg>
+      <span style="font-family:var(--display);font-weight:700;color:var(--text);font-size:18px">Attentify</span>
+    </a>
+
+    <h2 id="title" style="font-size:26px;text-align:center">Welcome back</h2>
+    <p id="subtitle" style="color:var(--muted);text-align:center;margin:10px 0 22px;font-size:14px">Sign in to see your focus dashboard.</p>
+
+    <form id="form" style="display:flex;flex-direction:column;gap:11px">
+      <label class="fld"><span>Email</span>
+        <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+      </label>
+      <label class="fld"><span>Password</span>
+        <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required>
+      </label>
+      <button id="submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+    <p id="msg" style="margin-top:14px;font-size:13.5px;text-align:center;min-height:18px"></p>
+
+    <p style="text-align:center;margin-top:18px;font-size:14px;color:var(--muted)">
+      <span id="switchText">New here?</span>
+      <a id="switchLink" href="#" style="color:var(--cyan);font-weight:600">Create an account</a>
+    </p>
+    <p style="text-align:center;margin-top:16px">
+      <a href="account.html" style="color:var(--faint);font-size:13px">Have a license key instead? →</a>
+    </p>
+  </div>
+</main>
+
+<style>
+  .fld{display:flex;flex-direction:column;gap:6px}
+  .fld span{font-size:12px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+  .fld input{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rs);padding:11px 13px;color:var(--text);font-family:var(--font);font-size:14.5px;outline:none;transition:border-color .15s}
+  .fld input:focus{border-color:var(--cyan)}
+</style>
+
+<script>
+const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+const $ = id => document.getElementById(id);
+let mode = 'login'; // 'login' | 'signup'
+
+// If already signed in, skip straight to the dashboard.
+if (localStorage.getItem('attentify_session')) location.replace('dashboard.html');
+
+function setMode(m) {
+  mode = m;
+  const signup = m === 'signup';
+  $('title').textContent = signup ? 'Create your account' : 'Welcome back';
+  $('subtitle').textContent = signup ? 'Free to start — no card required.' : 'Sign in to see your focus dashboard.';
+  $('submit').textContent = signup ? 'Create account' : 'Sign in';
+  $('password').setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
+  $('switchText').textContent = signup ? 'Already have an account?' : 'New here?';
+  $('switchLink').textContent = signup ? 'Sign in' : 'Create an account';
+  $('msg').textContent = '';
+}
+$('switchLink').addEventListener('click', (e) => { e.preventDefault(); setMode(mode === 'login' ? 'signup' : 'login'); });
+
+$('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('email').value.trim();
+  const password = $('password').value;
+  $('msg').style.color = 'var(--muted)'; $('msg').textContent = 'Working…';
+  $('submit').disabled = true;
+  try {
+    const r = await fetch(API + '/v1/auth/' + (mode === 'signup' ? 'signup' : 'login'), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const d = await r.json();
+    if (!r.ok || !d.token) throw new Error(d.error || 'Something went wrong');
+    localStorage.setItem('attentify_session', d.token);
+    location.href = 'dashboard.html';
+  } catch (err) {
+    $('msg').style.color = '#ff9d7a'; $('msg').textContent = err.message;
+    $('submit').disabled = false;
+  }
+});
+</script>
+</body>
+</html>

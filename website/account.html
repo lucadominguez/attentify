@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your account · Attentify</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><path d=%27M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%272.4%27 stroke-linejoin=%27round%27/><circle cx=%2716%27 cy=%2715.6%27 r=%274%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%271.8%27/><circle cx=%2716%27 cy=%2715.6%27 r=%271.9%27 fill=%27%2327d3ff%27/></svg>">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main style="max-width:560px;margin:0 auto;padding:90px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+  <div class="dl-card">
+    <h2 style="font-size:30px;text-align:center">Your <span class="grad">account</span></h2>
+    <p style="color:var(--muted);text-align:center;margin:12px 0 24px">Paste your license key to check your subscription or manage billing.</p>
+
+    <div class="acct-row">
+      <input id="key" class="report-desc" style="min-height:auto;padding:11px 12px;font-family:var(--mono)" placeholder="pd_live_…" type="password">
+      <button id="check" class="btn btn-primary">Check</button>
+    </div>
+    <p id="msg" style="margin-top:14px;font-size:14px"></p>
+
+    <div id="panel" style="display:none;margin-top:18px">
+      <div class="acct-grid">
+        <div><span>Plan</span><b id="tier">…</b></div>
+        <div><span>Status</span><b id="status">…</b></div>
+        <div><span>AI remaining</span><b id="ai">…</b></div>
+      </div>
+      <button id="manage" class="btn btn-glass btn-block" style="margin-top:16px">Manage / cancel billing</button>
+    </div>
+    <p style="text-align:center;margin-top:18px;font-size:13.5px;color:var(--muted)">
+      Prefer email &amp; password? <a href="auth.html" style="color:var(--cyan);font-weight:600">Sign in →</a>
+    </p>
+    <p style="text-align:center;margin-top:10px"><a href="/" style="color:var(--faint);font-size:13px">← Back to site</a></p>
+  </div>
+</main>
+
+<style>
+  .acct-row{display:flex;gap:8px}
+  .acct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .acct-grid div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:13px;text-align:center}
+  .acct-grid span{display:block;font-size:11px;color:var(--faint);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+  .acct-grid b{font-family:var(--display);font-size:18px;color:var(--cyan)}
+</style>
+
+<script>
+const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+const $ = id => document.getElementById(id);
+let key = '';
+
+$('check').addEventListener('click', async () => {
+  key = $('key').value.trim();
+  if (!key) return;
+  $('msg').textContent = 'Checking…'; $('msg').style.color = 'var(--muted)';
+  try {
+    const r = await fetch(API + '/v1/me', { headers: { Authorization: 'Bearer ' + key } });
+    const d = await r.json();
+    if (!r.ok || !d.user) throw new Error(d.error || 'License key not recognised');
+    const u = d.user;
+    $('tier').textContent = u.tier; $('status').textContent = u.status;
+    $('ai').textContent = (u.aiRemaining ?? '…');
+    $('panel').style.display = 'block';
+    $('msg').textContent = '✓ ' + (u.email || 'Account found');
+    $('msg').style.color = 'var(--green)';
+  } catch (e) {
+    $('panel').style.display = 'none';
+    $('msg').textContent = e.message; $('msg').style.color = '#ff9d7a';
+  }
+});
+
+$('manage').addEventListener('click', async () => {
+  try {
+    const r = await fetch(API + '/v1/billing/portal', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' }, body: '{}' });
+    const d = await r.json();
+    if (d.url) location.href = d.url; else throw new Error(d.error || 'No billing account');
+  } catch (e) { $('msg').textContent = e.message; $('msg').style.color = '#ff9d7a'; }
+});
+</script>
+</body>
+</html>

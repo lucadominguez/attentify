@@ -1,0 +1,18 @@
+{
+  "name": "attentify-cloud",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker backend for Attentify — accounts, Stripe billing, managed AI proxy, analytics, admin.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init:local": "wrangler d1 execute pd-cloud --local --file=./schema.sql",
+    "db:init": "wrangler d1 execute pd-cloud --remote --file=./schema.sql",
+    "secrets": "node scripts/setup-secrets.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wrangler": "^4.97.0"
+  }
+}

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Attentify</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><path d=%27M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%272.4%27 stroke-linejoin=%27round%27/><circle cx=%2716%27 cy=%2715.6%27 r=%274%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%271.8%27/><circle cx=%2716%27 cy=%2715.6%27 r=%271.9%27 fill=%27%2327d3ff%27/></svg>">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div id="loading" style="min-height:100vh;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px">Loading your dashboard…</div>
+
+<main id="app" style="display:none;max-width:900px;margin:0 auto;padding:34px 24px 80px">
+  <!-- Top bar -->
+  <header style="display:flex;align-items:center;justify-content:space-between;margin-bottom:26px">
+    <a href="/" style="display:flex;align-items:center;gap:9px;text-decoration:none">
+      <svg width="24" height="24" viewBox="0 0 28 28"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg>
+      <span style="font-family:var(--display);font-weight:700;color:var(--text);font-size:17px">Attentify</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="email" style="color:var(--muted);font-size:13px"></span>
+      <button id="signout" class="btn btn-glass btn-sm">Sign out</button>
+    </div>
+  </header>
+
+  <h1 id="greeting" style="font-family:var(--display);font-size:26px;color:var(--text);margin-bottom:4px">Your dashboard</h1>
+  <p id="intro" style="color:var(--muted);font-size:14px;margin-bottom:22px"></p>
+
+  <!-- Account / plan card -->
+  <section class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px">
+      <div>
+        <div class="klabel">Plan</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <b id="tier" style="font-family:var(--display);font-size:22px;color:var(--cyan)">…</b>
+          <span id="statusPill" class="pill"></span>
+        </div>
+        <div id="renewal" style="color:var(--faint);font-size:12.5px;margin-top:4px"></div>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <div class="klabel">AI usage this month</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <b id="aiUsed" style="font-family:var(--mono);font-size:20px;color:var(--text)">…</b>
+          <span id="aiQuota" style="color:var(--faint);font-size:13px"></span>
+        </div>
+        <div class="meter"><div id="aiBar" class="meter-fill"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button id="primaryCta" class="btn btn-primary btn-sm"></button>
+        <a href="https://attentify-cloud.ludomi2502.workers.dev/download/win" class="btn btn-glass btn-sm">Download app</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Focus insights (cloud) -->
+  <section id="insights" style="margin-top:20px;display:none">
+    <div class="card">
+      <div style="display:flex;gap:26px;align-items:center;flex-wrap:wrap">
+        <div style="text-align:center;min-width:120px">
+          <div id="focal" style="font-family:var(--display);font-weight:700;font-size:52px;color:var(--green);line-height:1">0</div>
+          <div style="color:var(--faint);font-size:12.5px;margin-top:4px">distractions blocked</div>
+        </div>
+        <div style="flex:1;min-width:220px" id="statRow"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="klabel" style="margin-bottom:12px">Activity — last 30 days</div>
+      <div id="bars" class="bars"></div>
+    </div>
+
+    <div id="topWrap" class="card" style="margin-top:16px;display:none">
+      <div class="klabel" style="margin-bottom:10px">Most-blocked sites</div>
+      <div id="topDomains"></div>
+    </div>
+  </section>
+
+  <!-- Free / no-data state -->
+  <section id="empty" class="card" style="margin-top:20px;display:none;text-align:center">
+    <div style="font-size:26px;margin-bottom:8px">📊</div>
+    <p style="color:var(--text);font-weight:600;font-size:15px">Cross-device insights are a Cloud feature</p>
+    <p style="color:var(--muted);font-size:13.5px;margin:6px auto 16px;max-width:420px">Upgrade to Cloud ($5/mo) and your desktop app syncs its focus analytics here — see your blocks, patterns and trends from any browser.</p>
+    <button id="upgrade2" class="btn btn-primary btn-sm">Upgrade to Cloud</button>
+  </section>
+</main>
+
+<style>
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+  .klabel{font-size:11px;color:var(--faint);font-family:var(--mono);text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px}
+  .pill{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:20px}
+  .pill.active{background:rgba(34,229,139,.12);color:var(--green);border:1px solid rgba(34,229,139,.3)}
+  .pill.inactive{background:rgba(159,178,201,.1);color:var(--muted);border:1px solid var(--line)}
+  .meter{height:7px;border-radius:5px;background:var(--bg2);overflow:hidden;margin-top:7px}
+  .meter-fill{height:100%;background:var(--grad);border-radius:5px;width:0}
+  .statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .statpill{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .statpill .v{font-family:var(--mono);font-size:20px;color:var(--text)}
+  .statpill .l{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .bars{display:flex;align-items:flex-end;gap:3px;height:80px}
+  .bars i{flex:1;background:var(--cyan);border-radius:3px 3px 0 0;min-height:2px;opacity:.75;transition:height .4s}
+  .td-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+  .td-row:last-child{border-bottom:none}
+  .td-row .d{flex:1;color:var(--text);font-size:13.5px}
+  .td-row .n{font-family:var(--mono);color:var(--cyan);font-size:13px}
+  .btn-sm{padding:9px 15px;font-size:13px}
+</style>
+
+<script>
+const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+const $ = id => document.getElementById(id);
+const token = localStorage.getItem('attentify_session');
+if (!token) location.replace('auth.html');
+const authHeaders = { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
+
+function greetingText() {
+  const h = new Date().getHours();
+  return h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+}
+
+async function load() {
+  let user;
+  try {
+    const r = await fetch(API + '/v1/auth/session', { headers: authHeaders });
+    if (r.status === 401) { localStorage.removeItem('attentify_session'); location.replace('auth.html'); return; }
+    const d = await r.json();
+    if (!d.user) throw new Error('session');
+    user = d.user;
+  } catch { localStorage.removeItem('attentify_session'); location.replace('auth.html'); return; }
+
+  // ---- account card ----
+  $('email').textContent = user.email;
+  $('greeting').textContent = greetingText() + '.';
+  const isCloud = user.tier === 'cloud';
+  $('tier').textContent = isCloud ? 'Cloud' : 'Free';
+  const active = user.status === 'active';
+  const sp = $('statusPill');
+  sp.textContent = user.status || 'active';
+  sp.className = 'pill ' + (active ? 'active' : 'inactive');
+  $('intro').textContent = isCloud
+    ? 'Your protection and focus analytics, synced across devices.'
+    : 'You are on the free plan. Upgrade to sync analytics from the desktop app.';
+
+  if (user.currentPeriodEnd) {
+    const d = new Date(user.currentPeriodEnd);
+    $('renewal').textContent = (active ? 'Renews ' : 'Ends ') + d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  const used = user.aiUsed ?? 0, quota = user.aiQuota ?? 0;
+  $('aiUsed').textContent = used.toLocaleString();
+  $('aiQuota').textContent = '/ ' + quota.toLocaleString() + ' calls';
+  $('aiBar').style.width = quota ? Math.min(100, (used / quota) * 100) + '%' : '0%';
+
+  // primary CTA: manage billing (cloud) or upgrade (free)
+  const cta = $('primaryCta');
+  if (isCloud) {
+    cta.textContent = 'Manage billing';
+    cta.onclick = async () => {
+      const r = await fetch(API + '/v1/billing/portal', { method: 'POST', headers: authHeaders, body: '{}' });
+      const d = await r.json(); if (d.url) location.href = d.url;
+    };
+  } else {
+    cta.textContent = 'Upgrade to Cloud';
+    cta.onclick = upgrade;
+  }
+  $('upgrade2').onclick = upgrade;
+
+  // ---- insights (cloud only) ----
+  if (isCloud) {
+    try {
+      const r = await fetch(API + '/v1/analytics/summary?days=30', { headers: authHeaders });
+      const d = await r.json();
+      if (r.ok) renderInsights(d);
+      else showEmpty();
+    } catch { showEmpty(); }
+  } else {
+    showEmpty();
+  }
+
+  $('loading').style.display = 'none';
+  $('app').style.display = 'block';
+}
+
+function total(totals, type) { return (totals.find(t => t.type === type) || {}).n || 0; }
+
+function renderInsights(d) {
+  const totals = d.totals || [];
+  const blocks = total(totals, 'block');
+  const distractions = total(totals, 'distraction');
+  const corrections = total(totals, 'misprediction');
+  const days = (d.byDay || []).length;
+
+  if (blocks + distractions + corrections === 0) { showEmpty(); return; }
+
+  $('focal').textContent = blocks.toLocaleString();
+  $('statRow').innerHTML = '<div class="statgrid">' +
+    statpill(distractions.toLocaleString(), 'distractions caught') +
+    statpill(days.toLocaleString(), 'active days') +
+    statpill(corrections.toLocaleString(), 'corrections') +
+    '</div>';
+
+  // by-day bars
+  const byDay = d.byDay || [];
+  const max = Math.max(1, ...byDay.map(x => x.n));
+  $('bars').innerHTML = byDay.map(x => `<i title="${x.n} events" style="height:${(x.n / max) * 100}%"></i>`).join('') || '<span style="color:var(--faint);font-size:13px">No activity yet.</span>';
+
+  const top = d.topDomains || [];
+  if (top.length) {
+    $('topWrap').style.display = 'block';
+    $('topDomains').innerHTML = top.map(t => `<div class="td-row"><span class="d">${escapeHtml(t.domain)}</span><span class="n">${t.n}</span></div>`).join('');
+  }
+  $('insights').style.display = 'block';
+}
+
+function statpill(v, l) { return `<div class="statpill"><div class="v">${v}</div><div class="l">${l}</div></div>`; }
+function showEmpty() { $('empty').style.display = 'block'; }
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+async function upgrade() {
+  const r = await fetch(API + '/v1/billing/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: $('email').textContent }) });
+  const d = await r.json(); if (d.url) location.href = d.url;
+}
+
+$('signout').addEventListener('click', async () => {
+  try { await fetch(API + '/v1/auth/logout', { method: 'POST', headers: authHeaders }); } catch {}
+  localStorage.removeItem('attentify_session');
+  location.href = 'auth.html';
+});
+
+load();
+</script>
+</body>
+</html>

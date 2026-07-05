@@ -1,0 +1,12 @@
+# Copy to `.dev.vars` for local `wrangler dev`. NEVER commit the real .dev.vars.
+# In production these are set with `wrangler secret put <NAME>` instead.
+
+OPENROUTER_KEY=sk-or-xxxxxxxxxxxxxxxxxxxxxxxx
+# Prefer a RESTRICTED key (rk_…, least privilege) over a full secret key (sk_…).
+STRIPE_SECRET=rk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxxx
+ADMIN_TOKEN=generate_a_long_random_string_here
+
+# Also overridable locally (otherwise read from wrangler.toml [vars]):
+SITE_URL=http://localhost:8753
+STRIPE_PRICE_ID=price_xxxxxxxxxxxx

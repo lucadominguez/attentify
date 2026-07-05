@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Cloud · Attentify</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27><path d=%27M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%272.4%27 stroke-linejoin=%27round%27/><circle cx=%2716%27 cy=%2715.6%27 r=%274%27 fill=%27none%27 stroke=%27%2327d3ff%27 stroke-width=%271.8%27/><circle cx=%2716%27 cy=%2715.6%27 r=%271.9%27 fill=%27%2327d3ff%27/></svg>">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main style="max-width:620px;margin:0 auto;padding:90px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+  <div class="dl-card" style="text-align:center">
+    <div style="font-size:46px;margin-bottom:6px">🛡️</div>
+    <h2 style="font-size:34px">You're on <span class="grad">Cloud.</span></h2>
+    <p style="color:var(--muted);margin:12px 0 26px">Thanks for subscribing. Here's your license key. Paste it into the extension or desktop app to turn on managed AI, automatic site blocking and analytics.</p>
+
+    <div id="state-loading">
+      <div class="kicker" style="display:inline-block">Activating your account…</div>
+      <p style="color:var(--faint);font-size:13px;margin-top:14px">This takes a few seconds while Stripe confirms the payment.</p>
+    </div>
+
+    <div id="state-ready" style="display:none">
+      <div class="lic-label">Your license key</div>
+      <div class="lic-key"><code id="lic">…</code><button id="copy" class="btn btn-glass btn-sm">Copy</button></div>
+      <ol class="lic-steps">
+        <li>Open the Attentify side panel (or the desktop app).</li>
+        <li>In the <b>Attentify Cloud</b> section, click <b>I have a key</b> and paste it.</li>
+        <li>That's it. The AI now works without an API key of your own.</li>
+      </ol>
+
+      <!-- Set a password so this account also works on the website dashboard. -->
+      <div class="pw-set">
+        <div class="lic-label" style="margin-top:6px">Set a password for web sign-in</div>
+        <div class="acct-row">
+          <input id="pw" type="password" minlength="8" placeholder="Choose a password (8+ chars)"
+                 style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:var(--rs);padding:11px 13px;color:var(--text);font-family:var(--font);font-size:14px;outline:none">
+          <button id="setpw" class="btn btn-primary">Save</button>
+        </div>
+        <p id="pwmsg" style="font-size:13px;margin-top:8px;min-height:16px"></p>
+      </div>
+
+      <a href="/" class="btn btn-glass btn-lg" style="margin-top:8px">Done</a>
+    </div>
+
+    <div id="state-error" style="display:none">
+      <p style="color:#ff9d7a">We couldn't load your key automatically. It's also in your email receipt, or open <a href="account.html" style="color:var(--cyan)">your account</a> to retrieve it.</p>
+    </div>
+  </div>
+</main>
+
+<style>
+  .lic-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+  .lic-key{display:flex;gap:8px;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;margin-bottom:18px}
+  .lic-key code{font-family:var(--mono);font-size:15px;color:#9fe6ff;word-break:break-all}
+  .lic-steps{text-align:left;max-width:430px;margin:0 auto 22px;color:var(--muted);font-size:14.5px;line-height:1.7;padding-left:20px}
+  .lic-steps b{color:var(--text)}
+  .pw-set{max-width:430px;margin:0 auto 20px}
+  .acct-row{display:flex;gap:8px}
+</style>
+
+<script>
+const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+const sid = new URLSearchParams(location.search).get('session_id');
+const show = id => { for (const s of ['loading','ready','error']) document.getElementById('state-'+s).style.display = (s===id?'block':'none'); };
+
+let licenseKey = '';
+async function poll(tries = 0) {
+  if (!sid) return show('error');
+  try {
+    const r = await fetch(API + '/v1/billing/session?session_id=' + encodeURIComponent(sid));
+    const d = await r.json();
+    if (d.ok && d.pending === false && d.license_key) {
+      licenseKey = d.license_key;
+      document.getElementById('lic').textContent = d.license_key;
+      return show('ready');
+    }
+  } catch (_) {}
+  if (tries < 12) return setTimeout(() => poll(tries + 1), 2000);  // webhook may lag a few seconds
+  show('error');
+}
+document.getElementById('copy').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('lic').textContent);
+  document.getElementById('copy').textContent = 'Copied ✓';
+});
+
+// Set a website password using the freshly-issued license key as the auth credential,
+// then drop the user straight into their dashboard signed in.
+document.getElementById('setpw').addEventListener('click', async () => {
+  const pw = document.getElementById('pw').value;
+  const msg = document.getElementById('pwmsg');
+  if (!pw || pw.length < 8) { msg.style.color = '#ff9d7a'; msg.textContent = 'Password must be at least 8 characters.'; return; }
+  if (!licenseKey) { msg.style.color = '#ff9d7a'; msg.textContent = 'Still activating — try again in a moment.'; return; }
+  msg.style.color = 'var(--muted)'; msg.textContent = 'Saving…';
+  try {
+    const setr = await fetch(API + '/v1/auth/set-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + licenseKey },
+      body: JSON.stringify({ password: pw }),
+    });
+    if (!setr.ok) throw new Error('Could not save password');
+    // Log in to mint a website session, then go to the dashboard.
+    const email = (await (await fetch(API + '/v1/me', { headers: { Authorization: 'Bearer ' + licenseKey } })).json()).user?.email;
+    const lr = await fetch(API + '/v1/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password: pw }) });
+    const ld = await lr.json();
+    if (ld.token) { localStorage.setItem('attentify_session', ld.token); location.href = 'dashboard.html'; return; }
+    msg.style.color = 'var(--green)'; msg.textContent = 'Saved. You can now sign in on the website.';
+  } catch (e) { msg.style.color = '#ff9d7a'; msg.textContent = e.message; }
+});
+poll();
+</script>
+</body>
+</html>

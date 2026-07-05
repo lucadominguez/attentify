@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Productivity Daemon</title>
+  <title>Attentify</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -12,8 +12,9 @@
 <div id="main-view">
 
   <div class="header">
-    <span class="brand">PRODUCTIVITY DAEMON <span id="version-label" class="version"></span></span>
+    <span class="brand">ATTENTIFY <span id="version-label" class="version"></span></span>
     <div class="header-actions">
+      <button id="flow-btn" class="icon-btn" title="Context timeline">◷</button>
       <button id="chat-btn" class="icon-btn" title="AI Assistant">✦</button>
       <div id="status-dot" class="status-dot"></div>
     </div>
@@ -24,15 +25,52 @@
 
   <div id="update-banner" class="update-banner" style="display:none"></div>
 
-  <!-- Diagnostics -->
-  <div class="section-label">DIAGNOSTICS</div>
-  <div id="diag-panel" class="diag-panel"></div>
+  <!-- Per-site hero: plain-language status + one-tap pause for the current site -->
+  <div id="site-hero" class="site-hero" style="display:none">
+    <span id="site-hero-icon" class="site-hero-icon">✓</span>
+    <div class="site-hero-text">
+      <div id="site-hero-title" class="site-hero-title">—</div>
+      <div id="site-hero-sub" class="site-hero-sub"></div>
+    </div>
+    <label class="toggle site-toggle" id="site-toggle-wrap" style="display:none" title="Block distractions on this site">
+      <input type="checkbox" id="site-toggle"><span class="slider"></span>
+    </label>
+  </div>
+
+  <!-- Diagnostics (advanced — collapsed by default) -->
+  <div class="section-label collapsible" id="diag-toggle">DIAGNOSTICS <span id="diag-arrow">▸</span></div>
+  <div id="diag-panel" class="diag-panel" style="display:none"></div>
 
   <!-- Active tab -->
   <div id="tab-section" style="display:none">
     <div class="section-label">ACTIVE TAB: <span id="tab-domain-label" class="tab-domain-hl"></span></div>
     <div id="tab-detail" class="tab-detail"></div>
   </div>
+
+  <!-- Auto-detected distractions on the current page -->
+  <div class="section-label">
+    DISTRACTIONS DETECTED <span id="scan-summary" class="rules-summary"></span>
+    <button id="scan-btn" class="pill-btn accent" style="float:right;margin-top:-1px">⟳ Scan</button>
+  </div>
+  <div class="scan-controls">
+    <label class="toggle scan-toggle"><input type="checkbox" id="autoblock-toggle"><span class="slider"></span></label>
+    <span class="scan-auto-lbl">Auto-hide obvious distractions on every page</span>
+  </div>
+  <!-- Live context read: why you're here + how distracted you look right now -->
+  <div id="context-banner" class="context-banner" style="display:none"></div>
+  <div id="learned-topics" class="learned-topics" style="display:none"></div>
+
+  <!-- Block whole videos by words in their title (feed + watch page) -->
+  <div class="title-block-row">
+    <input id="title-block-input" class="title-block-input" placeholder="Block videos whose title contains…">
+    <button id="title-block-add" class="pill-btn accent">Block</button>
+  </div>
+  <div id="title-blocks" class="title-blocks" style="display:none"></div>
+  <div id="scan-list" class="scan-list"><div class="placeholder">Tap <b>⟳ Scan</b> to spot distracting elements on this page.</div></div>
+
+  <!-- Attentify Cloud -->
+  <div class="section-label">ATTENTIFY CLOUD <span id="cloud-badge" class="cloud-badge"></span></div>
+  <div id="cloud-box" class="cloud-box"></div>
 
   <!-- Rules -->
   <div class="section-label">
@@ -48,6 +86,7 @@
   <div class="footer">
     <span class="footer-stat"><span id="bypass-total">0</span> bypasses · <span id="elements-total">0</span> hidden</span>
     <div class="footer-btns">
+      <button id="report-btn"       class="footer-btn" title="Report a bug to GitHub">🐞 Bug</button>
       <button id="test-btn"         class="footer-btn">⚡ Test</button>
       <button id="check-update-btn" class="footer-btn">↑</button>
       <button id="sync-btn"         class="footer-btn accent">↻ Sync</button>
@@ -62,6 +101,7 @@
   <div class="chat-header">
     <button id="chat-back-btn" class="icon-btn">← Back</button>
     <span class="chat-title">AI ASSISTANT <span id="chat-mode-label" class="chat-mode"></span></span>
+    <button id="api-key-change-btn" class="icon-btn" style="display:none" title="Change OpenRouter key">🔑</button>
     <div id="chat-status-dot" class="status-dot" style="width:6px;height:6px"></div>
   </div>
 
@@ -69,12 +109,13 @@
 
   <!-- API key setup (shown when no key) -->
   <div id="api-key-panel" style="display:none" class="api-key-panel">
-    <p class="api-key-hint">Enter your OpenRouter API key to use AI chat.<br>Get one free at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> — free tier available.</p>
-    <div class="api-key-row">
+    <p id="api-key-hint" class="api-key-hint">AI already works on your included free credit. To use your own key instead, paste an OpenRouter key.<br>Get one free at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>.</p>
+    <div id="api-key-row" class="api-key-row">
       <input id="api-key-input" type="password" placeholder="sk-or-..." class="api-key-input">
       <button id="api-key-save-btn" class="pill-btn accent">Save</button>
     </div>
     <p id="api-key-err" class="api-key-err" style="display:none"></p>
+    <p id="api-key-saved" class="api-key-saved" style="display:none">✓ OpenRouter key saved — remembered across restarts. <a href="#" id="api-key-remove">remove</a></p>
   </div>
 
   <!-- Messages -->
@@ -86,6 +127,67 @@
     <button id="chat-send-btn" class="chat-send-btn">↑</button>
   </div>
 
+</div>
+
+<!-- ══════════════════════ CONTEXT FLOW VIEW ══════════════════════ -->
+<div id="flow-view" style="display:none">
+
+  <div class="chat-header">
+    <button id="flow-back-btn" class="icon-btn">← Back</button>
+    <span class="chat-title">CONTEXT FLOW</span>
+    <button id="flow-refresh-btn" class="icon-btn" title="Refresh">⟳</button>
+  </div>
+
+  <div class="progress-track"><div id="flow-progress-fill" class="progress-fill"></div></div>
+
+  <p class="flow-intro">Where your attention went, oldest → newest. Each step is a page the AI read for intent; the colour shows how distracted you looked.</p>
+  <div id="flow-list" class="flow-list"></div>
+
+</div>
+
+<!-- ══════════════════════ REPORT BUG VIEW ══════════════════════ -->
+<div id="report-view" style="display:none">
+
+  <div class="chat-header">
+    <button id="report-back-btn" class="icon-btn">← Back</button>
+    <span class="chat-title">REPORT A BUG</span>
+    <div style="width:6px"></div>
+  </div>
+
+  <div class="progress-track"><div id="report-progress-fill" class="progress-fill"></div></div>
+
+  <div class="report-body">
+    <p class="report-lede">Found a bug or a wrong block? Tell us what happened — diagnostic context (version, current site, rules, recent activity) is attached automatically.</p>
+    <textarea id="report-desc" class="report-desc" rows="5" placeholder="What went wrong? What did you expect instead?"></textarea>
+    <button id="report-submit" class="pill-btn accent report-submit">Submit bug report</button>
+    <p id="report-status" class="report-status"></p>
+
+    <!-- GitHub token setup (shown when none stored) -->
+    <div id="gh-token-panel" class="gh-token-panel" style="display:none">
+      <p class="gh-token-hint">To file directly on GitHub, paste a personal access token with <b>public_repo</b> scope. Create one at <a href="https://github.com/settings/tokens/new?scopes=public_repo&description=Attentify" target="_blank">github.com/settings/tokens</a>. Stored locally &amp; synced to your browser only.</p>
+      <div class="gh-token-row">
+        <input id="gh-token-input" type="password" placeholder="ghp_… or github_pat_…" class="gh-token-input">
+        <button id="gh-token-save" class="pill-btn accent">Save</button>
+      </div>
+      <p id="gh-token-err" class="gh-token-err" style="display:none"></p>
+    </div>
+    <p id="gh-token-saved" class="gh-token-saved" style="display:none">✓ GitHub token saved — reports file directly to Issues. <a href="#" id="gh-token-remove">remove</a></p>
+  </div>
+
+</div>
+
+<!-- ══════════════════════ FIRST-RUN ONBOARDING ══════════════════════ -->
+<div id="onboarding" class="onboarding" style="display:none">
+  <div class="onboard-card">
+    <div class="onboard-title">Welcome 👋</div>
+    <p class="onboard-lede">Attentify strips the addictive feeds out of the sites you visit — automatically.</p>
+    <ul class="onboard-list">
+      <li><span class="ob-i">✓</span> Blocks YouTube Shorts, Reels, TikTok FYP &amp; more the moment a page loads — nothing to set up.</li>
+      <li><span class="ob-i">⏸</span> Hit the toggle at the top to pause blocking on any single site.</li>
+      <li><span class="ob-i">✦</span> Open the AI assistant to block anything custom in plain English.</li>
+    </ul>
+    <button id="onboard-dismiss" class="onboard-btn">Got it — start blocking</button>
+  </div>
 </div>
 
 <script src="popup.js"></script>
