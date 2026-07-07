@@ -6,9 +6,12 @@ workers_dev = true
 # Serve the API (and the GET /download/win installer route) on a custom domain.
 # Requires attentify.ai to be a zone in this Cloudflare account; on `wrangler deploy`
 # Wrangler provisions the DNS record + edge cert for api.attentify.ai automatically.
-[[routes]]
-pattern = "api.attentify.ai"
-custom_domain = true
+# DISABLED until attentify.ai is registered + added to Cloudflare — the domain does not
+# resolve yet, so this route fails `wrangler deploy`. Consumers use the workers.dev URL.
+# To re-enable the attentify.ai rebrand: register the domain, add the zone, then uncomment.
+# [[routes]]
+# pattern = "api.attentify.ai"
+# custom_domain = true
 
 # Non-secret config (override per-environment as needed)
 [vars]
