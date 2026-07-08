@@ -272,6 +272,17 @@ const Globe = createLucideIcon("Globe", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const History = createLucideIcon("History", [
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
+  ["path", { d: "M12 7v5l4 2", key: "1fdv2h" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Home$1 = createLucideIcon("Home", [
   ["path", { d: "m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", key: "y5dka4" }],
   ["polyline", { points: "9 22 9 12 15 12 15 22", key: "e2us08" }]
@@ -409,6 +420,16 @@ const RefreshCw = createLucideIcon("RefreshCw", [
   ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
   ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
   ["path", { d: "M8 16H3v5", key: "1cv678" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const RotateCcw = createLucideIcon("RotateCcw", [
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -5629,6 +5650,38 @@ function SettingsView({ store, onRefresh, onNavigate }) {
   const [licenseInput, setLicenseInput] = reactExports.useState("");
   const [licenseBusy, setLicenseBusy] = reactExports.useState(false);
   const [checkingOut, setCheckingOut] = reactExports.useState(false);
+  const [changeCount, setChangeCount] = reactExports.useState(null);
+  const [changelog, setChangelog] = reactExports.useState(null);
+  const [confirmRevert, setConfirmRevert] = reactExports.useState(false);
+  const [reverting, setReverting] = reactExports.useState(false);
+  const [revertResult, setRevertResult] = reactExports.useState(null);
+  const refreshSafety = () => {
+    api$3.getSafetyStatus().then((s) => setChangeCount(s.changeCount)).catch(() => {
+    });
+  };
+  const handleRevert = async () => {
+    setReverting(true);
+    try {
+      const res = await api$3.revertAllChanges();
+      setRevertResult(res);
+      setConfirmRevert(false);
+      refreshSafety();
+      onRefresh();
+    } finally {
+      setReverting(false);
+    }
+  };
+  const toggleLog = async () => {
+    if (changelog) {
+      setChangelog(null);
+      return;
+    }
+    try {
+      setChangelog(await api$3.getChangeLog(200));
+    } catch {
+      setChangelog([]);
+    }
+  };
   React.useEffect(() => {
     api$3.getApiKeyStatus().then((s) => setHasKey(s.hasKey));
     api$3.getUsage().then(setUsage).catch(() => {
@@ -5637,6 +5690,9 @@ function SettingsView({ store, onRefresh, onNavigate }) {
     });
     const off = api$3.onUsageChanged((u) => setUsage(u));
     return off;
+  }, []);
+  reactExports.useEffect(() => {
+    refreshSafety();
   }, []);
   const saveLicense = async () => {
     if (!licenseInput.trim()) return;
@@ -6074,6 +6130,136 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 )
               ] }),
               store.elevation !== "full" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-3", style: { color: "rgba(255,170,0,0.6)" }, children: "Run the app as Administrator once — it will register a Task Scheduler entry so future launches are automatically elevated without a UAC prompt." })
+            ]
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 11 }), label: "Safety & Recovery" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "p-4 rounded-lg",
+            style: { background: colors.cardBg, border: `1px solid ${colors.border}` },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 16, style: { color: "#00c8ff", marginTop: 2, flexShrink: 0 } }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Restore my system" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Undo everything Attentify has changed on this device — hosts-file blocks, firewall rules, browser DNS policies and the login startup entry — returning it to how it was before. Every change is recorded, so nothing is guessed at." }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: changeCount === null ? "" : `${changeCount} change${changeCount === 1 ? "" : "s"} recorded` })
+                ] })
+              ] }),
+              revertResult && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "div",
+                {
+                  className: "mt-3 p-3 rounded-md",
+                  style: {
+                    background: revertResult.ok ? "rgba(0,230,118,0.06)" : "rgba(255,170,0,0.06)",
+                    border: `1px solid ${revertResult.ok ? "rgba(0,230,118,0.25)" : "rgba(255,170,0,0.25)"}`
+                  },
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 mb-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle, { size: 11, style: { color: revertResult.ok ? "#00e676" : "#ffaa00" } }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold", style: { color: revertResult.ok ? "#00e676" : "#ffaa00" }, children: revertResult.ok ? "System restored" : "Restored with warnings" })
+                    ] }),
+                    revertResult.undone.map((u, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px]", style: { color: colors.textMuted }, children: [
+                      "· ",
+                      u
+                    ] }, i)),
+                    revertResult.errors.map((e, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px]", style: { color: "#ffaa00" }, children: [
+                      "! ",
+                      e
+                    ] }, `e${i}`))
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-3", children: [
+                !confirmRevert ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: () => {
+                      setRevertResult(null);
+                      setConfirmRevert(true);
+                    },
+                    className: "flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all hover:brightness-110",
+                    style: { background: "rgba(255,90,90,0.10)", border: "1px solid rgba(255,90,90,0.30)", color: "#ff7a7a" },
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 12 }),
+                      " Restore my system"
+                    ]
+                  }
+                ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "button",
+                    {
+                      onClick: handleRevert,
+                      disabled: reverting,
+                      className: "flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-semibold transition-all disabled:opacity-60",
+                      style: { background: "rgba(255,90,90,0.16)", border: "1px solid rgba(255,90,90,0.45)", color: "#ff7a7a" },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 12 }),
+                        " ",
+                        reverting ? "Restoring…" : "Yes, undo everything"
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => setConfirmRevert(false),
+                      disabled: reverting,
+                      className: "px-3 py-2 rounded-lg text-[11px] font-medium transition-all disabled:opacity-60",
+                      style: { background: colors.cardBg, border: `1px solid ${colors.border}`, color: colors.textMuted },
+                      children: "Cancel"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: toggleLog,
+                    className: "flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all hover:brightness-110 ml-auto",
+                    style: { background: "rgba(0,200,255,0.06)", border: "1px solid rgba(0,200,255,0.18)", color: "#7fd6ff" },
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(History, { size: 12 }),
+                      " ",
+                      changelog ? "Hide change log" : "View change log"
+                    ]
+                  }
+                )
+              ] }),
+              changelog && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "mt-3 rounded-md overflow-y-auto",
+                  style: { maxHeight: 220, background: "rgba(0,0,0,0.18)", border: `1px solid ${colors.border}` },
+                  children: changelog.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] p-3", style: { color: colors.textMuted }, children: "No changes recorded yet." }) : changelog.map((c, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "div",
+                    {
+                      className: "flex items-center gap-2 px-3 py-1.5",
+                      style: { borderBottom: i < changelog.length - 1 ? `1px solid ${colors.border}` : "none" },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "span",
+                          {
+                            className: "text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded",
+                            style: { background: "rgba(0,200,255,0.08)", color: "#7fd6ff", fontFamily: '"Share Tech Mono", monospace', flexShrink: 0, minWidth: 54, textAlign: "center" },
+                            children: c.category
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] flex-1 min-w-0 truncate", style: { color: colors.textPrimary }, children: [
+                          c.action,
+                          c.target ? `: ${c.target}` : "",
+                          c.detail && !c.target ? ` — ${c.detail}` : ""
+                        ] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: new Date(c.ts).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })
+                      ]
+                    },
+                    i
+                  ))
+                }
+              )
             ]
           }
         )
