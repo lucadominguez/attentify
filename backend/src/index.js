@@ -128,12 +128,21 @@ export async function router(request, env, store, ctx) {
       if (!env.DOWNLOADS) return err('downloads not configured', 503);
       const obj = await env.DOWNLOADS.get('Attentify-Setup.exe');
       if (!obj) return err('installer not found', 404);
+      // If the client already has the current build (matching ETag), tell it so
+      // instead of re-sending ~80 MB.
+      const inm = request.headers.get('if-none-match');
+      if (inm && inm === obj.httpEtag) {
+        return new Response(null, { status: 304, headers: { ...CORS, etag: obj.httpEtag, 'Cache-Control': 'no-cache' } });
+      }
       const headers = new Headers(CORS);
       obj.writeHttpMetadata(headers);
       headers.set('etag', obj.httpEtag);
       headers.set('Content-Type', 'application/vnd.microsoft.portable-executable');
       headers.set('Content-Disposition', 'attachment; filename="Attentify-Setup.exe"');
-      headers.set('Cache-Control', 'public, max-age=3600');
+      // The installer is replaced in place on every release, so the browser must
+      // revalidate every time rather than serving a stale cached copy for an hour.
+      // Paired with the ETag check above, an unchanged build still costs only a 304.
+      headers.set('Cache-Control', 'no-cache, must-revalidate');
       return new Response(obj.body, { headers });
     }
 

@@ -1,19 +1,19 @@
-import { r as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-Bcwv0s08.js";
-import { Z as Zap, E as Eye, B as Brain, A as AlertTriangle, S as Shield, X } from "./zap-Ce3wWFAx.js";
+import { r as reactExports, R as React, j as jsxRuntimeExports, c as client } from "./globals-ekWPP5uJ.js";
+import { Z as Zap, E as Eye, B as Brain, A as AlertTriangle, S as Shield, X } from "./zap-CBOnLhvY.js";
 const api = window.electronAPI;
 const DISMISS_AFTER = 12e3;
 const TYPE_CONFIG = {
-  "auto-block": { color: "#ff4444", dimColor: "rgba(255,68,68,0.12)", border: "rgba(255,68,68,0.35)", icon: Shield, label: "BLOCKED" },
-  "suggest": { color: "#ffaa00", dimColor: "rgba(255,170,0,0.10)", border: "rgba(255,170,0,0.35)", icon: AlertTriangle, label: "FLAGGED" },
-  "heuristic": { color: "#b388ff", dimColor: "rgba(179,136,255,0.10)", border: "rgba(179,136,255,0.35)", icon: Brain, label: "PATTERN" },
-  "guard": { color: "#00c8ff", dimColor: "rgba(0,200,255,0.08)", border: "rgba(0,200,255,0.30)", icon: Eye, label: "GUARD" },
-  "proactive": { color: "#00e676", dimColor: "rgba(0,230,118,0.08)", border: "rgba(0,230,118,0.30)", icon: Zap, label: "DAEMON" }
+  "auto-block": { color: "#f87171", dimColor: "rgba(248,113,113,0.12)", border: "rgba(248,113,113,0.35)", icon: Shield, label: "BLOCKED" },
+  "suggest": { color: "#fbbf24", dimColor: "rgba(251,191,36,0.10)", border: "rgba(251,191,36,0.35)", icon: AlertTriangle, label: "FLAGGED" },
+  "heuristic": { color: "#a78bfa", dimColor: "rgba(167,139,250,0.10)", border: "rgba(167,139,250,0.35)", icon: Brain, label: "PATTERN" },
+  "guard": { color: "#6366f1", dimColor: "rgba(99,102,241,0.08)", border: "rgba(99,102,241,0.30)", icon: Eye, label: "GUARD" },
+  "proactive": { color: "#34d399", dimColor: "rgba(52,211,153,0.08)", border: "rgba(52,211,153,0.30)", icon: Zap, label: "DAEMON" }
 };
 const ACTION_STYLE = {
-  block: { bg: "rgba(255,68,68,0.12)", border: "rgba(255,68,68,0.35)", color: "#ff6666" },
-  break: { bg: "rgba(255,170,0,0.10)", border: "rgba(255,170,0,0.30)", color: "#ffcc44" },
-  chat: { bg: "rgba(0,200,255,0.08)", border: "rgba(0,200,255,0.25)", color: "#00c8ff" },
-  "view-actions": { bg: "rgba(0,200,255,0.06)", border: "rgba(0,200,255,0.18)", color: "rgba(0,200,255,0.7)" },
+  block: { bg: "rgba(248,113,113,0.12)", border: "rgba(248,113,113,0.35)", color: "#f87171" },
+  break: { bg: "rgba(251,191,36,0.10)", border: "rgba(251,191,36,0.30)", color: "#fcd34d" },
+  chat: { bg: "rgba(99,102,241,0.08)", border: "rgba(99,102,241,0.25)", color: "#6366f1" },
+  "view-actions": { bg: "rgba(99,102,241,0.06)", border: "rgba(99,102,241,0.18)", color: "rgba(99,102,241,0.7)" },
   dismiss: { bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.35)" }
 };
 function OverlayCard() {
@@ -74,12 +74,16 @@ function OverlayCard() {
     const offUpdate = api.onOverlayUpdate((update) => {
       setNotif((prev) => prev?.id === update.id ? { ...prev, aiMessage: update.aiMessage } : prev);
     });
+    api.overlayReady?.();
     return () => {
       offShow();
       offUpdate();
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
+  React.useLayoutEffect(() => {
+    if (notif) api.overlayShown?.(notif.id);
+  }, [notif]);
   if (!notif) return null;
   const cfg = TYPE_CONFIG[notif.type] ?? TYPE_CONFIG["guard"];
   const Icon = cfg.icon;

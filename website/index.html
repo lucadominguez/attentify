@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3 29 16 16 29 3 16Z' fill='none' stroke='%2327d3ff' stroke-width='2.6' stroke-linejoin='round'/><path d='M16 10.5 21.5 16 16 21.5 10.5 16Z' fill='%2327d3ff'/></svg>">
+<link rel="icon" href="attentify-logo.png">
 </head>
 <body>
 
@@ -23,7 +23,7 @@
 <!-- ══════════════ NAV ══════════════ -->
 <header class="nav" id="nav">
   <a class="brand" href="#top">
-    <svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path class="lm-o" d="M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z"/><circle class="lm-o" cx="16" cy="15.6" r="4" fill="none"/><circle class="lm-i" cx="16" cy="15.6" r="1.9"/></svg>
+    <img class="logomark" src="attentify-logo.png" alt="Attentify" width="30" height="30" style="border-radius:7px;">
     <span class="brand-name">ATTENTIFY</span>
   </a>
   <nav class="nav-links">
@@ -263,13 +263,14 @@
     <div class="reveal">
       <span class="kicker">The desktop app</span>
       <h2>The extension cleans your browser. <span class="grad">The app runs the whole show.</span></h2>
-      <p class="lead">Add the optional Windows app and everything levels up. It's a focus engine for your
-         whole computer, and the browser just plugs right into it.</p>
+      <p class="lead">Add the Windows app and everything levels up. It's a chat-first focus engine for your
+         whole computer — the browser just plugs right into it.</p>
       <ul class="check-list">
-        <li><b>It works across your whole system.</b> Starts with a gentle nudge and moves up to a timed block if you keep pushing.</li>
-        <li><b>A real assistant, not just toggles.</b> Ask it to "block just Shorts, keep tutorials" and it writes the rule and syncs it for you.</li>
-        <li><b>One brain everywhere.</b> Your rules and what it's learned stay in sync across the browser and the desktop.</li>
-        <li><b>It stays out of your way.</b> Runs in the background and finds the extension on its own. Nothing to configure.</li>
+        <li><b>A real assistant, not just toggles.</b> Chat with it in plain English across saved conversations, attach a screenshot, and <b>revert to any earlier point</b> with one click if it goes too far.</li>
+        <li><b>It shows its work.</b> A <b>Logic</b> page lays out, as collapsible flow-charts, exactly why it thinks you're distracted — and you can feed it your own context to sharpen it.</li>
+        <li><b>Analytics you just describe.</b> Ask for "time on social by weekday" and it builds a live chart, table or graph. Plus RescueTime-style <b>timesheets</b> and auto-built <b>schedules</b>.</li>
+        <li><b>Cleans up your machine.</b> Deep Clean finds attention leaks and can <b>stop apps launching at startup</b>. It even imports your browser history so analytics work from day one.</li>
+        <li><b>Works with your browser, whatever it is.</b> Tracks the top 15 browsers natively — Chrome, Edge, Firefox, Brave, Arc, Opera, Vivaldi and more — no extension required. Light &amp; dark themes.</li>
       </ul>
       <div class="daemon-cta">
         <a class="btn btn-primary dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">Download for Windows</a>
@@ -427,7 +428,7 @@
     <details><summary>Do you see my browsing or send my data anywhere?</summary><p>No. Everything runs locally. There's no account and no tracking. If you turn on the AI intent engine you can run the offline version, or bring your own AI key. In that case only a tiny, anonymous summary goes to <em>your</em> AI provider, and never to us.</p></details>
     <details><summary>How is this different from Freedom or Cold Turkey?</summary><p>Those block whole sites or apps on a schedule. Attentify takes out only the addictive parts, like the Shorts shelf and the For-You feed, so you keep the useful web. And it adapts in real time to whether you're actually focused.</p></details>
     <details><summary>Do I need the desktop app?</summary><p>No. The browser extension works completely on its own. The Windows app adds system-wide nudges and an assistant that writes the rules for you, and the two sync automatically when both are running.</p></details>
-    <details><summary>Which browsers and sites are supported?</summary><p>Any Chromium browser (Chrome, Edge, Brave, Arc). It comes with built-in rules for YouTube, Instagram, TikTok, X, Reddit, Facebook and LinkedIn, and you can add any site just by asking in plain English.</p></details>
+    <details><summary>Which browsers and sites are supported?</summary><p>The desktop app tracks the <b>top 15 browsers natively</b> — Chrome, Edge, Firefox, Brave, Opera, Opera GX, Vivaldi, Safari, Arc, Tor, Chromium, Yandex, DuckDuckGo, Maxthon, UC and more — no extension needed. The surgical element-blocking <b>extension</b> runs on any Chromium browser (Chrome, Edge, Brave, Arc). Built-in rules cover YouTube, Instagram, TikTok, X, Reddit, Facebook and LinkedIn, and you can add any site just by asking in plain English.</p></details>
     <details><summary>Won't I just turn it off?</summary><p>That's exactly why it isn't all-or-nothing. Because it removes the junk and not the tools you need, there's far less reason to switch it off. And if you do start sneaking around it, Attentify notices and gently steps in.</p></details>
   </div>
 </section>
@@ -438,7 +439,7 @@
 <footer class="footer">
   <div class="foot-grid">
     <div class="foot-brand">
-      <div class="brand"><svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path class="lm-o" d="M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z"/><circle class="lm-o" cx="16" cy="15.6" r="4" fill="none"/><circle class="lm-i" cx="16" cy="15.6" r="1.9"/></svg><span class="brand-name">ATTENTIFY</span></div>
+      <div class="brand"><img class="logomark" src="attentify-logo.png" alt="Attentify" width="30" height="30" style="border-radius:7px;"><span class="brand-name">ATTENTIFY</span></div>
       <p>An anti-mind-virus for the attention economy. Local-first, open source, and quietly on your side.</p>
     </div>
     <div class="foot-col"><h4>Product</h4>
@@ -449,7 +450,7 @@
       <a href="#app-demo">App demo</a></div>
     <div class="foot-col"><h4>Open source</h4>
       <a href="https://github.com/lucadominguez/Browser-Daemon" target="_blank" rel="noopener">Extension repo</a>
-      <a href="https://github.com/lucadominguez/Daemon-Testing-Version-1" target="_blank" rel="noopener">Desktop app repo</a>
+      <a href="https://github.com/lucadominguez/productivity-daemon-V1" target="_blank" rel="noopener">Desktop app repo</a>
       <a href="#faq">FAQ</a></div>
   </div>
   <div class="foot-bottom">

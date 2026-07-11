@@ -922,12 +922,14 @@ async function llmJson(system, userText) {
   }
   if (daemonConnected && daemonPort) {
     try {
-      const r = await fetch(`http://127.0.0.1:${daemonPort}/inject/chat`, {
+      // Use the raw AI proxy — NOT /inject/chat, which persists to the app's chat
+      // history and runs the tool loop (this is an internal classifier call).
+      const r = await fetch(`http://127.0.0.1:${daemonPort}/ai/json`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `${system}\n\nINPUT:\n${userText}` }),
+        body: JSON.stringify({ system, input: userText }),
         signal: AbortSignal.timeout(15000),
       });
-      if (r.ok) return (await r.json()).content || '';
+      if (r.ok) return (await r.json()).text || '';
     } catch (_) {}
   }
   // Falls back to the bundled free key when the user hasn't set one — but only while
