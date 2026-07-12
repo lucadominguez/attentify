@@ -1,6 +1,6 @@
-import { r as reactExports, j as jsxRuntimeExports, a as createLucideIcon, R as React, c as client } from "./globals-ekWPP5uJ.js";
-import { S as Shield, B as Brain, Z as Zap, A as AlertTriangle, X, E as Eye } from "./zap-CBOnLhvY.js";
-import { C as Clock, a as Coffee } from "./coffee-mqnItU-o.js";
+import { r as reactExports, j as jsxRuntimeExports, a as createLucideIcon, R as React, c as client } from "./globals-DSWNc6k-.js";
+import { S as Shield, B as Brain, Z as Zap, A as AlertTriangle, X, E as Eye } from "./zap-C62FHR_-.js";
+import { C as Clock, a as Coffee } from "./coffee-DLH0B9O_.js";
 const DARK = {
   rootBg: "#020912",
   mainBg: "#030c1a",
@@ -296,27 +296,6 @@ const Download = createLucideIcon("Download", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const EyeOff = createLucideIcon("EyeOff", [
-  ["path", { d: "M9.88 9.88a3 3 0 1 0 4.24 4.24", key: "1jxqfv" }],
-  [
-    "path",
-    {
-      d: "M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68",
-      key: "9wicm4"
-    }
-  ],
-  [
-    "path",
-    { d: "M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61", key: "1jreej" }
-  ],
-  ["line", { x1: "2", x2: "22", y1: "2", y2: "22", key: "a6p6uj" }]
-]);
-/**
- * @license lucide-react v0.312.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const Globe = createLucideIcon("Globe", [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
@@ -354,18 +333,6 @@ const Key = createLucideIcon("Key", [
   ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }],
   ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
   ["path", { d: "m15.5 7.5 3 3L22 7l-3-3", key: "1rn1fs" }]
-]);
-/**
- * @license lucide-react v0.312.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const LayoutDashboard = createLucideIcon("LayoutDashboard", [
-  ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
-  ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
-  ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
-  ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -734,10 +701,9 @@ function BrandMark({
     }
   );
 }
-const api$g = window.electronAPI;
+const api$f = window.electronAPI;
 const mainNav = [
   { id: "home", label: "Assistant", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 15 }), desc: "Chat with Attentify — block sites, start focus, ask about your day" },
-  { id: "dashboard", label: "Dashboard", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(LayoutDashboard, { size: 15 }), desc: "Today's focus at a glance" },
   { id: "analytics", label: "Analytics", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 15 }), desc: "Charts, patterns, alerts — and describe any custom analytics you want" },
   { id: "logic", label: "Logic", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 15 }), desc: "How Attentify reasons about you — and add your own context" },
   { id: "timesheets", label: "Timesheets", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 15 }), desc: "Time logged per app and category, day by day" },
@@ -759,11 +725,12 @@ function Sidebar({
   alertCount = 0,
   pendingActionCount = 0
 }) {
+  const { colors } = useTheme();
   const [relaunching, setRelaunching] = reactExports.useState(false);
   const handleRelaunch = async () => {
     setRelaunching(true);
     try {
-      await api$g.relaunchAsAdmin();
+      await api$f.relaunchAsAdmin();
     } catch {
       setRelaunching(false);
     }
@@ -782,7 +749,7 @@ function Sidebar({
             "span",
             {
               className: "flex-shrink-0",
-              style: { color: isActive ? "#6366f1" : "#4a6a86", transition: "color 0.15s" },
+              style: { color: isActive ? colors.accent : colors.textMuted, transition: "color 0.15s" },
               children: item.icon
             }
           ),
@@ -813,22 +780,23 @@ function Sidebar({
       className: "flex flex-col flex-shrink-0 h-full overflow-hidden",
       style: {
         width: 220,
-        background: "linear-gradient(180deg, #020a16 0%, #030d1c 100%)",
-        borderRight: "1px solid rgba(99,102,241,0.1)"
+        background: colors.panelBg,
+        borderRight: `1px solid ${colors.border}`,
+        transition: "background 0.2s ease"
       },
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
             className: "flex items-center gap-2.5 px-4 flex-shrink-0",
-            style: { height: 56, borderBottom: "1px solid rgba(99,102,241,0.08)" },
+            style: { height: 56, borderBottom: `1px solid ${colors.border}` },
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 relative", style: { width: 26, height: 26 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrandMark, { size: 26 }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-w-0 flex-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "div",
                 {
                   className: "text-[15px] font-semibold leading-none",
-                  style: { color: "#e8f4ff", letterSpacing: "0.01em" },
+                  style: { color: colors.textPrimary, letterSpacing: "0.01em" },
                   children: "Attentify"
                 }
               ) }),
@@ -865,7 +833,7 @@ function Sidebar({
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1 h-1 rounded-full", style: { background: "#fbbf24" } }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold", style: { color: "#fbbf24" }, children: "Blocking disabled" })
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-relaxed mb-2", style: { color: "#6a89a6" }, children: "Admin rights are required for site blocking." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-relaxed mb-2", style: { color: colors.textMuted }, children: "Admin rights are required for site blocking." }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
                 {
@@ -873,9 +841,9 @@ function Sidebar({
                   disabled: relaunching,
                   className: "w-full flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-medium rounded-md transition-all disabled:opacity-60",
                   style: {
-                    background: "rgba(99,102,241,0.10)",
-                    color: "#6366f1",
-                    border: "1px solid rgba(99,102,241,0.28)"
+                    background: colors.accentBg,
+                    color: colors.accent,
+                    border: `1px solid ${colors.borderMid}`
                   },
                   children: relaunching ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 11, className: "animate-spin" }),
@@ -894,20 +862,20 @@ function Sidebar({
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 mb-1.5 flex items-center gap-2", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hud-label", children: "Utilities" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: "rgba(99,102,241,0.10)" } })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } })
             ] }),
             utilityNav.map(renderItem)
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 p-3", style: { borderTop: "1px solid rgba(99,102,241,0.08)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 p-3", style: { borderTop: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "button",
           {
             onClick: () => onNavigate("home"),
             className: "w-full flex items-center justify-center gap-2 py-2 rounded-lg text-[12px] font-medium transition-all hover:brightness-110",
             style: {
-              background: "rgba(99,102,241,0.08)",
-              border: "1px solid rgba(99,102,241,0.22)",
-              color: "#a5b4fc"
+              background: colors.accentBg,
+              border: `1px solid ${colors.borderMid}`,
+              color: colors.accent
             },
             title: "Open the Attentify assistant",
             children: [
@@ -917,382 +885,6 @@ function Sidebar({
           }
         ) })
       ]
-    }
-  );
-}
-const api$f = window.electronAPI;
-const MIN_TRACKED_MS = 10 * 60 * 1e3;
-function fmtMs(ms) {
-  const h = Math.floor(ms / 36e5);
-  const m = Math.floor(ms % 36e5 / 6e4);
-  if (h > 0 && m > 0) return `${h}h ${m}m`;
-  if (h > 0) return `${h}h`;
-  if (m > 0) return `${m}m`;
-  return "0m";
-}
-function ScoreRing({ score, color, size = 96 }) {
-  const { colors } = useTheme();
-  const stroke = 8;
-  const r = (size - stroke) / 2;
-  const circ = 2 * Math.PI * r;
-  const off = circ * (1 - score / 100);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: size, height: size, style: { flexShrink: 0 }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: size / 2, cy: size / 2, r, fill: "none", stroke: colors.border, strokeWidth: stroke }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "circle",
-      {
-        cx: size / 2,
-        cy: size / 2,
-        r,
-        fill: "none",
-        stroke: color,
-        strokeWidth: stroke,
-        strokeDasharray: circ,
-        strokeDashoffset: off,
-        strokeLinecap: "round",
-        transform: `rotate(-90 ${size / 2} ${size / 2})`,
-        style: { transition: "stroke-dashoffset 0.7s ease" }
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: "50%", y: "48%", textAnchor: "middle", dominantBaseline: "middle", className: "data-value", style: { fontSize: 26, fontWeight: 700, fill: color }, children: score }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: "50%", y: "66%", textAnchor: "middle", dominantBaseline: "middle", style: { fontSize: 9, fill: colors.textMuted, letterSpacing: "0.08em" }, children: "SCORE" })
-  ] });
-}
-function Home({ store, onNavigate, onScanComplete, onRefresh, latestAlert, onChatWith }) {
-  const { colors } = useTheme();
-  const [stats, setStats] = reactExports.useState(null);
-  const [hasApiKey, setHasApiKey] = reactExports.useState(null);
-  const [showApiKeyModal, setShowApiKeyModal] = reactExports.useState(false);
-  const [relaunching, setRelaunching] = reactExports.useState(false);
-  const [scanning, setScanning] = reactExports.useState(false);
-  const activeSession = store.sessions.find((s) => s.active);
-  const isProtected = store.elevation === "full";
-  const loadStats = reactExports.useCallback(() => {
-    api$f.getAnalytics().then((data) => {
-      const sessions = data.recentSessions ?? [];
-      const cutoff = Date.now() - 8 * 36e5;
-      const today2 = sessions.filter((s) => s.startTime > cutoff);
-      const totalMs = today2.reduce((s, r) => s + r.duration, 0);
-      const hours = totalMs / 36e5;
-      const rate = hours > 0.05 ? Math.round(today2.length / hours) : 0;
-      const byApp = /* @__PURE__ */ new Map();
-      for (const s of sessions.filter((s2) => s2.isDistraction))
-        byApp.set(s.app, (byApp.get(s.app) ?? 0) + s.duration);
-      const topDrains = [...byApp.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([app, ms]) => ({ app, ms }));
-      setStats({
-        focusScore: data.today.focusScore,
-        focusedTime: data.today.focusedTime,
-        distractedTime: data.today.distractedTime,
-        blockEvents: data.today.blockEvents,
-        switchRate: rate,
-        topDrains
-      });
-    }).catch(() => {
-    });
-  }, []);
-  reactExports.useEffect(() => {
-    loadStats();
-  }, [loadStats]);
-  reactExports.useEffect(() => {
-    const off = api$f.onStoreRefresh?.(() => loadStats());
-    return () => {
-      off?.();
-    };
-  }, [loadStats]);
-  reactExports.useEffect(() => {
-    api$f.getApiKeyStatus().then(({ hasKey }) => setHasApiKey(hasKey)).catch(() => setHasApiKey(false));
-  }, []);
-  const trackedMs = (stats?.focusedTime ?? 0) + (stats?.distractedTime ?? 0);
-  const hasData = trackedMs >= MIN_TRACKED_MS;
-  const score = Math.round(stats?.focusScore ?? 0);
-  const scoreColor = score >= 70 ? colors.positive : score >= 40 ? colors.warning : colors.negative;
-  const focusedPct = trackedMs > 0 ? Math.round((stats?.focusedTime ?? 0) / trackedMs * 100) : 0;
-  const handleRescan = async () => {
-    setScanning(true);
-    try {
-      const results = await api$f.runScan();
-      onScanComplete(results);
-    } catch {
-    }
-    setScanning(false);
-  };
-  const today = (/* @__PURE__ */ new Date()).toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
-  const Kpi = ({ label, value, sub, color }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-3.5", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: label }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[20px] font-semibold leading-tight mt-1 data-value truncate", title: value, style: { color: color ?? colors.textPrimary }, children: value }),
-    sub && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textDim }, children: sub })
-  ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-full overflow-y-auto", children: [
-    showApiKeyModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
-      ApiKeyModal,
-      {
-        onSave: async (key) => {
-          await api$f.setApiKey(key);
-          setHasApiKey(true);
-          setShowApiKeyModal(false);
-        },
-        onClose: () => setShowApiKeyModal(false)
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto px-6 py-6 flex flex-col gap-5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-end justify-between gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[19px] font-semibold", style: { color: colors.textPrimary }, children: "Dashboard" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] mt-0.5", style: { color: colors.textMuted }, children: today })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "div",
-            {
-              className: "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium",
-              style: {
-                background: isProtected ? colors.positiveBg : "transparent",
-                border: `1px solid ${isProtected ? "rgba(52,211,153,0.3)" : colors.border}`,
-                color: isProtected ? colors.positive : colors.textMuted
-              },
-              title: isProtected ? "Full protection active" : "Limited — admin rights needed",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 12 }),
-                " ",
-                isProtected ? "Protected" : "Limited"
-              ]
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: loadStats, className: "p-1.5 rounded-lg transition-colors", style: { border: `1px solid ${colors.border}`, color: colors.textMuted }, title: "Refresh", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 13 }) })
-        ] })
-      ] }),
-      (store.elevation === "soft" || store.elevation === "unknown") && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl", style: { background: colors.warningBg, border: "1px solid rgba(251,191,36,0.25)" }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 min-w-0", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { size: 14, style: { color: colors.warning, flexShrink: 0 } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px]", style: { color: colors.textSecondary }, children: "Site blocking is off — it needs administrator rights." })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: async () => {
-              setRelaunching(true);
-              try {
-                await api$f.relaunchAsAdmin();
-              } catch {
-                setRelaunching(false);
-              }
-            },
-            disabled: relaunching,
-            className: "flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg transition-all disabled:opacity-60",
-            style: { background: colors.accentBg, color: colors.accent, border: `1px solid ${colors.borderMid}` },
-            children: relaunching ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 12, className: "animate-spin" }),
-              " Relaunching…"
-            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 12 }),
-              " Enable"
-            ] })
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-2xl p-5", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: hasData ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-6", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ScoreRing, { score, color: scoreColor }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] leading-relaxed mb-3", style: { color: colors.textSecondary }, children: score >= 70 ? `Strong focus — ${fmtMs(stats.focusedTime)} of deep work across ${fmtMs(trackedMs)} tracked today.` : score >= 40 ? `Mixed focus — ${fmtMs(stats.focusedTime)} focused, ${fmtMs(stats.distractedTime)} lost to distractions.` : `Fragmented — only ${fmtMs(stats.focusedTime)} focused out of ${fmtMs(trackedMs)} tracked.` }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-2.5 rounded-full overflow-hidden flex", style: { background: colors.negative }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: `${focusedPct}%`, background: colors.positive, transition: "width 0.6s ease" } }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4 mt-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1.5 text-[11px]", style: { color: colors.textMuted }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2 h-2 rounded-sm", style: { background: colors.positive } }),
-              " Focused ",
-              fmtMs(stats.focusedTime)
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1.5 text-[11px]", style: { color: colors.textMuted }, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2 h-2 rounded-sm", style: { background: colors.negative } }),
-              " Distracted ",
-              fmtMs(stats.distractedTime)
-            ] })
-          ] })
-        ] })
-      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0", style: { background: colors.accentBg, border: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { size: 24, style: { color: colors.accent } }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[15px] font-medium", style: { color: colors.textPrimary }, children: "Building your picture" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] mt-0.5", style: { color: colors.textMuted }, children: "Your focus score appears after about 10 minutes of tracked activity." })
-        ] })
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Kpi, { label: "Focused", value: fmtMs(stats?.focusedTime ?? 0), sub: hasData ? `of ${fmtMs(trackedMs)}` : "today", color: colors.positive }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Kpi, { label: "Distracted", value: fmtMs(stats?.distractedTime ?? 0), sub: "today", color: (stats?.distractedTime ?? 0) > 0 ? colors.negative : colors.textMuted }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Kpi, { label: "Switches / hr", value: hasData && stats ? `${stats.switchRate}` : "—", sub: hasData ? stats.switchRate < 20 ? "steady" : "fragmented" : "today", color: !hasData ? colors.textMuted : stats.switchRate < 20 ? colors.positive : stats.switchRate < 60 ? colors.warning : colors.negative }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Kpi, { label: "Blocked", value: `${stats?.blockEvents ?? store.blockEventCount ?? 0}`, sub: "attempts today", color: colors.accent })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-4", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium mb-2.5", style: { color: colors.textMuted }, children: "Top distractions today" }),
-          stats && stats.topDrains.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: stats.topDrains.map((d) => {
-            const max = stats.topDrains[0].ms || 1;
-            return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] w-28 truncate", style: { color: colors.textSecondary }, children: d.app }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-2 rounded-full overflow-hidden", style: { background: colors.border }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full rounded-full", style: { width: `${d.ms / max * 100}%`, background: colors.negative, opacity: 0.85 } }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] w-12 text-right data-value", style: { color: colors.textPrimary }, children: fmtMs(d.ms) })
-            ] }, d.app);
-          }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px]", style: { color: colors.textDim }, children: "No distractions detected yet — nice." })
-        ] }),
-        latestAlert && !latestAlert.dismissed ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-4 flex flex-col", style: { background: colors.warningBg, border: "1px solid rgba(251,191,36,0.25)" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 15, style: { color: colors.warning, flexShrink: 0, marginTop: 1 } }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: latestAlert.title }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: latestAlert.description })
-            ] })
-          ] }),
-          onChatWith && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              onClick: () => onChatWith(`About the "${latestAlert.title}" pattern — ${latestAlert.description}. What should I do?`),
-              className: "mt-auto pt-2 flex items-center gap-1.5 text-[11px] font-medium self-start",
-              style: { color: colors.accent },
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 12 }),
-                " Ask Attentify"
-              ]
-            }
-          )
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-4", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium mb-2.5", style: { color: colors.textMuted }, children: "Attention" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px]", style: { color: colors.textDim }, children: "No attention alerts right now. Keep it up." })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-2.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(QuickAction, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 15 }), label: activeSession ? "Session running" : "Deep Focus", onClick: () => onNavigate("deep-focus") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(QuickAction, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 15 }), label: "Ask Attentify", onClick: () => onNavigate("home") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(QuickAction, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 15 }), label: "Analytics", onClick: () => onNavigate("analytics") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(QuickAction, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 15 }), label: "Timesheets", onClick: () => onNavigate("timesheets") })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2.5", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: () => {
-              if (!scanning) void handleRescan();
-            },
-            className: "flex items-center gap-1.5 px-3 py-1.5 text-[12px] rounded-lg transition-colors",
-            style: { background: colors.cardBg, border: `1px solid ${colors.border}`, color: colors.textSecondary },
-            children: scanning ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 12, className: "animate-spin" }),
-              " Scanning…"
-            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ScanLine, { size: 12 }),
-              " Run a device scan"
-            ] })
-          }
-        ),
-        hasApiKey === false && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            onClick: () => setShowApiKeyModal(true),
-            className: "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] transition-colors",
-            style: { background: colors.accentBg, border: `1px solid ${colors.border}`, color: colors.textSecondary },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 12, style: { color: colors.accent } }),
-              " Add your own AI key",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 12, style: { color: colors.textMuted } })
-            ]
-          }
-        )
-      ] })
-    ] })
-  ] });
-}
-function QuickAction({ icon, label, onClick }) {
-  const { colors } = useTheme();
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "button",
-    {
-      onClick,
-      className: "flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-left transition-all hover:brightness-110",
-      style: { background: colors.cardBg, border: `1px solid ${colors.border}` },
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: colors.accent }, children: icon }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12.5px] font-medium truncate", style: { color: colors.textPrimary }, children: label })
-      ]
-    }
-  );
-}
-function ApiKeyModal({ onSave, onClose }) {
-  const [key, setKey] = reactExports.useState("");
-  const [show, setShow] = reactExports.useState(false);
-  const [saving, setSaving] = reactExports.useState(false);
-  const [error, setError] = reactExports.useState("");
-  const { colors } = useTheme();
-  const handleSave = async () => {
-    const trimmed = key.trim();
-    if (!trimmed.startsWith("sk-ant-") && !trimmed.startsWith("sk-or-")) {
-      setError("Key must start with sk-ant- (Anthropic) or sk-or- (OpenRouter)");
-      return;
-    }
-    setSaving(true);
-    try {
-      await onSave(key.trim());
-    } catch {
-      setError("Failed to save key");
-      setSaving(false);
-    }
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      className: "fixed inset-0 z-50 flex items-center justify-center",
-      style: { background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" },
-      onClick: (e) => {
-        if (e.target === e.currentTarget) onClose();
-      },
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-md mx-4 p-6 relative rounded-2xl", style: { background: colors.cardBg, border: `1px solid ${colors.borderMid}` }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: "absolute top-4 right-4 opacity-50 hover:opacity-100", style: { color: colors.textMuted }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 16 }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0", style: { background: colors.accentBg, border: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 16, style: { color: colors.accent } }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Add your API key" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px]", style: { color: colors.textMuted }, children: "Anthropic or OpenRouter" })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[12px] mb-4 leading-relaxed", style: { color: colors.textSecondary }, children: [
-          "Your key is encrypted on this device and never leaves your machine. Get an Anthropic key at",
-          " ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: colors.accent }, children: "console.anthropic.com" }),
-          ", or an OpenRouter key at",
-          " ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: colors.accent }, children: "openrouter.ai/keys" }),
-          "."
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-3 py-2.5 mb-1 rounded-lg", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "input",
-            {
-              type: show ? "text" : "password",
-              placeholder: "sk-ant-api03-… or sk-or-v1-…",
-              value: key,
-              onChange: (e) => {
-                setKey(e.target.value);
-                setError("");
-              },
-              onKeyDown: (e) => {
-                if (e.key === "Enter") handleSave();
-              },
-              className: "flex-1 bg-transparent text-[13px] outline-none",
-              style: { color: colors.textPrimary, caretColor: colors.accent, fontFamily: "monospace" },
-              autoFocus: true
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShow((v) => !v), className: "opacity-50 hover:opacity-100 flex-shrink-0", style: { color: colors.textMuted }, children: show ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 13 }) })
-        ] }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mb-2", style: { color: colors.negative }, children: error }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "button",
-          {
-            onClick: handleSave,
-            disabled: !key.trim() || saving,
-            className: "w-full py-2.5 mt-3 text-[13px] font-medium rounded-lg transition-all disabled:opacity-40",
-            style: { background: colors.accentBg, border: `1px solid ${colors.borderMid}`, color: colors.accent },
-            children: saving ? "Saving…" : "Save & activate"
-          }
-        )
-      ] })
     }
   );
 }
@@ -8019,7 +7611,7 @@ function App() {
   const handleNavigate = reactExports.useCallback((v) => {
     setView(v);
   }, []);
-  const handleScanComplete = reactExports.useCallback((results) => {
+  reactExports.useCallback((results) => {
     setScanResults(results);
     setView("focus-scan-results");
     api.getStore().then(setStore);
@@ -8114,16 +7706,11 @@ function App() {
   const activeSession = store.sessions.find((s) => s.active);
   const activeAlerts = heuristicAlerts.filter((a) => !a.dismissed);
   const activeAlertCount = activeAlerts.length;
-  const latestAlert = activeAlerts[activeAlerts.length - 1] ?? null;
+  activeAlerts[activeAlerts.length - 1] ?? null;
   const renderView = () => {
     switch (view) {
       case "home":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(ChatPanel, { variant: "full", onRefresh: refreshStore, initialMessage: chatPreFill }, "home-chat");
-      case "dashboard":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(Home, { store, onNavigate: handleNavigate, onScanComplete: handleScanComplete, onRefresh: refreshStore, latestAlert, onChatWith: (msg) => {
-          setChatPreFill(msg);
-          setChatOpen(true);
-        } });
       case "timesheets":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Timesheets, { onChatWith: (msg) => {
           setChatPreFill(msg);
@@ -8184,8 +7771,9 @@ function App() {
         className: "titlebar-drag flex items-center justify-between px-4 flex-shrink-0",
         style: {
           height: 32,
-          background: "rgba(2,9,18,0.98)",
-          borderBottom: "1px solid rgba(99,102,241,0.1)"
+          background: colors.panelBg,
+          borderBottom: `1px solid ${colors.border}`,
+          transition: "background 0.2s ease"
         },
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [

@@ -628,20 +628,12 @@ video {
   right: 0.625rem;
 }
 
-.right-4{
-  right: 1rem;
-}
-
 .top-0{
   top: 0px;
 }
 
 .top-2\.5{
   top: 0.625rem;
-}
-
-.top-4{
-  top: 1rem;
 }
 
 .top-full{
@@ -671,11 +663,6 @@ video {
 .mx-3{
   margin-left: 0.75rem;
   margin-right: 0.75rem;
-}
-
-.mx-4{
-  margin-left: 1rem;
-  margin-right: 1rem;
 }
 
 .mx-6{
@@ -808,10 +795,6 @@ video {
 
 .mt-6{
   margin-top: 1.5rem;
-}
-
-.mt-auto{
-  margin-top: auto;
 }
 
 .block{
@@ -1050,10 +1033,6 @@ video {
   max-width: 48rem;
 }
 
-.max-w-4xl{
-  max-width: 56rem;
-}
-
 .max-w-5xl{
   max-width: 64rem;
 }
@@ -1104,10 +1083,6 @@ video {
 
 .max-w-lg{
   max-width: 32rem;
-}
-
-.max-w-md{
-  max-width: 28rem;
 }
 
 .max-w-sm{
@@ -1393,10 +1368,6 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(1px * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1px * var(--tw-space-y-reverse));
-}
-
-.self-start{
-  align-self: flex-start;
 }
 
 .overflow-hidden{
@@ -1837,14 +1808,6 @@ video {
 
 .text-\[16px\]{
   font-size: 16px;
-}
-
-.text-\[19px\]{
-  font-size: 19px;
-}
-
-.text-\[20px\]{
-  font-size: 20px;
 }
 
 .text-\[22px\]{
@@ -2340,7 +2303,7 @@ html.light .bg-grid {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
-/* ── Sidebar items — always dark (sidebar stays dark in both themes) ─────────── */
+/* ── Sidebar items — theme-aware (adapt to light + dark) ─────────────────────── */
 
 .sidebar-item{
   display: flex;
@@ -2357,19 +2320,19 @@ html.light .bg-grid {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
   font-size: 13px;
-  color: #6a89a6;
+  color: var(--text-secondary);
   letter-spacing: 0.01em;
   position: relative;
 }
 
 .sidebar-item:hover {
-  background: rgba(99, 102, 241, 0.05);
-  color: #a0cce8;
+  background: var(--accent-bg);
+  color: var(--text-primary);
 }
 
 .sidebar-item.active {
-  background: rgba(99, 102, 241, 0.07);
-  color: #e8f4ff;
+  background: var(--accent-bg);
+  color: var(--text-primary);
 }
 
 /* Glowing left bar on active */
@@ -2379,8 +2342,8 @@ html.light .bg-grid {
   position: absolute;
   left: 0; top: 4px; bottom: 4px;
   width: 2px;
-  background: #6366f1;
-  box-shadow: 0 0 8px #6366f1, 0 0 2px #6366f1;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow), 0 0 2px var(--accent);
   border-radius: 0 1px 1px 0;
 }
 

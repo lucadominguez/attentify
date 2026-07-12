@@ -1,5 +1,5 @@
-import { a as createLucideIcon, r as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-ekWPP5uJ.js";
-import { a as Coffee, C as Clock } from "./coffee-mqnItU-o.js";
+import { a as createLucideIcon, r as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-DSWNc6k-.js";
+import { a as Coffee, C as Clock } from "./coffee-DLH0B9O_.js";
 /**
  * @license lucide-react v0.312.0 - ISC
  *
