@@ -5585,6 +5585,11 @@ function SettingsView({ store, onRefresh, onNavigate }) {
   const [licenseInput, setLicenseInput] = reactExports.useState("");
   const [licenseBusy, setLicenseBusy] = reactExports.useState(false);
   const [checkingOut, setCheckingOut] = reactExports.useState(false);
+  const [version, setVersion] = reactExports.useState("");
+  reactExports.useEffect(() => {
+    api$5.getAppVersion?.().then(setVersion).catch(() => {
+    });
+  }, []);
   const [changeCount, setChangeCount] = reactExports.useState(null);
   const [changelog, setChangelog] = reactExports.useState(null);
   const [confirmRevert, setConfirmRevert] = reactExports.useState(false);
@@ -5720,7 +5725,11 @@ function SettingsView({ store, onRefresh, onNavigate }) {
               )
             ]
           }
-        )
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] mt-2 text-right", style: { color: colors.textDim }, children: [
+          "Attentify",
+          version ? ` v${version}` : ""
+        ] })
       ] }),
       onNavigate && /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { size: 11 }), label: "Extra Modules" }),
