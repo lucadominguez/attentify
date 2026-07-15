@@ -244,3 +244,80 @@ async function hmac(data, secret) {
   const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data));
   return [...new Uint8Array(sig)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
+// ── Social sign-in (OAuth) ───────────────────────────────────────────────────────
+// Raw-response call so we can inspect redirect status + Location.
+const callRaw = (store, method, path, env = ENV, opts) => router(req(method, path, opts), env, store);
+const GENV = { ...ENV, GOOGLE_CLIENT_ID: 'gid', GOOGLE_CLIENT_SECRET: 'gsecret' };
+
+test('providers endpoint reflects configured credentials', async () => {
+  const s = new FakeStore();
+  const none = await call(s, 'GET', '/v1/auth/providers');
+  assert.deepEqual(none.body.providers, []);
+  const res = await callRaw(s, 'GET', '/v1/auth/providers', GENV);
+  const body = await res.json();
+  assert.deepEqual(body.providers, ['google']);
+});
+
+test('oauth start redirects to the provider with a signed state', async () => {
+  const s = new FakeStore();
+  const cb = 'http://127.0.0.1:53112/cb';
+  const res = await callRaw(s, 'GET', `/v1/auth/oauth/google/start?cb=${encodeURIComponent(cb)}&nonce=abc`, GENV);
+  assert.equal(res.status, 302);
+  const loc = new URL(res.headers.get('location'));
+  assert.equal(loc.origin + loc.pathname, 'https://accounts.google.com/o/oauth2/v2/auth');
+  assert.equal(loc.searchParams.get('client_id'), 'gid');
+  assert.match(loc.searchParams.get('redirect_uri'), /\/v1\/auth\/oauth\/google\/callback$/);
+  assert.ok(loc.searchParams.get('state').includes('.'), 'state is signed');
+});
+
+test('oauth start rejects a non-loopback callback', async () => {
+  const s = new FakeStore();
+  const res = await callRaw(s, 'GET', '/v1/auth/oauth/google/start?cb=https://evil.com/cb&nonce=abc', GENV);
+  assert.equal(res.status, 400);
+});
+
+test('oauth start 404s for an unconfigured provider', async () => {
+  const s = new FakeStore();
+  const res = await callRaw(s, 'GET', '/v1/auth/oauth/google/start?cb=http://127.0.0.1:5/cb&nonce=a', ENV);
+  assert.equal(res.status, 404);
+});
+
+test('oauth callback exchanges the code, upserts the user, and returns the token to loopback', async () => {
+  const s = new FakeStore();
+  const cb = 'http://127.0.0.1:53112/cb';
+  // Drive a real start to get a valid signed state.
+  const start = await callRaw(s, 'GET', `/v1/auth/oauth/google/start?cb=${encodeURIComponent(cb)}&nonce=xyz`, GENV);
+  const state = new URL(start.headers.get('location')).searchParams.get('state');
+
+  // Mock Google's token + userinfo endpoints for this test only.
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    url = String(url);
+    if (url === 'https://oauth2.googleapis.com/token') return jres({ access_token: 'gat_1', token_type: 'Bearer' });
+    if (url === 'https://openidconnect.googleapis.com/v1/userinfo') return jres({ email: 'Social@Example.com', email_verified: true });
+    return realFetch(url, init);
+  };
+  try {
+    const res = await callRaw(s, 'GET', `/v1/auth/oauth/google/callback?code=CODE&state=${encodeURIComponent(state)}`, GENV);
+    assert.equal(res.status, 302);
+    const loc = new URL(res.headers.get('location'));
+    assert.equal(loc.origin + loc.pathname, cb);
+    assert.equal(loc.searchParams.get('nonce'), 'xyz');
+    const token = loc.searchParams.get('token');
+    assert.ok(token && token.startsWith('ses_'), 'a session token is returned');
+    // The user was created (email lowercased) and the session resolves to them.
+    const sess = await call(s, 'GET', '/v1/auth/session', bearer(token));
+    assert.equal(sess.status, 200);
+    assert.equal(sess.body.user.email, 'social@example.com');
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
+
+test('oauth callback with a tampered state shows the close page (no redirect)', async () => {
+  const s = new FakeStore();
+  const res = await callRaw(s, 'GET', '/v1/auth/oauth/google/callback?code=C&state=forged.deadbeef', GENV);
+  assert.equal(res.status, 200);
+  assert.match(res.headers.get('content-type'), /text\/html/);
+});

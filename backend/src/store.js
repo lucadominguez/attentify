@@ -107,4 +107,57 @@ export class D1Store {
   async markEvent(id) {
     await this.db.prepare('INSERT OR IGNORE INTO processed_events (id,ts) VALUES (?,?)').bind(id, Date.now()).run();
   }
+
+  // ── Diagnostics: issues + usage ──────────────────────────────────────────────
+  async insertIssue(i) {
+    await this.db.prepare(
+      `INSERT OR REPLACE INTO issues (id,install_id,version,ts,kind,category,severity,title,description,context,status,received_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`
+    ).bind(
+      i.id, i.install_id ?? null, i.version ?? null, i.ts || Date.now(),
+      i.kind || 'bug_manual', i.category ?? null, i.severity ?? 'medium',
+      (i.title || '').slice(0, 300), (i.description || '').slice(0, 6000),
+      i.context != null ? JSON.stringify(i.context).slice(0, 40000) : null,
+      'open', Date.now()
+    ).run();
+  }
+  async listIssues({ limit = 200, kind } = {}) {
+    const r = kind
+      ? await this.db.prepare('SELECT * FROM issues WHERE kind = ? ORDER BY ts DESC LIMIT ?').bind(kind, limit).all()
+      : await this.db.prepare('SELECT * FROM issues ORDER BY ts DESC LIMIT ?').bind(limit).all();
+    return (r.results || []).map(row => ({ ...row, context: row.context ? safeParse(row.context) : null }));
+  }
+  async upsertUsage(installId, stat) {
+    await this.db.prepare(
+      `INSERT INTO usage (install_id,day,model,input_tokens,output_tokens,cost_usd,calls,updated_at)
+       VALUES (?,?,?,?,?,?,?,?)
+       ON CONFLICT(install_id,day,model) DO UPDATE SET
+         input_tokens = excluded.input_tokens,
+         output_tokens = excluded.output_tokens,
+         cost_usd = excluded.cost_usd,
+         calls = excluded.calls,
+         updated_at = excluded.updated_at`
+    ).bind(installId, stat.day, stat.model,
+      stat.input_tokens || 0, stat.output_tokens || 0, stat.cost_usd || 0, stat.calls || 0, Date.now()).run();
+  }
+  async usageByModel({ sinceDay } = {}) {
+    const r = sinceDay
+      ? await this.db.prepare(
+          `SELECT model, SUM(input_tokens) input_tokens, SUM(output_tokens) output_tokens,
+                  SUM(cost_usd) cost_usd, SUM(calls) calls, COUNT(DISTINCT install_id) installs
+           FROM usage WHERE day >= ? GROUP BY model ORDER BY cost_usd DESC`).bind(sinceDay).all()
+      : await this.db.prepare(
+          `SELECT model, SUM(input_tokens) input_tokens, SUM(output_tokens) output_tokens,
+                  SUM(cost_usd) cost_usd, SUM(calls) calls, COUNT(DISTINCT install_id) installs
+           FROM usage GROUP BY model ORDER BY cost_usd DESC`).all();
+    return r.results || [];
+  }
+  async usageByDay({ days = 30 } = {}) {
+    const r = await this.db.prepare(
+      `SELECT day, SUM(cost_usd) cost_usd, SUM(input_tokens+output_tokens) tokens, SUM(calls) calls
+       FROM usage GROUP BY day ORDER BY day DESC LIMIT ?`).bind(days).all();
+    return r.results || [];
+  }
 }
+
+function safeParse(s) { try { return JSON.parse(s); } catch { return s; } }

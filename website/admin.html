@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Attentify — Admin</title>
+<link rel="icon" href="attentify-logo.png" />
+<style>
+  :root { --bg:#0a0e1a; --panel:#111726; --panel2:#0d1320; --border:#1e2740; --text:#e8edf7; --muted:#8a97b4; --dim:#5a6683; --accent:#6366f1; --brand:#3b9eff; --pos:#34d399; --warn:#fbbf24; --neg:#f87171; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1100px; margin:0 auto; padding:28px 20px 60px; }
+  header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.06em; }
+  .brand img { width:30px; height:30px; border-radius:7px; }
+  button, input { font:inherit; }
+  .btn { background:rgba(99,102,241,.12); color:#a5b4fc; border:1px solid rgba(99,102,241,.3); border-radius:9px; padding:8px 14px; cursor:pointer; font-size:13px; }
+  .btn:hover { filter:brightness(1.15); }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:18px; }
+  .card h2 { font-size:13px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:14px; }
+  .kpis { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:6px; }
+  .kpi { flex:1; min-width:150px; background:var(--panel2); border:1px solid var(--border); border-radius:11px; padding:14px; }
+  .kpi b { display:block; font-size:24px; font-weight:700; }
+  .kpi span { font-size:11px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; color:var(--muted); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.05em; padding:8px 10px; border-bottom:1px solid var(--border); }
+  td { padding:9px 10px; border-bottom:1px solid var(--border); }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .model { font-family:ui-monospace,'SF Mono',monospace; font-size:12px; }
+  .bar { height:6px; border-radius:3px; background:var(--accent); }
+  .login { max-width:380px; margin:12vh auto; }
+  .login input { width:100%; background:var(--panel2); border:1px solid var(--border); border-radius:9px; padding:11px 13px; color:var(--text); margin-bottom:10px; }
+  .muted { color:var(--muted); } .dim { color:var(--dim); } .pos{color:var(--pos);} .warn{color:var(--warn);} .neg{color:var(--neg);}
+  .pill { display:inline-block; font-size:10px; padding:2px 7px; border-radius:20px; border:1px solid var(--border); color:var(--muted); }
+  .issue { border-bottom:1px solid var(--border); padding:11px 2px; }
+  .issue .row { display:flex; gap:8px; align-items:center; }
+  .issue .desc { color:var(--muted); font-size:12px; margin-top:3px; white-space:pre-wrap; }
+  .tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  .tab { font-size:12px; padding:6px 12px; border-radius:8px; border:1px solid var(--border); color:var(--muted); cursor:pointer; background:transparent; }
+  .tab.on { background:rgba(99,102,241,.14); color:#a5b4fc; border-color:rgba(99,102,241,.35); }
+  .err { color:var(--neg); font-size:12px; margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><img src="attentify-logo.png" alt="" /> ATTENTIFY · ADMIN</div>
+    <div id="hdr-actions"></div>
+  </header>
+  <div id="app"></div>
+</div>
+
+<script>
+const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+let TOKEN = localStorage.getItem('attentify_admin_token') || '';
+let issueFilter = '';
+
+const $ = (s) => document.querySelector(s);
+const fmtUsd = (n) => '$' + (Number(n||0)).toFixed(4);
+const fmtN = (n) => (Number(n||0)).toLocaleString();
+const fmtTok = (n) => { n = Number(n||0); return n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'k' : String(n); };
+const esc = (s) => String(s==null?'':s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const timeAgo = (ts) => { const d=(Date.now()-ts)/1000; if(d<60)return Math.floor(d)+'s'; if(d<3600)return Math.floor(d/60)+'m'; if(d<86400)return Math.floor(d/3600)+'h'; return Math.floor(d/86400)+'d'; };
+
+async function api(path) {
+  const r = await fetch(API + path, { headers: { 'X-Admin-Token': TOKEN } });
+  if (r.status === 403) throw new Error('Invalid admin token.');
+  if (!r.ok) throw new Error('Request failed (' + r.status + ')');
+  return r.json();
+}
+
+function renderLogin(msg) {
+  $('#hdr-actions').innerHTML = '';
+  $('#app').innerHTML = `
+    <div class="login card">
+      <h2>Admin sign-in</h2>
+      <input id="tok" type="password" placeholder="Admin token (X-Admin-Token)" />
+      <button class="btn" style="width:100%" onclick="saveTok()">Sign in</button>
+      ${msg ? '<p class="err">'+esc(msg)+'</p>' : ''}
+    </div>`;
+  $('#tok').addEventListener('keydown', e => { if (e.key==='Enter') saveTok(); });
+}
+function saveTok() {
+  TOKEN = $('#tok').value.trim();
+  localStorage.setItem('attentify_admin_token', TOKEN);
+  load();
+}
+function logout() { localStorage.removeItem('attentify_admin_token'); TOKEN=''; renderLogin(); }
+
+async function load() {
+  if (!TOKEN) return renderLogin();
+  $('#hdr-actions').innerHTML = '<button class="btn" onclick="load()">Refresh</button> <button class="btn" onclick="logout()">Sign out</button>';
+  $('#app').innerHTML = '<p class="muted">Loading…</p>';
+  try {
+    const [usage, issues] = await Promise.all([ api('/v1/admin/usage'), api('/v1/admin/issues?limit=300') ]);
+    render(usage, issues.issues || []);
+  } catch (e) { renderLogin(e.message); }
+}
+
+function render(usage, issues) {
+  const byModel = usage.byModel || [];
+  const t = usage.totals || {};
+  const maxCost = Math.max(1e-9, ...byModel.map(m => m.cost_usd||0));
+
+  const usageRows = byModel.map(m => `
+    <tr>
+      <td class="model">${esc(m.model)}</td>
+      <td class="num">${fmtTok(m.input_tokens)}</td>
+      <td class="num">${fmtTok(m.output_tokens)}</td>
+      <td class="num">${fmtN(m.calls)}</td>
+      <td class="num">${m.installs ?? '—'}</td>
+      <td class="num">${fmtUsd(m.cost_usd)}</td>
+      <td style="width:120px"><div class="bar" style="width:${Math.round((m.cost_usd/maxCost)*100)}%"></div></td>
+    </tr>`).join('') || '<tr><td colspan="7" class="muted">No usage recorded yet.</td></tr>';
+
+  const kinds = { all:'All', bug_manual:'Bugs', crash:'Crashes', freeze:'Freezes', ai_friction:'AI friction' };
+  const counts = issues.reduce((a,i)=>{a[i.kind]=(a[i.kind]||0)+1;return a;},{});
+  const tabs = Object.entries(kinds).map(([k,l]) =>
+    `<button class="tab ${issueFilter===(k==='all'?'':k)?'on':''}" onclick="setFilter('${k==='all'?'':k}')">${l} ${k==='all'?issues.length:(counts[k]||0)}</button>`).join('');
+
+  const kindColor = { crash:'neg', freeze:'warn', ai_friction:'pos', bug_manual:'' };
+  const shown = issues.filter(i => !issueFilter || i.kind===issueFilter);
+  const issueRows = shown.map(i => `
+    <div class="issue">
+      <div class="row">
+        <span class="pill ${kindColor[i.kind]||''}">${esc(i.kind)}</span>
+        ${i.category?`<span class="pill">${esc(i.category)}</span>`:''}
+        <b style="font-size:13px">${esc(i.title||'(no title)')}</b>
+        <span class="dim" style="margin-left:auto;font-size:11px">v${esc(i.version||'?')} · ${timeAgo(i.ts)} ago</span>
+      </div>
+      ${i.description?`<div class="desc">${esc(i.description)}</div>`:''}
+      ${i.context?`<details style="margin-top:5px"><summary class="dim" style="font-size:11px;cursor:pointer">context</summary><pre class="dim" style="font-size:10px;white-space:pre-wrap;margin-top:5px;max-height:240px;overflow:auto">${esc(JSON.stringify(i.context,null,1)).slice(0,4000)}</pre></details>`:''}
+    </div>`).join('') || '<p class="muted">No issues.</p>';
+
+  $('#app').innerHTML = `
+    <div class="card">
+      <h2>Token usage &amp; cost</h2>
+      <div class="kpis">
+        <div class="kpi"><b>${fmtUsd(t.cost_usd)}</b><span>total est. spend</span></div>
+        <div class="kpi"><b>${fmtTok((t.input_tokens||0)+(t.output_tokens||0))}</b><span>total tokens</span></div>
+        <div class="kpi"><b>${fmtN(t.calls)}</b><span>AI calls</span></div>
+        <div class="kpi"><b>${byModel.length}</b><span>models in use</span></div>
+      </div>
+      <table style="margin-top:12px">
+        <thead><tr><th>Model</th><th class="num">In</th><th class="num">Out</th><th class="num">Calls</th><th class="num">Installs</th><th class="num">Cost</th><th></th></tr></thead>
+        <tbody>${usageRows}</tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Issues &amp; friction (${issues.length})</h2>
+      <div class="tabs">${tabs}</div>
+      <div>${issueRows}</div>
+    </div>`;
+}
+function setFilter(k){ issueFilter = k; load._last && render(load._last.u, load._last.i); }
+// keep last payload so filter switches don't refetch
+const _origRender = render;
+render = (u,i) => { load._last = { u, i }; _origRender(u,i); };
+
+load();
+</script>
+</body>
+</html>

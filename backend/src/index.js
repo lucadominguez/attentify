@@ -12,6 +12,10 @@ import {
 } from './util.js';
 import { stripe, verifyStripeSig } from './stripe.js';
 import { aiJson, aiChatStream, SEED_RULES } from './ai.js';
+import {
+  enabledProviders, providerCreds, signState, verifyState, isLoopbackCallback,
+  authorizeUrl, exchangeCode, fetchEmail,
+} from './oauth.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -45,6 +49,18 @@ async function issueSession(store, user, request) {
   };
   await store.createSession(session);
   return session;
+}
+
+// A minimal branded HTML page shown in the browser when a social sign-in can't be
+// completed (e.g. a tampered/expired state, so we have no loopback URL to return to).
+function oauthClosePage(message) {
+  const body = `<!doctype html><html><head><meta charset="utf-8"><title>Attentify</title>
+<style>body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;
+font-family:system-ui,Segoe UI,Roboto,sans-serif;background:#0b0b12;color:#e5e7eb}
+.card{max-width:360px;text-align:center;padding:32px}h1{font-size:16px;margin:0 0 8px}
+p{font-size:13px;color:#9ca3af;line-height:1.5;margin:0}</style></head>
+<body><div class="card"><h1>Attentify</h1><p>${message}</p></div></body></html>`;
+  return new Response(body, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', ...CORS } });
 }
 
 async function createUser(store, { email, tier = 'free', source = 'self', stripe_customer, stripe_sub, current_period_end }) {
@@ -123,6 +139,60 @@ export async function router(request, env, store, ctx) {
       return ok({ updated: true });
     }
 
+    // ---- auth: which social providers are configured (drives the sign-in UI) ----
+    if (p === '/v1/auth/providers' && method === 'GET') {
+      return ok({ providers: enabledProviders(env) });
+    }
+
+    // ---- auth: begin social sign-in — redirect the user's browser to the provider ----
+    // The desktop app opens this in the system browser with a loopback `cb` + `nonce`;
+    // we bind both into a signed state so the callback can hand the token straight back.
+    {
+      const mStart = p.match(/^\/v1\/auth\/oauth\/([a-z]+)\/start$/);
+      if (mStart && method === 'GET') {
+        const provider = mStart[1];
+        if (!providerCreds(env, provider)) return err('sign-in provider not configured', 404);
+        const cb = url.searchParams.get('cb') || '';
+        const nonce = url.searchParams.get('nonce') || '';
+        if (!isLoopbackCallback(cb)) return err('invalid callback');
+        const redirectUri = `${url.origin}/v1/auth/oauth/${provider}/callback`;
+        const state = await signState(env, { provider, cb, nonce, ts: Date.now() });
+        return Response.redirect(authorizeUrl(env, provider, redirectUri, state), 302);
+      }
+    }
+
+    // ---- auth: social sign-in callback — provider redirects here with a code ----
+    {
+      const mCb = p.match(/^\/v1\/auth\/oauth\/([a-z]+)\/callback$/);
+      if (mCb && method === 'GET') {
+        const provider = mCb[1];
+        const payload = await verifyState(env, url.searchParams.get('state') || '');
+        // Without a valid state we can't trust the loopback target — show a plain page.
+        if (!payload || payload.provider !== provider || !isLoopbackCallback(payload.cb)) {
+          return oauthClosePage('Sign-in could not be verified. You can close this window and try again.');
+        }
+        const backToApp = (extra) => {
+          const q = new URLSearchParams({ nonce: payload.nonce || '', ...extra });
+          return Response.redirect(`${payload.cb}?${q.toString()}`, 302);
+        };
+        const provErr = url.searchParams.get('error');
+        if (provErr) return backToApp({ error: provErr });
+        const code = url.searchParams.get('code');
+        if (!code || !providerCreds(env, provider)) return backToApp({ error: 'no_code' });
+
+        const redirectUri = `${url.origin}/v1/auth/oauth/${provider}/callback`;
+        const accessToken = await exchangeCode(env, provider, code, redirectUri);
+        if (!accessToken) return backToApp({ error: 'exchange_failed' });
+        const email = await fetchEmail(env, provider, accessToken);
+        if (!email) return backToApp({ error: 'no_email' });
+
+        let user = await store.getUserByEmail(email);
+        if (!user) user = await createUser(store, { email, tier: 'free', source: provider });
+        const session = await issueSession(store, user, request);
+        return backToApp({ token: session.token });
+      }
+    }
+
     // ---- public installer download (streamed from R2) ----
     if (p === '/download/win' && method === 'GET') {
       if (!env.DOWNLOADS) return err('downloads not configured', 503);
@@ -142,6 +212,30 @@ export async function router(request, env, store, ctx) {
       // The installer is replaced in place on every release, so the browser must
       // revalidate every time rather than serving a stale cached copy for an hour.
       // Paired with the ETag check above, an unchanged build still costs only a 304.
+      headers.set('Cache-Control', 'no-cache, must-revalidate');
+      return new Response(obj.body, { headers });
+    }
+
+    // ---- auto-update feed (electron-updater generic provider) ----
+    // Serves latest.yml (+ .blockmap) from R2 under the updates/ prefix; the installer
+    // itself reuses the single Attentify-Setup.exe object so releases upload it once.
+    if (p.startsWith('/updates/') && method === 'GET') {
+      if (!env.DOWNLOADS) return err('downloads not configured', 503);
+      const name = p.slice('/updates/'.length);
+      if (!/^[A-Za-z0-9._-]+$/.test(name)) return err('bad request', 400);
+      let obj = await env.DOWNLOADS.get(`updates/${name}`);
+      if (!obj && name === 'Attentify-Setup.exe') obj = await env.DOWNLOADS.get('Attentify-Setup.exe');
+      if (!obj) return err('not found', 404);
+      const inm = request.headers.get('if-none-match');
+      if (inm && inm === obj.httpEtag) {
+        return new Response(null, { status: 304, headers: { ...CORS, etag: obj.httpEtag, 'Cache-Control': 'no-cache' } });
+      }
+      const headers = new Headers(CORS);
+      obj.writeHttpMetadata(headers);
+      headers.set('etag', obj.httpEtag);
+      if (name.endsWith('.yml')) headers.set('Content-Type', 'text/yaml; charset=utf-8');
+      else if (name.endsWith('.exe')) headers.set('Content-Type', 'application/vnd.microsoft.portable-executable');
+      // latest.yml must never be cached stale, or clients miss releases.
       headers.set('Cache-Control', 'no-cache, must-revalidate');
       return new Response(obj.body, { headers });
     }
@@ -265,6 +359,27 @@ export async function router(request, env, store, ctx) {
       return ok({ days, ...summary });
     }
 
+    // ---- diagnostics (unauthenticated: installs identified by anonymous install_id) ----
+    if (p === '/v1/issues' && method === 'POST') {
+      const { install_id, version, issues } = await readJson(request);
+      let n = 0;
+      for (const i of (Array.isArray(issues) ? issues : []).slice(0, 50)) {
+        if (!i || !i.id || !i.kind) continue;
+        try { await store.insertIssue({ ...i, install_id, version }); n++; } catch { /* skip bad row */ }
+      }
+      return ok({ stored: n });
+    }
+    if (p === '/v1/usage' && method === 'POST') {
+      const { install_id, stats } = await readJson(request);
+      if (!install_id) return err('install_id required');
+      let n = 0;
+      for (const s of (Array.isArray(stats) ? stats : []).slice(0, 300)) {
+        if (!s || !s.day || !s.model) continue;
+        try { await store.upsertUsage(install_id, s); n++; } catch { /* skip */ }
+      }
+      return ok({ stored: n });
+    }
+
     // ---- admin ----
     if (p.startsWith('/v1/admin/')) {
       if (!isAdmin(request, env)) return err('forbidden', 403);
@@ -330,6 +445,25 @@ async function handleStripeEvent(store, evt) {
 
 // ── admin routes ────────────────────────────────────────────────────────────────
 async function adminRoutes(p, method, request, url, store) {
+  // token usage + cost, broken down by model (the admin token panel)
+  if (p === '/v1/admin/usage' && method === 'GET') {
+    const days = url.searchParams.get('days');
+    const sinceDay = days ? new Date(Date.now() - (+days) * 86400000).toISOString().split('T')[0] : undefined;
+    const byModel = await store.usageByModel({ sinceDay });
+    const totals = byModel.reduce((a, m) => ({
+      cost_usd: a.cost_usd + (m.cost_usd || 0),
+      input_tokens: a.input_tokens + (m.input_tokens || 0),
+      output_tokens: a.output_tokens + (m.output_tokens || 0),
+      calls: a.calls + (m.calls || 0),
+    }), { cost_usd: 0, input_tokens: 0, output_tokens: 0, calls: 0 });
+    return ok({ byModel, byDay: await store.usageByDay({ days: 30 }), totals });
+  }
+  // uploaded issues (bugs, crashes, freezes, AI-friction)
+  if (p === '/v1/admin/issues' && method === 'GET') {
+    const limit = Math.min(500, Math.max(1, +(url.searchParams.get('limit') || 200)));
+    const kind = url.searchParams.get('kind') || undefined;
+    return ok({ issues: await store.listIssues({ limit, kind }) });
+  }
   // give someone a free or comped-cloud account
   if (p === '/v1/admin/grant' && method === 'POST') {
     const { email, tier = 'free', days } = await readJson(request);

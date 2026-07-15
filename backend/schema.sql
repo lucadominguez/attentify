@@ -66,3 +66,38 @@ CREATE TABLE IF NOT EXISTS processed_events (
   id  TEXT PRIMARY KEY,
   ts  INTEGER NOT NULL
 );
+
+-- ── Diagnostics (beta self-improvement pipeline) ───────────────────────────────
+-- Issues uploaded by installs: manual bug reports, auto crash/freeze captures, and
+-- AI-detected friction. Identified by an anonymous install_id (no PII required).
+CREATE TABLE IF NOT EXISTS issues (
+  id          TEXT PRIMARY KEY,       -- issue id from the client
+  install_id  TEXT,
+  version     TEXT,
+  ts          INTEGER NOT NULL,
+  kind        TEXT NOT NULL,          -- bug_manual | crash | freeze | ai_friction
+  category    TEXT,
+  severity    TEXT,
+  title       TEXT,
+  description TEXT,
+  context     TEXT,                   -- JSON blob
+  status      TEXT NOT NULL DEFAULT 'open',
+  received_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_issues_ts ON issues(ts);
+CREATE INDEX IF NOT EXISTS idx_issues_kind ON issues(kind);
+
+-- Per-install, per-model, per-day token usage + cost. Powers the admin token panel.
+CREATE TABLE IF NOT EXISTS usage (
+  install_id    TEXT NOT NULL,
+  day           TEXT NOT NULL,        -- YYYY-MM-DD
+  model         TEXT NOT NULL,
+  input_tokens  INTEGER NOT NULL DEFAULT 0,
+  output_tokens INTEGER NOT NULL DEFAULT 0,
+  cost_usd      REAL NOT NULL DEFAULT 0,
+  calls         INTEGER NOT NULL DEFAULT 0,
+  updated_at    INTEGER NOT NULL,
+  PRIMARY KEY (install_id, day, model)
+);
+CREATE INDEX IF NOT EXISTS idx_usage_model ON usage(model);
+CREATE INDEX IF NOT EXISTS idx_usage_day ON usage(day);

@@ -7018,7 +7018,8 @@ const createLucideIcon = (iconName, iconNode) => {
 export {
   React as R,
   createLucideIcon as a,
+  reactExports as b,
   client as c,
   jsxRuntimeExports as j,
-  reactExports as r
+  reactDomExports as r
 };

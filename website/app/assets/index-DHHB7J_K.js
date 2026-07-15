@@ -1,6 +1,6 @@
-import { r as reactExports, j as jsxRuntimeExports, a as createLucideIcon, R as React, c as client } from "./globals-DSWNc6k-.js";
-import { S as Shield, B as Brain, Z as Zap, A as AlertTriangle, X, E as Eye } from "./zap-C62FHR_-.js";
-import { C as Clock, a as Coffee } from "./coffee-DLH0B9O_.js";
+import { b as reactExports, j as jsxRuntimeExports, a as createLucideIcon, R as React, r as reactDomExports, c as client } from "./globals-Niz52e0z.js";
+import { A as AlertTriangle, X, S as Shield, B as Brain, Z as Zap, E as Eye } from "./zap-By6eoHVO.js";
+import { C as Clock, a as Coffee } from "./coffee-Dqv-zoJ6.js";
 const DARK = {
   rootBg: "#020912",
   mainBg: "#030c1a",
@@ -133,7 +133,7 @@ function useTheme() {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Activity = createLucideIcon("Activity", [
+const Activity$1 = createLucideIcon("Activity", [
   ["path", { d: "M22 12h-4l-3 9L9 3l-3 9H2", key: "d5dnw9" }]
 ]);
 /**
@@ -146,6 +146,18 @@ const AlertCircle = createLucideIcon("AlertCircle", [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const AppWindow = createLucideIcon("AppWindow", [
+  ["rect", { x: "2", y: "4", width: "20", height: "16", rx: "2", key: "izxlao" }],
+  ["path", { d: "M10 4v4", key: "pp8u80" }],
+  ["path", { d: "M2 8h20", key: "d11cs7" }],
+  ["path", { d: "M6 4v4", key: "1svtjw" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -187,6 +199,31 @@ const BarChart2 = createLucideIcon("BarChart2", [
 const Bell = createLucideIcon("Bell", [
   ["path", { d: "M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9", key: "1qo2s2" }],
   ["path", { d: "M10.3 21a1.94 1.94 0 0 0 3.4 0", key: "qgo35s" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Bug = createLucideIcon("Bug", [
+  ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
+  ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
+  ["path", { d: "M9 7.13v-1a3.003 3.003 0 1 1 6 0v1", key: "d7y7pr" }],
+  [
+    "path",
+    {
+      d: "M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6",
+      key: "xs1cw7"
+    }
+  ],
+  ["path", { d: "M12 20v-9", key: "1qisl0" }],
+  ["path", { d: "M6.53 9C4.6 8.8 3 7.1 3 5", key: "32zzws" }],
+  ["path", { d: "M6 13H2", key: "82j7cp" }],
+  ["path", { d: "M3 21c0-2.1 1.7-3.9 3.8-4", key: "4p0ekp" }],
+  ["path", { d: "M20.97 5c0 2.1-1.6 3.8-3.5 4", key: "18gb23" }],
+  ["path", { d: "M22 13h-4", key: "1jl80f" }],
+  ["path", { d: "M17.2 17c2.1.1 3.8 1.9 3.8 4", key: "k3fwyw" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -296,6 +333,57 @@ const Download = createLucideIcon("Download", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const ExternalLink = createLucideIcon("ExternalLink", [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Filter = createLucideIcon("Filter", [
+  ["polygon", { points: "22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3", key: "1yg77f" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const FolderOpen = createLucideIcon("FolderOpen", [
+  [
+    "path",
+    {
+      d: "m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2",
+      key: "usdka0"
+    }
+  ]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Github = createLucideIcon("Github", [
+  [
+    "path",
+    {
+      d: "M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4",
+      key: "tonef"
+    }
+  ],
+  ["path", { d: "M9 18c-4.51 2-5-2-7-2", key: "9comsn" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Globe = createLucideIcon("Globe", [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
@@ -333,6 +421,18 @@ const Key = createLucideIcon("Key", [
   ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }],
   ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
   ["path", { d: "m15.5 7.5 3 3L22 7l-3-3", key: "1rn1fs" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const LayoutGrid = createLucideIcon("LayoutGrid", [
+  ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
+  ["rect", { width: "7", height: "7", x: "14", y: "3", rx: "1", key: "6d4xhi" }],
+  ["rect", { width: "7", height: "7", x: "14", y: "14", rx: "1", key: "nxv5o0" }],
+  ["rect", { width: "7", height: "7", x: "3", y: "14", rx: "1", key: "1bb6yr" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -389,6 +489,27 @@ const Loader = createLucideIcon("Loader", [
 const Lock = createLucideIcon("Lock", [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
   ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const LogOut = createLucideIcon("LogOut", [
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }],
+  ["polyline", { points: "16 17 21 12 16 7", key: "1gabdz" }],
+  ["line", { x1: "21", x2: "9", y1: "12", y2: "12", key: "1uyos4" }]
+]);
+/**
+ * @license lucide-react v0.312.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Mail = createLucideIcon("Mail", [
+  ["rect", { width: "20", height: "16", x: "2", y: "4", rx: "2", key: "18n3k1" }],
+  ["path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7", key: "1ocrg3" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -582,10 +703,9 @@ const Sun = createLucideIcon("Sun", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Target = createLucideIcon("Target", [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
-  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+const Terminal = createLucideIcon("Terminal", [
+  ["polyline", { points: "4 17 10 11 4 5", key: "akl6gq" }],
+  ["line", { x1: "12", x2: "20", y1: "19", y2: "19", key: "q2wloq" }]
 ]);
 /**
  * @license lucide-react v0.312.0 - ISC
@@ -701,11 +821,436 @@ function BrandMark({
     }
   );
 }
-const api$f = window.electronAPI;
+const api$j = window.electronAPI;
+function BugReporter({
+  currentView,
+  variant = "sidebar"
+}) {
+  const { colors } = useTheme();
+  const [open, setOpen] = reactExports.useState(false);
+  const [title, setTitle] = reactExports.useState("");
+  const [desc, setDesc] = reactExports.useState("");
+  const [busy, setBusy] = reactExports.useState(false);
+  const [done, setDone] = reactExports.useState(false);
+  const [incident, setIncident] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    const off = api$j.onDiagnosticsIncident?.((evt) => setIncident({ id: evt.id, title: evt.title }));
+    return () => {
+      off?.();
+    };
+  }, []);
+  const openModal = reactExports.useCallback((prefillTitle = "") => {
+    setTitle(prefillTitle);
+    setDesc("");
+    setDone(false);
+    setOpen(true);
+    setIncident(null);
+  }, []);
+  const submit = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await api$j.reportBug({ title: title.trim() || "Bug report", description: desc.trim(), view: currentView });
+      setDone(true);
+      setTimeout(() => {
+        setOpen(false);
+        setDone(false);
+      }, 1400);
+    } catch {
+    }
+    setBusy(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: () => openModal(),
+        className: `${variant === "titlebar" ? "titlebar-nodrag " : ""}flex items-center justify-center rounded transition-colors hover:bg-white/5`,
+        style: {
+          width: variant === "sidebar" ? 26 : 22,
+          height: variant === "sidebar" ? 26 : 22,
+          color: colors.textMuted
+        },
+        title: "Report a bug",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Bug, { size: variant === "sidebar" ? 14 : 12 })
+      }
+    ),
+    incident && !open && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "fixed z-[60] bottom-4 right-4 flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl",
+        style: { background: colors.panelBg, border: `1px solid ${colors.borderMid}`, maxWidth: 360 },
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 15, style: { color: colors.warning, flexShrink: 0 } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: incident.title }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "It's already logged. Add a note so we can fix it faster?" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => openModal("Freeze / crash"),
+              className: "text-[11px] px-2.5 py-1.5 rounded-lg font-medium flex-shrink-0",
+              style: { background: colors.accentBg, color: colors.accent, border: `1px solid ${colors.borderMid}` },
+              children: "Add note"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setIncident(null), className: "p-1 flex-shrink-0", style: { color: colors.textMuted }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 13 }) })
+        ]
+      }
+    ),
+    open && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "fixed inset-0 z-[70] flex items-center justify-center",
+        style: { background: "rgba(0,0,0,0.55)", backdropFilter: "blur(3px)" },
+        onClick: (e) => {
+          if (e.target === e.currentTarget) setOpen(false);
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full max-w-md mx-4 p-5 rounded-2xl", style: { background: colors.cardBg, border: `1px solid ${colors.borderMid}` }, children: done ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 py-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { size: 18, style: { color: colors.positive } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px]", style: { color: colors.textPrimary }, children: "Thanks — reported. It helps make Attentify better." })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Bug, { size: 15, style: { color: colors.accent } }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Report a bug" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setOpen(false), style: { color: colors.textMuted }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 16 }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              value: title,
+              onChange: (e) => setTitle(e.target.value),
+              placeholder: "Short summary (e.g. froze when I pressed Always-On)",
+              className: "w-full text-[12px] px-3 py-2 mb-2 rounded-lg outline-none",
+              style: { background: colors.inputBg, border: `1px solid ${colors.border}`, color: colors.textPrimary },
+              autoFocus: true
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "textarea",
+            {
+              value: desc,
+              onChange: (e) => setDesc(e.target.value),
+              placeholder: "What happened, and what were you doing?",
+              rows: 4,
+              className: "w-full text-[12px] px-3 py-2 rounded-lg outline-none resize-none",
+              style: { background: colors.inputBg, border: `1px solid ${colors.border}`, color: colors.textPrimary }
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-2", style: { color: colors.textDim }, children: "Attaches app version, the current screen, recent logs and the last few chat turns. No passwords or keys." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-2 mt-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setOpen(false), className: "text-[12px] px-3 py-1.5 rounded-lg", style: { color: colors.textMuted, border: `1px solid ${colors.border}` }, children: "Cancel" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                onClick: () => void submit(),
+                disabled: busy,
+                className: "text-[12px] px-3 py-1.5 rounded-lg font-medium disabled:opacity-50",
+                style: { background: colors.accentBg, color: colors.accent, border: `1px solid ${colors.borderMid}` },
+                children: busy ? "Sending…" : "Send report"
+              }
+            )
+          ] })
+        ] }) })
+      }
+    )
+  ] });
+}
+const api$i = window.electronAPI;
+const GoogleIcon = ({ size = 14 }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: size, height: size, viewBox: "0 0 48 48", "aria-hidden": "true", children: [
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#4285F4", d: "M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#34A853", d: "M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#FBBC05", d: "M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#EA4335", d: "M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z" })
+] });
+const FacebookIcon = ({ size = 14 }) => /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { width: size, height: size, viewBox: "0 0 24 24", "aria-hidden": "true", children: /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#1877F2", d: "M24 12c0-6.63-5.37-12-12-12S0 5.37 0 12c0 5.99 4.39 10.95 10.13 11.85v-8.38H7.08V12h3.05V9.36c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.68.23 2.68.23v2.95h-1.51c-1.49 0-1.96.93-1.96 1.87V12h3.33l-.53 3.47h-2.8v8.38C19.61 22.95 24 17.99 24 12z" }) });
+const MicrosoftIcon = ({ size = 14 }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: size, height: size, viewBox: "0 0 23 23", "aria-hidden": "true", children: [
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#F25022", d: "M1 1h10v10H1z" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#7FBA00", d: "M12 1h10v10H12z" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#00A4EF", d: "M1 12h10v10H1z" }),
+  /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#FFB900", d: "M12 12h10v10H12z" })
+] });
+const PROVIDER_META = {
+  google: { label: "Continue with Google", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(GoogleIcon, {}) },
+  microsoft: { label: "Continue with Microsoft", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MicrosoftIcon, {}) },
+  facebook: { label: "Continue with Facebook", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FacebookIcon, {}) },
+  github: { label: "Continue with GitHub", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Github, { size: 14 }) }
+};
+function AuthPanel({ onChange }) {
+  const { colors } = useTheme();
+  const [auth, setAuth] = reactExports.useState(null);
+  const [mode, setMode] = reactExports.useState("signin");
+  const [email, setEmail] = reactExports.useState("");
+  const [password, setPassword] = reactExports.useState("");
+  const [busy, setBusy] = reactExports.useState(false);
+  const [error, setError] = reactExports.useState("");
+  const [providers, setProviders] = reactExports.useState([]);
+  const load = reactExports.useCallback(() => {
+    api$i.getAuth?.().then(setAuth).catch(() => setAuth(null));
+  }, []);
+  reactExports.useEffect(() => {
+    load();
+  }, [load]);
+  reactExports.useEffect(() => {
+    api$i.getAuthProviders?.().then(setProviders).catch(() => setProviders([]));
+  }, []);
+  const providerLogin = async (provider) => {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const res = await api$i.signInWithProvider(provider);
+      if (res.ok && res.auth) {
+        setAuth(res.auth);
+        onChange?.();
+      } else setError(res.error || "Sign-in could not be completed.");
+    } catch {
+      setError("Sign-in could not be completed. Try again.");
+    }
+    setBusy(false);
+  };
+  const submit = async () => {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const res = mode === "signup" ? await api$i.signUp(email.trim(), password) : await api$i.signIn(email.trim(), password);
+      if (res.ok && res.auth) {
+        setAuth(res.auth);
+        setEmail("");
+        setPassword("");
+        onChange?.();
+      } else {
+        setError(res.error || "Something went wrong.");
+      }
+    } catch {
+      setError("Something went wrong. Try again.");
+    }
+    setBusy(false);
+  };
+  const signOut = async () => {
+    setBusy(true);
+    try {
+      const res = await api$i.signOut();
+      setAuth(res.auth);
+      onChange?.();
+    } catch {
+    }
+    setBusy(false);
+  };
+  const field = (icon, type, value, set, placeholder) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-3 py-2 rounded-lg", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: colors.textMuted, flexShrink: 0 }, children: icon }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        type,
+        value,
+        onChange: (e) => {
+          set(e.target.value);
+          setError("");
+        },
+        onKeyDown: (e) => {
+          if (e.key === "Enter") void submit();
+        },
+        placeholder,
+        disabled: busy,
+        autoComplete: type === "password" ? mode === "signup" ? "new-password" : "current-password" : "email",
+        className: "flex-1 bg-transparent text-[12px] outline-none disabled:opacity-60",
+        style: { color: colors.textPrimary, caretColor: colors.accent }
+      }
+    )
+  ] });
+  if (auth?.signedIn) {
+    const tierLabel = auth.subscribed ? "Cloud" : auth.tier || "Free";
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between p-4 rounded-lg", style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0", style: { background: colors.accentBg, border: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 16, style: { color: colors.accent } }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium truncate", style: { color: colors.textPrimary }, children: auth.email }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] mt-0.5 flex items-center gap-1.5", style: { color: colors.textMuted }, children: [
+            "Signed in",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "px-1.5 py-0.5 rounded", style: { background: auth.subscribed ? colors.positiveBg : colors.accentBg, color: auth.subscribed ? colors.positive : colors.accent }, children: tierLabel })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => void signOut(),
+          disabled: busy,
+          className: "flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-medium transition-all disabled:opacity-50 flex-shrink-0",
+          style: { background: colors.cardBg, border: `1px solid ${colors.border}`, color: colors.textMuted },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LogOut, { size: 12 }),
+            " Sign out"
+          ]
+        }
+      )
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-lg", style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
+    providers.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: providers.map((p) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => void providerLogin(p),
+          disabled: busy,
+          className: "w-full flex items-center justify-center gap-2 py-2 rounded-lg text-[12px] font-medium transition-all disabled:opacity-40 hover:brightness-105",
+          style: { background: colors.cardBg, border: `1px solid ${colors.border}`, color: colors.textPrimary },
+          children: [
+            PROVIDER_META[p].icon,
+            PROVIDER_META[p].label
+          ]
+        },
+        p
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 my-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px] uppercase tracking-wider", style: { color: colors.textDim }, children: "or use email" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-1 mb-3", children: ["signin", "signup"].map((m) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: () => {
+          setMode(m);
+          setError("");
+        },
+        className: "px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors",
+        style: {
+          background: mode === m ? colors.accentBg : "transparent",
+          border: `1px solid ${mode === m ? colors.borderMid : colors.border}`,
+          color: mode === m ? colors.accent : colors.textMuted
+        },
+        children: m === "signin" ? "Sign in" : "Create account"
+      },
+      m
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+      field(/* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { size: 13 }), "email", email, setEmail, "you@example.com"),
+      field(/* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 13 }), "password", password, setPassword, mode === "signup" ? "Create a password (8+ chars)" : "Password"),
+      error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.negative }, children: error }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => void submit(),
+          disabled: busy || !email.trim() || !password,
+          className: "w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-[12px] font-medium transition-all disabled:opacity-40",
+          style: { background: colors.accent, color: "#fff" },
+          children: busy ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 13, className: "animate-spin" }),
+            " Please wait…"
+          ] }) : mode === "signup" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { size: 13 }),
+            " Create account"
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 13 }),
+            " Sign in"
+          ] })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] leading-snug", style: { color: colors.textDim }, children: mode === "signup" ? "Creating an account syncs your settings and unlocks Cloud when you subscribe. Your password is hashed on the server; it never leaves your device in the clear." : "Use the same account as the website. Sessions last 30 days." })
+    ] })
+  ] });
+}
+const api$h = window.electronAPI;
+const PANEL_W = 320;
+function AccountMenu({
+  onChange,
+  variant = "sidebar"
+}) {
+  const { colors } = useTheme();
+  const [auth, setAuth] = reactExports.useState(null);
+  const [open, setOpen] = reactExports.useState(false);
+  const [pos, setPos] = reactExports.useState({ top: 44, right: 12 });
+  const btnRef = reactExports.useRef(null);
+  const load = reactExports.useCallback(() => {
+    api$h.getAuth?.().then(setAuth).catch(() => setAuth(null));
+  }, []);
+  reactExports.useEffect(() => {
+    load();
+  }, [load]);
+  const toggle = () => {
+    if (!open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      if (variant === "sidebar") {
+        const top = Math.min(Math.round(r.top), Math.max(8, window.innerHeight - 360));
+        setPos({ top, left: Math.min(Math.round(r.right + 8), Math.max(8, window.innerWidth - PANEL_W - 8)) });
+      } else {
+        setPos({ top: Math.round(r.bottom + 6), right: Math.max(8, Math.round(window.innerWidth - r.right)) });
+      }
+    }
+    setOpen((v) => !v);
+  };
+  reactExports.useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+  const signedIn = !!auth?.signedIn;
+  const initial = auth?.email ? auth.email[0].toUpperCase() : "";
+  const size = variant === "sidebar" ? 26 : 22;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        ref: btnRef,
+        onClick: toggle,
+        className: `${variant === "titlebar" ? "titlebar-nodrag " : ""}flex items-center justify-center rounded-full transition-all`,
+        title: signedIn ? `Signed in as ${auth?.email}` : "Sign in to your account",
+        style: {
+          width: size,
+          height: size,
+          background: signedIn ? colors.accent : "transparent",
+          border: `1px solid ${signedIn ? colors.accent : "rgba(99,102,241,0.3)"}`,
+          color: signedIn ? "#fff" : colors.textMuted,
+          fontSize: variant === "sidebar" ? 12 : 11,
+          fontWeight: 600,
+          boxShadow: signedIn ? `0 0 0 2px ${colors.accentBg}` : "none"
+        },
+        children: signedIn ? initial : /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: variant === "sidebar" ? 14 : 12 })
+      }
+    ),
+    open && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-40", onClick: () => setOpen(false) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "fixed z-50",
+          style: { top: pos.top, left: pos.left, right: pos.right, width: PANEL_W },
+          onClick: (e) => e.stopPropagation(),
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: "rounded-xl overflow-hidden",
+              style: { background: colors.panelBg, border: `1px solid ${colors.borderMid}`, boxShadow: "0 12px 40px rgba(0,0,0,0.5)" },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-4 pt-3 pb-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-semibold uppercase tracking-wider", style: { color: colors.textMuted }, children: "Account" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 pt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthPanel, { onChange: () => {
+                  load();
+                  onChange?.();
+                } }) })
+              ]
+            }
+          )
+        }
+      )
+    ] })
+  ] });
+}
+const api$g = window.electronAPI;
 const mainNav = [
   { id: "home", label: "Assistant", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 15 }), desc: "Chat with Attentify — block sites, start focus, ask about your day" },
   { id: "analytics", label: "Analytics", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 15 }), desc: "Charts, patterns, alerts — and describe any custom analytics you want" },
   { id: "logic", label: "Logic", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 15 }), desc: "How Attentify reasons about you — and add your own context" },
+  { id: "activity", label: "Activity", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 15 }), desc: "Your searches, browsing and app activity — the raw log" },
   { id: "timesheets", label: "Timesheets", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 15 }), desc: "Time logged per app and category, day by day" },
   { id: "focus-shield", label: "Protection", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 15 }), desc: "Blocklists, feed blocks, and the activity log" },
   { id: "deep-focus", label: "Deep Focus", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 15 }), desc: "Lock out distractions for a set time" },
@@ -725,12 +1270,12 @@ function Sidebar({
   alertCount = 0,
   pendingActionCount = 0
 }) {
-  const { colors } = useTheme();
+  const { colors, theme, toggle: toggleTheme } = useTheme();
   const [relaunching, setRelaunching] = reactExports.useState(false);
   const handleRelaunch = async () => {
     setRelaunching(true);
     try {
-      await api$f.relaunchAsAdmin();
+      await api$g.relaunchAsAdmin();
     } catch {
       setRelaunching(false);
     }
@@ -867,6 +1412,28 @@ function Sidebar({
             utilityNav.map(renderItem)
           ] })
         ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "flex-shrink-0 flex items-center gap-1.5 px-3 py-2",
+            style: { borderTop: `1px solid ${colors.border}` },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  onClick: toggleTheme,
+                  className: "flex items-center justify-center rounded transition-colors hover:bg-white/5",
+                  style: { width: 26, height: 26, color: colors.textMuted },
+                  title: theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
+                  children: theme === "dark" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 14 })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(BugReporter, { currentView, variant: "sidebar" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(AccountMenu, { variant: "sidebar" })
+            ]
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 p-3", style: { borderTop: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "button",
           {
@@ -888,7 +1455,7 @@ function Sidebar({
     }
   );
 }
-const api$e = window.electronAPI;
+const api$f = window.electronAPI;
 function formatExpiry(ts) {
   const diff = ts - Date.now();
   if (diff <= 0) return "expired";
@@ -946,7 +1513,7 @@ function categoryLabel(cat) {
   };
   return labels[cat];
 }
-function cleanTitle(title, app) {
+function cleanTitle$1(title, app) {
   let t = title;
   const appName = app.replace(/\.exe$/i, "");
   t = t.replace(new RegExp(`\\s*[-–|]\\s*${appName}\\s*$`, "i"), "");
@@ -969,7 +1536,7 @@ function Overview({ store, onRefresh, onChatWith }) {
     return () => clearInterval(id);
   }, []);
   reactExports.useEffect(() => {
-    api$e.getAnalytics().then((data) => {
+    api$f.getAnalytics().then((data) => {
       setTodayStats({
         focusScore: data.today.focusScore,
         focusedTime: data.today.focusedTime,
@@ -983,7 +1550,7 @@ function Overview({ store, onRefresh, onChatWith }) {
     const d = newDomain.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
     if (!d) return;
     setAdding("domain");
-    await api$e.addDomain(d);
+    await api$f.addDomain(d);
     setNewDomain("");
     onRefresh();
     setAdding(null);
@@ -992,7 +1559,7 @@ function Overview({ store, onRefresh, onChatWith }) {
     const p = newProcess.trim();
     if (!p) return;
     setAdding("process");
-    await api$e.addProcess(p);
+    await api$f.addProcess(p);
     setNewProcess("");
     onRefresh();
     setAdding(null);
@@ -1151,7 +1718,7 @@ function Overview({ store, onRefresh, onChatWith }) {
               className: "hover:text-accent-orange text-[11px] transition-colors",
               style: { color: colors.textSecondary },
               onClick: async () => {
-                await api$e.stopSession(activeSession.id);
+                await api$f.stopSession(activeSession.id);
                 onRefresh();
               },
               children: "End session"
@@ -1182,7 +1749,7 @@ function Overview({ store, onRefresh, onChatWith }) {
                 "button",
                 {
                   onClick: async () => {
-                    await api$e.removeDomain(d.domain);
+                    await api$f.removeDomain(d.domain);
                     onRefresh();
                   },
                   className: "opacity-0 group-hover:opacity-100 hover:text-accent-orange transition-all flex-shrink-0",
@@ -1198,7 +1765,7 @@ function Overview({ store, onRefresh, onChatWith }) {
           "button",
           {
             onClick: async () => {
-              await api$e.addDomain(s);
+              await api$f.addDomain(s);
               onRefresh();
             },
             className: "text-[10px] px-2 py-0.5 rounded-full transition-colors hover:brightness-125",
@@ -1265,7 +1832,7 @@ function Overview({ store, onRefresh, onChatWith }) {
                 "button",
                 {
                   onClick: async () => {
-                    await api$e.removeProcess(p.name);
+                    await api$f.removeProcess(p.name);
                     onRefresh();
                   },
                   className: "opacity-0 group-hover:opacity-100 hover:text-accent-orange transition-all flex-shrink-0",
@@ -1281,7 +1848,7 @@ function Overview({ store, onRefresh, onChatWith }) {
           "button",
           {
             onClick: async () => {
-              await api$e.addProcess(s);
+              await api$f.addProcess(s);
               onRefresh();
             },
             className: "text-[10px] px-2 py-0.5 rounded-full transition-colors hover:brightness-125",
@@ -1399,7 +1966,7 @@ function Overview({ store, onRefresh, onChatWith }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest mb-1.5", style: { color: colors.textSecondary }, children: dateLabel }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-px", children: sessions.map((s) => {
             const catColor = CAT_COLOR$2[s.category];
-            const title = cleanTitle(s.title, s.app);
+            const title = cleanTitle$1(s.title, s.app);
             const tooltipParts = [
               `${s.app} — ${s.category}`,
               title !== s.app ? `"${title}"` : "",
@@ -1466,7 +2033,7 @@ function Overview({ store, onRefresh, onChatWith }) {
     ] })
   ] });
 }
-const api$d = window.electronAPI;
+const api$e = window.electronAPI;
 const SEV_COLOR = { high: "#f87171", medium: "#fbbf24", low: "#34d399" };
 const CAT_ICON = {
   apps: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 13 }),
@@ -1492,7 +2059,7 @@ function buildPlan(results) {
       tag: "Sites",
       tagColor: "#3b9eff",
       execute: async () => {
-        for (const d of sites) await api$d.addDomain(d);
+        for (const d of sites) await api$e.addDomain(d);
       },
       applied: false,
       skipped: false
@@ -1506,7 +2073,7 @@ function buildPlan(results) {
       tag: "Running",
       tagColor: "#f87171",
       execute: async () => {
-        for (const p of results.runningDistractors) await api$d.addProcess(p);
+        for (const p of results.runningDistractors) await api$e.addProcess(p);
       },
       applied: false,
       skipped: false
@@ -1521,7 +2088,7 @@ function buildPlan(results) {
       tag: "Apps",
       tagColor: "#fbbf24",
       execute: async () => {
-        for (const p of apps) await api$d.addProcess(p);
+        for (const p of apps) await api$e.addProcess(p);
       },
       applied: false,
       skipped: false
@@ -1535,7 +2102,7 @@ function buildPlan(results) {
       tag: "Startup",
       tagColor: "#ff6b35",
       execute: async () => {
-        for (const p of results.startupDistractors) await api$d.addProcess(p);
+        for (const p of results.startupDistractors) await api$e.addProcess(p);
       },
       applied: false,
       skipped: false
@@ -1550,7 +2117,7 @@ function buildPlan(results) {
       tag: "Feeds",
       tagColor: "#f87171",
       execute: async () => {
-        for (const d of FEED_GUARD) await api$d.addDomain(d);
+        for (const d of FEED_GUARD) await api$e.addDomain(d);
       },
       applied: false,
       skipped: false
@@ -1563,7 +2130,7 @@ function buildPlan(results) {
     tag: "Session",
     tagColor: "#34d399",
     execute: async () => {
-      await api$d.startSession("normal", 2 * 60 * 60 * 1e3);
+      await api$e.startSession("normal", 2 * 60 * 60 * 1e3);
     },
     applied: false,
     skipped: false
@@ -1616,7 +2183,7 @@ function DeepClean({ store, onChatWith }) {
       setProgress(Math.round((i + 1) / steps.length * 100));
       await new Promise((r) => setTimeout(r, 700));
     }
-    const res = await api$d.runScan();
+    const res = await api$e.runScan();
     setResults(res);
     setScanning(false);
   };
@@ -1668,18 +2235,18 @@ function DeepClean({ store, onChatWith }) {
     switch (issue.fixAction) {
       case "add-domain-block":
         for (const d of results.recentDistractingSites.length > 0 ? results.recentDistractingSites : issue.affectedItem ? [issue.affectedItem] : [])
-          await api$d.addDomain(d);
+          await api$e.addDomain(d);
         break;
       case "add-process-block": {
         const procs = issue.id === "running-distractors" ? results.runningDistractors : issue.id === "installed-distractors" ? results.installedDistractors : issue.id === "startup-distractors" ? results.startupDistractors : issue.affectedItem ? [issue.affectedItem] : [];
-        for (const p of procs) await api$d.addProcess(p);
+        for (const p of procs) await api$e.addProcess(p);
         break;
       }
       case "enable-feed-guard":
-        for (const d of FEED_GUARD) await api$d.addDomain(d);
+        for (const d of FEED_GUARD) await api$e.addDomain(d);
         break;
       case "enable-notification-filter":
-        await api$d.startSession("normal");
+        await api$e.startSession("normal");
         break;
     }
     setFixedIds((prev) => new Set(prev).add(issue.id));
@@ -2027,7 +2594,7 @@ function StartupPanel() {
   const [busy, setBusy] = reactExports.useState(null);
   const [note, setNote] = reactExports.useState(null);
   const load = React.useCallback(() => {
-    api$d.getStartupItems().then(setItems).catch(() => setItems([]));
+    api$e.getStartupItems().then(setItems).catch(() => setItems([]));
   }, []);
   React.useEffect(() => {
     load();
@@ -2036,7 +2603,7 @@ function StartupPanel() {
     setBusy(item.id);
     setNote(null);
     try {
-      const res = await api$d.disableStartupItem(item);
+      const res = await api$e.disableStartupItem(item);
       if (res.ok) setItems((prev) => (prev ?? []).filter((i) => i.id !== item.id));
       else setNote({ id: item.id, text: res.error || "Could not disable this one." });
     } catch {
@@ -2074,7 +2641,7 @@ function StartupPanel() {
     ] }, item.id)) })
   ] });
 }
-const api$c = window.electronAPI;
+const api$d = window.electronAPI;
 const PRESETS = [
   { label: "25 min — Pomodoro", ms: 25 * 60 * 1e3 },
   { label: "90 min — Flow state", ms: 90 * 60 * 1e3 },
@@ -2090,13 +2657,13 @@ function DeepFocusMode({ store, onRefresh }) {
   const activeSession = store.sessions.find((s) => s.active && s.mode === "deep");
   const handleStart = async () => {
     setStarting(true);
-    await api$c.startSession("deep", duration, allowlist);
+    await api$d.startSession("deep", duration, allowlist);
     onRefresh();
     setStarting(false);
   };
   const handleStop = async () => {
     const session = store.sessions.find((s) => s.active);
-    if (session) await api$c.stopSession(session.id);
+    if (session) await api$d.stopSession(session.id);
     onRefresh();
   };
   const addAllowlistItem = () => {
@@ -2239,7 +2806,7 @@ function DeepFocusMode({ store, onRefresh }) {
     ] })
   ] });
 }
-const api$b = window.electronAPI;
+const api$c = window.electronAPI;
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function ScheduleManager({ store, onRefresh }) {
   const { colors } = useTheme();
@@ -2261,18 +2828,18 @@ function ScheduleManager({ store, onRefresh }) {
       active: true
     };
     const updated = [...store.schedules, rule];
-    await api$b.setStore({ schedules: updated });
+    await api$c.setStore({ schedules: updated });
     onRefresh();
     setCreating(false);
   };
   const handleToggle = async (id) => {
     const updated = store.schedules.map((r) => r.id === id ? { ...r, active: !r.active } : r);
-    await api$b.setStore({ schedules: updated });
+    await api$c.setStore({ schedules: updated });
     onRefresh();
   };
   const handleDelete = async (id) => {
     const updated = store.schedules.filter((r) => r.id !== id);
-    await api$b.setStore({ schedules: updated });
+    await api$c.setStore({ schedules: updated });
     onRefresh();
   };
   const toggleDay = (d) => {
@@ -2412,7 +2979,7 @@ function ScheduleManager({ store, onRefresh }) {
     ] }, rule.id)) })
   ] });
 }
-const api$a = window.electronAPI;
+const api$b = window.electronAPI;
 const PLATFORMS = [
   {
     name: "TikTok",
@@ -2557,7 +3124,7 @@ function AlgoTrack({ store, onChatWith }) {
   const [showGlossary, setShowGlossary] = reactExports.useState(false);
   const blockedDomains = new Set(store.blocklist.domains.map((d) => d.domain));
   const load = reactExports.useCallback(() => {
-    api$a.getAnalytics().then((data) => {
+    api$b.getAnalytics().then((data) => {
       setSessions(data.recentSessions);
       setRefreshed(true);
     }).catch(() => {
@@ -2573,7 +3140,7 @@ function AlgoTrack({ store, onChatWith }) {
   const blockDomain = async (domain) => {
     setApplying(domain);
     try {
-      await api$a.addDomain(domain);
+      await api$b.addDomain(domain);
       store.blocklist.domains.push({ domain, addedAt: Date.now() });
     } finally {
       setApplying(null);
@@ -2582,7 +3149,7 @@ function AlgoTrack({ store, onChatWith }) {
   const unblockDomain = async (domain) => {
     setApplying(domain);
     try {
-      await api$a.removeDomain(domain);
+      await api$b.removeDomain(domain);
       const idx = store.blocklist.domains.findIndex((d) => d.domain === domain);
       if (idx !== -1) store.blocklist.domains.splice(idx, 1);
     } finally {
@@ -2834,7 +3401,7 @@ function AlgoTrack({ store, onChatWith }) {
   ] });
 }
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-function domainOf(s) {
+function domainOf$1(s) {
   if (s.url) {
     try {
       return new URL(s.url).hostname.replace(/^www\./, "");
@@ -2850,7 +3417,7 @@ function keyFor(s, groupBy) {
     case "category":
       return s.category || "other";
     case "domain":
-      return domainOf(s);
+      return domainOf$1(s);
     case "hour":
       return String(new Date(s.startTime).getHours());
     case "weekday":
@@ -2898,7 +3465,211 @@ function runAnalyticsQuery(sessions, spec) {
   const total = spec.metric === "time" ? totalTime : spec.metric === "sessions" ? filtered.length : totalTime > 0 ? Math.round(totalFocused / totalTime * 100) : 0;
   return { rows, unit, total, matched: filtered.length };
 }
-const api$9 = window.electronAPI;
+function detectPrivacyMode(app, title) {
+  const a = (app || "").toLowerCase();
+  const t = (title || "").toLowerCase();
+  if (a === "tor" || a === "torbrowser" || t.includes("tor browser")) return "tor";
+  if (t.includes("inprivate")) return "inprivate";
+  if (t.includes("private browsing")) return "private";
+  if (t.includes("incognito")) return "incognito";
+  return null;
+}
+function privacyLabel(mode) {
+  switch (mode) {
+    case "tor":
+      return "Tor Browser";
+    case "inprivate":
+      return "InPrivate";
+    case "private":
+      return "Private Browsing";
+    case "incognito":
+      return "Incognito";
+  }
+}
+const AskAIContext = reactExports.createContext(void 0);
+function AskAIProvider({ value, children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(AskAIContext.Provider, { value, children });
+}
+function useAskAI() {
+  return reactExports.useContext(AskAIContext);
+}
+function Popover({ trigger, children, width = 320, anchorClassName = "inline-flex" }) {
+  const anchorRef = reactExports.useRef(null);
+  const popRef = reactExports.useRef(null);
+  const [open, setOpen] = reactExports.useState(false);
+  const [pos, setPos] = reactExports.useState(null);
+  const place = () => {
+    const r = anchorRef.current?.getBoundingClientRect();
+    if (!r) return;
+    let left = r.left;
+    if (left + width > window.innerWidth - 12) left = window.innerWidth - 12 - width;
+    if (left < 12) left = 12;
+    const spaceBelow = window.innerHeight - r.bottom;
+    if (spaceBelow < 280 && r.top > 280) setPos({ left, bottom: window.innerHeight - r.top + 8 });
+    else setPos({ left, top: r.bottom + 8 });
+  };
+  reactExports.useLayoutEffect(() => {
+    if (open) place();
+  }, [open]);
+  reactExports.useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => {
+      if (!popRef.current?.contains(e.target) && !anchorRef.current?.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+    };
+  }, [open]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { ref: anchorRef, className: anchorClassName, children: [
+    trigger({ open, toggle: () => setOpen((o) => !o) }),
+    open && pos && reactDomExports.createPortal(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: popRef, style: { position: "fixed", left: pos.left, top: pos.top, bottom: pos.bottom, width, zIndex: 1e3 }, children: children(() => setOpen(false)) }),
+      document.body
+    )
+  ] });
+}
+function DrilldownCard({ spec, onAskAI, close, children }) {
+  const { colors } = useTheme();
+  const ctxAsk = useAskAI();
+  const ask = onAskAI ?? ctxAsk;
+  const toneColor = (t) => t === "negative" ? colors.negative : t === "positive" ? colors.positive : t === "warning" ? colors.warning : t === "accent" ? colors.accent : colors.textPrimary;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl overflow-hidden animate-fade-in", style: { background: colors.panelBg, border: `1px solid ${colors.borderMid}`, boxShadow: "0 12px 40px rgba(0,0,0,0.45)" }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-2 px-3 py-2.5", style: { borderBottom: `1px solid ${colors.border}` }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-semibold", style: { color: colors.textPrimary }, children: spec.title }),
+        spec.subtitle && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: spec.subtitle })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: close, className: "p-0.5 rounded flex-shrink-0 hover:opacity-70", style: { color: colors.textMuted }, title: "Close", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 13 }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2.5 max-h-[300px] overflow-y-auto", children: [
+      children,
+      spec.rows && spec.rows.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: spec.rows.map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-baseline justify-between gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textSecondary }, children: r.label }),
+          r.sub && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px] ml-1.5", style: { color: colors.textDim }, children: r.sub })
+        ] }),
+        r.value && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] data-value flex-shrink-0", style: { color: toneColor(r.tone) }, children: r.value })
+      ] }, i)) }) : !children ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10.5px] py-1", style: { color: colors.textMuted }, children: spec.empty ?? "No details available." }) : null,
+      spec.note && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] mt-2 leading-snug", style: { color: colors.textDim }, children: spec.note })
+    ] }),
+    ask && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3 py-2.5", style: { borderTop: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AskBox,
+      {
+        placeholder: `Ask about ${spec.title.toLowerCase()}…`,
+        onSubmit: (q) => {
+          const prompt = q ? `Regarding "${spec.title}"${spec.subtitle ? ` (${spec.subtitle})` : ""} on my Analytics: ${q}` : spec.askPrompt ?? `Tell me about "${spec.title}" — what stands out and what should I do?`;
+          ask(prompt);
+          close();
+        }
+      }
+    ) })
+  ] });
+}
+function AskBox({ placeholder, onSubmit }) {
+  const { colors } = useTheme();
+  const [q, setQ] = reactExports.useState("");
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 px-2 py-1.5 rounded-lg", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { size: 12, style: { color: colors.accent, flexShrink: 0 } }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        value: q,
+        autoFocus: true,
+        onChange: (e) => setQ(e.target.value),
+        onKeyDown: (e) => {
+          if (e.key === "Enter") onSubmit(q.trim());
+        },
+        placeholder,
+        className: "flex-1 bg-transparent text-[11px] outline-none",
+        style: { color: colors.textPrimary, caretColor: colors.accent }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: () => onSubmit(q.trim()),
+        title: q.trim() ? "Ask" : "Ask AI about this",
+        className: "flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0 transition-opacity hover:opacity-90",
+        style: { background: colors.accentBg, color: colors.accent },
+        children: q.trim() ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          "Ask ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 10 })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 10 }),
+          " Ask AI"
+        ] })
+      }
+    )
+  ] });
+}
+function TableQuery({ title, summary, onAskAI, className }) {
+  const { colors } = useTheme();
+  const ctxAsk = useAskAI();
+  const ask = onAskAI ?? ctxAsk;
+  if (!ask) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Popover,
+    {
+      width: 300,
+      trigger: ({ toggle }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: toggle,
+          className: `flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium drill-hit ${className ?? ""}`,
+          style: { color: colors.accent, border: `1px solid ${colors.border}` },
+          title: `Ask AI about ${title}`,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 9 }),
+            " Ask AI"
+          ]
+        }
+      ),
+      children: (close) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl overflow-hidden animate-fade-in", style: { background: colors.panelBg, border: `1px solid ${colors.borderMid}`, boxShadow: "0 12px 40px rgba(0,0,0,0.45)" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-2 px-3 py-2.5", style: { borderBottom: `1px solid ${colors.border}` }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-semibold", style: { color: colors.textPrimary }, children: title }),
+            summary && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: summary })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: close, className: "p-0.5 rounded flex-shrink-0 hover:opacity-70", style: { color: colors.textMuted }, title: "Close", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 13 }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3 py-2.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          AskBox,
+          {
+            placeholder: `Ask about this table…`,
+            onSubmit: (q) => {
+              const prompt = q ? `Regarding the "${title}" table${summary ? ` (${summary})` : ""}: ${q}` : `Analyze the "${title}" table${summary ? ` (${summary})` : ""} — what stands out and what should I change?`;
+              ask(prompt);
+              close();
+            }
+          }
+        ) })
+      ] })
+    }
+  );
+}
+function MetricDrill({ spec, onAskAI, width, className, render, children, full }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Popover,
+    {
+      width,
+      anchorClassName: full ? "flex w-full h-full" : "inline-flex",
+      trigger: ({ toggle }) => /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", onClick: toggle, className: `drill-hit text-left ${full ? "w-full" : ""} ${className ?? ""}`, children: render }),
+      children: (close) => /* @__PURE__ */ jsxRuntimeExports.jsx(DrilldownCard, { spec, onAskAI, close, children })
+    }
+  );
+}
+const api$a = window.electronAPI;
 const EMPTY_SESSIONS = [];
 function AnimatedStat({ value }) {
   const match = value.match(/^(\d+)(.*)$/);
@@ -2936,7 +3707,7 @@ function durOrZero(ms, hasData) {
   if (!hasData) return "No data";
   return ms > 0 ? fmt$1(ms) : "0m";
 }
-function fmtTime(ts) {
+function fmtTime$1(ts) {
   return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 function fmtDate(ts) {
@@ -3061,13 +3832,6 @@ function buildCategoryBreakdown(sessions) {
   const total = [...map.values()].reduce((a, b) => a + b, 0) || 1;
   return [...map.entries()].map(([cat, ms]) => ({ cat, ms, color: CAT_COLOR$1[cat], pct: ms / total * 100 })).sort((a, b) => b.ms - a.ms).filter((r) => r.ms > 1e4);
 }
-function extractDomain(url) {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return null;
-  }
-}
 function buildIdlePeriods(sessions) {
   const IDLE_MIN_MS = 3 * 60 * 1e3;
   const sorted = [...sessions].sort((a, b) => a.startTime - b.startTime);
@@ -3128,35 +3892,6 @@ function cellColor(cell) {
   if (r >= 0.4) return `rgba(251,191,36,${0.4 + (1 - r) * 0.35})`;
   return `rgba(248,113,113,${0.45 + (1 - r) * 0.4})`;
 }
-function generateInsights(focusPct, weeklyDistracted, streaks, switchFreq, appRows, hourRows, totalWeekly) {
-  if (totalWeekly === 0) return [];
-  const out = [];
-  if (focusPct >= 70)
-    out.push({ label: "Focus", text: `${Math.round(focusPct)}% focus ratio this week — excellent. You're maintaining deep work discipline.`, color: "#34d399" });
-  else if (focusPct >= 40)
-    out.push({ label: "Focus", text: `${Math.round(focusPct)}% focus ratio — ${fmt$1(weeklyDistracted)} lost to distractions this week. Room to improve.`, color: "#fbbf24" });
-  else
-    out.push({ label: "Focus", text: `Only ${Math.round(focusPct)}% focus ratio — attention is heavily fragmented. Start by blocking your top distractor.`, color: "#f87171" });
-  if (streaks.longest > 54e5)
-    out.push({ label: "Streak", text: `Best run: ${fmt$1(streaks.longest)} unbroken. You reach 90m+ deep work blocks — protect that window.`, color: "#34d399" });
-  else if (streaks.longest > 12e5)
-    out.push({ label: "Streak", text: `Longest run: ${fmt$1(streaks.longest)}. Work toward 90-minute blocks for compounding deep work gains.`, color: "#34d399" });
-  else if (streaks.longest > 0)
-    out.push({ label: "Streak", text: `Longest run: ${fmt$1(streaks.longest)} — heavily fragmented. Start with 25-minute Pomodoro blocks and extend from there.`, color: "#fbbf24" });
-  const topDist = appRows.find((r) => r.isDistraction);
-  if (topDist && topDist.pctOfTime >= 3)
-    out.push({ label: "Drain", text: `${topDist.app} took ${topDist.pctOfTime}% of tracked time (${fmt$1(topDist.totalTime)}). Blocking it is your highest-ROI change.`, color: "#f87171" });
-  if (switchFreq > 20)
-    out.push({ label: "Switching", text: `${switchFreq} context switches/h is fragmented. Each switch delays re-entry into deep focus by up to 23 minutes.`, color: "#f87171" });
-  else if (switchFreq > 10)
-    out.push({ label: "Switching", text: `${switchFreq} switches/h — moderate. Use timed focus sessions to reduce task-switching overhead.`, color: "#fbbf24" });
-  else if (switchFreq > 0)
-    out.push({ label: "Switching", text: `${switchFreq} switches/h — low context switching. Your focus depth is solid.`, color: "#34d399" });
-  const peak = hourRows.filter((r) => r.ratio >= 0 && r.focused > 3e5).sort((a, b) => b.focused - a.focused)[0];
-  if (peak)
-    out.push({ label: "Peak Hour", text: `Today's strongest hour: ${fmtHour(peak.hour)} — ${fmt$1(peak.focused)} focused at ${peak.ratio}% ratio. Schedule hard work here.`, color: "#3b9eff" });
-  return out.slice(0, 4);
-}
 function FocusLineChart({ hourRows }) {
   const W = 300, H = 72, PL = 8, PR = 28, PT = 6, PB = 12;
   const iW = W - PL - PR, iH = H - PT - PB;
@@ -3191,40 +3926,6 @@ function FocusLineChart({ hourRows }) {
       },
       p.h
     ))
-  ] });
-}
-function DonutChart({ segments }) {
-  const total = segments.reduce((s, d) => s + d.value, 0);
-  if (total === 0) return null;
-  const R = 34, sw = 13, cx = 44, cy = 44, size = 88;
-  const circ = 2 * Math.PI * R;
-  let cumPct = 0;
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: size, height: size, style: { flexShrink: 0 }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx, cy, r: R, fill: "none", stroke: "rgba(20,38,60,0.6)", strokeWidth: sw }),
-    segments.map((seg, i) => {
-      const pct = seg.value / total;
-      const dash = pct * circ;
-      const offset = -(cumPct * circ);
-      cumPct += pct;
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "circle",
-        {
-          cx,
-          cy,
-          r: R,
-          fill: "none",
-          stroke: seg.color,
-          strokeWidth: sw,
-          strokeDasharray: `${dash} ${circ - dash}`,
-          strokeDashoffset: offset,
-          transform: `rotate(-90 ${cx} ${cy})`,
-          strokeLinecap: "butt"
-        },
-        i
-      );
-    }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: cx, y: cy - 3, textAnchor: "middle", fontSize: "9", fontWeight: "700", fill: "white", children: segments.length }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: cx, y: cx + 8, textAnchor: "middle", fontSize: "5.5", fill: "rgba(107,132,160,0.9)", children: "categories" })
   ] });
 }
 function SessionTimeline({ sessions }) {
@@ -3305,7 +4006,8 @@ function HourOfWeekHeatmap({ matrix }) {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2 h-2 rounded-sm inline-block", style: { background: "rgba(20,38,60,0.5)" } }),
           " no data"
-        ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Focus heatmap (hour of week)", summary: "focus ratio by day-of-week and hour" })
       ] })
     ] }),
     !hasData ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: "rgba(99,102,241,0.3)" }, children: "No session data yet — heatmap populates after several sessions" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
@@ -3368,35 +4070,13 @@ function HourlyHeatmapRow({ hourRows }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between mt-1", children: [0, 3, 6, 9, 12, 15, 18, 21].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[7.5px]", style: { color: "rgba(99,102,241,0.2)" }, children: fmtHour(h) }, h)) })
   ] });
 }
-function CategoryBreakdown({ sessions }) {
-  const cats = buildCategoryBreakdown(sessions);
-  const total = cats.reduce((s, c) => s + c.ms, 0);
-  const meaningfulMs = cats.filter((c) => c.cat.toLowerCase() !== "other").reduce((s, c) => s + c.ms, 0);
-  if (cats.length === 0 || total < 12e4 || meaningfulMs / total < 0.15) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] text-center py-6 leading-relaxed", style: { color: "rgba(120,150,180,0.5)" }, children: [
-      "Not enough recognised activity yet.",
-      /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-      "Category breakdown appears as apps are classified."
-    ] });
-  }
-  const donutData = cats.slice(0, 7).map((c) => ({ label: c.cat, value: c.ms, color: c.color }));
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DonutChart, { segments: donutData }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 space-y-1 min-w-0", children: cats.slice(0, 7).map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-2 h-2 rounded-full flex-shrink-0", style: { background: c.color } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px] capitalize flex-1 truncate", style: { color: "rgba(180,210,235,0.6)" }, children: c.cat }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px] text-white font-mono tabular-nums", children: fmt$1(c.ms) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[8.5px] w-7 text-right tabular-nums", style: { color: "rgba(99,102,241,0.3)" }, children: [
-        Math.round(c.pct),
-        "%"
-      ] })
-    ] }, c.cat)) })
-  ] });
-}
 function DayScoreStrip({ dayRows }) {
   if (dayRows.length === 0) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-2", children: "7-Day Focus Score" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "7-Day Focus Score" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "7-day focus score", summary: dayRows.map((d) => `${d.day} ${d.score}%`).join(", ") })
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-1.5", children: dayRows.map((d) => {
       const color = d.score >= 70 ? "#34d399" : d.score >= 40 ? "#fbbf24" : "#f87171";
       const isToday = d.date === (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
@@ -3460,6 +4140,274 @@ function AppBarChart({ rows }) {
     )) })
   ] });
 }
+function fmtClock(ts) {
+  return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+function aggAppRows(sessions, tone) {
+  const m = /* @__PURE__ */ new Map();
+  for (const s of sessions) m.set(s.app, (m.get(s.app) ?? 0) + s.duration);
+  return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([app, ms]) => ({ label: app, value: fmt$1(ms), tone }));
+}
+function qualityLabel(score) {
+  if (score >= 85) return "Excellent session";
+  if (score >= 70) return "Strong focus";
+  if (score >= 50) return "Mixed session";
+  if (score >= 30) return "Fragmented — hard to hold focus";
+  return "Heavily scattered";
+}
+function fmtSignedMin(ms) {
+  const sign = ms >= 0 ? "+" : "−";
+  const m = Math.round(Math.abs(ms) / 6e4);
+  if (m >= 60) {
+    const h = Math.floor(m / 60), mm = m % 60;
+    return `${sign}${h}h${mm ? ` ${mm}m` : ""}`;
+  }
+  return `${sign}${m}m`;
+}
+function TodaySummaryCard({ score, focusedMs, distractedMs, idleMs, distractionEvents, switchRate, hasData, drills }) {
+  const { colors } = useTheme();
+  const scoreColor = score >= 70 ? colors.positive : score >= 40 ? colors.warning : colors.negative;
+  const totalBar = Math.max(focusedMs + distractedMs + idleMs, 1);
+  const fw = focusedMs / totalBar * 100;
+  const dw = distractedMs / totalBar * 100;
+  const iw = idleMs / totalBar * 100;
+  const distOk = distractionEvents < 3;
+  const switchOk = switchRate < 25;
+  if (!hasData) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-4 flex items-center gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-3xl font-bold leading-none", style: { color: colors.textMuted }, children: "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] leading-relaxed", style: { color: colors.textMuted }, children: "No activity tracked yet today. Your focus summary appears here once Attentify has watched a few minutes of work." })
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-4 mb-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        MetricDrill,
+        {
+          spec: drills.score ?? { title: "Focus score" },
+          width: 320,
+          className: "px-2 py-1 -ml-2",
+          render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-baseline gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[40px] font-bold leading-none tracking-tight", style: { color: scoreColor }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatedStat, { value: `${Math.round(score)}%` }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium", style: { color: colors.textSecondary }, children: "Focused" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-2", style: { color: scoreColor }, children: qualityLabel(score) })
+          ] })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-end gap-0.5 flex-shrink-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          MetricDrill,
+          {
+            spec: drills.focused ?? { title: "Focused time" },
+            width: 320,
+            className: "px-2 py-0.5",
+            render: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-lg font-semibold data-value", style: { color: colors.positive }, children: [
+              fmt$1(focusedMs),
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-normal", style: { color: colors.textMuted }, children: "focused" })
+            ] })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            MetricDrill,
+            {
+              spec: drills.distracted ?? { title: "Distracted time" },
+              width: 320,
+              className: "px-1",
+              render: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { color: colors.negative }, children: [
+                fmt$1(distractedMs),
+                " distracted"
+              ] })
+            }
+          ),
+          idleMs > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            " · ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              MetricDrill,
+              {
+                spec: drills.idle ?? { title: "Idle time" },
+                width: 320,
+                className: "px-1",
+                render: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { style: { color: colors.textSecondary }, children: [
+                  fmt$1(idleMs),
+                  " idle"
+                ] })
+              }
+            )
+          ] })
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex h-2.5 rounded-full overflow-hidden mb-3.5", style: { background: colors.accentBg }, children: [
+      fw > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: `${fw}%`, background: colors.positive }, title: `${fmt$1(focusedMs)} focused` }),
+      dw > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: `${dw}%`, background: colors.negative }, title: `${fmt$1(distractedMs)} distracted` }),
+      iw > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: `${iw}%`, background: "rgba(120,140,170,0.35)" }, title: `${fmt$1(idleMs)} idle` })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        MetricDrill,
+        {
+          spec: drills.distraction ?? { title: "Distraction events" },
+          full: true,
+          width: 340,
+          render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2 px-2 py-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[13px] font-semibold", style: { color: distOk ? colors.textPrimary : colors.negative }, children: [
+                distractionEvents,
+                " distraction event",
+                distractionEvents !== 1 ? "s" : ""
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5 hud-label", style: { color: colors.textDim }, children: "Goal < 3 · click for detail" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8.5px] px-1.5 py-0.5 rounded flex-shrink-0", style: { background: distOk ? colors.positiveBg : colors.negativeBg, color: distOk ? colors.positive : colors.negative }, children: distOk ? "on target" : "over" })
+          ] })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        MetricDrill,
+        {
+          spec: drills.switches ?? { title: "Context switching" },
+          full: true,
+          width: 340,
+          render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2 px-2 py-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[13px] font-semibold", style: { color: switchOk ? colors.textPrimary : colors.warning }, children: [
+                switchRate,
+                " switches/hour"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5 hud-label", style: { color: colors.textDim }, children: "Goal < 25/hour · click for detail" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8.5px] px-1.5 py-0.5 rounded flex-shrink-0", style: { background: switchOk ? colors.positiveBg : colors.warningBg, color: switchOk ? colors.positive : colors.warning }, children: switchOk ? "on target" : "high" })
+          ] })
+        }
+      )
+    ] })
+  ] });
+}
+function KpiStrip({ items, onAskAI }) {
+  const { colors } = useTheme();
+  const cell = (k) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1", style: { color: colors.textMuted }, children: k.label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-baseline gap-1.5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[15px] font-semibold data-value", style: { color: colors.textPrimary }, children: k.value }),
+      k.delta && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-medium flex-shrink-0", style: { color: k.delta.good ? colors.positive : colors.negative }, children: k.delta.text })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8.5px] mt-0.5 truncate", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: k.sub })
+  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel flex items-stretch overflow-x-auto", children: items.map((k, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex", style: { minWidth: 96, borderLeft: i === 0 ? "none" : `1px solid ${colors.border}` }, children: k.drill ? /* @__PURE__ */ jsxRuntimeExports.jsx(MetricDrill, { spec: k.drill, onAskAI, full: true, width: 320, render: cell(k) }) : cell(k) }, k.label)) });
+}
+function TimeDistributionPanel({ sessions, appRows }) {
+  const { colors } = useTheme();
+  const cats = buildCategoryBreakdown(sessions);
+  const total = cats.reduce((s, c) => s + c.ms, 0);
+  const maxCat = cats[0]?.ms ?? 1;
+  const topApps = appRows.slice(0, 5);
+  const distMap = /* @__PURE__ */ new Map();
+  for (const s of sessions) if (s.isDistraction) distMap.set(s.app, (distMap.get(s.app) ?? 0) + s.duration);
+  const topDist = [...distMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const privMap = /* @__PURE__ */ new Map();
+  for (const s of sessions) {
+    const mode = s.privacy ?? detectPrivacyMode(s.app, s.title);
+    if (mode) privMap.set(mode, (privMap.get(mode) ?? 0) + s.duration);
+  }
+  const privRows = [...privMap.entries()].sort((a, b) => b[1] - a[1]);
+  const privTotal = privRows.reduce((s, [, ms]) => s + ms, 0);
+  if (total < 6e4) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] text-center py-8 leading-relaxed", style: { color: colors.textMuted }, children: [
+      "Not enough recognised activity yet.",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+      "A breakdown appears as apps are classified."
+    ] });
+  }
+  const catSummary = cats.slice(0, 5).map((c) => `${c.cat} ${fmt$1(c.ms)}`).join(", ");
+  const appSummary = topApps.map((a) => `${a.app} ${fmt$1(a.totalTime)}`).join(", ");
+  const distSummary = topDist.map(([app, ms]) => `${app} ${fmt$1(ms)}`).join(", ");
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Time Distribution" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Time Distribution", summary: catSummary })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: cats.slice(0, 6).map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", title: `${c.cat}: ${fmt$1(c.ms)} (${Math.round(c.pct)}%)`, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] capitalize flex-shrink-0", style: { width: 74, color: colors.textSecondary }, children: c.cat }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] data-value text-right flex-shrink-0", style: { width: 46, color: colors.textPrimary }, children: fmt$1(c.ms) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] data-value text-right flex-shrink-0", style: { width: 30, color: colors.textMuted }, children: [
+          Math.round(c.pct),
+          "%"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-1.5 rounded-full overflow-hidden min-w-0", style: { background: colors.accentBg }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full rounded-full", style: { width: `${c.ms / maxCat * 100}%`, background: c.color } }) })
+      ] }, c.cat)) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3 pt-1", style: { borderTop: `1px solid ${colors.border}` }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2 mt-2.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Top Apps" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Top Apps", summary: appSummary })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: topApps.map((a) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] truncate", style: { color: colors.textSecondary }, children: a.app }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] data-value flex-shrink-0", style: { color: colors.textPrimary }, children: fmt$1(a.totalTime) })
+        ] }, a.app)) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2 mt-2.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Top Distractions" }),
+          topDist.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Top Distractions", summary: distSummary })
+        ] }),
+        topDist.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim }, children: "None recorded." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: topDist.map(([app, ms]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] truncate", style: { color: colors.negative }, children: app }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] data-value flex-shrink-0", style: { color: colors.textPrimary }, children: fmt$1(ms) })
+        ] }, app)) })
+      ] })
+    ] }),
+    privTotal >= 3e4 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pt-2.5", style: { borderTop: `1px solid ${colors.border}` }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", style: { color: colors.warning }, children: "Private Windows" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] data-value", style: { color: colors.textPrimary }, children: fmt$1(privTotal) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5 mb-1", children: privRows.map(([mode, ms]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] px-1.5 py-0.5 rounded", style: { background: colors.warningBg, color: colors.warning }, children: [
+        privacyLabel(mode),
+        " · ",
+        fmt$1(ms)
+      ] }, mode)) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-snug", style: { color: colors.textMuted }, children: "Time tracked, but URLs inside are not captured — so this time isn't attributed to a site." })
+    ] })
+  ] });
+}
+function RankedInsightTable({ rows, recommendation }) {
+  const { colors } = useTheme();
+  if (rows.length === 0) return null;
+  const PRI = { Critical: colors.negative, High: colors.negative, Medium: colors.warning, Low: colors.positive };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel overflow-hidden", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "hud-table", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Priority" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Signal" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Current" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Baseline" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Impact" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: rows.map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: i % 2 === 0 ? colors.rowEven : colors.rowOdd }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] px-1.5 py-0.5 rounded font-bold uppercase", style: { background: PRI[r.priority] + "22", color: PRI[r.priority] }, children: r.priority }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap", style: { color: colors.textPrimary }, children: r.signal }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] data-value whitespace-nowrap", style: { color: colors.textSecondary }, children: r.current }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] data-value whitespace-nowrap", style: { color: colors.textMuted }, children: r.baseline }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px]", style: { color: colors.textSecondary }, children: r.impact })
+      ] }, r.signal)) })
+    ] }),
+    recommendation && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2.5", style: { borderTop: `1px solid ${colors.border}`, background: colors.accentBg }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1", style: { color: colors.accent }, children: "Recommended action" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] leading-snug", style: { color: colors.textPrimary }, children: recommendation.action }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9.5px] mt-1", style: { color: colors.textMuted }, children: [
+        "Expected effect: ",
+        recommendation.effect
+      ] })
+    ] })
+  ] });
+}
 function Analytics({ onChatWith }) {
   const [data, setData] = reactExports.useState(null);
   const [loading, setLoading] = reactExports.useState(true);
@@ -3468,27 +4416,27 @@ function Analytics({ onChatWith }) {
   const [exporting, setExporting] = reactExports.useState("idle");
   const load = reactExports.useCallback(() => {
     setLoading(true);
-    api$9.getAnalytics().then((d) => setData(d)).catch(() => {
+    api$a.getAnalytics().then((d) => setData(d)).catch(() => {
     }).finally(() => setLoading(false));
   }, []);
   reactExports.useEffect(() => {
     load();
   }, [load]);
   reactExports.useEffect(() => {
-    const off = api$9.onStoreRefresh?.(() => load());
+    const off = api$a.onStoreRefresh?.(() => load());
     return () => {
       off?.();
     };
   }, [load]);
   const dismissAlert = async (id) => {
-    await api$9.dismissHeuristicAlert(id);
+    await api$a.dismissHeuristicAlert(id);
     load();
   };
   const handleExportPdf = async () => {
     if (exporting === "busy") return;
     setExporting("busy");
     try {
-      const result = await api$9.exportPdf();
+      const result = await api$a.exportPdf();
       const next = result.ok ? "done" : result.canceled ? "idle" : "error";
       setExporting(next);
       if (next !== "idle") setTimeout(() => setExporting("idle"), 2500);
@@ -3519,7 +4467,7 @@ function Analytics({ onChatWith }) {
     ] }) });
   }
   const { today, weekly, heuristicAlerts, recentSessions } = data;
-  const domains = data.domains ?? [];
+  data.domains ?? [];
   const totalWeekly = weekly.focusedTime + weekly.distractedTime;
   const focusPct = totalWeekly > 0 ? weekly.focusedTime / totalWeekly * 100 : 0;
   const activeAlerts = heuristicAlerts.filter((a) => !a.dismissed);
@@ -3530,11 +4478,185 @@ function Analytics({ onChatWith }) {
   const topDistractor = appRows.find((r) => r.isDistraction);
   const distractDebtMs = weekly.distractedTime;
   const avgDailyWastedMs = distractDebtMs > 0 ? Math.round(distractDebtMs / Math.max(dayRows.length, 1)) : 0;
-  const insights = generateInsights(focusPct, weekly.distractedTime, streaks, switchFreq, appRows, hourRows, totalWeekly);
   const todayStart = (/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0);
   const todayIdlePeriods = idlePeriods.filter((ip) => ip.start >= todayStart);
   const todayIdleMs = todayIdlePeriods.reduce((s, ip) => s + ip.duration, 0);
   const todayRelapses = relapses.filter((r) => r.ts >= todayStart);
+  const todaySessions = recentSessions.filter((s) => s.startTime >= todayStart);
+  const todayDistractionEvents = todaySessions.filter((s) => s.isDistraction).length;
+  const todaySwitchRate = todayTracked > 0 ? Math.round(todaySessions.length / (todayTracked / 36e5)) : 0;
+  const todayAppRows = buildAppRows(todaySessions, todayTracked);
+  const todayTopDistractor = todayAppRows.find((r) => r.isDistraction);
+  const todayStreaks = computeStreaks(todaySessions);
+  const todayKey = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+  const priorDays = dayRows.filter((d) => d.date !== todayKey && d.tracked > 0);
+  const avgOf = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+  const hasBaseline = priorDays.length > 0;
+  const blScore = avgOf(priorDays.map((d) => d.score));
+  const blFocused = avgOf(priorDays.map((d) => d.focused));
+  const blDistracted = avgOf(priorDays.map((d) => d.distracted));
+  const blSwitch = avgOf(priorDays.map((d) => d.tracked > 0 ? d.sessions / (d.tracked / 36e5) : 0));
+  const todaySessionsAsc = [...todaySessions].sort((a, b) => a.startTime - b.startTime);
+  const distractSessionsToday = todaySessions.filter((s) => s.isDistraction).sort((a, b) => b.startTime - a.startTime);
+  const focusSessionsToday = todaySessions.filter((s) => !s.isDistraction);
+  const transitions = /* @__PURE__ */ new Map();
+  for (let i = 1; i < todaySessionsAsc.length; i++) {
+    const a = todaySessionsAsc[i - 1].app, b = todaySessionsAsc[i].app;
+    if (a !== b) transitions.set(`${a} → ${b}`, (transitions.get(`${a} → ${b}`) ?? 0) + 1);
+  }
+  const topTransitions = [...transitions.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+  const distractionDrill = {
+    title: "Distraction events — today",
+    subtitle: `${todayDistractionEvents} event${todayDistractionEvents !== 1 ? "s" : ""} · goal < 3`,
+    rows: distractSessionsToday.slice(0, 12).map((s) => ({
+      label: s.title ? s.title.slice(0, 40) : s.app,
+      sub: `${s.app} · ${fmtClock(s.startTime)}`,
+      value: fmt$1(s.duration),
+      tone: "negative"
+    })),
+    empty: "No distraction events today — nice.",
+    note: distractSessionsToday.length > 12 ? `+${distractSessionsToday.length - 12} more today` : void 0,
+    askPrompt: `I had ${todayDistractionEvents} distraction events today${todayTopDistractor ? `, mostly ${todayTopDistractor.app}` : ""}. What triggered them and how do I cut them?`
+  };
+  const switchDrill = {
+    title: "Context switching — today",
+    subtitle: `${todaySwitchRate}/h · goal < 25`,
+    rows: topTransitions.map(([t, n]) => ({ label: t, value: `${n}×` })),
+    empty: "Not enough switching yet to analyze.",
+    note: "Each app-to-app switch carries a re-entry cost — repeated pairs are worth automating away or batching.",
+    askPrompt: `I'm switching apps about ${todaySwitchRate} times an hour today. Which of these switches look unnecessary, and how do I reduce context switching?`
+  };
+  const idleDrill = {
+    title: "Idle gaps — today",
+    subtitle: `${fmt$1(todayIdleMs)} across ${todayIdlePeriods.length} gap${todayIdlePeriods.length !== 1 ? "s" : ""} ≥3m`,
+    rows: [...todayIdlePeriods].sort((a, b) => b.start - a.start).slice(0, 12).map((ip) => ({
+      label: `after ${ip.prevApp}`,
+      sub: fmtClock(ip.start),
+      value: fmt$1(ip.duration),
+      tone: "warning"
+    })),
+    empty: "No idle gaps ≥3m today.",
+    askPrompt: `I had ${fmt$1(todayIdleMs)} of idle time today across ${todayIdlePeriods.length} gaps. Is that a problem and what should I do about it?`
+  };
+  const relapseDrill = {
+    title: "Relapses — today",
+    subtitle: `${todayRelapses.length} return${todayRelapses.length !== 1 ? "s" : ""} to distraction within 30m · goal < 3`,
+    rows: [...todayRelapses].sort((a, b) => b.ts - a.ts).slice(0, 12).map((r) => ({
+      label: r.app,
+      sub: `after ${r.prevApp} · ${fmtClock(r.ts)}`,
+      value: `+${fmt$1(r.gapMs)}`,
+      tone: "negative"
+    })),
+    empty: "No relapses today — discipline holding.",
+    askPrompt: `I relapsed into distractions ${todayRelapses.length} times today. How do I make my recoveries stick?`
+  };
+  const focusDrill = {
+    title: "Focus score — today",
+    subtitle: `${Math.round(today.focusScore)}% · target 85%`,
+    rows: [
+      { label: "Focused time", value: fmt$1(today.focusedTime), tone: "positive" },
+      { label: "Distracted time", value: fmt$1(today.distractedTime), tone: "negative" },
+      { label: "Idle time", value: fmt$1(todayIdleMs), tone: "warning" },
+      ...hasBaseline ? [{ label: "7-day average", value: `${Math.round(blScore)}%` }] : []
+    ],
+    note: "Focus score weights focused vs distracted time, lightly rewarding long unbroken blocks.",
+    askPrompt: `My focus score today is ${Math.round(today.focusScore)}%${hasBaseline ? ` vs a ${Math.round(blScore)}% average` : ""}. Break down what's driving it and how to raise it.`
+  };
+  const focusedDrill = {
+    title: "Focused time — today",
+    subtitle: `${fmt$1(today.focusedTime)} · ${todayTracked > 0 ? Math.round(today.focusedTime / todayTracked * 100) : 0}% of tracked`,
+    rows: aggAppRows(focusSessionsToday, "positive"),
+    empty: "No focused time recorded yet today.",
+    askPrompt: `Where did my ${fmt$1(today.focusedTime)} of focused time go today, and how do I protect more of it?`
+  };
+  const distractedDrill = {
+    title: "Distracted time — today",
+    subtitle: `${fmt$1(today.distractedTime)} · ${todayTracked > 0 ? Math.round(today.distractedTime / todayTracked * 100) : 0}% of tracked`,
+    rows: aggAppRows(todaySessions.filter((s) => s.isDistraction), "negative"),
+    empty: "No distracted time recorded today.",
+    askPrompt: `What ate my ${fmt$1(today.distractedTime)} of distracted time today, and what's the single highest-ROI thing to block?`
+  };
+  const kpiItems = [
+    {
+      label: "Focus",
+      value: todayTracked > 0 ? `${Math.round(today.focusScore)}%` : "—",
+      delta: hasBaseline ? { text: `${today.focusScore - blScore >= 0 ? "+" : "−"}${Math.abs(Math.round(today.focusScore - blScore))}pp`, good: today.focusScore >= blScore } : void 0,
+      sub: "Target 85%",
+      drill: focusDrill
+    },
+    {
+      label: "Focused",
+      value: durOrZero(today.focusedTime, todayTracked > 0),
+      delta: hasBaseline ? { text: fmtSignedMin(today.focusedTime - blFocused), good: today.focusedTime >= blFocused } : void 0,
+      sub: todayTracked > 0 ? `${Math.round(today.focusedTime / todayTracked * 100)}% of time` : "no data",
+      drill: focusedDrill
+    },
+    {
+      label: "Distracted",
+      value: durOrZero(today.distractedTime, todayTracked > 0),
+      delta: hasBaseline ? { text: fmtSignedMin(today.distractedTime - blDistracted), good: today.distractedTime <= blDistracted } : void 0,
+      sub: todayTracked > 0 ? `${Math.round(today.distractedTime / todayTracked * 100)}% of time` : "no data",
+      drill: distractedDrill
+    },
+    {
+      label: "Idle",
+      value: durOrZero(todayIdleMs, todayTracked > 0),
+      sub: `${todayIdlePeriods.length} gap${todayIdlePeriods.length !== 1 ? "s" : ""} ≥3m`,
+      drill: idleDrill
+    },
+    {
+      label: "Switches",
+      value: todayTracked > 0 ? `${todaySwitchRate}/h` : "—",
+      delta: hasBaseline && blSwitch > 0 ? { text: `${todaySwitchRate - blSwitch >= 0 ? "+" : "−"}${Math.abs(Math.round((todaySwitchRate - blSwitch) / blSwitch * 100))}%`, good: todaySwitchRate <= blSwitch } : void 0,
+      sub: "Target <25",
+      drill: switchDrill
+    },
+    {
+      label: "Relapses",
+      value: String(todayRelapses.length),
+      sub: "Target <3",
+      drill: relapseDrill
+    }
+  ];
+  const PRI_ORDER = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+  const rankRows = [];
+  if (todayTracked > 0 && todaySwitchRate > 0) {
+    rankRows.push({
+      priority: todaySwitchRate > 40 ? "Critical" : todaySwitchRate > 25 ? "High" : "Low",
+      signal: "Context switching",
+      current: `${todaySwitchRate}/h`,
+      baseline: hasBaseline && blSwitch > 0 ? `${Math.round(blSwitch)}/h` : "—",
+      impact: todaySwitchRate > 25 ? `~${Math.round((todaySwitchRate - 25) * 0.4)}m focus lost` : "within target"
+    });
+  }
+  if (todayTopDistractor && todayTopDistractor.pctOfTime >= 2) {
+    rankRows.push({
+      priority: todayTopDistractor.pctOfTime > 15 ? "High" : todayTopDistractor.pctOfTime > 7 ? "Medium" : "Low",
+      signal: `${todayTopDistractor.app} distraction`,
+      current: fmt$1(todayTopDistractor.totalTime),
+      baseline: "—",
+      impact: `${todayTopDistractor.pctOfTime}% of today's time`
+    });
+  }
+  rankRows.push({
+    priority: todayStreaks.longest > 36e5 ? "Low" : "Medium",
+    signal: "Longest focus block",
+    current: todayStreaks.longest > 0 ? fmt$1(todayStreaks.longest) : "—",
+    baseline: todayStreaks.avgLen > 0 ? `avg ${fmt$1(todayStreaks.avgLen)}` : "—",
+    impact: todayStreaks.longest > 36e5 ? "deep-work capable" : "aim for 45m+ blocks"
+  });
+  if (todayIdleMs > 5 * 6e4) {
+    rankRows.push({
+      priority: todayIdleMs > 36e5 ? "Medium" : "Low",
+      signal: "Idle gaps",
+      current: fmt$1(todayIdleMs),
+      baseline: "—",
+      impact: `${todayIdlePeriods.length} gap${todayIdlePeriods.length !== 1 ? "s" : ""} ≥3m`
+    });
+  }
+  rankRows.sort((a, b) => PRI_ORDER[a.priority] - PRI_ORDER[b.priority]);
+  const distractorMinToday = todayTopDistractor ? Math.round(todayTopDistractor.totalTime / 6e4) : 0;
+  const recommendation = todayTopDistractor && distractorMinToday >= 3 ? { action: `Block ${todayTopDistractor.app} during active focus sessions.`, effect: `up to ~${Math.max(5, Math.round(distractorMinToday * 0.6))} fewer distracted minutes reclaimed per day.` } : todaySwitchRate > 25 ? { action: "Start a timed Deep Focus session to cut context switching.", effect: "fewer re-entry costs and noticeably longer focus blocks." } : null;
   const sortedApps = [...appRows].sort((a, b) => {
     const av = a[appSort.col];
     const bv = b[appSort.col];
@@ -3551,21 +4673,29 @@ function Analytics({ onChatWith }) {
       `Analytics: ${Math.round(focusPct)}% focus ratio this week, ${fmt$1(weekly.focusedTime)} focused, ${fmt$1(weekly.distractedTime)} distracted. Top app: "${topApp}", top distraction: "${topDist}". Today focus score: ${Math.round(today.focusScore)}%, ${today.blockEvents} blocks. Switch rate: ${switchFreq}/h. Longest streak: ${fmt$1(streaks.longest)}. Give me a detailed analysis and specific actions I should take.`
     );
   };
-  const kpiChip = (chip, i, baseDelay = 0) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+  const kpiChip = (chip, i, baseDelay = 0) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
-      className: "section-panel flex flex-col gap-1 p-3 animate-entry",
-      style: { animationDelay: `${baseDelay + i * 55}ms`, animationFillMode: "both", opacity: 0, cursor: "default" },
+      className: "section-panel flex animate-entry",
+      style: { animationDelay: `${baseDelay + i * 55}ms`, animationFillMode: "both", opacity: 0 },
       title: chip.tooltip,
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-bold leading-none data-value", style: { color: chip.color }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatedStat, { value: chip.value }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-tight", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: chip.label }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: chip.sub })
-      ]
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        MetricDrill,
+        {
+          full: true,
+          width: 300,
+          spec: chip.drill ?? { title: chip.label, subtitle: `${chip.value} · ${chip.sub}`, note: chip.tooltip, askPrompt: `Tell me about my ${chip.label.toLowerCase()} (${chip.value}) — what does it mean and how do I improve it?` },
+          render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 p-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-bold leading-none data-value", style: { color: chip.color }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatedStat, { value: chip.value }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-tight", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: chip.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: chip.sub })
+          ] })
+        }
+      )
     },
     chip.label
   );
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 space-y-4 animate-fade-in", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(AskAIProvider, { value: onChatWith, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 space-y-4 animate-fade-in", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 16, style: { color: colors.accent, flexShrink: 0 } }),
@@ -3632,24 +4762,10 @@ function Analytics({ onChatWith }) {
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(CustomAnalyticsSection, {}),
-    totalWeekly < INSIGHT_MIN_MS ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel px-3 py-3 flex items-center gap-2.5", children: [
+    totalWeekly < INSIGHT_MIN_MS && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel px-3 py-3 flex items-center gap-2.5", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Lightbulb, { size: 12, style: { color: colors.accent, flexShrink: 0 } }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-relaxed", style: { color: colors.textSecondary }, children: "Not enough data yet to draw conclusions — keep Attentify running and insights will appear once there's enough activity to be meaningful." })
-    ] }) : insights.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-2", style: { gridTemplateColumns: `repeat(${insights.length}, 1fr)` }, children: insights.map((ins, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
-      {
-        className: "section-panel px-3 py-2.5 flex flex-col gap-1.5 animate-entry",
-        style: { borderLeft: `2px solid ${ins.color}`, animationDelay: `${i * 70}ms`, animationFillMode: "both", opacity: 0 },
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Lightbulb, { size: 9, style: { color: ins.color, flexShrink: 0 } }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold uppercase tracking-wide", style: { color: ins.color, fontFamily: '"Share Tech Mono", monospace' }, children: ins.label })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-relaxed", style: { color: colors.textSecondary }, children: ins.text })
-        ]
-      },
-      i
-    )) }),
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       AnalyticsSectionHeader,
       {
@@ -3657,16 +4773,20 @@ function Analytics({ onChatWith }) {
         sub: (/* @__PURE__ */ new Date()).toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" })
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-4 gap-1.5", children: [
-      { label: "Focus Score", value: todayTracked > 0 ? `${Math.round(today.focusScore)}%` : "No data", color: today.focusScore >= 70 ? "#34d399" : today.focusScore >= 40 ? "#fbbf24" : "#f87171", sub: todayTracked > 0 ? `${fmt$1(todayTracked)} tracked` : "keep tracking", tooltip: `${Math.round(today.focusScore)}% focus score` },
-      { label: "Focused", value: durOrZero(today.focusedTime, todayTracked > 0), color: "#6366f1", sub: todayTracked > 0 ? `${Math.round(today.focusedTime / todayTracked * 100)}% of tracked` : "keep tracking", tooltip: `${fmt$1(today.focusedTime)} on productive apps today` },
-      { label: "Distracted", value: durOrZero(today.distractedTime, todayTracked > 0), color: today.distractedTime > 36e5 ? "#f87171" : "#fbbf24", sub: todayTracked > 0 ? `${Math.round(today.distractedTime / todayTracked * 100)}% of tracked` : "keep tracking", tooltip: `${fmt$1(today.distractedTime)} on distracting apps` },
-      { label: "Switch Rate", value: todayTracked > 0 ? `${switchFreq}/h` : "No data", color: switchFreq > 20 ? "#f87171" : switchFreq > 10 ? "#fbbf24" : "#34d399", sub: todayTracked > 0 ? switchFreq > 20 ? "fragmented" : "steady" : "keep tracking", tooltip: `${switchFreq} app switches/h` },
-      { label: "Idle Time", value: durOrZero(todayIdleMs, todayTracked > 0), color: todayIdleMs > 36e5 ? "#fbbf24" : "rgba(99,102,241,0.5)", sub: todayIdlePeriods.length > 0 ? `${todayIdlePeriods.length} gap${todayIdlePeriods.length !== 1 ? "s" : ""} ≥3m` : todayTracked > 0 ? "no idle gaps" : "keep tracking", tooltip: `${fmt$1(todayIdleMs)} idle today (gaps ≥3m between sessions)` },
-      { label: "Relapses", value: String(todayRelapses.length), color: todayRelapses.length > 3 ? "#f87171" : todayRelapses.length > 0 ? "#fbbf24" : "#34d399", sub: todayRelapses.length > 0 ? "returned to dist." : "none today", tooltip: `${todayRelapses.length} times returned to distraction within 30m` },
-      { label: "Blocked", value: String(today.blockEvents || 0), color: "#6366f1", sub: "blocked today", tooltip: `${today.blockEvents} blocked attempts today` },
-      { label: "Sessions", value: String(today.focusSessions), color: "#6366f1", sub: "started today", tooltip: `${today.focusSessions} focus sessions today` }
-    ].map((chip, i) => kpiChip(chip, i, 0)) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TodaySummaryCard,
+      {
+        score: today.focusScore,
+        focusedMs: today.focusedTime,
+        distractedMs: today.distractedTime,
+        idleMs: todayIdleMs,
+        distractionEvents: todayDistractionEvents,
+        switchRate: todaySwitchRate,
+        hasData: todayTracked > 0,
+        drills: { score: focusDrill, focused: focusedDrill, distracted: distractedDrill, idle: idleDrill, distraction: distractionDrill, switches: switchDrill }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(KpiStrip, { items: kpiItems }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-3 gap-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-2 space-y-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(SessionTimeline, { sessions: recentSessions }),
@@ -3678,10 +4798,14 @@ function Analytics({ onChatWith }) {
           ] })
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-2.5", children: "Time by Category" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryBreakdown, { sessions: recentSessions })
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel p-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TimeDistributionPanel, { sessions: todaySessions, appRows: todayAppRows }) })
+    ] }),
+    totalWeekly >= INSIGHT_MIN_MS && rankRows.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Diagnostics — Ranked" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Ranked diagnostics", summary: rankRows.map((r) => `${r.priority}: ${r.signal} ${r.current}`).join("; ") })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RankedInsightTable, { rows: rankRows, recommendation })
     ] }),
     (todayRelapses.length > 0 || todayIdlePeriods.length > 0) && /* @__PURE__ */ jsxRuntimeExports.jsx(RelapseTracker, { relapses: todayRelapses, idlePeriods: todayIdlePeriods }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -3704,7 +4828,7 @@ function Analytics({ onChatWith }) {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel px-3 py-2.5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Focus vs Distraction" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 text-[9px]", style: { color: "rgba(99,102,241,0.4)", fontFamily: '"Share Tech Mono", monospace' }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 text-[9px]", style: { color: "rgba(99,102,241,0.4)", fontFamily: '"Share Tech Mono", monospace' }, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block w-1.5 h-1.5", style: { background: "#34d399" } }),
                 fmt$1(weekly.focusedTime),
@@ -3714,7 +4838,8 @@ function Analytics({ onChatWith }) {
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block w-1.5 h-1.5", style: { background: "#ff6b35" } }),
                 fmt$1(weekly.distractedTime),
                 " distracted"
-              ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Focus vs Distraction (this week)", summary: `${fmt$1(weekly.focusedTime)} focused vs ${fmt$1(weekly.distractedTime)} distracted, ${Math.round(focusPct)}% focus ratio` })
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex overflow-hidden h-2", style: { background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.1)" }, children: [
@@ -3741,17 +4866,25 @@ function Analytics({ onChatWith }) {
         { label: "Distraction Debt", value: fmt$1(distractDebtMs), sub: "lost this week", detail: avgDailyWastedMs > 0 ? `~${fmt$1(avgDailyWastedMs)}/day avg` : null, color: "#f87171" },
         { label: "Switch Cost", value: recentSessions.length > 0 ? fmt$1(recentSessions.length * 23 * 6e4) : "—", sub: "recovery overhead", detail: `${recentSessions.length} switches × 23m`, color: "#fbbf24" },
         { label: "Reclaim Potential", value: topDistractor ? fmt$1(topDistractor.totalTime) : "—", sub: topDistractor ? `block ${topDistractor.app}` : "no distractors", detail: topDistractor ? `${topDistractor.pctOfTime}% of time` : null, color: "#34d399" }
-      ].map((card) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      ].map((card) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
         {
-          className: "section-panel p-3 animate-entry",
+          className: "section-panel flex animate-entry",
           style: { borderLeft: `2px solid ${card.color}`, animationFillMode: "both", opacity: 0 },
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] uppercase tracking-wide mb-1.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: card.label }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-bold leading-none data-value", style: { color: card.color }, children: card.value }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1 leading-snug", style: { color: colors.textSecondary }, children: card.sub }),
-            card.detail && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] mt-0.5 data-value", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: card.detail })
-          ]
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            MetricDrill,
+            {
+              full: true,
+              width: 300,
+              spec: { title: card.label, subtitle: `${card.value} · ${card.sub}`, note: card.detail ?? void 0, askPrompt: `Explain my "${card.label}" (${card.value}) this week and what I can do about it.` },
+              render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] uppercase tracking-wide mb-1.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: card.label }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-bold leading-none data-value", style: { color: card.color }, children: card.value }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1 leading-snug", style: { color: colors.textSecondary }, children: card.sub }),
+                card.detail && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] mt-0.5 data-value", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: card.detail })
+              ] })
+            }
+          )
         },
         card.label
       )) })
@@ -3759,33 +4892,38 @@ function Analytics({ onChatWith }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsSectionHeader, { label: "Patterns", sub: "Hour-of-week focus distribution" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(HourOfWeekHeatmap, { matrix }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AnalyticsSectionHeader, { label: "Deep Dive", sub: `${recentSessions.length} sessions · ${sortedApps.length} apps tracked` }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-0", style: { borderBottom: `1px solid ${colors.border}` }, children: [
-      { id: "apps", label: `Apps (${sortedApps.length})` },
-      { id: "websites", label: `Websites (${domains.length})` },
-      { id: "daily", label: `Daily (${dayRows.length}d)` },
-      { id: "patterns", label: "Patterns" },
-      { id: "alerts", label: `Alerts${activeAlerts.length > 0 ? ` (${activeAlerts.length})` : ""}` },
-      { id: "log", label: `Log (${Math.min(recentSessions.length, 100)})` }
-    ].map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "button",
-      {
-        onClick: () => setActiveTab(tab.id),
-        className: "px-4 py-2 text-[10px] font-medium transition-all border-b-2 -mb-px",
-        style: { color: activeTab === tab.id ? colors.accent : colors.textMuted, borderBottomColor: activeTab === tab.id ? colors.accent : "transparent", background: "transparent" },
-        children: tab.label
-      },
-      tab.id
-    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-0 items-center", style: { borderBottom: `1px solid ${colors.border}` }, children: [
+      [
+        { id: "apps", label: `Apps (${sortedApps.length})` },
+        { id: "daily", label: `Daily (${dayRows.length}d)` },
+        { id: "patterns", label: "Patterns" },
+        { id: "alerts", label: `Alerts${activeAlerts.length > 0 ? ` (${activeAlerts.length})` : ""}` }
+      ].map((tab) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setActiveTab(tab.id),
+          className: "px-4 py-2 text-[10px] font-medium transition-all border-b-2 -mb-px",
+          style: { color: activeTab === tab.id ? colors.accent : colors.textMuted, borderBottomColor: activeTab === tab.id ? colors.accent : "transparent", background: "transparent" },
+          children: tab.label
+        },
+        tab.id
+      )),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "ml-auto pr-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableQuery,
+        {
+          title: activeTab === "apps" ? "Apps table" : activeTab === "daily" ? "Daily table" : activeTab === "patterns" ? "Patterns" : "Alerts table",
+          summary: activeTab === "apps" ? sortedApps.slice(0, 6).map((a) => `${a.app} ${fmt$1(a.totalTime)} (${a.pctOfTime}%)`).join(", ") : activeTab === "daily" ? dayRows.map((d) => `${d.day} ${d.score}%`).join(", ") : activeTab === "alerts" ? activeAlerts.slice(0, 6).map((a) => TYPE_LABELS[a.type]).join(", ") : `${hourRows.length} hours tracked, longest run ${fmt$1(streaks.longest)}`
+        }
+      ) })
+    ] }),
     activeTab === "apps" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(AppBarChart, { rows: sortedApps }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(AppTable, { rows: sortedApps, toggleSort, SortIcon })
     ] }),
-    activeTab === "websites" && /* @__PURE__ */ jsxRuntimeExports.jsx(WebsitesTab, { domains, sessions: recentSessions }),
     activeTab === "daily" && /* @__PURE__ */ jsxRuntimeExports.jsx(DailyTable, { rows: dayRows }),
     activeTab === "patterns" && /* @__PURE__ */ jsxRuntimeExports.jsx(PatternsTab, { hourRows, streaks, sessions: recentSessions }),
-    activeTab === "alerts" && /* @__PURE__ */ jsxRuntimeExports.jsx(AlertsTable, { alerts: heuristicAlerts, onDismiss: dismissAlert }),
-    activeTab === "log" && /* @__PURE__ */ jsxRuntimeExports.jsx(ActivityLog, { sessions: [...recentSessions].reverse().slice(0, 100) })
-  ] });
+    activeTab === "alerts" && /* @__PURE__ */ jsxRuntimeExports.jsx(AlertsTable, { alerts: heuristicAlerts, onDismiss: dismissAlert })
+  ] }) });
 }
 function AnalyticsSectionHeader({ label, sub }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 pt-1", children: [
@@ -4052,7 +5190,7 @@ function AlertsTable({ alerts, onDismiss }) {
       const sev = SEV[alert.severity];
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: alert.dismissed ? colors.panelBg : i % 2 === 0 ? colors.rowEven : colors.rowOdd, opacity: alert.dismissed ? 0.5 : 1 }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-2.5 py-1.5 text-[9px] font-mono whitespace-nowrap", style: { color: "rgba(99,102,241,0.45)" }, children: [
-          fmtTime(alert.detectedAt),
+          fmtTime$1(alert.detectedAt),
           /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(99,102,241,0.2)" }, children: fmtDate(alert.detectedAt) })
         ] }),
@@ -4065,100 +5203,6 @@ function AlertsTable({ alerts, onDismiss }) {
           " Dismiss"
         ] }) })
       ] }, alert.id);
-    }) })
-  ] }) });
-}
-function ActivityLog({ sessions }) {
-  const { colors } = useTheme();
-  if (sessions.length === 0) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No activity sessions recorded yet." });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "hud-table", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Start" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "End" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "App" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Domain / Title" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Duration" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Cat" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Type" })
-    ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: sessions.map((s, i) => {
-      const domain = s.url ? extractDomain(s.url) : null;
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: s.isDistraction ? "rgba(248,113,113,0.04)" : i % 2 === 0 ? colors.rowEven : colors.rowOdd }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1 text-[9px] font-mono whitespace-nowrap tabular-nums", style: { color: colors.textSecondary }, children: fmtTime(s.startTime) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1 text-[9px] font-mono whitespace-nowrap tabular-nums", style: { color: colors.textMuted }, children: fmtTime(s.endTime) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-medium truncate max-w-[90px]", style: { color: colors.textPrimary }, children: s.app }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1", children: domain ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-mono truncate max-w-[150px]", style: { color: "#6366f1" }, children: domain }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] truncate max-w-[150px]", style: { color: colors.textMuted }, children: s.title })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] truncate max-w-[150px]", style: { color: colors.textSecondary }, children: s.title }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1 text-[10px] font-mono tabular-nums whitespace-nowrap", style: { color: s.isDistraction ? "#f87171" : colors.textSecondary }, children: fmt$1(s.duration) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] px-1 py-0.5 rounded font-semibold", style: { background: CAT_COLOR$1[s.category] + "18", color: CAT_COLOR$1[s.category] }, children: s.category.slice(0, 4) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1", children: s.isDistraction ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-0.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 8, style: { color: "#f87171" } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: "#f87171" }, children: "dist" })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: "#34d399" }, children: "focus" }) })
-      ] }, s.id);
-    }) })
-  ] }) });
-}
-function WebsitesTab({ domains, sessions }) {
-  const { colors } = useTheme();
-  const urlDomainMap = /* @__PURE__ */ new Map();
-  for (const s of sessions) {
-    if (!s.url) continue;
-    const domain = extractDomain(s.url);
-    if (!domain) continue;
-    const cur = urlDomainMap.get(domain) ?? { total_ms: 0, visits: 0, isDistraction: s.isDistraction };
-    cur.total_ms += s.duration;
-    cur.visits++;
-    if (s.isDistraction) cur.isDistraction = true;
-    urlDomainMap.set(domain, cur);
-  }
-  const merged = /* @__PURE__ */ new Map();
-  for (const d of domains) {
-    merged.set(d.domain, { total_ms: d.total_ms, category: d.category, classification: d.classification, visits: 0, isDistraction: d.classification === "distract" });
-  }
-  for (const [domain, v] of urlDomainMap) {
-    const existing = merged.get(domain);
-    if (existing) {
-      existing.visits = v.visits;
-      if (v.total_ms > existing.total_ms) existing.total_ms = v.total_ms;
-    } else {
-      merged.set(domain, { total_ms: v.total_ms, category: "browser", classification: v.isDistraction ? "distract" : "neutral", visits: v.visits, isDistraction: v.isDistraction });
-    }
-  }
-  const rows = [...merged.entries()].map(([domain, v]) => ({ domain, ...v })).filter((r) => r.total_ms > 5e3).sort((a, b) => b.total_ms - a.total_ms).slice(0, 50);
-  const maxMs = rows[0]?.total_ms ?? 1;
-  if (rows.length === 0) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No website visits recorded yet. Website tracking activates when browser URLs are captured via system accessibility APIs." });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "hud-table", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Domain" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Category" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Classification" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Time" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Share" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Visits" })
-    ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: rows.map((row, i) => {
-      const pct = Math.round(row.total_ms / maxMs * 100);
-      const clsColor = row.classification === "distract" ? "#f87171" : row.classification === "focus" ? "#34d399" : "#607d8b";
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: row.classification === "distract" ? "rgba(248,113,113,0.03)" : i % 2 === 0 ? colors.rowEven : colors.rowOdd }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 9, style: { color: "rgba(99,102,241,0.35)", flexShrink: 0 } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-mono truncate max-w-[150px]", style: { color: colors.textPrimary }, children: row.domain })
-        ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] px-1.5 py-0.5 rounded font-semibold capitalize", style: { background: "rgba(99,102,241,0.08)", color: "rgba(99,102,241,0.6)" }, children: row.category }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] px-1.5 py-0.5 rounded font-bold uppercase", style: { background: clsColor + "22", color: clsColor }, children: row.classification }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.classification === "distract" ? "#f87171" : colors.textSecondary }, children: fmt$1(row.total_ms) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-16 h-1 overflow-hidden", style: { background: "rgba(99,102,241,0.06)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full", style: { width: `${pct}%`, background: row.classification === "distract" ? "#f87171" : "#6366f1" } }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] tabular-nums", style: { color: "rgba(180,210,235,0.6)" }, children: [
-            pct,
-            "%"
-          ] })
-        ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.5)" }, children: row.visits > 0 ? row.visits : "—" })
-      ] }, row.domain);
     }) })
   ] }) });
 }
@@ -4203,7 +5247,7 @@ function RelapseTracker({ relapses, idlePeriods }) {
 }
 function EmptyState({ text }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel py-8 text-center", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { size: 18, style: { color: "rgba(99,102,241,0.25)" }, className: "mx-auto mb-2" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 18, style: { color: "rgba(99,102,241,0.25)" }, className: "mx-auto mb-2" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] max-w-sm mx-auto leading-relaxed", style: { color: "rgba(99,102,241,0.3)", fontFamily: '"Share Tech Mono", monospace' }, children: text })
   ] });
 }
@@ -4231,14 +5275,14 @@ function CustomAnalyticsSection() {
   const [building, setBuilding] = reactExports.useState(false);
   const [error, setError] = reactExports.useState("");
   const loadCards = reactExports.useCallback(() => {
-    api$9.getCustomCards().then(setCards).catch(() => setCards([]));
+    api$a.getCustomCards().then(setCards).catch(() => setCards([]));
   }, []);
   reactExports.useEffect(() => {
     loadCards();
-    api$9.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => setSessions([]));
-    const off = api$9.onStoreRefresh?.(() => {
+    api$a.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => setSessions([]));
+    const off = api$a.onStoreRefresh?.(() => {
       loadCards();
-      api$9.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => {
+      api$a.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => {
       });
     });
     return () => {
@@ -4251,11 +5295,11 @@ function CustomAnalyticsSection() {
     setBuilding(true);
     setError("");
     try {
-      const res = await api$9.buildAnalyticsCard(q);
+      const res = await api$a.buildAnalyticsCard(q);
       if (res.ok) {
         setDesc("");
         loadCards();
-        api$9.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => {
+        api$a.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => {
         });
       } else setError(res.error === "PAYWALL" ? "Free AI used up — add your key in Settings." : res.error || "Could not build that. Try rephrasing.");
     } catch {
@@ -4264,7 +5308,7 @@ function CustomAnalyticsSection() {
     setBuilding(false);
   };
   const remove = async (id) => {
-    await api$9.deleteCustomCard(id);
+    await api$a.deleteCustomCard(id);
     loadCards();
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3.5", children: [
@@ -4492,7 +5536,7 @@ function IssueCard({ issue, onFix, onAskAI, fixing, fixed }) {
     }
   );
 }
-const api$8 = window.electronAPI;
+const api$9 = window.electronAPI;
 const FEED_GUARD_DOMAINS = ["youtube.com", "instagram.com", "x.com", "twitter.com", "facebook.com", "tiktok.com"];
 const categoryLabels = {
   apps: "Apps & Websites",
@@ -4516,7 +5560,7 @@ function FocusScanResults({ results, onNavigate, onRefresh, onChatWith }) {
       case "add-domain-block": {
         const domains = results.recentDistractingSites.length > 0 ? results.recentDistractingSites : issue.affectedItem ? [issue.affectedItem] : [];
         for (const d of domains) {
-          await api$8.addDomain(d);
+          await api$9.addDomain(d);
         }
         break;
       }
@@ -4527,18 +5571,18 @@ function FocusScanResults({ results, onNavigate, onRefresh, onChatWith }) {
         else if (issue.id === "startup-distractors") procs = results.startupDistractors;
         else if (issue.affectedItem) procs = [issue.affectedItem];
         for (const p of procs) {
-          await api$8.addProcess(p);
+          await api$9.addProcess(p);
         }
         break;
       }
       case "enable-feed-guard": {
         for (const d of FEED_GUARD_DOMAINS) {
-          await api$8.addDomain(d);
+          await api$9.addDomain(d);
         }
         break;
       }
       case "enable-notification-filter": {
-        await api$8.startSession("normal");
+        await api$9.startSession("normal");
         break;
       }
       case "review-extensions": {
@@ -4702,7 +5746,7 @@ function FocusScanResults({ results, onNavigate, onRefresh, onChatWith }) {
     ] })
   ] });
 }
-const api$7 = window.electronAPI;
+const api$8 = window.electronAPI;
 const PATTERN_TAXONOMY = [
   {
     type: "rapid-switching",
@@ -4877,7 +5921,7 @@ function Patterns({ heuristicAlerts, onChatWith }) {
   const refresh = async () => {
     setRefreshing(true);
     try {
-      const data = await api$7.getAnalytics();
+      const data = await api$8.getAnalytics();
       setAllAlerts(data.heuristicAlerts);
     } finally {
       setRefreshing(false);
@@ -5165,7 +6209,7 @@ function Patterns({ heuristicAlerts, onChatWith }) {
     ] })
   ] });
 }
-const api$6 = window.electronAPI;
+const api$7 = window.electronAPI;
 function timeAgo(ts) {
   const s = Math.floor((Date.now() - ts) / 1e3);
   if (s < 60) return `${s}s ago`;
@@ -5220,7 +6264,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
   const load = reactExports.useCallback(async () => {
     setLoading(true);
     try {
-      const rows = await api$6.getInferences();
+      const rows = await api$7.getInferences();
       setInferences(rows);
     } catch {
     }
@@ -5228,7 +6272,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
   }, []);
   reactExports.useEffect(() => {
     void load();
-    const off = api$6.onInferenceSuggest(() => void load());
+    const off = api$7.onInferenceSuggest(() => void load());
     return off;
   }, [load]);
   reactExports.useEffect(() => {
@@ -5236,7 +6280,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
   }, [liveAutoBlocks, load]);
   const resolve = async (id, status) => {
     setResolving(id);
-    await api$6.resolveInference(id, status);
+    await api$7.resolveInference(id, status);
     await load();
     setResolving(null);
   };
@@ -5559,8 +6603,15 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
     ] })
   ] });
 }
-const api$5 = window.electronAPI;
-function SectionHeader({ icon, label }) {
+const api$6 = window.electronAPI;
+const COMPAT_COLOR = { ok: "#34d399", warn: "#fbbf24", fail: "#f87171" };
+function CompatIcon({ status }) {
+  const color = COMPAT_COLOR[status];
+  if (status === "ok") return /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle, { size: 12, style: { color, flexShrink: 0, marginTop: 1 } });
+  if (status === "warn") return /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 12, style: { color, flexShrink: 0, marginTop: 1 } });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(XCircle, { size: 12, style: { color, flexShrink: 0, marginTop: 1 } });
+}
+function SectionHeader$1({ icon, label }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-3", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(99,102,241,0.6)" }, children: icon }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -5587,8 +6638,27 @@ function SettingsView({ store, onRefresh, onNavigate }) {
   const [checkingOut, setCheckingOut] = reactExports.useState(false);
   const [version, setVersion] = reactExports.useState("");
   reactExports.useEffect(() => {
-    api$5.getAppVersion?.().then(setVersion).catch(() => {
+    api$6.getAppVersion?.().then(setVersion).catch(() => {
     });
+  }, []);
+  const [update, setUpdate] = reactExports.useState({ state: "idle" });
+  reactExports.useEffect(() => {
+    api$6.getUpdateStatus?.().then(setUpdate).catch(() => {
+    });
+    const off = api$6.onUpdateStatus?.((s) => setUpdate(s));
+    return () => {
+      off?.();
+    };
+  }, []);
+  const [compat, setCompat] = reactExports.useState(null);
+  const [compatBusy, setCompatBusy] = reactExports.useState(false);
+  const runCompat = () => {
+    setCompatBusy(true);
+    api$6.runCompatCheck?.().then(setCompat).catch(() => {
+    }).finally(() => setCompatBusy(false));
+  };
+  reactExports.useEffect(() => {
+    runCompat();
   }, []);
   const [changeCount, setChangeCount] = reactExports.useState(null);
   const [changelog, setChangelog] = reactExports.useState(null);
@@ -5596,13 +6666,13 @@ function SettingsView({ store, onRefresh, onNavigate }) {
   const [reverting, setReverting] = reactExports.useState(false);
   const [revertResult, setRevertResult] = reactExports.useState(null);
   const refreshSafety = () => {
-    api$5.getSafetyStatus().then((s) => setChangeCount(s.changeCount)).catch(() => {
+    api$6.getSafetyStatus().then((s) => setChangeCount(s.changeCount)).catch(() => {
     });
   };
   const handleRevert = async () => {
     setReverting(true);
     try {
-      const res = await api$5.revertAllChanges();
+      const res = await api$6.revertAllChanges();
       setRevertResult(res);
       setConfirmRevert(false);
       refreshSafety();
@@ -5617,18 +6687,18 @@ function SettingsView({ store, onRefresh, onNavigate }) {
       return;
     }
     try {
-      setChangelog(await api$5.getChangeLog(200));
+      setChangelog(await api$6.getChangeLog(200));
     } catch {
       setChangelog([]);
     }
   };
   React.useEffect(() => {
-    api$5.getApiKeyStatus().then((s) => setHasKey(s.hasKey));
-    api$5.getUsage().then(setUsage).catch(() => {
+    api$6.getApiKeyStatus().then((s) => setHasKey(s.hasKey));
+    api$6.getUsage().then(setUsage).catch(() => {
     });
-    api$5.getCloud().then(setCloud).catch(() => {
+    api$6.getCloud().then(setCloud).catch(() => {
     });
-    const off = api$5.onUsageChanged((u) => setUsage(u));
+    const off = api$6.onUsageChanged((u) => setUsage(u));
     return off;
   }, []);
   reactExports.useEffect(() => {
@@ -5637,42 +6707,42 @@ function SettingsView({ store, onRefresh, onNavigate }) {
   const saveLicense = async () => {
     if (!licenseInput.trim()) return;
     setLicenseBusy(true);
-    const state = await api$5.setCloudLicense(licenseInput.trim());
+    const state = await api$6.setCloudLicense(licenseInput.trim());
     setCloud(state);
     setLicenseInput("");
     setLicenseBusy(false);
-    api$5.getUsage().then(setUsage).catch(() => {
+    api$6.getUsage().then(setUsage).catch(() => {
     });
   };
   const clearLicense = async () => {
-    const state = await api$5.clearCloudLicense();
+    const state = await api$6.clearCloudLicense();
     setCloud(state);
-    api$5.getUsage().then(setUsage).catch(() => {
+    api$6.getUsage().then(setUsage).catch(() => {
     });
   };
   const subscribe = async () => {
     setCheckingOut(true);
     try {
-      const res = await api$5.cloudCheckout();
-      if (res.url) await api$5.openExternal(res.url);
+      const res = await api$6.cloudCheckout();
+      if (res.url) await api$6.openExternal(res.url);
     } catch {
     }
     setCheckingOut(false);
   };
   const setMode = async (mode) => {
-    await api$5.setStore({ settings: { ...store.settings, blockingMode: mode } });
+    await api$6.setStore({ settings: { ...store.settings, blockingMode: mode } });
     onRefresh();
   };
   const saveApiKey = async () => {
     if (!apiInput.trim()) return;
-    await api$5.setApiKey(apiInput.trim());
+    await api$6.setApiKey(apiInput.trim());
     setApiInput("");
     setApiSaved(true);
     setHasKey(true);
     setTimeout(() => setApiSaved(false), 2500);
   };
   const deleteApiKey = async () => {
-    await api$5.deleteApiKey();
+    await api$6.deleteApiKey();
     setHasKey(false);
     onRefresh();
   };
@@ -5697,7 +6767,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 overflow-y-auto px-6 py-5 space-y-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: theme === "dark" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 11 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 11 }), label: "Appearance" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: theme === "dark" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 11 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 11 }), label: "Appearance" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
@@ -5726,13 +6796,52 @@ function SettingsView({ store, onRefresh, onNavigate }) {
             ]
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] mt-2 text-right", style: { color: colors.textDim }, children: [
-          "Attentify",
-          version ? ` v${version}` : ""
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between p-4 rounded-lg mt-2", style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pr-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Share anonymized diagnostics" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "Sends bug reports, crash/freeze captures and token usage to help fix issues. No passwords or keys. Beta." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => api$6.setStore({ settings: { ...store.settings, shareDiagnostics: store.settings.shareDiagnostics === false } }).then(onRefresh),
+              className: "flex-shrink-0 w-11 h-6 rounded-full transition-colors relative",
+              style: { background: store.settings.shareDiagnostics === false ? colors.border : colors.accent },
+              title: "Toggle diagnostics sharing",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all", style: { left: store.settings.shareDiagnostics === false ? 2 : 22 } })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between p-4 rounded-lg mt-2", style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pr-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Updates" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: [
+              "Attentify",
+              version ? ` v${version}` : "",
+              " · ",
+              update.state === "ready" ? "update ready — restart to install" : update.state === "downloading" ? `downloading${typeof update.percent === "number" ? ` ${update.percent}%` : "…"}` : update.state === "available" ? "update found — downloading" : update.state === "checking" ? "checking…" : update.state === "error" ? "check failed" : update.state === "dev" ? "updates active in the installed app" : "up to date"
+            ] })
+          ] }),
+          update.state === "ready" ? /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => void api$6.installUpdate?.(), className: "flex-shrink-0 px-3 py-2 rounded-lg text-[11px] font-medium", style: { background: colors.accent, color: "#fff" }, children: "Restart to update" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: () => {
+                setUpdate({ state: "checking" });
+                api$6.checkForUpdate?.().then(setUpdate).catch(() => {
+                });
+              },
+              className: "flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-medium",
+              style: { background: colors.accentBg, border: `1px solid ${colors.border}`, color: colors.accent },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 12, className: update.state === "checking" ? "animate-spin" : "" }),
+                " Check now"
+              ]
+            }
+          )
         ] })
       ] }),
       onNavigate && /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { size: 11 }), label: "Extra Modules" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { size: 11 }), label: "Extra Modules" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "button",
           {
@@ -5751,7 +6860,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }), label: "Threat Response Mode" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }), label: "Threat Response Mode" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
@@ -5887,7 +6996,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { size: 11 }), label: "AI Usage & Cloud" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { size: 11 }), label: "AI Usage & Cloud" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "div",
           {
@@ -5972,7 +7081,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 11 }), label: "AI API Key" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 11 }), label: "AI API Key" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
@@ -6047,7 +7156,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }), label: "System Protection" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }), label: "System Protection" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
@@ -6079,7 +7188,65 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 11 }), label: "Safety & Recovery" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Cpu, { size: 11 }), label: "Compatibility" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "p-4 rounded-lg",
+            style: { background: colors.cardBg, border: `1px solid ${colors.border}` },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-3 mb-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "This device" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Checks that this PC can actually run every part of Attentify — so a capability that is silently unavailable shows up here instead of just looking broken." })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: runCompat,
+                    disabled: compatBusy,
+                    className: "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium transition-all hover:brightness-110 disabled:opacity-60 flex-shrink-0",
+                    style: { background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.30)", color: "#818cf8" },
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 11, className: compatBusy ? "animate-spin" : "" }),
+                      " ",
+                      compatBusy ? "Checking…" : "Re-check"
+                    ]
+                  }
+                )
+              ] }),
+              !compat ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: compatBusy ? "Running checks…" : "No results yet." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-2", children: compat.checks.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "div",
+                {
+                  className: "flex items-start gap-2.5 p-2.5 rounded-md",
+                  style: {
+                    background: c.status === "ok" ? "transparent" : `${COMPAT_COLOR[c.status]}0f`,
+                    border: `1px solid ${c.status === "ok" ? colors.border : `${COMPAT_COLOR[c.status]}40`}`
+                  },
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CompatIcon, { status: c.status }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium", style: { color: colors.textPrimary }, children: c.label }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "p",
+                        {
+                          className: "text-[9px] mt-0.5 break-words",
+                          style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' },
+                          children: c.detail
+                        }
+                      ),
+                      c.fix && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1 leading-relaxed", style: { color: COMPAT_COLOR[c.status] }, children: c.fix })
+                    ] })
+                  ]
+                },
+                c.id
+              )) })
+            ]
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { size: 11 }), label: "Safety & Recovery" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
@@ -6211,7 +7378,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
     ] })
   ] });
 }
-const api$4 = window.electronAPI;
+const api$5 = window.electronAPI;
 const SCAN_STEPS = [
   { label: "Scanning installed applications…", duration: 2500 },
   { label: "Checking browser history patterns…", duration: 2800 },
@@ -6228,10 +7395,23 @@ function Onboarding({ onComplete }) {
   const [issueCount, setIssueCount] = reactExports.useState(0);
   const [elevation, setElevation] = reactExports.useState("checking");
   const autoAdvanceRef = reactExports.useRef(null);
+  const [auth, setAuth] = reactExports.useState(null);
+  const refreshAuth = reactExports.useCallback(() => {
+    api$5.getAuth?.().then(setAuth).catch(() => setAuth(null));
+  }, []);
+  reactExports.useEffect(() => {
+    refreshAuth();
+    window.addEventListener("focus", refreshAuth);
+    return () => window.removeEventListener("focus", refreshAuth);
+  }, [refreshAuth]);
+  const signedIn = !!auth?.signedIn;
+  reactExports.useEffect(() => {
+    if (step === "signin" && signedIn) setStep("permission");
+  }, [step, signedIn]);
   reactExports.useEffect(() => {
     if (step !== "permission") return;
     setElevation("checking");
-    api$4.requestElevation().then((status) => {
+    api$5.requestElevation().then((status) => {
       setElevation(status);
       if (status === "full") {
         autoAdvanceRef.current = setTimeout(() => setStep("scanning"), 1800);
@@ -6257,7 +7437,7 @@ function Onboarding({ onComplete }) {
     const done = setTimeout(async () => {
       setScanProgress(100);
       try {
-        const results = await api$4.runScan();
+        const results = await api$5.runScan();
         setIssueCount(results.issueCount);
       } catch {
         setIssueCount(5);
@@ -6272,7 +7452,7 @@ function Onboarding({ onComplete }) {
   const handleRelaunchAsAdmin = async () => {
     setElevation("relaunching");
     try {
-      await api$4.relaunchAsAdmin();
+      await api$5.relaunchAsAdmin();
     } catch {
       setElevation("soft");
     }
@@ -6298,7 +7478,7 @@ function Onboarding({ onComplete }) {
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
-          onClick: () => setStep("permission"),
+          onClick: () => setStep(signedIn ? "permission" : "signin"),
           className: "flex items-center gap-2 bg-accent-blue hover:bg-accent-blue-light text-white font-bold px-10 py-4 rounded-full text-lg transition-all hover:scale-105",
           style: { boxShadow: "0 0 40px rgba(33,150,243,0.35)" },
           children: [
@@ -6307,7 +7487,15 @@ function Onboarding({ onComplete }) {
           ]
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mt-6", style: { color: colors.textMuted }, children: "No accounts. No telemetry. Everything stays on your device." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mt-6", style: { color: colors.textMuted }, children: "Your activity history stays on this device." })
+    ] });
+  }
+  if (step === "signin") {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Wrapper, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-5", style: { filter: "drop-shadow(0 0 20px rgba(42,168,234,0.3))" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrandMark, { size: 72 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-bold mb-2", style: { color: colors.textPrimary }, children: "Create your account" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm leading-relaxed mb-6", style: { color: colors.textSecondary }, children: "Attentify needs an account to block sites, run focus sessions and use the assistant." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full", style: { maxWidth: 340 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthPanel, { onChange: refreshAuth }) })
     ] });
   }
   if (step === "permission") {
@@ -6469,7 +7657,7 @@ function Onboarding({ onComplete }) {
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Wrapper, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", {}) });
 }
-const api$3 = window.electronAPI;
+const api$4 = window.electronAPI;
 const CAT_COLOR = {
   productivity: "#34d399",
   development: "#34d399",
@@ -6540,13 +7728,13 @@ function Timesheets({ onChatWith }) {
   const [selectedDay, setSelectedDay] = reactExports.useState(null);
   const load = reactExports.useCallback(() => {
     setLoading(true);
-    api$3.getTimesheet(28).then((r) => setSessions(r.sessions ?? [])).catch(() => setSessions([])).finally(() => setLoading(false));
+    api$4.getTimesheet(28).then((r) => setSessions(r.sessions ?? [])).catch(() => setSessions([])).finally(() => setLoading(false));
   }, []);
   reactExports.useEffect(() => {
     load();
   }, [load]);
   reactExports.useEffect(() => {
-    const off = api$3.onStoreRefresh?.(() => load());
+    const off = api$4.onStoreRefresh?.(() => load());
     return () => {
       off?.();
     };
@@ -6578,11 +7766,19 @@ function Timesheets({ onChatWith }) {
   if (loading) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center h-full", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) });
   }
-  const Stat = ({ label, value, color }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 p-3.5 rounded-xl", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textMuted }, children: label }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[22px] font-semibold leading-none data-value", style: { color: color ?? colors.textPrimary }, children: value })
-  ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 space-y-4 animate-fade-in max-w-5xl mx-auto", children: [
+  const Stat = ({ label, value, color }) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex rounded-xl", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    MetricDrill,
+    {
+      full: true,
+      width: 300,
+      spec: { title: label, subtitle: `${value} · week of ${weekLabel}`, askPrompt: `For the week of ${weekLabel}, my "${label}" is ${value}. What does that tell you and what should I change?` },
+      render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 p-3.5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textMuted }, children: label }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[22px] font-semibold leading-none data-value", style: { color: color ?? colors.textPrimary }, children: value })
+      ] })
+    }
+  ) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(AskAIProvider, { value: onChatWith, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 space-y-4 animate-fade-in max-w-5xl mx-auto", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 16, style: { color: colors.accent } }),
@@ -6630,7 +7826,10 @@ function Timesheets({ onChatWith }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-1", style: { color: colors.textMuted }, children: "Keep Attentify running — your timesheet fills in as you work." })
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-4", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium mb-3", style: { color: colors.textMuted }, children: "Daily breakdown — click a day for details" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium", style: { color: colors.textMuted }, children: "Daily breakdown — click a day for details" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Daily breakdown", summary: days.map((d) => `${fmtDay(d.date)} ${fmtHM(d.total)}`).join(", ") })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: days.map((d) => {
           const isToday = d.key === dayKey(Date.now());
           const isSel = d.key === selectedDay;
@@ -6662,14 +7861,20 @@ function Timesheets({ onChatWith }) {
             fmtDay(selected.date),
             " — time entries"
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px]", style: { color: colors.textMuted }, children: [
-            fmt(selected.total),
-            " total"
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px]", style: { color: colors.textMuted }, children: [
+              fmt(selected.total),
+              " total"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: `${fmtDay(selected.date)} time entries`, summary: [...selected.byApp.entries()].sort((a, b) => b[1].ms - a[1].ms).slice(0, 6).map(([app, v]) => `${app} ${fmt(v.ms)}`).join(", ") })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TimeEntryTable, { rows: [...selected.byApp.entries()].map(([app, v]) => ({ app, ...v })).sort((a, b) => b.ms - a.ms), total: selected.total, colors })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-4", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium mb-3", style: { color: colors.textPrimary }, children: "Top apps this week" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Top apps this week" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Top apps this week", summary: weekApps.slice(0, 6).map((r) => `${r.app} ${fmt(r.ms)}`).join(", ") })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TimeEntryTable, { rows: weekApps, total: weekTotal, colors })
       ] }),
       onChatWith && /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -6685,7 +7890,7 @@ function Timesheets({ onChatWith }) {
         }
       )
     ] })
-  ] });
+  ] }) });
 }
 function TimeEntryTable({ rows, total, colors }) {
   const max = Math.max(1, ...rows.map((r) => r.ms));
@@ -6696,18 +7901,13 @@ function TimeEntryTable({ rows, total, colors }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] w-16 text-right flex-shrink-0 data-value", style: { color: colors.textPrimary }, children: fmt(r.ms) })
   ] }, r.app)) });
 }
-const api$2 = window.electronAPI;
-function Section({ icon, title, count, defaultOpen = true, children }) {
+const api$3 = window.electronAPI;
+function SectionHeader({ label, sub }) {
   const { colors } = useTheme();
-  const [open, setOpen] = reactExports.useState(defaultOpen);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl overflow-hidden", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => setOpen((v) => !v), className: "w-full flex items-center gap-2 px-3.5 py-2.5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: colors.accent }, children: icon }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12.5px] font-semibold flex-1 text-left", style: { color: colors.textPrimary }, children: title }),
-      count !== void 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] px-1.5 py-0.5 rounded-full", style: { background: colors.accentBg, color: colors.textMuted }, children: count }),
-      open ? /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14, style: { color: colors.textMuted } }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 14, style: { color: colors.textMuted } })
-    ] }),
-    open && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3.5 pb-3.5 pt-0.5", children })
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 pt-1", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider flex-shrink-0", style: { color: "var(--label)", fontFamily: '"Share Tech Mono", monospace' }, children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } }),
+    sub && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] flex-shrink-0", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: sub })
   ] });
 }
 function FlowNode({ label, text, tone = "neutral", confidence }) {
@@ -6823,32 +8023,32 @@ function PatternChain({ alert }) {
     ] })
   ] });
 }
-function Logic() {
+function Logic({ onChatWith }) {
   const { colors } = useTheme();
   const [inferences, setInferences] = reactExports.useState([]);
   const [goals, setGoals] = reactExports.useState([]);
   const [prefs, setPrefs] = reactExports.useState([]);
   const [context, setContext] = reactExports.useState([]);
   const [alerts, setAlerts] = reactExports.useState([]);
-  const [topDistractor, setTopDistractor] = reactExports.useState(null);
+  const [distractors, setDistractors] = reactExports.useState([]);
   const [input, setInput] = reactExports.useState("");
   const [adding, setAdding] = reactExports.useState(false);
   const [loading, setLoading] = reactExports.useState(true);
   const load = reactExports.useCallback(() => {
     Promise.all([
-      api$2.getInferences().then((r) => setInferences(r)).catch(() => {
+      api$3.getInferences().then((r) => setInferences(r)).catch(() => {
       }),
-      api$2.getGoals().then((r) => setGoals(r)).catch(() => {
+      api$3.getGoals().then((r) => setGoals(r)).catch(() => {
       }),
-      api$2.getPreferences().then(setPrefs).catch(() => {
+      api$3.getPreferences().then(setPrefs).catch(() => {
       }),
-      api$2.getUserContext().then(setContext).catch(() => {
+      api$3.getUserContext().then(setContext).catch(() => {
       }),
-      api$2.getAnalytics().then((d) => {
+      api$3.getAnalytics().then((d) => {
         setAlerts((d.heuristicAlerts ?? []).filter((a) => !a.dismissed));
         const byApp = /* @__PURE__ */ new Map();
         for (const s of (d.recentSessions ?? []).filter((s2) => s2.isDistraction)) byApp.set(s.app, (byApp.get(s.app) ?? 0) + s.duration);
-        setTopDistractor([...byApp.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null);
+        setDistractors([...byApp.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([app, ms]) => ({ app, ms })));
       }).catch(() => {
       })
     ]).finally(() => setLoading(false));
@@ -6857,13 +8057,13 @@ function Logic() {
     load();
   }, [load]);
   reactExports.useEffect(() => {
-    const off = api$2.onStoreRefresh?.(() => load());
+    const off = api$3.onStoreRefresh?.(() => load());
     return () => {
       off?.();
     };
   }, [load]);
   const resolve = async (id, action) => {
-    await api$2.resolveInference(id, action).catch(() => {
+    await api$3.resolveInference(id, action).catch(() => {
     });
     load();
   };
@@ -6872,7 +8072,7 @@ function Logic() {
     if (!t || adding) return;
     setAdding(true);
     try {
-      const res = await api$2.addUserContext(t);
+      const res = await api$3.addUserContext(t);
       if (res.ok && res.note) {
         setContext((prev) => [res.note, ...prev]);
         setInput("");
@@ -6882,43 +8082,112 @@ function Logic() {
     setAdding(false);
   };
   const delContext = async (id) => {
-    await api$2.deleteUserContext(id).catch(() => {
+    await api$3.deleteUserContext(id).catch(() => {
     });
     setContext((prev) => prev.filter((c) => c.id !== id));
   };
   const pending = inferences.filter((i) => i.status === "pending");
   const activeInf = pending.length > 0 ? pending : inferences.slice(0, 6);
-  const chip = (label, value, color) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg px-3 py-2 flex-1 min-w-[90px]", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[16px] font-bold leading-none data-value", style: { color: color ?? colors.textPrimary }, children: value }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] mt-1", style: { color: colors.textMuted }, children: label })
-  ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-3xl mx-auto px-5 py-5 space-y-3.5", children: [
+  const topDistractor = distractors[0]?.app ?? null;
+  const fmtMs = (ms) => {
+    const h = Math.floor(ms / 36e5), m = Math.round(ms % 36e5 / 6e4);
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  };
+  const summary = [
+    {
+      label: "Goals",
+      value: String(goals.length),
+      color: goals.length ? colors.accent : colors.textMuted,
+      drill: {
+        title: "Your goals",
+        subtitle: `${goals.length} active`,
+        rows: goals.map((g) => ({ label: g.text })),
+        empty: "No goals set yet — tell the assistant what you want to achieve.",
+        askPrompt: "What are my current goals and how well is my activity aligned with them?"
+      }
+    },
+    {
+      label: "Learned",
+      value: String(prefs.length),
+      drill: {
+        title: "Learned about you",
+        subtitle: `${prefs.length} preferences`,
+        rows: prefs.slice(0, 14).map((p) => ({ label: p.key, sub: p.source === "user" ? "you told me" : "inferred", value: p.value })),
+        empty: "Nothing learned yet — this fills in as you use Attentify.",
+        askPrompt: "What have you learned about my habits and preferences so far?"
+      }
+    },
+    {
+      label: "Live signals",
+      value: String(pending.length),
+      color: pending.length ? colors.warning : colors.textMuted,
+      drill: {
+        title: "Live reasoning signals",
+        subtitle: `${pending.length} awaiting your call`,
+        rows: pending.map((i) => ({ label: i.value, sub: i.type, value: `${Math.round(i.confidence * 100)}%`, tone: "warning" })),
+        empty: "No open signals right now.",
+        askPrompt: "Walk me through the signals you are currently reasoning about."
+      }
+    },
+    {
+      label: "Patterns",
+      value: String(alerts.length),
+      color: alerts.length ? colors.negative : colors.textMuted,
+      drill: {
+        title: "Behavioral patterns",
+        subtitle: `${alerts.length} detected recently`,
+        rows: alerts.slice(0, 12).map((a) => ({ label: a.title, sub: a.severity, tone: a.severity === "high" ? "negative" : a.severity === "medium" ? "warning" : "positive" })),
+        empty: "No patterns detected recently.",
+        askPrompt: "What behavioral patterns have you noticed in how I work, and what should I do about them?"
+      }
+    },
+    {
+      label: "Top drain",
+      value: topDistractor ?? "—",
+      color: topDistractor ? colors.negative : colors.textMuted,
+      drill: {
+        title: "Top distractions",
+        subtitle: "Where distracted time goes",
+        rows: distractors.map((d) => ({ label: d.app, value: fmtMs(d.ms), tone: "negative" })),
+        empty: "No distractions recorded yet.",
+        askPrompt: `My biggest distraction lately is ${topDistractor ?? "unclear"}. How do I bring it under control?`
+      }
+    }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(AskAIProvider, { value: onChatWith, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-4xl mx-auto px-4 py-4 space-y-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 17, style: { color: colors.accent } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 16, style: { color: colors.accent } }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[15px] font-semibold", style: { color: colors.textPrimary }, children: "Logic" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "How Attentify reasons about your attention — and what it's working from." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Logic" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: "How Attentify reasons about your attention — and what it's working from." })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: load, className: "p-1.5 rounded-lg", style: { border: `1px solid ${colors.border}`, color: colors.textMuted }, title: "Refresh", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 13 }) })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2.5", children: [
-        chip("Goals", goals.length, colors.accent),
-        chip("Learned prefs", prefs.length),
-        chip("Live signals", pending.length, pending.length ? colors.warning : colors.textMuted),
-        chip("Patterns", alerts.length, alerts.length ? colors.negative : colors.textMuted),
-        chip("Top drain", topDistractor ?? "—", topDistractor ? colors.negative : colors.textMuted)
-      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel flex items-stretch overflow-x-auto", children: summary.map((m, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex", style: { minWidth: 96, borderLeft: i === 0 ? "none" : `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        MetricDrill,
+        {
+          spec: m.drill,
+          onAskAI: onChatWith,
+          full: true,
+          width: 320,
+          render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1", style: { color: colors.textMuted }, children: m.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[15px] font-semibold data-value truncate", style: { color: m.color ?? colors.textPrimary }, children: m.value })
+          ] })
+        }
+      ) }, m.label)) }),
       loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-10", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Section, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { size: 14 }), title: "Context I'm using", count: goals.length + prefs.length + context.length, children: goals.length === 0 && prefs.length === 0 && context.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "Nothing yet. Set a goal in chat, or add context below — it sharpens my reasoning." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { label: "Context I'm using", sub: `${goals.length + prefs.length + context.length} items` }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel p-3.5", children: goals.length === 0 && prefs.length === 0 && context.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "Nothing yet. Set a goal in chat, or add context below — it sharpens my reasoning." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
           goals.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] font-semibold uppercase tracking-wide mb-1.5", style: { color: colors.textMuted }, children: "Your goals" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", style: { color: colors.textMuted }, children: "Your goals" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5", children: goals.map((g) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] px-2 py-1 rounded-lg", style: { background: colors.accentBg, color: colors.textSecondary, border: `1px solid ${colors.border}` }, children: g.text }, g.id)) })
           ] }),
           context.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] font-semibold uppercase tracking-wide mb-1.5", style: { color: colors.textMuted }, children: "Context you gave me" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", style: { color: colors.textMuted }, children: "Context you gave me" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: context.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group flex items-center gap-2 px-2.5 py-1.5 rounded-lg", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 11, style: { color: colors.accent, flexShrink: 0 } }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11.5px] flex-1", style: { color: colors.textSecondary }, children: c.text }),
@@ -6926,7 +8195,7 @@ function Logic() {
             ] }, c.id)) })
           ] }),
           prefs.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] font-semibold uppercase tracking-wide mb-1.5", style: { color: colors.textMuted }, children: "Learned about you" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", style: { color: colors.textMuted }, children: "Learned about you" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: prefs.slice(0, 12).map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-2.5 py-1.5 rounded-lg", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px] flex-1", style: { color: colors.textSecondary }, children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("b", { style: { color: colors.textPrimary }, children: p.key }),
@@ -6941,11 +8210,16 @@ function Logic() {
             ] }, i)) })
           ] })
         ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Section, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { size: 14 }), title: "Live reasoning", count: activeInf.length, defaultOpen: activeInf.length > 0, children: activeInf.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "No active signals. As you work, Attentify surfaces reasoning about what's pulling your focus here." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { label: "Live reasoning", sub: `${activeInf.length} signal${activeInf.length !== 1 ? "s" : ""}` }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel p-3.5", children: activeInf.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "No active signals. As you work, Attentify surfaces reasoning about what's pulling your focus here." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mb-2", style: { color: colors.textMuted }, children: "Each chain shows how a signal in your behavior becomes a conclusion. Click to expand." }),
           activeInf.map((inf) => /* @__PURE__ */ jsxRuntimeExports.jsx(ReasoningChain, { inf, onResolve: resolve }, inf.id))
         ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Section, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Lightbulb, { size: 14 }), title: "Behavioral patterns", count: alerts.length, defaultOpen: alerts.length > 0, children: alerts.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "No patterns detected recently." }) : alerts.slice(0, 12).map((a) => /* @__PURE__ */ jsxRuntimeExports.jsx(PatternChain, { alert: a }, a.id)) })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { label: "Behavioral patterns", sub: `${alerts.length} detected` }) }),
+          alerts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Behavioral patterns", summary: alerts.slice(0, 6).map((a) => a.title).join("; ") })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel p-3.5", children: alerts.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "No patterns detected recently." }) : alerts.slice(0, 12).map((a) => /* @__PURE__ */ jsxRuntimeExports.jsx(PatternChain, { alert: a }, a.id)) })
       ] })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 px-5 py-3", style: { borderTop: `1px solid ${colors.border}`, background: colors.mainBg }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-3xl mx-auto", children: [
@@ -6978,6 +8252,375 @@ function Logic() {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9.5px] mt-1.5 text-center", style: { color: colors.textDim }, children: "Stored on your device and used to inform how Attentify reasons about you." })
     ] }) })
+  ] }) });
+}
+const api$2 = window.electronAPI;
+const BROWSERS = /* @__PURE__ */ new Set(["chrome", "msedge", "firefox", "brave", "opera", "operagx", "vivaldi", "safari", "arc", "tor", "torbrowser", "chromium", "yandex", "duckduckgo", "librewolf", "waterfox", "floorp", "thorium", "zen", "whale", "epic"]);
+const TERMINALS = /* @__PURE__ */ new Set(["windowsterminal", "wt", "cmd", "powershell", "pwsh", "conhost", "terminal", "iterm2", "iterm", "alacritty", "wezterm", "bash", "zsh", "kitty", "tabby", "hyper"]);
+const FILE_APPS = /* @__PURE__ */ new Set(["explorer", "finder", "nautilus", "files", "dolphin", "thunar", "pcmanfm"]);
+const APP_NAMES = {
+  chrome: "Chrome",
+  msedge: "Edge",
+  firefox: "Firefox",
+  brave: "Brave",
+  opera: "Opera",
+  vivaldi: "Vivaldi",
+  arc: "Arc",
+  code: "VS Code",
+  cursor: "Cursor",
+  devenv: "Visual Studio",
+  idea64: "IntelliJ",
+  pycharm64: "PyCharm",
+  windowsterminal: "Windows Terminal",
+  wt: "Windows Terminal",
+  pwsh: "PowerShell",
+  powershell: "PowerShell",
+  cmd: "Command Prompt",
+  explorer: "File Explorer",
+  discord: "Discord",
+  slack: "Slack",
+  teams: "Teams",
+  spotify: "Spotify",
+  steam: "Steam",
+  notion: "Notion",
+  figma: "Figma",
+  obsidian: "Obsidian",
+  zoom: "Zoom"
+};
+function kindOf(app) {
+  if (BROWSERS.has(app)) return "website";
+  if (TERMINALS.has(app)) return "terminal";
+  if (FILE_APPS.has(app)) return "files";
+  return "app";
+}
+function prettyApp(app) {
+  return APP_NAMES[app] ?? app.charAt(0).toUpperCase() + app.slice(1);
+}
+function domainOf(url) {
+  if (!url) return "";
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+}
+function fmtDur(ms) {
+  const h = Math.floor(ms / 36e5), m = Math.floor(ms % 36e5 / 6e4), s = Math.floor(ms % 6e4 / 1e3);
+  if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  if (m > 0) return s > 0 && m < 10 ? `${m}m ${s}s` : `${m}m`;
+  return `${s}s`;
+}
+function fmtTime(ts) {
+  return new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+function dayLabel(ts) {
+  const d = new Date(ts), today = /* @__PURE__ */ new Date();
+  const y = new Date(today);
+  y.setDate(today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return "Today";
+  if (d.toDateString() === y.toDateString()) return "Yesterday";
+  return d.toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" });
+}
+const TITLE_SUFFIX = /\s*[-–—|]\s*(Google Chrome|Mozilla Firefox|Microsoft Edge|Brave|Opera|Vivaldi|Chromium|Safari|Arc|Visual Studio Code|VS Code|Visual Studio|Discord|Slack|Notion|Figma|Obsidian|.+? Browser)\s*$/i;
+function cleanTitle(app, title) {
+  if (!title || !title.trim()) return prettyApp(app);
+  let t = title.replace(/^\(\d+\)\s*/, "");
+  t = t.replace(TITLE_SUFFIX, "");
+  t = t.replace(/\s*[-–—]\s*(Private Browsing|InPrivate|Incognito)\s*$/i, "");
+  t = t.trim();
+  return t || prettyApp(app);
+}
+function mergeSessions(events) {
+  const GAP = 3 * 60 * 1e3;
+  const asc = [...events].filter((e) => e.duration >= 3e3).sort((a, b) => a.startTime - b.startTime);
+  const groups = [];
+  for (const e of asc) {
+    const last = groups[groups.length - 1];
+    const dom = domainOf(e.url);
+    if (last && last.app === e.app && e.startTime - last.end <= GAP) {
+      last.events.push(e);
+      last.end = e.endTime;
+      last.duration += e.duration;
+      if (e.isDistraction) last.distractMs += e.duration;
+      if (dom && !last.domains.includes(dom)) last.domains.push(dom);
+      if (!last.privacy && e.privacy) last.privacy = e.privacy;
+    } else {
+      groups.push({
+        id: e.id,
+        app: e.app,
+        category: e.category,
+        start: e.startTime,
+        end: e.endTime,
+        duration: e.duration,
+        events: [e],
+        domains: dom ? [dom] : [],
+        distractMs: e.isDistraction ? e.duration : 0,
+        privacy: e.privacy ?? detectPrivacyMode(e.app, e.title)
+      });
+    }
+  }
+  return groups.map((g) => {
+    const longest = g.events.reduce((a, b) => b.duration > a.duration ? b : a, g.events[0]);
+    return {
+      ...g,
+      kind: kindOf(g.app),
+      title: cleanTitle(longest.app, longest.title),
+      isDistraction: g.distractMs > g.duration / 2
+    };
+  });
+}
+const PRIMARY = [
+  { id: "all", label: "All activity", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(LayoutGrid, { size: 12 }) },
+  { id: "app", label: "Apps", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(AppWindow, { size: 12 }) },
+  { id: "website", label: "Websites", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12 }) },
+  { id: "search", label: "Searches", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 12 }) },
+  { id: "terminal", label: "Terminal", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { size: 12 }) },
+  { id: "files", label: "Files", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FolderOpen, { size: 12 }) }
+];
+function Activity({ onChatWith }) {
+  const { colors } = useTheme();
+  const [searches, setSearches] = reactExports.useState([]);
+  const [sessions, setSessions] = reactExports.useState([]);
+  const [loading, setLoading] = reactExports.useState(true);
+  const [filter, setFilter] = reactExports.useState("all");
+  const [query, setQuery] = reactExports.useState("");
+  const [todayOnly, setTodayOnly] = reactExports.useState(false);
+  const [distractOnly, setDistractOnly] = reactExports.useState(false);
+  const [longOnly, setLongOnly] = reactExports.useState(false);
+  const [expanded, setExpanded] = reactExports.useState(/* @__PURE__ */ new Set());
+  const load = reactExports.useCallback(() => {
+    setLoading(true);
+    api$2.getActivity(14).then((d) => {
+      setSearches(d.searches ?? []);
+      setSessions(d.sessions ?? []);
+    }).catch(() => {
+    }).finally(() => setLoading(false));
+  }, []);
+  reactExports.useEffect(() => {
+    load();
+  }, [load]);
+  reactExports.useEffect(() => {
+    const off = api$2.onStoreRefresh?.(() => load());
+    return () => {
+      off?.();
+    };
+  }, [load]);
+  const merged = reactExports.useMemo(() => mergeSessions(sessions), [sessions]);
+  const stats = reactExports.useMemo(() => {
+    const events = sessions.filter((s) => s.duration >= 3e3).length;
+    const apps = new Set(merged.map((m) => m.app)).size;
+    const sites = new Set(merged.filter((m) => m.kind === "website").flatMap((m) => m.domains)).size;
+    return { events, apps, sites, searches: searches.length };
+  }, [sessions, merged, searches]);
+  const kindCounts = reactExports.useMemo(() => ({
+    all: merged.length + searches.length,
+    app: merged.filter((m) => m.kind === "app").length,
+    website: merged.filter((m) => m.kind === "website").length,
+    search: searches.length,
+    terminal: merged.filter((m) => m.kind === "terminal").length,
+    files: merged.filter((m) => m.kind === "files").length
+  }), [merged, searches]);
+  const rows = reactExports.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const todayStart = (/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0);
+    const out = [];
+    const wantSessions = filter !== "search";
+    const wantSearches = filter === "all" || filter === "search";
+    if (wantSessions) {
+      for (const s of merged) {
+        if (filter !== "all" && s.kind !== filter) continue;
+        if (todayOnly && s.start < todayStart) continue;
+        if (distractOnly && !s.isDistraction) continue;
+        if (longOnly && s.duration < 6e4) continue;
+        if (q && !s.title.toLowerCase().includes(q) && !s.app.toLowerCase().includes(q) && !s.domains.some((d) => d.includes(q))) continue;
+        out.push({ type: "session", ts: s.start, s });
+      }
+    }
+    if (wantSearches && !distractOnly) {
+      for (const q2 of searches) {
+        if (todayOnly && q2.ts < todayStart) continue;
+        if (q && !q2.query.toLowerCase().includes(q)) continue;
+        out.push({ type: "search", ts: q2.ts, q: q2 });
+      }
+    }
+    return out.sort((a, b) => b.ts - a.ts).slice(0, 800);
+  }, [merged, searches, filter, query, todayOnly, distractOnly, longOnly]);
+  const groups = reactExports.useMemo(() => {
+    const out = [];
+    for (const it of rows) {
+      const day = dayLabel(it.ts);
+      const last = out[out.length - 1];
+      if (last && last.day === day) last.items.push(it);
+      else out.push({ day, items: [it] });
+    }
+    return out;
+  }, [rows]);
+  const toggleExpand = (id) => setExpanded((prev) => {
+    const n = new Set(prev);
+    n.has(id) ? n.delete(id) : n.add(id);
+    return n;
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-shrink-0 px-5 pt-5 pb-3 max-w-4xl mx-auto w-full", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2.5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 16, style: { color: colors.accent } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Activity" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: [
+              stats.events,
+              " events · ",
+              stats.apps,
+              " application",
+              stats.apps !== 1 ? "s" : "",
+              " · ",
+              stats.sites,
+              " website",
+              stats.sites !== 1 ? "s" : "",
+              " · ",
+              stats.searches,
+              " search",
+              stats.searches !== 1 ? "es" : "",
+              " · last 14 days"
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: load, className: "p-1.5 rounded-lg", style: { border: `1px solid ${colors.border}`, color: colors.textMuted }, title: "Refresh", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 13 }) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-3 py-2 rounded-xl mb-2", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Filter, { size: 13, style: { color: colors.textMuted, flexShrink: 0 } }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            value: query,
+            onChange: (e) => setQuery(e.target.value),
+            placeholder: "Search your activity…",
+            className: "flex-1 bg-transparent text-[12px] outline-none",
+            style: { color: colors.textPrimary, caretColor: colors.accent }
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-1 flex-wrap", children: PRIMARY.map((f) => {
+        const n = kindCounts[f.id];
+        const active = filter === f.id;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => setFilter(f.id),
+            className: "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors",
+            style: {
+              background: active ? colors.accentBg : "transparent",
+              border: `1px solid ${active ? colors.borderMid : colors.border}`,
+              color: active ? colors.accent : colors.textMuted
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: active ? colors.accent : colors.textDim }, children: f.icon }),
+              f.label,
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "data-value", style: { color: active ? colors.accent : colors.textDim, opacity: 0.75 }, children: n })
+            ]
+          },
+          f.id
+        );
+      }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-1.5 mt-2", children: [
+        ["Today", todayOnly, () => setTodayOnly((v) => !v)],
+        ["Distractions", distractOnly, () => setDistractOnly((v) => !v)],
+        ["≥ 1m", longOnly, () => setLongOnly((v) => !v)]
+      ].map(([label, on, fn]) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: fn,
+          className: "px-2 py-0.5 rounded-full text-[10px] transition-colors",
+          style: {
+            background: on ? colors.accentBg : "transparent",
+            border: `1px solid ${on ? colors.borderMid : colors.border}`,
+            color: on ? colors.accent : colors.textMuted
+          },
+          children: label
+        },
+        label
+      )) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto px-5 pb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-4xl mx-auto", children: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) }) : rows.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-[12px] py-12", style: { color: colors.textMuted }, children: sessions.length === 0 && searches.length === 0 ? "No activity recorded yet — keep Attentify running and it fills in here." : "Nothing matches those filters." }) : groups.map((g) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wide mb-1 sticky top-0 py-1 z-10", style: { color: colors.textMuted, background: colors.mainBg, fontFamily: '"Share Tech Mono", monospace' }, children: g.day }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl overflow-hidden", style: { border: `1px solid ${colors.border}` }, children: g.items.map((it, idx) => it.type === "search" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SearchRow, { q: it.q, first: idx === 0 }, `s${idx}`) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+        SessionRow,
+        {
+          s: it.s,
+          first: idx === 0,
+          open: expanded.has(it.s.id),
+          onToggle: () => toggleExpand(it.s.id),
+          onChatWith
+        },
+        it.s.id
+      )) })
+    ] }, g.day)) }) })
+  ] });
+}
+function SessionRow({ s, first, open, onToggle, onChatWith }) {
+  const { colors } = useTheme();
+  const multi = s.events.length > 1;
+  const domainStr = s.domains.length > 0 ? `${s.domains[0]}${s.domains.length > 1 ? ` +${s.domains.length - 1}` : ""}` : "";
+  const secondaryParts = [
+    domainStr,
+    prettyApp(s.app),
+    multi ? `${s.events.length} events` : "",
+    s.privacy ? privacyLabel(s.privacy) : ""
+  ].filter(Boolean);
+  const accent = s.kind === "website" ? colors.brand : s.kind === "terminal" ? colors.positive : s.isDistraction ? colors.negative : colors.textMuted;
+  const icon = s.kind === "website" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 13 }) : s.kind === "terminal" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { size: 13 }) : s.kind === "files" ? /* @__PURE__ */ jsxRuntimeExports.jsx(FolderOpen, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(AppWindow, { size: 13 });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { borderTop: first ? "none" : `1px solid ${colors.border}`, background: colors.cardBg }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onToggle, className: "w-full flex items-center gap-2.5 px-3 py-1.5 text-left transition-colors hover:opacity-90", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] flex-shrink-0 data-value tabular-nums", style: { color: colors.textDim, width: multi ? 84 : 46 }, children: multi ? `${fmtTime(s.start)}–${fmtTime(s.end)}` : fmtTime(s.start) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-shrink-0", style: { color: accent }, children: icon }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] truncate", style: { color: colors.textPrimary }, children: s.title }),
+        secondaryParts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] truncate", style: { color: colors.textMuted }, children: secondaryParts.join(" · ") })
+      ] }),
+      s.privacy && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8.5px] px-1.5 py-0.5 rounded flex-shrink-0", style: { background: colors.warningBg, color: colors.warning }, children: "private" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] flex-shrink-0 data-value tabular-nums text-right", style: { color: s.isDistraction ? colors.negative : colors.textSecondary, width: 56 }, children: fmtDur(s.duration) }),
+      multi && /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 13, className: "flex-shrink-0 transition-transform", style: { color: colors.textDim, transform: open ? "rotate(90deg)" : "none" } }),
+      !multi && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { width: 13 }, className: "flex-shrink-0" })
+    ] }),
+    open && multi && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-3 pb-2", style: { background: colors.inputBg }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pl-[74px] pr-1 py-1 space-y-0.5", children: [
+      s.events.map((e) => {
+        const dom = domainOf(e.url);
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-0.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0 data-value tabular-nums", style: { color: colors.textDim, width: 42 }, children: fmtTime(e.startTime) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10.5px] flex-1 truncate", style: { color: colors.textSecondary }, children: cleanTitle(e.app, e.title) }),
+          dom && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0 truncate max-w-[120px]", style: { color: colors.brand }, children: dom }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px] flex-shrink-0 data-value tabular-nums", style: { color: colors.textMuted, width: 44, textAlign: "right" }, children: fmtDur(e.duration) })
+        ] }, e.id);
+      }),
+      onChatWith && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => onChatWith(`On the Activity page I'm looking at a ${fmtDur(s.duration)} session in ${prettyApp(s.app)}${s.domains.length ? ` across ${s.domains.join(", ")}` : ""} ("${s.title}"). What was I doing and was it productive?`),
+          className: "mt-1 flex items-center gap-1.5 text-[10px] transition-opacity hover:opacity-80",
+          style: { color: colors.accent },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 10 }),
+            " Ask AI about this session"
+          ]
+        }
+      )
+    ] }) })
+  ] });
+}
+function SearchRow({ q, first }) {
+  const { colors } = useTheme();
+  const dom = domainOf(q.url);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-3 py-1.5", style: { borderTop: first ? "none" : `1px solid ${colors.border}`, background: colors.cardBg }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] flex-shrink-0 data-value tabular-nums", style: { color: colors.textDim, width: 46 }, children: fmtTime(q.ts) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex-shrink-0", style: { color: colors.accent }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 13 }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] truncate", style: { color: colors.textPrimary }, children: q.query }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] truncate", style: { color: colors.textMuted }, children: [
+        "Search",
+        dom ? ` · ${dom}` : ""
+      ] })
+    ] }),
+    q.url && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => api$2.openExternal?.(q.url), className: "flex-shrink-0 p-1 opacity-50 hover:opacity-100", style: { color: colors.textMuted }, title: "Open", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ExternalLink, { size: 11 }) })
   ] });
 }
 const WELCOME_TEXT = "Hey. I'm Attentify, your focus assistant. Tell me what you need to focus on and I'll block everything that gets in the way.\n\nTry: **Block Instagram for 2 hours** or **Start a deep focus session**";
@@ -7084,6 +8727,9 @@ function renderInline(text) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: part }, i);
   }) });
 }
+const MessageBody = React.memo(function MessageBody2({ content, clean }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: renderMarkdown(clean ? cleanForDisplay(content) : content) });
+});
 function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" }) {
   const isFull = variant === "full";
   const { colors } = useTheme();
@@ -7259,12 +8905,13 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
       setActiveToolName(null);
       const isPaywall = err === "PAYWALL";
       if (isPaywall) setPaywalled(true);
+      const isAuth = err === "AUTH_REQUIRED";
       setMessages((prev) => [
         ...prev.filter((m) => !m.streaming),
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: isPaywall ? "You've used up your **$1 of free AI**. Subscribe to **Attentify Cloud** for **$5/month** to keep using the assistant — or add your own OpenRouter key in Settings (never metered)." : `Error: ${err}`,
+          content: isPaywall ? "You've used up your **$1 of free AI**. Subscribe to **Attentify Cloud** for **$5/month** to keep using the assistant — or add your own OpenRouter key in Settings (never metered)." : isAuth ? "Sign in to use the assistant — open the account button at the bottom of the sidebar." : `Error: ${err}`,
           timestamp: Date.now()
         }
       ]);
@@ -7466,7 +9113,12 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
                   },
                   children: [
                     msg.images && msg.images.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5 mb-1.5", children: msg.images.map((src, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src, alt: "attachment", className: "rounded-lg", style: { maxWidth: 140, maxHeight: 140, objectFit: "cover", border: `1px solid ${colors.border}` } }, i)) }),
-                    msg.streaming && msg.content === "" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-1 py-0.5", children: [0, 1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1.5 h-1.5 rounded-full animate-bounce", style: { background: colors.textMuted, animationDelay: `${i * 150}ms` } }, i)) }) : renderMarkdown(msg.role === "assistant" ? cleanForDisplay(msg.content) : msg.content),
+                    msg.streaming && msg.content === "" ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-1 py-0.5", children: [0, 1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-1.5 h-1.5 rounded-full animate-bounce", style: { background: colors.textMuted, animationDelay: `${i * 150}ms` } }, i)) }) : (
+                      // The streaming message already arrives sanitized from main, so skip the
+                      // per-chunk regex pass while it types. Memoized so only the changed
+                      // message re-renders.
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(MessageBody, { content: msg.content, clean: msg.role === "assistant" && !msg.streaming })
+                    ),
                     msg.streaming && msg.content !== "" && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block w-1.5 h-3 ml-0.5 rounded-sm animate-pulse", style: { background: colors.textMuted, verticalAlign: "text-bottom" } })
                   ]
                 }
@@ -7616,7 +9268,7 @@ function App() {
   const [breakMode, setBreakMode] = reactExports.useState(null);
   const [alwaysOn, setAlwaysOn] = reactExports.useState(false);
   const [platform, setPlatform] = reactExports.useState("windows");
-  const { colors, theme, toggle: toggleTheme } = useTheme();
+  const { colors } = useTheme();
   const handleNavigate = reactExports.useCallback((v) => {
     setView(v);
   }, []);
@@ -7692,6 +9344,29 @@ function App() {
       off?.();
     };
   }, [handleNavigate]);
+  const [auth, setAuth] = reactExports.useState(null);
+  const refreshAuth = reactExports.useCallback(() => {
+    api.getAuth?.().then(setAuth).catch(() => setAuth(null));
+  }, []);
+  reactExports.useEffect(() => {
+    refreshAuth();
+    window.addEventListener("focus", refreshAuth);
+    return () => window.removeEventListener("focus", refreshAuth);
+  }, [refreshAuth]);
+  const signedOut = auth !== null && !auth.signedIn;
+  const [authPrompt, setAuthPrompt] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    if (auth?.signedIn) setAuthPrompt(false);
+  }, [auth?.signedIn]);
+  const [update, setUpdate] = reactExports.useState({ state: "idle" });
+  reactExports.useEffect(() => {
+    api.getUpdateStatus?.().then(setUpdate).catch(() => {
+    });
+    const off = api.onUpdateStatus?.((s) => setUpdate(s));
+    return () => {
+      off?.();
+    };
+  }, []);
   reactExports.useEffect(() => {
     const loadPending = () => {
       api.getInferences("pending").then((rows) => {
@@ -7726,7 +9401,15 @@ function App() {
           setChatOpen(true);
         } });
       case "logic":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(Logic, {});
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(Logic, { onChatWith: (msg) => {
+          setChatPreFill(msg);
+          setChatOpen(true);
+        } });
+      case "activity":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { onChatWith: (msg) => {
+          setChatPreFill(msg);
+          setChatOpen(true);
+        } });
       case "focus-shield":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Overview, { store, onRefresh: refreshStore, onChatWith: (msg) => {
           setChatPreFill(msg);
@@ -7844,19 +9527,6 @@ function App() {
               }
             )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(BrandMark, { size: 18, style: { opacity: 0.9 } }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "button",
-              {
-                onClick: toggleTheme,
-                className: "titlebar-nodrag flex items-center justify-center rounded transition-colors hover:bg-white/5",
-                style: { width: 22, height: 22, color: colors.textMuted },
-                title: theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
-                children: theme === "dark" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 12 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 12 })
-              }
-            )
-          ] }),
           platform !== "mac" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "titlebar-nodrag flex items-center", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
@@ -7908,6 +9578,57 @@ function App() {
           className: "flex-1 overflow-hidden relative flex flex-col",
           style: { background: colors.mainBg, transition: "background 0.2s ease" },
           children: [
+            signedOut && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "flex-shrink-0 flex items-center justify-between px-5 py-1.5",
+                style: { background: "rgba(251,191,36,0.07)", borderBottom: "1px solid rgba(251,191,36,0.25)" },
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 12, style: { color: "#fbbf24" } }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textSecondary }, children: "You’re signed out. Look around freely — blocking, focus sessions and the assistant need an account." })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => setAuthPrompt(true),
+                      className: "text-[11px] font-medium px-2.5 py-1 rounded-md transition-opacity hover:opacity-90",
+                      style: { background: "rgba(251,191,36,0.14)", border: "1px solid rgba(251,191,36,0.4)", color: "#fbbf24" },
+                      children: "Sign in"
+                    }
+                  )
+                ]
+              }
+            ),
+            (update.state === "ready" || update.state === "downloading") && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "flex-shrink-0 flex items-center justify-between px-5 py-1.5",
+                style: { background: "rgba(99,102,241,0.06)", borderBottom: "1px solid rgba(99,102,241,0.2)" },
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 12, style: { color: colors.accent } }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textSecondary }, children: update.state === "ready" ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                      "Update",
+                      update.version ? ` ${update.version}` : "",
+                      " ready to install."
+                    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                      "Downloading update",
+                      typeof update.percent === "number" ? ` — ${update.percent}%` : "…"
+                    ] }) })
+                  ] }),
+                  update.state === "ready" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => void api.installUpdate?.(),
+                      className: "text-[11px] font-medium px-2.5 py-1 rounded-md transition-opacity hover:opacity-90",
+                      style: { background: colors.accent, color: "#fff" },
+                      children: "Restart to update"
+                    }
+                  )
+                ]
+              }
+            ),
             breakMode && Date.now() < breakMode.endsAt && /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "div",
               {
@@ -7997,7 +9718,7 @@ function App() {
                 ]
               }
             ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `flex-1 min-h-0 animate-fade-in ${view === "home" || view === "logic" ? "overflow-hidden" : "overflow-y-auto"}`, children: renderView() }, view)
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `flex-1 min-h-0 animate-fade-in ${view === "home" || view === "logic" || view === "activity" ? "overflow-hidden" : "overflow-y-auto"}`, children: renderView() }, view)
           ]
         }
       ),
@@ -8005,6 +9726,26 @@ function App() {
         setChatOpen(false);
         setChatPreFill("");
       }, onRefresh: refreshStore, initialMessage: chatPreFill })
+    ] }),
+    authPrompt && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-[70]", style: { background: "rgba(0,0,0,0.45)" }, onClick: () => setAuthPrompt(false) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed z-[71] left-1/2 top-1/2", style: { transform: "translate(-50%,-50%)", width: 360 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "rounded-xl overflow-hidden",
+          style: { background: colors.panelBg, border: `1px solid ${colors.borderMid}`, boxShadow: "0 20px 60px rgba(0,0,0,0.55)" },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between px-4 pt-3.5 pb-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold", style: { color: colors.textPrimary }, children: "Sign in to Attentify" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "Needed to block sites, run focus sessions and use the assistant." })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setAuthPrompt(false), className: "rounded p-1 hover:bg-white/5", title: "Close", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 13, style: { color: colors.textMuted } }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 pt-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthPanel, { onChange: refreshAuth }) })
+          ]
+        }
+      ) })
     ] })
   ] });
 }
