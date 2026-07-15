@@ -1,5 +1,5 @@
-import { a as createLucideIcon, b as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-Niz52e0z.js";
-import { a as Coffee, C as Clock } from "./coffee-Dqv-zoJ6.js";
+import { a as createLucideIcon, b as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-CCfb2mVU.js";
+import { a as Coffee, C as Clock } from "./coffee-Dp0X32Ge.js";
 /**
  * @license lucide-react v0.312.0 - ISC
  *
@@ -105,7 +105,7 @@ function InterstitialWarning() {
                 " ",
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-accent-orange font-semibold", children: data?.blocked ?? "…" }),
                 " ",
-                "— you asked it to."
+                "You asked it to."
               ] }),
               sessionEnd && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-navy-600 text-xs mt-1", children: [
                 "Focus session ends at ",

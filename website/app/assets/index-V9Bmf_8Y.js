@@ -1,6 +1,6 @@
-import { b as reactExports, j as jsxRuntimeExports, a as createLucideIcon, R as React, r as reactDomExports, c as client } from "./globals-Niz52e0z.js";
-import { A as AlertTriangle, X, S as Shield, B as Brain, Z as Zap, E as Eye } from "./zap-By6eoHVO.js";
-import { C as Clock, a as Coffee } from "./coffee-Dqv-zoJ6.js";
+import { b as reactExports, j as jsxRuntimeExports, a as createLucideIcon, R as React, r as reactDomExports, c as client } from "./globals-CCfb2mVU.js";
+import { A as AlertTriangle, X, S as Shield, B as Brain, Z as Zap, E as Eye } from "./zap-NFnEc1cR.js";
+import { C as Clock, a as Coffee } from "./coffee-Dp0X32Ge.js";
 const DARK = {
   rootBg: "#020912",
   mainBg: "#030c1a",
@@ -909,7 +909,7 @@ function BugReporter({
         },
         children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full max-w-md mx-4 p-5 rounded-2xl", style: { background: colors.cardBg, border: `1px solid ${colors.borderMid}` }, children: done ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 py-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { size: 18, style: { color: colors.positive } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px]", style: { color: colors.textPrimary }, children: "Thanks — reported. It helps make Attentify better." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px]", style: { color: colors.textPrimary }, children: "Thanks, reported. It helps make Attentify better." })
         ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
@@ -1247,10 +1247,10 @@ function AccountMenu({
 }
 const api$g = window.electronAPI;
 const mainNav = [
-  { id: "home", label: "Assistant", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 15 }), desc: "Chat with Attentify — block sites, start focus, ask about your day" },
-  { id: "analytics", label: "Analytics", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 15 }), desc: "Charts, patterns, alerts — and describe any custom analytics you want" },
-  { id: "logic", label: "Logic", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 15 }), desc: "How Attentify reasons about you — and add your own context" },
-  { id: "activity", label: "Activity", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 15 }), desc: "Your searches, browsing and app activity — the raw log" },
+  { id: "home", label: "Assistant", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 15 }), desc: "Chat with Attentify, block sites, start focus, ask about your day" },
+  { id: "analytics", label: "Analytics", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 15 }), desc: "Charts, patterns, alerts, and describe any custom analytics you want" },
+  { id: "logic", label: "Logic", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 15 }), desc: "How Attentify reasons about you, and add your own context" },
+  { id: "activity", label: "Activity", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 15 }), desc: "Your searches, browsing and app activity, the raw log" },
   { id: "timesheets", label: "Timesheets", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 15 }), desc: "Time logged per app and category, day by day" },
   { id: "focus-shield", label: "Protection", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 15 }), desc: "Blocklists, feed blocks, and the activity log" },
   { id: "deep-focus", label: "Deep Focus", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 15 }), desc: "Lock out distractions for a set time" },
@@ -1358,7 +1358,7 @@ function Sidebar({
                 {
                   className: "flex-shrink-0 w-1.5 h-1.5 rounded-full",
                   style: { background: "#fbbf24", boxShadow: "0 0 6px #fbbf24" },
-                  title: "Soft mode — limited protection"
+                  title: "Soft mode, limited protection"
                 }
               )
             ]
@@ -1629,12 +1629,12 @@ function Overview({ store, onRefresh, onChatWith }) {
       "div",
       {
         className: "flex items-center gap-2 px-3 py-2 rounded-lg text-xs",
-        title: "Without admin rights, hosts-file edits cannot be made — site blocking is unavailable.",
+        title: "Without admin rights, hosts-file edits cannot be made, so site blocking is unavailable.",
         style: { background: "rgba(255,107,53,0.08)", border: "1px solid rgba(255,107,53,0.2)" },
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(WifiOff, { size: 12, className: "text-accent-orange flex-shrink-0" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-accent-orange font-semibold", children: "Hosts-file blocking inactive" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1", style: { color: colors.textSecondary }, children: "— admin rights required to enforce site blocks" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1", style: { color: colors.textSecondary }, children: "admin rights required to enforce site blocks" })
         ]
       }
     ),
@@ -1645,7 +1645,7 @@ function Overview({ store, onRefresh, onChatWith }) {
         color: store.blocklist.domains.length > 0 ? "#34d399" : colors.textMuted,
         sub: "domains",
         icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Globe, { size: 12 }),
-        tooltip: store.blocklist.domains.length > 0 ? `${store.blocklist.domains.length} domain${store.blocklist.domains.length > 1 ? "s" : ""} actively blocked` : "No sites blocked — add a domain below to start blocking"
+        tooltip: store.blocklist.domains.length > 0 ? `${store.blocklist.domains.length} domain${store.blocklist.domains.length > 1 ? "s" : ""} actively blocked` : "No sites blocked, add a domain below to start blocking"
       },
       {
         label: "Apps Blocked",
@@ -1741,7 +1741,7 @@ function Overview({ store, onRefresh, onChatWith }) {
           "div",
           {
             className: "flex items-center gap-1.5 px-2 py-1 rounded-md group hover:bg-white/[0.03] transition-colors",
-            title: `${d.domain}${d.expiresAt ? ` — expires in ${formatExpiry(d.expiresAt)}` : " — permanent block"}`,
+            title: `${d.domain}${d.expiresAt ? `, expires in ${formatExpiry(d.expiresAt)}` : ", permanent block"}`,
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-medium truncate flex-1", style: { color: colors.textPrimary }, children: d.domain }),
               d.expiresAt && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-mono tabular-nums flex-shrink-0", style: { color: colors.textSecondary }, children: formatExpiry(d.expiresAt) }),
@@ -1824,7 +1824,7 @@ function Overview({ store, onRefresh, onChatWith }) {
           "div",
           {
             className: "flex items-center gap-1.5 px-2 py-1 rounded-md group hover:bg-white/[0.03] transition-colors",
-            title: `${p.name}${p.expiresAt ? ` — expires in ${formatExpiry(p.expiresAt)}` : " — permanent block"}`,
+            title: `${p.name}${p.expiresAt ? `, expires in ${formatExpiry(p.expiresAt)}` : ", permanent block"}`,
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-medium truncate flex-1", style: { color: colors.textPrimary }, children: p.name }),
               p.expiresAt && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-mono tabular-nums flex-shrink-0", style: { color: colors.textSecondary }, children: formatExpiry(p.expiresAt) }),
@@ -1961,14 +1961,14 @@ function Overview({ store, onRefresh, onChatWith }) {
           " sessions tracked"
         ] })
       ] }),
-      loggedSessions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: colors.textSecondary }, children: "No activity recorded yet — tracking starts automatically in the background" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+      loggedSessions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: colors.textSecondary }, children: "No activity recorded yet, tracking starts automatically in the background" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
         [...grouped.entries()].map(([dateLabel, sessions]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest mb-1.5", style: { color: colors.textSecondary }, children: dateLabel }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-px", children: sessions.map((s) => {
             const catColor = CAT_COLOR$2[s.category];
             const title = cleanTitle$1(s.title, s.app);
             const tooltipParts = [
-              `${s.app} — ${s.category}`,
+              `${s.app}: ${s.category}`,
               title !== s.app ? `"${title}"` : "",
               s.url ? `URL: ${s.url}` : "",
               `Duration: ${formatMs(s.duration)}`,
@@ -2112,7 +2112,7 @@ function buildPlan(results) {
   if (hasFeeds) {
     steps.push({
       id: "feed-guard",
-      label: "Enable Feed Guard — block all algorithmic feeds",
+      label: "Enable Feed Guard, block all algorithmic feeds",
       description: FEED_GUARD.join(", "),
       tag: "Feeds",
       tagColor: "#f87171",
@@ -2306,7 +2306,7 @@ function DeepClean({ store, onChatWith }) {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-xl bg-accent-blue/10 flex items-center justify-center mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { size: 28, className: "text-accent-blue" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-bold text-base mb-1", style: { color: colors.textPrimary }, children: "No scan run yet" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs max-w-xs", style: { color: colors.textSecondary }, children: "Scan your system to detect attention leaks — running apps, browsing history, notification overload, and more." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs max-w-xs", style: { color: colors.textSecondary }, children: "Scan your system to detect attention leaks, running apps, browsing history, notification overload, and more." })
         ]
       }
     ),
@@ -2320,7 +2320,7 @@ function DeepClean({ store, onChatWith }) {
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
               results.issueCount === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle2, { size: 20, className: "text-accent-green" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 20, className: "text-accent-orange" }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-bold", style: { color: colors.textPrimary }, children: results.issueCount === 0 ? "Clean — no issues found" : `${results.issueCount} attention leak${results.issueCount !== 1 ? "s" : ""} found` }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-bold", style: { color: colors.textPrimary }, children: results.issueCount === 0 ? "Clean, no issues found" : `${results.issueCount} attention leak${results.issueCount !== 1 ? "s" : ""} found` }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px]", style: { color: colors.textSecondary }, children: [
                   new Date(results.runAt).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" }),
                   " ",
@@ -2555,7 +2555,7 @@ function DeepClean({ store, onChatWith }) {
                         {
                           onClick: (e) => {
                             e.stopPropagation();
-                            onChatWith(`Help me fix this scan issue: ${issue.title} — ${issue.description}`);
+                            onChatWith(`Help me fix this scan issue: ${issue.title}: ${issue.description}`);
                           },
                           className: "text-[10px] hover:text-accent-blue transition-colors flex-shrink-0 ml-1",
                           style: { color: colors.textSecondary },
@@ -2617,7 +2617,7 @@ function StartupPanel() {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Cpu, { size: 15, style: { color: colors.accent } }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold", style: { color: colors.textPrimary }, children: "Startup apps" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "Stop apps from launching automatically at login — a faster, calmer boot." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "Stop apps from launching automatically at login, a faster, calmer boot." })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: load, className: "text-[10px] px-2 py-1 rounded-lg", style: { border: `1px solid ${colors.border}`, color: colors.textMuted }, children: "Refresh" })
@@ -2643,10 +2643,10 @@ function StartupPanel() {
 }
 const api$d = window.electronAPI;
 const PRESETS = [
-  { label: "25 min — Pomodoro", ms: 25 * 60 * 1e3 },
-  { label: "90 min — Flow state", ms: 90 * 60 * 1e3 },
-  { label: "3 hours — Deep work", ms: 3 * 60 * 60 * 1e3 },
-  { label: "4 hours — Half-day", ms: 4 * 60 * 60 * 1e3 }
+  { label: "25 min Pomodoro", ms: 25 * 60 * 1e3 },
+  { label: "90 min Flow state", ms: 90 * 60 * 1e3 },
+  { label: "3 hours Deep work", ms: 3 * 60 * 60 * 1e3 },
+  { label: "4 hours Half-day", ms: 4 * 60 * 60 * 1e3 }
 ];
 function DeepFocusMode({ store, onRefresh }) {
   const { colors } = useTheme();
@@ -2679,7 +2679,7 @@ function DeepFocusMode({ store, onRefresh }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 20, className: "text-accent-amber" }),
         " Deep Focus Mode"
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm mt-0.5", style: { color: colors.textSecondary }, children: "Hardcore lockdown — blocks everything except your allowlist" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm mt-0.5", style: { color: colors.textSecondary }, children: "Hardcore lockdown, blocks everything except your allowlist" })
     ] }),
     activeSession ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
@@ -2955,7 +2955,7 @@ function ScheduleManager({ store, onRefresh }) {
     store.schedules.length === 0 && !creating ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "card flex flex-col items-center py-10 text-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 40, className: "mb-3", style: { color: colors.textSecondary } }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold mb-1", style: { color: colors.textPrimary }, children: "No schedules yet" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm", style: { color: colors.textSecondary }, children: "Create recurring focus blocks — e.g. block social media weekdays 9am–5pm" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm", style: { color: colors.textSecondary }, children: "Create recurring focus blocks, e.g. block social media weekdays 9am–5pm" })
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", children: store.schedules.map((rule) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "card flex items-center gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-1", children: [
@@ -3100,14 +3100,14 @@ const PLATFORMS = [
   }
 ];
 const TECHNIQUE_GLOSSARY = [
-  { term: "Variable reward", explanation: "Unpredictable positive outcomes (likes, new posts) trigger dopamine release — identical to slot machine mechanics." },
+  { term: "Variable reward", explanation: "Unpredictable positive outcomes (likes, new posts) trigger dopamine release, i.e.tical to slot machine mechanics." },
   { term: "Infinite scroll", explanation: "Removes natural stopping points. Without pagination, session length is bounded only by willpower." },
   { term: "Autoplay", explanation: "Default continuation eliminates the active decision to keep watching. Most users never opt out." },
   { term: "FOMO loop", explanation: "Fear Of Missing Out manufactured through social proof, trending labels, and time-limited content." },
-  { term: "Streak mechanics", explanation: `Arbitrary progress counters that create loss aversion — users feel they've "lost" something if they skip a day.` },
+  { term: "Streak mechanics", explanation: `Arbitrary progress counters that create loss aversion. Users feel they've "lost" something if they skip a day.` },
   { term: "Notification hooks", explanation: "Push notifications trigger app opens even during focus. Each open extends average session by 4–7 minutes." },
   { term: "Social comparison", explanation: "Curated highlight reels drive status anxiety, which increases engagement to seek validation." },
-  { term: "Outrage optimization", explanation: "Content ranked by predicted engagement. Anger spreads 6× faster than positive content — so it gets surfaced more." }
+  { term: "Outrage optimization", explanation: "Content ranked by predicted engagement. Anger spreads 6× faster than positive content, so it gets surfaced more." }
 ];
 const RISK_COLOR = {
   extreme: "#f87171",
@@ -3265,7 +3265,7 @@ function AlgoTrack({ store, onChatWith }) {
           const m = Math.floor(ms / 6e4);
           const h = Math.floor(m / 60);
           if (h > 0) return `${h}h ${m % 60}m`;
-          return m > 0 ? `${m}m` : "—";
+          return m > 0 ? `${m}m` : "-";
         };
         return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -3567,7 +3567,7 @@ function DrilldownCard({ spec, onAskAI, close, children }) {
       {
         placeholder: `Ask about ${spec.title.toLowerCase()}…`,
         onSubmit: (q) => {
-          const prompt = q ? `Regarding "${spec.title}"${spec.subtitle ? ` (${spec.subtitle})` : ""} on my Analytics: ${q}` : spec.askPrompt ?? `Tell me about "${spec.title}" — what stands out and what should I do?`;
+          const prompt = q ? `Regarding "${spec.title}"${spec.subtitle ? ` (${spec.subtitle})` : ""} on my Analytics: ${q}` : spec.askPrompt ?? `Tell me about "${spec.title}" What stands out and what should I do?`;
           ask(prompt);
           close();
         }
@@ -3648,7 +3648,7 @@ function TableQuery({ title, summary, onAskAI, className }) {
           {
             placeholder: `Ask about this table…`,
             onSubmit: (q) => {
-              const prompt = q ? `Regarding the "${title}" table${summary ? ` (${summary})` : ""}: ${q}` : `Analyze the "${title}" table${summary ? ` (${summary})` : ""} — what stands out and what should I change?`;
+              const prompt = q ? `Regarding the "${title}" table${summary ? ` (${summary})` : ""}: ${q}` : `Analyze the "${title}" table${summary ? ` (${summary})` : ""} What stands out and what should I change?`;
               ask(prompt);
               close();
             }
@@ -3764,7 +3764,7 @@ function buildDayRows(sessions) {
     const tracked = v.focused + v.distracted;
     const score = tracked > 0 ? Math.round(Math.min(100, v.focused / tracked * 120)) : 0;
     const distractRate = tracked > 0 ? Math.round(v.distracted / tracked * 100) : 0;
-    const topApp = [...v.apps.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
+    const topApp = [...v.apps.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "-";
     return { day: days[d.getDay()], date, focused: v.focused, distracted: v.distracted, tracked, score, sessions: v.sessions, topApp, distractRate };
   });
 }
@@ -3805,7 +3805,7 @@ function buildHourRows(sessions) {
   return Array.from(map.entries()).sort(([a], [b]) => a - b).map(([hour, v]) => {
     const total = v.focused + v.distracted;
     const ratio = total > 0 ? Math.round(v.focused / total * 100) : -1;
-    const topApp = [...v.apps.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
+    const topApp = [...v.apps.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "-";
     const trackedHrs = Math.max(total / 36e5, 0.0167);
     const switchRate = Math.round(v.sessions / trackedHrs);
     return { hour, focused: v.focused, distracted: v.distracted, ratio, sessions: v.sessions, topApp, switchRate };
@@ -3989,7 +3989,7 @@ function HourOfWeekHeatmap({ matrix }) {
   const hasData = matrix.some((row) => row.some((c) => c.focused + c.distracted > 0));
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Focus Heatmap — Hour of Week" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Focus Heatmap by Hour of Week" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 text-[8.5px]", style: { color: "rgba(99,102,241,0.45)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2 h-2 rounded-sm inline-block", style: { background: "rgba(52,211,153,0.75)" } }),
@@ -4010,7 +4010,7 @@ function HourOfWeekHeatmap({ matrix }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Focus heatmap (hour of week)", summary: "focus ratio by day-of-week and hour" })
       ] })
     ] }),
-    !hasData ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: "rgba(99,102,241,0.3)" }, children: "No session data yet — heatmap populates after several sessions" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+    !hasData ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: "rgba(99,102,241,0.3)" }, children: "No session data yet. The heatmap fills in after several sessions" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-0.5 flex-shrink-0", style: { paddingTop: 14 }, children: DOW_LABELS.map((d) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[8.5px] text-right leading-none", style: { height: 11, lineHeight: "11px", color: "rgba(99,102,241,0.45)" }, children: d }, d)) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex mb-0.5", children: Array.from({ length: 24 }, (_, h) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 text-center", style: { minWidth: 0 }, children: [0, 6, 12, 18].includes(h) && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[7.5px]", style: { color: "rgba(99,102,241,0.2)" }, children: fmtHour(h) }) }, h)) }),
@@ -4035,7 +4035,7 @@ function HourlyHeatmapRow({ hourRows }) {
   const { colors } = useTheme();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Hourly Focus Map — Today" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Hourly Focus Map Today" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 text-[8.5px]", style: { color: colors.textMuted }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-2 h-2 rounded inline-block", style: { background: "#34d399" } }),
@@ -4097,7 +4097,7 @@ function DayScoreStrip({ dayRows }) {
                   color,
                   boxShadow: isToday ? `0 0 8px ${color}20` : "none"
                 },
-                children: d.tracked > 0 ? `${d.score}%` : "—"
+                children: d.tracked > 0 ? `${d.score}%` : "-"
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8.5px]", style: { color: isToday ? "#818cf8" : "#6b84a0" }, children: d.day })
@@ -4113,12 +4113,12 @@ function AppBarChart({ rows }) {
   const max = top[0]?.totalTime ?? 1;
   if (top.length === 0) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest mb-2", style: { color: "rgba(99,102,241,0.45)" }, children: "Top Apps — Time Distribution" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest mb-2", style: { color: "rgba(99,102,241,0.45)" }, children: "Top Apps by Time Distribution" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: top.map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         className: "flex items-center gap-2",
-        title: `${row.app} — ${fmt$1(row.totalTime)} total (${row.pctOfTime}% of tracked time) · ${row.sessions} session${row.sessions !== 1 ? "s" : ""} · avg ${fmt$1(row.avgDuration)}/session · ${row.isDistraction ? "classified as distraction" : "classified as productive"}`,
+        title: `${row.app}: ${fmt$1(row.totalTime)} total (${row.pctOfTime}% of tracked time) · ${row.sessions} session${row.sessions !== 1 ? "s" : ""} · avg ${fmt$1(row.avgDuration)}/session · ${row.isDistraction ? "classified as distraction" : "classified as productive"}`,
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-24 text-[10px] truncate flex-shrink-0 text-right", style: { color: "rgba(180,210,235,0.6)" }, children: row.app }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-4 overflow-hidden", style: { background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.06)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -4152,7 +4152,7 @@ function qualityLabel(score) {
   if (score >= 85) return "Excellent session";
   if (score >= 70) return "Strong focus";
   if (score >= 50) return "Mixed session";
-  if (score >= 30) return "Fragmented — hard to hold focus";
+  if (score >= 30) return "Fragmented. Hard to hold focus";
   return "Heavily scattered";
 }
 function fmtSignedMin(ms) {
@@ -4175,7 +4175,7 @@ function TodaySummaryCard({ score, focusedMs, distractedMs, idleMs, distractionE
   const switchOk = switchRate < 25;
   if (!hasData) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-4 flex items-center gap-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-3xl font-bold leading-none", style: { color: colors.textMuted }, children: "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-3xl font-bold leading-none", style: { color: colors.textMuted }, children: "-" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] leading-relaxed", style: { color: colors.textMuted }, children: "No activity tracked yet today. Your focus summary appears here once Attentify has watched a few minutes of work." })
     ] });
   }
@@ -4373,7 +4373,7 @@ function TimeDistributionPanel({ sessions, appRows }) {
         " · ",
         fmt$1(ms)
       ] }, mode)) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-snug", style: { color: colors.textMuted }, children: "Time tracked, but URLs inside are not captured — so this time isn't attributed to a site." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-snug", style: { color: colors.textMuted }, children: "Time tracked, but URLs inside are not captured, so this time isn't attributed to a site." })
     ] })
   ] });
 }
@@ -4506,7 +4506,7 @@ function Analytics({ onChatWith }) {
   }
   const topTransitions = [...transitions.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
   const distractionDrill = {
-    title: "Distraction events — today",
+    title: "Distraction events today",
     subtitle: `${todayDistractionEvents} event${todayDistractionEvents !== 1 ? "s" : ""} · goal < 3`,
     rows: distractSessionsToday.slice(0, 12).map((s) => ({
       label: s.title ? s.title.slice(0, 40) : s.app,
@@ -4514,20 +4514,20 @@ function Analytics({ onChatWith }) {
       value: fmt$1(s.duration),
       tone: "negative"
     })),
-    empty: "No distraction events today — nice.",
+    empty: "No distraction events today. Nice.",
     note: distractSessionsToday.length > 12 ? `+${distractSessionsToday.length - 12} more today` : void 0,
     askPrompt: `I had ${todayDistractionEvents} distraction events today${todayTopDistractor ? `, mostly ${todayTopDistractor.app}` : ""}. What triggered them and how do I cut them?`
   };
   const switchDrill = {
-    title: "Context switching — today",
+    title: "Context switching today",
     subtitle: `${todaySwitchRate}/h · goal < 25`,
     rows: topTransitions.map(([t, n]) => ({ label: t, value: `${n}×` })),
     empty: "Not enough switching yet to analyze.",
-    note: "Each app-to-app switch carries a re-entry cost — repeated pairs are worth automating away or batching.",
+    note: "Each app-to-app switch carries a re-entry cost. Repeated pairs are worth automating away or batching.",
     askPrompt: `I'm switching apps about ${todaySwitchRate} times an hour today. Which of these switches look unnecessary, and how do I reduce context switching?`
   };
   const idleDrill = {
-    title: "Idle gaps — today",
+    title: "Idle gaps today",
     subtitle: `${fmt$1(todayIdleMs)} across ${todayIdlePeriods.length} gap${todayIdlePeriods.length !== 1 ? "s" : ""} ≥3m`,
     rows: [...todayIdlePeriods].sort((a, b) => b.start - a.start).slice(0, 12).map((ip) => ({
       label: `after ${ip.prevApp}`,
@@ -4539,7 +4539,7 @@ function Analytics({ onChatWith }) {
     askPrompt: `I had ${fmt$1(todayIdleMs)} of idle time today across ${todayIdlePeriods.length} gaps. Is that a problem and what should I do about it?`
   };
   const relapseDrill = {
-    title: "Relapses — today",
+    title: "Relapses today",
     subtitle: `${todayRelapses.length} return${todayRelapses.length !== 1 ? "s" : ""} to distraction within 30m · goal < 3`,
     rows: [...todayRelapses].sort((a, b) => b.ts - a.ts).slice(0, 12).map((r) => ({
       label: r.app,
@@ -4547,11 +4547,11 @@ function Analytics({ onChatWith }) {
       value: `+${fmt$1(r.gapMs)}`,
       tone: "negative"
     })),
-    empty: "No relapses today — discipline holding.",
+    empty: "No relapses today. Discipline holding.",
     askPrompt: `I relapsed into distractions ${todayRelapses.length} times today. How do I make my recoveries stick?`
   };
   const focusDrill = {
-    title: "Focus score — today",
+    title: "Focus score today",
     subtitle: `${Math.round(today.focusScore)}% · target 85%`,
     rows: [
       { label: "Focused time", value: fmt$1(today.focusedTime), tone: "positive" },
@@ -4563,14 +4563,14 @@ function Analytics({ onChatWith }) {
     askPrompt: `My focus score today is ${Math.round(today.focusScore)}%${hasBaseline ? ` vs a ${Math.round(blScore)}% average` : ""}. Break down what's driving it and how to raise it.`
   };
   const focusedDrill = {
-    title: "Focused time — today",
+    title: "Focused time today",
     subtitle: `${fmt$1(today.focusedTime)} · ${todayTracked > 0 ? Math.round(today.focusedTime / todayTracked * 100) : 0}% of tracked`,
     rows: aggAppRows(focusSessionsToday, "positive"),
     empty: "No focused time recorded yet today.",
     askPrompt: `Where did my ${fmt$1(today.focusedTime)} of focused time go today, and how do I protect more of it?`
   };
   const distractedDrill = {
-    title: "Distracted time — today",
+    title: "Distracted time today",
     subtitle: `${fmt$1(today.distractedTime)} · ${todayTracked > 0 ? Math.round(today.distractedTime / todayTracked * 100) : 0}% of tracked`,
     rows: aggAppRows(todaySessions.filter((s) => s.isDistraction), "negative"),
     empty: "No distracted time recorded today.",
@@ -4579,7 +4579,7 @@ function Analytics({ onChatWith }) {
   const kpiItems = [
     {
       label: "Focus",
-      value: todayTracked > 0 ? `${Math.round(today.focusScore)}%` : "—",
+      value: todayTracked > 0 ? `${Math.round(today.focusScore)}%` : "-",
       delta: hasBaseline ? { text: `${today.focusScore - blScore >= 0 ? "+" : "−"}${Math.abs(Math.round(today.focusScore - blScore))}pp`, good: today.focusScore >= blScore } : void 0,
       sub: "Target 85%",
       drill: focusDrill
@@ -4606,7 +4606,7 @@ function Analytics({ onChatWith }) {
     },
     {
       label: "Switches",
-      value: todayTracked > 0 ? `${todaySwitchRate}/h` : "—",
+      value: todayTracked > 0 ? `${todaySwitchRate}/h` : "-",
       delta: hasBaseline && blSwitch > 0 ? { text: `${todaySwitchRate - blSwitch >= 0 ? "+" : "−"}${Math.abs(Math.round((todaySwitchRate - blSwitch) / blSwitch * 100))}%`, good: todaySwitchRate <= blSwitch } : void 0,
       sub: "Target <25",
       drill: switchDrill
@@ -4625,7 +4625,7 @@ function Analytics({ onChatWith }) {
       priority: todaySwitchRate > 40 ? "Critical" : todaySwitchRate > 25 ? "High" : "Low",
       signal: "Context switching",
       current: `${todaySwitchRate}/h`,
-      baseline: hasBaseline && blSwitch > 0 ? `${Math.round(blSwitch)}/h` : "—",
+      baseline: hasBaseline && blSwitch > 0 ? `${Math.round(blSwitch)}/h` : "-",
       impact: todaySwitchRate > 25 ? `~${Math.round((todaySwitchRate - 25) * 0.4)}m focus lost` : "within target"
     });
   }
@@ -4634,15 +4634,15 @@ function Analytics({ onChatWith }) {
       priority: todayTopDistractor.pctOfTime > 15 ? "High" : todayTopDistractor.pctOfTime > 7 ? "Medium" : "Low",
       signal: `${todayTopDistractor.app} distraction`,
       current: fmt$1(todayTopDistractor.totalTime),
-      baseline: "—",
+      baseline: "-",
       impact: `${todayTopDistractor.pctOfTime}% of today's time`
     });
   }
   rankRows.push({
     priority: todayStreaks.longest > 36e5 ? "Low" : "Medium",
     signal: "Longest focus block",
-    current: todayStreaks.longest > 0 ? fmt$1(todayStreaks.longest) : "—",
-    baseline: todayStreaks.avgLen > 0 ? `avg ${fmt$1(todayStreaks.avgLen)}` : "—",
+    current: todayStreaks.longest > 0 ? fmt$1(todayStreaks.longest) : "-",
+    baseline: todayStreaks.avgLen > 0 ? `avg ${fmt$1(todayStreaks.avgLen)}` : "-",
     impact: todayStreaks.longest > 36e5 ? "deep-work capable" : "aim for 45m+ blocks"
   });
   if (todayIdleMs > 5 * 6e4) {
@@ -4650,7 +4650,7 @@ function Analytics({ onChatWith }) {
       priority: todayIdleMs > 36e5 ? "Medium" : "Low",
       signal: "Idle gaps",
       current: fmt$1(todayIdleMs),
-      baseline: "—",
+      baseline: "-",
       impact: `${todayIdlePeriods.length} gap${todayIdlePeriods.length !== 1 ? "s" : ""} ≥3m`
     });
   }
@@ -4684,7 +4684,7 @@ function Analytics({ onChatWith }) {
         {
           full: true,
           width: 300,
-          spec: chip.drill ?? { title: chip.label, subtitle: `${chip.value} · ${chip.sub}`, note: chip.tooltip, askPrompt: `Tell me about my ${chip.label.toLowerCase()} (${chip.value}) — what does it mean and how do I improve it?` },
+          spec: chip.drill ?? { title: chip.label, subtitle: `${chip.value} · ${chip.sub}`, note: chip.tooltip, askPrompt: `Tell me about my ${chip.label.toLowerCase()} (${chip.value}). What does it mean and how do I improve it?` },
           render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 p-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-bold leading-none data-value", style: { color: chip.color }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatedStat, { value: chip.value }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-tight", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: chip.label }),
@@ -4764,7 +4764,7 @@ function Analytics({ onChatWith }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(CustomAnalyticsSection, {}),
     totalWeekly < INSIGHT_MIN_MS && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel px-3 py-3 flex items-center gap-2.5", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Lightbulb, { size: 12, style: { color: colors.accent, flexShrink: 0 } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-relaxed", style: { color: colors.textSecondary }, children: "Not enough data yet to draw conclusions — keep Attentify running and insights will appear once there's enough activity to be meaningful." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] leading-relaxed", style: { color: colors.textSecondary }, children: "Not enough data yet to draw conclusions yet. Keep Attentify running and insights will appear once there's enough activity to be meaningful." })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       AnalyticsSectionHeader,
@@ -4802,7 +4802,7 @@ function Analytics({ onChatWith }) {
     ] }),
     totalWeekly >= INSIGHT_MIN_MS && rankRows.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Diagnostics — Ranked" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Ranked Diagnostics" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Ranked diagnostics", summary: rankRows.map((r) => `${r.priority}: ${r.signal} ${r.current}`).join("; ") })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(RankedInsightTable, { rows: rankRows, recommendation })
@@ -4819,8 +4819,8 @@ function Analytics({ onChatWith }) {
       { label: "Focus Time", value: fmt$1(weekly.focusedTime), color: "#34d399", sub: `${Math.round(focusPct)}% ratio`, tooltip: `${fmt$1(weekly.focusedTime)} focused this week` },
       { label: "Time Lost", value: fmt$1(weekly.distractedTime), color: weekly.distractedTime > 7 * 36e5 ? "#f87171" : "#fbbf24", sub: `${Math.round(100 - focusPct)}% ratio`, tooltip: `${fmt$1(weekly.distractedTime)} on distractions` },
       { label: "Avg Score", value: `${weeklyAvgScore}%`, color: weeklyAvgScore >= 70 ? "#34d399" : weeklyAvgScore >= 40 ? "#fbbf24" : "#f87171", sub: `${dayRows.length} days`, tooltip: `Average daily focus score` },
-      { label: "Longest Run", value: streaks.longest > 0 ? fmt$1(streaks.longest) : "—", color: "#34d399", sub: "unbroken focus", tooltip: `Longest unbroken focus streak` },
-      { label: "Avg Run", value: streaks.avgLen > 0 ? fmt$1(streaks.avgLen) : "—", color: "#6366f1", sub: `${streaks.count} streaks`, tooltip: `Average streak length` },
+      { label: "Longest Run", value: streaks.longest > 0 ? fmt$1(streaks.longest) : "-", color: "#34d399", sub: "unbroken focus", tooltip: `Longest unbroken focus streak` },
+      { label: "Avg Run", value: streaks.avgLen > 0 ? fmt$1(streaks.avgLen) : "-", color: "#6366f1", sub: `${streaks.count} streaks`, tooltip: `Average streak length` },
       { label: "Blocked", value: String(weekly.blockEvents), color: "#6366f1", sub: "this week", tooltip: `${weekly.blockEvents} total block events` }
     ].map((chip, i) => kpiChip(chip, i, 330)) }),
     totalWeekly > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-3 gap-2", children: [
@@ -4864,8 +4864,8 @@ function Analytics({ onChatWith }) {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: [
         { label: "Distraction Debt", value: fmt$1(distractDebtMs), sub: "lost this week", detail: avgDailyWastedMs > 0 ? `~${fmt$1(avgDailyWastedMs)}/day avg` : null, color: "#f87171" },
-        { label: "Switch Cost", value: recentSessions.length > 0 ? fmt$1(recentSessions.length * 23 * 6e4) : "—", sub: "recovery overhead", detail: `${recentSessions.length} switches × 23m`, color: "#fbbf24" },
-        { label: "Reclaim Potential", value: topDistractor ? fmt$1(topDistractor.totalTime) : "—", sub: topDistractor ? `block ${topDistractor.app}` : "no distractors", detail: topDistractor ? `${topDistractor.pctOfTime}% of time` : null, color: "#34d399" }
+        { label: "Switch Cost", value: recentSessions.length > 0 ? fmt$1(recentSessions.length * 23 * 6e4) : "-", sub: "recovery overhead", detail: `${recentSessions.length} switches × 23m`, color: "#fbbf24" },
+        { label: "Reclaim Potential", value: topDistractor ? fmt$1(topDistractor.totalTime) : "-", sub: topDistractor ? `block ${topDistractor.app}` : "no distractors", detail: topDistractor ? `${topDistractor.pctOfTime}% of time` : null, color: "#34d399" }
       ].map((card) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
         {
@@ -4997,7 +4997,7 @@ function AppTable({ rows, toggleSort, SortIcon }) {
 }
 function DailyTable({ rows }) {
   const { colors } = useTheme();
-  if (rows.length === 0) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No daily data yet — sessions accumulate here over time." });
+  if (rows.length === 0) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyState, { text: "No daily data yet. Sessions accumulate here over time." });
   const totals = rows.reduce((acc, r) => ({
     focused: acc.focused + r.focused,
     distracted: acc.distracted + r.distracted,
@@ -5028,10 +5028,10 @@ function DailyTable({ rows }) {
             isToday && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1 text-[8px] px-1 py-0.5", style: { background: "rgba(99,102,241,0.12)", color: "#6366f1", fontFamily: '"Share Tech Mono", monospace' }, children: "today" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] font-mono tabular-nums", style: { color: "rgba(99,102,241,0.3)" }, children: row.date }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: row.tracked > 0 ? fmt$1(row.tracked) : "—" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.focused > 0 ? "#34d399" : "#4a6280" }, children: row.focused > 0 ? fmt$1(row.focused) : "—" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.distracted > 36e5 ? "#f87171" : row.distracted > 0 ? "#fbbf24" : "#4a6280" }, children: row.distracted > 0 ? fmt$1(row.distracted) : "—" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] tabular-nums", style: { color: row.distractRate > 50 ? "#f87171" : row.distractRate > 25 ? "#fbbf24" : "#34d399" }, children: row.tracked > 0 ? `${row.distractRate}%` : "—" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: row.tracked > 0 ? fmt$1(row.tracked) : "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.focused > 0 ? "#34d399" : "#4a6280" }, children: row.focused > 0 ? fmt$1(row.focused) : "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.distracted > 36e5 ? "#f87171" : row.distracted > 0 ? "#fbbf24" : "#4a6280" }, children: row.distracted > 0 ? fmt$1(row.distracted) : "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] tabular-nums", style: { color: row.distractRate > 50 ? "#f87171" : row.distractRate > 25 ? "#fbbf24" : "#34d399" }, children: row.tracked > 0 ? `${row.distractRate}%` : "-" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-1 overflow-hidden", style: { background: "rgba(99,102,241,0.06)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full", style: { width: `${row.score}%`, background: row.score >= 70 ? "#34d399" : row.score >= 40 ? "#fbbf24" : "#f87171" } }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] tabular-nums font-mono", style: { color: row.score >= 70 ? "#34d399" : row.score >= 40 ? "#fbbf24" : "#f87171" }, children: [
@@ -5052,7 +5052,7 @@ function DailyTable({ rows }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: fmt$1(totals.tracked) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "#34d399" }, children: fmt$1(totals.focused) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "#f87171" }, children: fmt$1(totals.distracted) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px]", style: { color: totals.tracked > 0 && totals.distracted / totals.tracked > 0.5 ? "#f87171" : "#fbbf24" }, children: totals.tracked > 0 ? `${Math.round(totals.distracted / totals.tracked * 100)}%` : "—" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px]", style: { color: totals.tracked > 0 && totals.distracted / totals.tracked > 0.5 ? "#f87171" : "#fbbf24" }, children: totals.tracked > 0 ? `${Math.round(totals.distracted / totals.tracked * 100)}%` : "-" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: 3 })
       ] })
     ] })
@@ -5069,10 +5069,10 @@ function PatternsTab({ hourRows, streaks, sessions }) {
   const totalDistracted = topDistractors.reduce((s, [, m]) => s + m, 0);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-4 gap-2", children: [
-      { label: "Longest Focus Run", value: streaks.longest > 0 ? fmt$1(streaks.longest) : "—", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { size: 12, style: { color: "#34d399" } }), color: "#34d399" },
+      { label: "Longest Focus Run", value: streaks.longest > 0 ? fmt$1(streaks.longest) : "-", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { size: 12, style: { color: "#34d399" } }), color: "#34d399" },
       { label: "Current Streak", value: streaks.current > 0 ? fmt$1(streaks.current) : "None", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { size: 12, style: { color: "#34d399" } }), color: streaks.current > 0 ? "#34d399" : "rgba(99,102,241,0.25)" },
-      { label: "Avg Focus Run", value: streaks.avgLen > 0 ? fmt$1(streaks.avgLen) : "—", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 12, style: { color: "rgba(99,102,241,0.5)" } }), color: "#6366f1" },
-      { label: "Peak Focus Hour", value: peakFocusHour ? fmtHour(peakFocusHour.hour) : "—", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { size: 12, style: { color: "#6366f1" } }), color: "#6366f1" }
+      { label: "Avg Focus Run", value: streaks.avgLen > 0 ? fmt$1(streaks.avgLen) : "-", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 12, style: { color: "rgba(99,102,241,0.5)" } }), color: "#6366f1" },
+      { label: "Peak Focus Hour", value: peakFocusHour ? fmtHour(peakFocusHour.hour) : "-", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { size: 12, style: { color: "#6366f1" } }), color: "#6366f1" }
     ].map((s) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hud-panel p-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 mb-1", children: [
         s.icon,
@@ -5082,7 +5082,7 @@ function PatternsTab({ hourRows, streaks, sessions }) {
     ] }, s.label)) }),
     hourRows.length >= 2 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Hourly Focus Score — Today" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Hourly Focus Score Today" }),
         peakDistractHour && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px]", style: { color: "rgba(99,102,241,0.45)" }, children: [
           "Peak distraction: ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#f87171" }, children: fmtHour(peakDistractHour.hour) })
@@ -5115,7 +5115,7 @@ function PatternsTab({ hourRows, streaks, sessions }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1.5 hud-label", style: { color: "rgba(99,102,241,0.25)" }, children: "Each bar = one unbroken focus streak · height = duration" })
     ] }),
     topDistractors.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", children: "Top Distraction Vectors — This Week" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", children: "Top Distraction Vectors This Week" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "hud-table", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "App" }),
@@ -5144,7 +5144,7 @@ function PatternsTab({ hourRows, streaks, sessions }) {
       ] }) })
     ] }),
     hourRows.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", children: "Hourly Breakdown — Today" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", children: "Hourly Breakdown Today" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "hud-table", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Hour" }),
@@ -5157,15 +5157,15 @@ function PatternsTab({ hourRows, streaks, sessions }) {
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: hourRows.map((row, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: i % 2 === 0 ? colors.rowEven : colors.rowOdd }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono text-[11px] whitespace-nowrap", style: { color: colors.textPrimary }, children: fmtHour(row.hour) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.focused > 0 ? "#34d399" : "#4a6280" }, children: row.focused > 0 ? fmt$1(row.focused) : "—" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.distracted > 0 ? "#f87171" : "#4a6280" }, children: row.distracted > 0 ? fmt$1(row.distracted) : "—" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.focused > 0 ? "#34d399" : "#4a6280" }, children: row.focused > 0 ? fmt$1(row.focused) : "-" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: row.distracted > 0 ? "#f87171" : "#4a6280" }, children: row.distracted > 0 ? fmt$1(row.distracted) : "-" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: row.ratio >= 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-1 overflow-hidden", style: { background: "rgba(99,102,241,0.06)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full", style: { width: `${row.ratio}%`, background: row.ratio >= 70 ? "#34d399" : row.ratio >= 40 ? "#fbbf24" : "#f87171" } }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] tabular-nums", style: { color: row.ratio >= 70 ? "#34d399" : row.ratio >= 40 ? "#fbbf24" : "#f87171" }, children: [
               row.ratio,
               "%"
             ] })
-          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(99,102,241,0.2)" }, children: "—" }) }),
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "rgba(99,102,241,0.2)" }, children: "-" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: row.sessions }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 tabular-nums text-[10px]", style: { color: row.switchRate > 20 ? "#f87171" : row.switchRate > 10 ? "#fbbf24" : "#34d399" }, children: row.switchRate }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] truncate max-w-[110px]", style: { color: "rgba(180,210,235,0.6)" }, children: row.topApp })
@@ -5197,7 +5197,7 @@ function AlertsTable({ alerts, onDismiss }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[11px] font-medium text-white whitespace-nowrap", children: TYPE_LABELS[alert.type] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] px-1.5 py-0.5 rounded font-bold", style: { background: sev.bg, color: sev.text }, children: sev.label }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] max-w-[200px] leading-tight", style: { color: "rgba(180,210,235,0.6)" }, children: alert.description }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[9px] truncate max-w-[80px]", style: { color: "rgba(99,102,241,0.45)" }, children: alert.app ?? "—" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[9px] truncate max-w-[80px]", style: { color: "rgba(99,102,241,0.45)" }, children: alert.app ?? "-" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: alert.dismissed ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: "rgba(99,102,241,0.2)" }, children: "dismissed" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => onDismiss(alert.id), className: "flex items-center gap-1 text-[9px] px-2 py-1 hover:text-white transition-colors", style: { background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", color: "rgba(99,102,241,0.5)", fontFamily: '"Share Tech Mono", monospace' }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 8 }),
           " Dismiss"
@@ -5212,10 +5212,10 @@ function RelapseTracker({ relapses, idlePeriods }) {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 mb-2.5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 10, style: { color: relapses.length > 0 ? "#fbbf24" : "#34d399", flexShrink: 0 } }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Relapse Events — Today" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Relapse Events Today" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto text-[10px] font-bold data-value", style: { color: relapses.length > 3 ? "#f87171" : relapses.length > 0 ? "#fbbf24" : "#34d399" }, children: relapses.length })
       ] }),
-      relapses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: "No relapses today — discipline holding." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1 max-h-28 overflow-y-auto", children: [...relapses].reverse().slice(0, 6).map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-1 px-1.5", style: { background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.1)" }, children: [
+      relapses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: "No relapses today. Discipline holding." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1 max-h-28 overflow-y-auto", children: [...relapses].reverse().slice(0, 6).map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-1 px-1.5", style: { background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.1)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-mono flex-shrink-0", style: { color: "rgba(99,102,241,0.35)" }, children: new Date(r.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] truncate max-w-[80px]", style: { color: colors.textPrimary }, children: r.app }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[8px] flex-shrink-0 ml-auto", style: { color: colors.textDim }, children: [
@@ -5227,7 +5227,7 @@ function RelapseTracker({ relapses, idlePeriods }) {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 mb-2.5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 10, style: { color: "rgba(99,102,241,0.5)", flexShrink: 0 } }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Idle Gaps — Today" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Idle Gaps Today" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-auto text-[9px] font-mono", style: { color: "rgba(99,102,241,0.45)" }, children: [
           idlePeriods.length,
           " gap",
@@ -5301,7 +5301,7 @@ function CustomAnalyticsSection() {
         loadCards();
         api$a.getTimesheet(31).then((r) => setSessions(r.sessions ?? [])).catch(() => {
         });
-      } else setError(res.error === "PAYWALL" ? "Free AI used up — add your key in Settings." : res.error || "Could not build that. Try rephrasing.");
+      } else setError(res.error === "PAYWALL" ? "Free AI used up. Add your key in Settings." : res.error || "Could not build that. Try rephrasing.");
     } catch {
       setError("Could not build that. Try rephrasing.");
     }
@@ -5323,7 +5323,7 @@ function CustomAnalyticsSection() {
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-semibold", style: { color: colors.textPrimary }, children: "Build your own analytics" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "Describe any metric — Attentify computes it from your activity and pins it here, live." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "Describe any metric. Attentify computes it from your activity and pins it here, live." })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -5411,7 +5411,7 @@ function CustomCard({ card, sessions, onDelete }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: res.rows.slice(0, 12).map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "text-[11px] py-1 pr-2 capitalize truncate", style: { color: colors.textSecondary, maxWidth: 120 }, children: r.label }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "text-[11px] py-1 px-2 text-right data-value", style: { color: colors.textPrimary }, children: cardUnitFmt(r.value, res.unit) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "text-[10px] py-1 pl-2 text-right", style: { color: colors.textMuted }, children: r.detail ?? "—" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "text-[10px] py-1 pl-2 text-right", style: { color: colors.textMuted }, children: r.detail ?? "-" })
       ] }, r.label)) })
     ] }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1", children: res.rows.slice(0, 8).map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", title: r.detail, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] w-24 truncate flex-shrink-0 capitalize", style: { color: colors.textSecondary }, children: r.label }),
@@ -5530,7 +5530,7 @@ function IssueCard({ issue, onFix, onAskAI, fixing, fixed }) {
               }
             )
           ] }),
-          fixed && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: "#34d399" }, children: "Fixed — protection applied" })
+          fixed && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: "#34d399" }, children: "Fixed. Protection applied" })
         ] })
       ]
     }
@@ -5610,7 +5610,7 @@ function FocusScanResults({ results, onNavigate, onRefresh, onChatWith }) {
       "installed-distractors": `I have ${results.installedDistractors.length} distracting apps installed (${results.installedDistractors.slice(0, 4).join(", ")}). Help me block them.`,
       "startup-distractors": `These apps auto-start with my computer: ${results.startupDistractors.join(", ")}. Block them during focus sessions.`,
       "recent-history": `I visited these distracting sites today: ${results.recentDistractingSites.slice(0, 5).join(", ")}. Block them for me.`,
-      "feed-guard": "Block all algorithmic feeds — YouTube, Instagram, Twitter/X, TikTok, and Facebook.",
+      "feed-guard": "Block all algorithmic feeds: YouTube, Instagram, Twitter/X, TikTok, and Facebook.",
       "extensions": `I have ${results.browserExtensionsFound} browser extensions. Help me identify and remove distracting ones.`,
       "notification-filter": "Start a focus session to suppress desktop notifications."
     };
@@ -5754,7 +5754,7 @@ const PATTERN_TAXONOMY = [
     icon: "⚡",
     definition: "Compulsive cycling between applications at a rate incompatible with sustained cognitive work.",
     signatures: ["20+ window switches in 20 minutes", "No single app held for more than 2–3 minutes", "Switching accelerates under stress or boredom"],
-    mechanism: "Each switch triggers a micro-dose of novelty — a low-intensity dopamine hit. The brain learns that switching relieves discomfort, reinforcing the behavior independent of any productive outcome.",
+    mechanism: "Each switch triggers a micro-dose of novelty, a low-intensity dopamine hit. The brain learns that switching relieves discomfort, reinforcing the behavior independent of any productive outcome.",
     citation: "Gloria Mark (UC Irvine): average cost of a distraction is 23 min to fully regain focus. Knowledge workers switch tasks every 3 min on average.",
     detectionCriteria: "> 20 switches in a 20-min window AND > 5 more than the previous check cycle.",
     severity: "medium"
@@ -5765,7 +5765,7 @@ const PATTERN_TAXONOMY = [
     icon: "🔄",
     definition: "Returning to the same distraction site multiple times in a short window with no new information available.",
     signatures: ["5+ visits to the same domain in 20 minutes", "Each visit is brief (under 2 min)", "Visits cluster around boredom or cognitive load spikes"],
-    mechanism: "Variable-reward conditioning — the same mechanism as slot machines. Refreshing Twitter/Reddit occasionally yields a novel post (reward), making every refresh feel potentially rewarding. The brain cannot resist.",
+    mechanism: "Variable-reward conditioning, the same mechanism as slot machines. Refreshing Twitter/Reddit occasionally yields a novel post (reward), making every refresh feel potentially rewarding. The brain cannot resist.",
     citation: "BF Skinner's variable-ratio reinforcement schedule produces the highest and most resistant response rates of any conditioning paradigm.",
     detectionCriteria: "≥ 5 visits to the same distraction domain within 20 minutes.",
     severity: "high"
@@ -5777,7 +5777,7 @@ const PATTERN_TAXONOMY = [
     definition: "Passive consumption of stimulating content (news, social feeds, video) after 11 PM, compromising sleep architecture.",
     signatures: ["Browser active after 23:00", "Session length > 20 min", "Content is emotionally activating (news, conflict, drama)"],
     mechanism: "Blue light suppresses melatonin; stimulating content raises cortisol. The combination delays sleep onset and reduces deep-sleep stages. Tomorrow's executive function and attention are directly impaired.",
-    citation: "Matthew Walker (2017): adults who sleep < 7h show 20–40% reduction in prefrontal cortex function — the area responsible for impulse control and focus.",
+    citation: "Matthew Walker (2017): adults who sleep < 7h show 20–40% reduction in prefrontal cortex function, the area responsible for impulse control and focus.",
     detectionCriteria: "Hour is 23:00–04:00, ≥ 3 browser sessions in the last 20 min, not already alerted in the last 30 min.",
     severity: "high"
   },
@@ -5809,7 +5809,7 @@ const PATTERN_TAXONOMY = [
     icon: "🔁",
     definition: "Cycling robotically between 2–3 distraction apps with zero productive activity between them.",
     signatures: ["2–3 apps each visited 3+ times in 20 min", "All are distraction-classified", "No productive work interspersed", "Cycling accelerates as each app fails to satisfy"],
-    mechanism: "Each app fails to deliver a satisfying reward, so the brain immediately seeks another. This is structurally identical to compulsive checking rituals in OCD — the behavior is self-reinforcing because it temporarily relieves the anxiety of *not* checking.",
+    mechanism: "Each app fails to deliver a satisfying reward, so the brain immediately seeks another. This is structurally identical to compulsive checking rituals in OCD, the behavior is self-reinforcing because it temporarily relieves the anxiety of *not* checking.",
     citation: "Same neural circuits as OCD rituals: orbitofrontal cortex → striatum → thalamus loop (Saxena & Rauch, 2002).",
     detectionCriteria: "≥ 6 recent sessions, 2–3 apps each with ≥ 3 visits, all distraction, all sessions are in the top apps. Not alerted within 15 min.",
     severity: "high"
@@ -5818,10 +5818,10 @@ const PATTERN_TAXONOMY = [
     type: "micro-escape",
     name: "Micro-Escapes",
     icon: "💨",
-    definition: "Sub-90-second bursts of distraction so brief they feel harmless — but collectively create continuous partial attention.",
+    definition: "Sub-90-second bursts of distraction so brief they feel harmless, but collectively create continuous partial attention.",
     signatures: ["5+ distraction opens under 90 seconds in 10 minutes", "Each visit is too short to consume anything", "Triggered by discomfort at any cognitive difficulty"],
     mechanism: '"Continuous partial attention" (Linda Stone): present everywhere, focused nowhere. Even brief escapes break the cognitive thread of the current task. The brain learns that discomfort can always be interrupted, which raises the activation threshold for sustained effort.',
-    citation: 'Linda Stone (1997) coined "continuous partial attention" — later validated by fMRI studies showing disrupted default-mode network recovery after micro-interruptions.',
+    citation: 'Linda Stone (1997) coined "continuous partial attention", later validated by fMRI studies showing disrupted default-mode network recovery after micro-interruptions.',
     detectionCriteria: "≥ 5 distraction sessions under 90s in the last 10 min. Not alerted within 10 min.",
     severity: "medium"
   },
@@ -5831,7 +5831,7 @@ const PATTERN_TAXONOMY = [
     icon: "🔔",
     definition: "High-frequency checking of communication apps driven by fear of missing messages, not actual communication need.",
     signatures: ["8+ checks/hour on messaging apps", "Most checks result in zero new messages", "Checking accelerates when a response is expected"],
-    mechanism: "Fear of Missing Out is a manufactured anxiety — each notification badge is deliberately designed to create exactly this reflex. The checking behavior is rewarded intermittently (sometimes there *is* a message), making it extremely persistent.",
+    mechanism: "Fear of Missing Out is a manufactured anxiety, each notification badge is deliberately designed to create exactly this reflex. The checking behavior is rewarded intermittently (sometimes there *is* a message), making it extremely persistent.",
     citation: "Average knowledge worker checks email 74 times per day (McKinsey Global Institute, 2012). Slack users average 9 hours/day with the app open.",
     detectionCriteria: "Communication apps (discord/slack/teams/telegram/etc.) at ≥ 8 sessions/hour in a 15-min window. Not alerted within 15 min.",
     severity: "medium"
@@ -5851,9 +5851,9 @@ const PATTERN_TAXONOMY = [
     type: "phantom-checking",
     name: "Phantom Checking",
     icon: "👻",
-    definition: "App opens so brief they serve no purpose — the behavior is automatic, executed before any conscious decision is made.",
+    definition: "App opens so brief they serve no purpose, the behavior is automatic, executed before any conscious decision is made.",
     signatures: ["4+ app opens under 30 seconds in 10 minutes", "User closes app immediately each time", "Often phone-mirror behavior (checking without knowing why)"],
-    mechanism: "The checking motion has become decoupled from the intention to check. This is a conditioned reflex — the cue (boredom, stress, an idle moment) triggers the motor routine automatically. The decision comes after the action.",
+    mechanism: "The checking motion has become decoupled from the intention to check. This is a conditioned reflex, the cue (boredom, stress, an idle moment) triggers the motor routine automatically. The decision comes after the action.",
     citation: 'Charles Duhigg "The Power of Habit": habits become automatic loops (cue → routine → reward) that operate below conscious awareness.',
     detectionCriteria: "≥ 4 app opens under 30 seconds in the last 10 min. Not alerted within 10 min.",
     severity: "low"
@@ -5862,7 +5862,7 @@ const PATTERN_TAXONOMY = [
     type: "pre-task-avoidance",
     name: "Pre-Task Avoidance",
     icon: "🚪",
-    definition: "Distraction that occurs specifically in the window before starting a known important task — procrastination with a clear trigger.",
+    definition: "Distraction that occurs specifically in the window before starting a known important task, procrastination with a clear trigger.",
     signatures: ["Distraction begins immediately after switching from a productive context", "Duration tracks with task difficulty/aversion", 'Often involves "prep" tasks (email, reading) to feel productive'],
     mechanism: "The anticipatory anxiety of starting a hard task is more aversive than the task itself. Distraction provides immediate relief. The brain learns: when a hard task is imminent, escape is available.",
     citation: "Pychyl & Flett (2012): procrastination is primarily an emotion regulation strategy, not a time management failure.",
@@ -5873,9 +5873,9 @@ const PATTERN_TAXONOMY = [
     type: "news-anxiety",
     name: "News Anxiety Loop",
     icon: "📰",
-    definition: "Repeated checking of news aggregators driven by hypervigilance, not information need — consuming more news increases anxiety rather than reducing it.",
+    definition: "Repeated checking of news aggregators driven by hypervigilance, not information need, consuming more news increases anxiety rather than reducing it.",
     signatures: ["4+ news/aggregator visits in 15 minutes", "Visits trigger emotional activation, not resolution", "Checking increases after distressing headlines"],
-    mechanism: "News is optimized for threat salience — the brain's threat-detection system treats each headline as a potential survival concern. Checking resolves the immediate uncertainty but generates new anxiety (what else might be happening?), creating a loop.",
+    mechanism: "News is optimized for threat salience, the brain's threat-detection system treats each headline as a potential survival concern. Checking resolves the immediate uncertainty but generates new anxiety (what else might be happening?), creating a loop.",
     citation: "74% of US adults say news causes stress, yet most check it multiple times daily (APA Stress in America, 2020).",
     detectionCriteria: "≥ 4 browser sessions on news domains in the last 15 min. Not alerted within 15 min.",
     severity: "medium"
@@ -5884,11 +5884,11 @@ const PATTERN_TAXONOMY = [
     type: "tab-anxiety",
     name: "Tab Anxiety",
     icon: "🗂️",
-    definition: "Accumulating large numbers of open browser tabs as a form of digital hoarding — each tab represents an unresolved intention.",
+    definition: "Accumulating large numbers of open browser tabs as a form of digital hoarding, each tab represents an unresolved intention.",
     signatures: ["20+ open tabs across browser windows", "Tabs are rarely revisited after opening", "New tabs are opened faster than existing ones are closed"],
-    mechanism: "Each open tab is a cognitive IOU — a promise to yourself that you'll return to it. The accumulation creates background anxiety and a constant sense of incompleteness. The tabs don't get read; they get shuffled.",
+    mechanism: "Each open tab is a cognitive IOU, a promise to yourself that you'll return to it. The accumulation creates background anxiety and a constant sense of incompleteness. The tabs don't get read; they get shuffled.",
     citation: "Tab hoarders report the same emotional profile as physical hoarders: anxiety at the thought of closing tabs, despite acknowledging they will never read most of them.",
-    detectionCriteria: "Tab count monitoring. [Not yet auto-detected — requires browser extension integration]",
+    detectionCriteria: "Tab count monitoring. [Not yet auto-detected, requires browser extension integration]",
     severity: "low"
   }
 ];
@@ -6026,7 +6026,7 @@ function Patterns({ heuristicAlerts, onChatWith }) {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-sm font-semibold mb-3 flex items-center gap-2", style: { color: colors.textPrimary }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 14, style: { color: colors.textSecondary } }),
           "Detected This Session",
-          recent.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-normal ml-1", style: { color: colors.textSecondary }, children: "— none yet" })
+          recent.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-normal ml-1", style: { color: colors.textSecondary }, children: "none yet" })
         ] }),
         recent.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-1.5", children: recent.map((alert) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
@@ -6103,7 +6103,7 @@ function Patterns({ heuristicAlerts, onChatWith }) {
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 20, className: "mb-2", style: { color: colors.textSecondary } }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs", style: { color: colors.textSecondary }, children: "No patterns detected yet this session." }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-1", style: { color: colors.textSecondary }, children: "Patterns appear here as you work — Attentify watches quietly." })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-1", style: { color: colors.textSecondary }, children: "Patterns appear here as you work. Attentify watches quietly." })
             ]
           }
         )
@@ -6113,7 +6113,7 @@ function Patterns({ heuristicAlerts, onChatWith }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 14, style: { color: colors.textSecondary } }),
           "Pattern Taxonomy"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mb-3", style: { color: colors.textSecondary }, children: "13 named attention pathologies — definitions, mechanisms, and detection criteria." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mb-3", style: { color: colors.textSecondary }, children: "13 named attention pathologies, definitions, mechanisms, and detection criteria." }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-1.5", children: PATTERN_TAXONOMY.map((pattern) => {
           const stats = patternStats.get(pattern.type);
           const isExpanded = expandedPattern === pattern.type;
@@ -6358,7 +6358,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
             style: { background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.08)" },
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircle, { size: 13, style: { color: "rgba(251,191,36,0.3)" } }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "No pending suggestions — AI hasn't flagged anything new." })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted }, children: "No pending suggestions. AI hasn't flagged anything new." })
             ]
           }
         ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: pending.map((inf) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -6776,7 +6776,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Theme" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: theme === "dark" ? "Dark — easier on the eyes at night" : "Light — brighter for daytime" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: theme === "dark" ? "Dark, easier on the eyes at night" : "Light, brighter for daytime" })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
@@ -6798,8 +6798,8 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between p-4 rounded-lg mt-2", style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pr-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Share anonymized diagnostics" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "Sends bug reports, crash/freeze captures and token usage to help fix issues. No passwords or keys. Beta." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Share diagnostics" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "Sends crash and freeze reports, recent app logs, a short excerpt of recent chat, and token usage, linked to your account so problems can be traced and fixed. Never passwords or API keys." })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
@@ -6819,7 +6819,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
               "Attentify",
               version ? ` v${version}` : "",
               " · ",
-              update.state === "ready" ? "update ready — restart to install" : update.state === "downloading" ? `downloading${typeof update.percent === "number" ? ` ${update.percent}%` : "…"}` : update.state === "available" ? "update found — downloading" : update.state === "checking" ? "checking…" : update.state === "error" ? "check failed" : update.state === "dev" ? "updates active in the installed app" : "up to date"
+              update.state === "ready" ? "update ready, restart to install" : update.state === "downloading" ? `downloading${typeof update.percent === "number" ? ` ${update.percent}%` : "…"}` : update.state === "available" ? "update found, downloading" : update.state === "checking" ? "checking…" : update.state === "error" ? "check failed" : update.state === "dev" ? "updates active in the installed app" : "up to date"
             ] })
           ] }),
           update.state === "ready" ? /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => void api$6.installUpdate?.(), className: "flex-shrink-0 px-3 py-2 rounded-lg text-[11px] font-medium", style: { background: colors.accent, color: "#fff" }, children: "Restart to update" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -6852,7 +6852,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
               /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { size: 16, style: { color: colors.accent, flexShrink: 0 } }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "AlgoTrack" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "See how algorithmic feeds pull you in — an optional side module." })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "See how algorithmic feeds pull you in, an optional side module." })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 14, style: { color: colors.textMuted } })
             ]
@@ -7004,7 +7004,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
             style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" },
             children: cloud?.active ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-bold", style: { color: "#34d399" }, children: "Cloud active — unlimited AI" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-bold", style: { color: "#34d399" }, children: "Cloud active, unlimited AI" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted }, children: [
                   cloud.email ? `Subscribed as ${cloud.email}` : "Subscription active",
                   " · $5/mo"
@@ -7019,7 +7019,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   children: "Unlink"
                 }
               )
-            ] }) : usage?.hasOwnKey ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textSecondary }, children: "Using your own API key — usage is billed directly to you and is never metered here." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            ] }) : usage?.hasOwnKey ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textSecondary }, children: "Using your own API key, usage is billed directly to you and is never metered here." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-semibold", style: { color: colors.textPrimary }, children: "Free AI credit" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] tabular-nums", style: { color: usage?.exhausted ? "#f87171" : "#34d399" }, children: [
@@ -7040,7 +7040,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   }
                 }
               ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textMuted }, children: usage?.exhausted ? "Your free AI credit is used up. Subscribe to Cloud for $5/mo to keep using AI features — or add your own key below." : "The app includes free AI to get you started. When it runs out, subscribe to Cloud ($5/mo) or add your own key." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textMuted }, children: usage?.exhausted ? "Your free AI credit is used up. Subscribe to Cloud for $5/mo to keep using AI features, or add your own key below." : "The app includes free AI to get you started. When it runs out, subscribe to Cloud ($5/mo) or add your own key." }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2 pt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
                 {
@@ -7075,7 +7075,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   }
                 )
               ] }),
-              cloud?.license && !cloud.active && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: "#ff8866" }, children: "That license isn’t active yet — check your subscription or re-enter it." })
+              cloud?.license && !cloud.active && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: "#ff8866" }, children: "That license isn’t active yet, check your subscription or re-enter it." })
             ] })
           }
         )
@@ -7096,7 +7096,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                     style: { background: hasKey ? "#34d399" : "#fbbf24", boxShadow: hasKey ? "0 0 6px #34d399" : "0 0 6px #fbbf24" }
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px]", style: { color: hasKey ? "#34d399" : "#6366f1" }, children: hasKey === null ? "Checking..." : hasKey ? "Your own API key configured" : "Optional — AI already works via included free credit" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px]", style: { color: hasKey ? "#34d399" : "#6366f1" }, children: hasKey === null ? "Checking..." : hasKey ? "Your own API key configured" : "Optional. AI already works via included free credit" })
               ] }),
               hasKey ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -7166,7 +7166,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-bold", style: { color: colors.textPrimary }, children: "Admin Privileges" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: store.elevation === "full" ? "Running elevated — hosts-file domain blocking active." : "Not elevated — domain blocking requires admin rights." })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: store.elevation === "full" ? "Running elevated, hosts-file domain blocking active." : "Not elevated, domain blocking requires admin rights." })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "div",
@@ -7182,7 +7182,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   }
                 )
               ] }),
-              store.elevation !== "full" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-3", style: { color: "rgba(251,191,36,0.6)" }, children: "Run the app as Administrator once — it will register a Task Scheduler entry so future launches are automatically elevated without a UAC prompt." })
+              store.elevation !== "full" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-3", style: { color: "rgba(251,191,36,0.6)" }, children: "Run the app as Administrator once, it will register a Task Scheduler entry so future launches are automatically elevated without a UAC prompt." })
             ]
           }
         )
@@ -7198,7 +7198,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-3 mb-3", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "This device" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Checks that this PC can actually run every part of Attentify — so a capability that is silently unavailable shows up here instead of just looking broken." })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Checks that this PC can actually run every part of Attentify, so a capability that is silently unavailable shows up here instead of just looking broken." })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "button",
@@ -7257,7 +7257,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 16, style: { color: "#6366f1", marginTop: 2, flexShrink: 0 } }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Restore my system" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Undo everything Attentify has changed on this device — hosts-file blocks, firewall rules, browser DNS policies and the login startup entry — returning it to how it was before. Every change is recorded, so nothing is guessed at." }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Undo everything Attentify has changed on this device, hosts-file blocks, firewall rules, browser DNS policies and the login startup entry, returning it to how it was before. Every change is recorded, so nothing is guessed at." }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: changeCount === null ? "" : `${changeCount} change${changeCount === 1 ? "" : "s"} recorded` })
                 ] })
               ] }),
@@ -7362,7 +7362,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] flex-1 min-w-0 truncate", style: { color: colors.textPrimary }, children: [
                           c.action,
                           c.target ? `: ${c.target}` : "",
-                          c.detail && !c.target ? ` — ${c.detail}` : ""
+                          c.detail && !c.target ? `: ${c.detail}` : ""
                         ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: new Date(c.ts).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })
                       ]
@@ -7534,11 +7534,11 @@ function Onboarding({ onComplete }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs", style: { color: colors.textMuted }, children: "Proceeding to initial scan in a moment…" })
       ] }),
       elevation === "soft" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm leading-relaxed mb-4", style: { color: colors.textSecondary }, children: "Attentify needs administrator rights to edit your system's hosts file — this is how site blocking works at the network layer, before browsers even load the page." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm leading-relaxed mb-4", style: { color: colors.textSecondary }, children: "Attentify needs administrator rights to edit your system's hosts file, this is how site blocking works at the network layer, before browsers even load the page." }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full p-4 rounded-xl mb-6 text-left", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold mb-2 uppercase tracking-wider", style: { color: colors.textSecondary }, children: "What admin access enables" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: [
-            ["Hosts file blocking", "Sinkhole blocked domains at the OS level — no browser workaround"],
+            ["Hosts file blocking", "Sinkhole blocked domains at the OS level, no browser workaround"],
             ["DoH bypass prevention", "Block DNS-over-HTTPS so browsers use system DNS"],
             ["Process enforcement", "Kill blocked apps during deep focus sessions"]
           ].map(([title, desc]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2", children: [
@@ -7570,7 +7570,7 @@ function Onboarding({ onComplete }) {
             ] })
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "A UAC dialog will appear — click Yes to grant access" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "A UAC dialog will appear. Click Yes to grant access" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
@@ -7677,7 +7677,7 @@ function fmt(ms) {
   if (h > 0) return `${h}h`;
   if (m > 0) return `${m}m`;
   const s = Math.floor(ms / 1e3);
-  return s > 0 ? `${s}s` : "—";
+  return s > 0 ? `${s}s` : "-";
 }
 function fmtHM(ms) {
   const h = Math.floor(ms / 36e5), m = Math.floor(ms % 36e5 / 6e4);
@@ -7823,11 +7823,11 @@ function Timesheets({ onChatWith }) {
     ] }),
     weekTotal === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-6 text-center", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px]", style: { color: colors.textSecondary }, children: "No time logged this week." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-1", style: { color: colors.textMuted }, children: "Keep Attentify running — your timesheet fills in as you work." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-1", style: { color: colors.textMuted }, children: "Keep Attentify running, your timesheet fills in as you work." })
     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl p-4", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium", style: { color: colors.textMuted }, children: "Daily breakdown — click a day for details" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium", style: { color: colors.textMuted }, children: "Daily breakdown. Click a day for details" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableQuery, { title: "Daily breakdown", summary: days.map((d) => `${fmtDay(d.date)} ${fmtHM(d.total)}`).join(", ") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: days.map((d) => {
@@ -7859,7 +7859,7 @@ function Timesheets({ onChatWith }) {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: [
             fmtDay(selected.date),
-            " — time entries"
+            " time entries"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px]", style: { color: colors.textMuted }, children: [
@@ -8102,7 +8102,7 @@ function Logic({ onChatWith }) {
         title: "Your goals",
         subtitle: `${goals.length} active`,
         rows: goals.map((g) => ({ label: g.text })),
-        empty: "No goals set yet — tell the assistant what you want to achieve.",
+        empty: "No goals set yet, tell the assistant what you want to achieve.",
         askPrompt: "What are my current goals and how well is my activity aligned with them?"
       }
     },
@@ -8113,7 +8113,7 @@ function Logic({ onChatWith }) {
         title: "Learned about you",
         subtitle: `${prefs.length} preferences`,
         rows: prefs.slice(0, 14).map((p) => ({ label: p.key, sub: p.source === "user" ? "you told me" : "inferred", value: p.value })),
-        empty: "Nothing learned yet — this fills in as you use Attentify.",
+        empty: "Nothing learned yet. This fills in as you use Attentify.",
         askPrompt: "What have you learned about my habits and preferences so far?"
       }
     },
@@ -8143,7 +8143,7 @@ function Logic({ onChatWith }) {
     },
     {
       label: "Top drain",
-      value: topDistractor ?? "—",
+      value: topDistractor ?? "-",
       color: topDistractor ? colors.negative : colors.textMuted,
       drill: {
         title: "Top distractions",
@@ -8161,7 +8161,7 @@ function Logic({ onChatWith }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 16, style: { color: colors.accent } }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Logic" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: "How Attentify reasons about your attention — and what it's working from." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: "How Attentify reasons about your attention, and what it's working from." })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: load, className: "p-1.5 rounded-lg", style: { border: `1px solid ${colors.border}`, color: colors.textMuted }, title: "Refresh", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 13 }) })
@@ -8181,7 +8181,7 @@ function Logic({ onChatWith }) {
       ) }, m.label)) }),
       loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-10", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { label: "Context I'm using", sub: `${goals.length + prefs.length + context.length} items` }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel p-3.5", children: goals.length === 0 && prefs.length === 0 && context.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "Nothing yet. Set a goal in chat, or add context below — it sharpens my reasoning." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel p-3.5", children: goals.length === 0 && prefs.length === 0 && context.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px]", style: { color: colors.textMuted }, children: "Nothing yet. Set a goal in chat, or add context below, it sharpens my reasoning." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
           goals.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1.5", style: { color: colors.textMuted }, children: "Your goals" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5", children: goals.map((g) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] px-2 py-1 rounded-lg", style: { background: colors.accentBg, color: colors.textSecondary, border: `1px solid ${colors.border}` }, children: g.text }, g.id)) })
@@ -8234,7 +8234,7 @@ function Logic({ onChatWith }) {
               if (e.key === "Enter") void addContext();
             },
             disabled: adding,
-            placeholder: "Tell Attentify something to inform it — e.g. “Reddit is for work” or “I do night shifts”",
+            placeholder: "Tell Attentify something to inform it, e.g. “Reddit is for work” or “I do night shifts”",
             className: "flex-1 bg-transparent text-[12px] outline-none disabled:opacity-60",
             style: { color: colors.textPrimary, caretColor: colors.accent }
           }
@@ -8541,7 +8541,7 @@ function Activity({ onChatWith }) {
         label
       )) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto px-5 pb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-4xl mx-auto", children: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) }) : rows.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-[12px] py-12", style: { color: colors.textMuted }, children: sessions.length === 0 && searches.length === 0 ? "No activity recorded yet — keep Attentify running and it fills in here." : "Nothing matches those filters." }) : groups.map((g) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto px-5 pb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-4xl mx-auto", children: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) }) : rows.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-[12px] py-12", style: { color: colors.textMuted }, children: sessions.length === 0 && searches.length === 0 ? "No activity recorded yet. Keep Attentify running and it fills in here." : "Nothing matches those filters." }) : groups.map((g) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wide mb-1 sticky top-0 py-1 z-10", style: { color: colors.textMuted, background: colors.mainBg, fontFamily: '"Share Tech Mono", monospace' }, children: g.day }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl overflow-hidden", style: { border: `1px solid ${colors.border}` }, children: g.items.map((it, idx) => it.type === "search" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SearchRow, { q: it.q, first: idx === 0 }, `s${idx}`) : /* @__PURE__ */ jsxRuntimeExports.jsx(
         SessionRow,
@@ -8911,7 +8911,7 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
         {
           id: crypto.randomUUID(),
           role: "assistant",
-          content: isPaywall ? "You've used up your **$1 of free AI**. Subscribe to **Attentify Cloud** for **$5/month** to keep using the assistant — or add your own OpenRouter key in Settings (never metered)." : isAuth ? "Sign in to use the assistant — open the account button at the bottom of the sidebar." : `Error: ${err}`,
+          content: isPaywall ? "You've used up your **$1 of free AI**. Subscribe to **Attentify Cloud** for **$5/month** to keep using the assistant, or add your own OpenRouter key in Settings (never metered)." : isAuth ? "Sign in to use the assistant. Open the account button at the bottom of the sidebar." : `Error: ${err}`,
           timestamp: Date.now()
         }
       ]);
@@ -8999,7 +8999,7 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
     setMessages([{
       id: "welcome",
       role: "assistant",
-      content: "History cleared. I'm Attentify, your focus assistant — tell me what you need to focus on.",
+      content: "History cleared. I'm Attentify, your focus assistant, tell me what you need to focus on.",
       timestamp: Date.now()
     }]);
   }, [confirmClear]);
@@ -9176,7 +9176,7 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
             disabled: checkingOut,
             className: "w-full py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all disabled:opacity-50 rounded-xl",
             style: { background: "rgba(52,211,153,0.15)", border: "1px solid rgba(52,211,153,0.35)", color: "#34d399" },
-            children: checkingOut ? "Opening checkout…" : "Subscribe — $5/month"
+            children: checkingOut ? "Opening checkout…" : "Subscribe for $5/month"
           }
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-shrink-0 px-4 pb-4", style: { borderTop: `1px solid ${colors.border}`, paddingTop: 12 }, children: [
@@ -9586,7 +9586,7 @@ function App() {
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { size: 12, style: { color: "#fbbf24" } }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textSecondary }, children: "You’re signed out. Look around freely — blocking, focus sessions and the assistant need an account." })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textSecondary }, children: "You’re signed out. Look around freely, blocking, focus sessions and the assistant need an account." })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "button",
@@ -9614,7 +9614,7 @@ function App() {
                       " ready to install."
                     ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                       "Downloading update",
-                      typeof update.percent === "number" ? ` — ${update.percent}%` : "…"
+                      typeof update.percent === "number" ? `: ${update.percent}%` : "…"
                     ] }) })
                   ] }),
                   update.state === "ready" && /* @__PURE__ */ jsxRuntimeExports.jsx(
