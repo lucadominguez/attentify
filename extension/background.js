@@ -546,6 +546,23 @@ async function reportBypass(attempt) {
   }).catch(() => {});
 }
 
+// ── Authoritative activity sensor ─────────────────────────────────────────────
+// The desktop app scrapes the browser address bar via PowerShell when the extension is
+// absent, which is flaky. When we ARE installed we send the real navigation here, and the
+// app treats it as the authoritative sensor (and stands the poller down). Only real http(s)
+// top-level pages; never file:// or chrome:// or internal URLs.
+let lastActivityUrl = '';
+function reportActivity(url, title) {
+  if (!daemonPort || !url || !/^https?:\/\//i.test(url)) return;
+  if (url === lastActivityUrl) return;
+  lastActivityUrl = url;
+  fetch(`http://127.0.0.1:${daemonPort}/extension/activity`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, title: title || '', ts: Date.now() }),
+    signal: AbortSignal.timeout(1500),
+  }).catch(() => {});
+}
+
 // ── Web navigation hooks ──────────────────────────────────────────────────────
 
 chrome.webNavigation.onBeforeNavigate.addListener((details) => {
@@ -567,6 +584,7 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
 
 chrome.webNavigation.onCommitted.addListener((details) => {
   if (details.frameId !== 0) return;
+  reportActivity(details.url, details.title);
   const urlL = details.url.toLowerCase();
   for (const rule of rules.filter(r => r.enabled)) {
     for (const term of (rule.antiBypassSearchTerms || [])) {
@@ -576,6 +594,17 @@ chrome.webNavigation.onCommitted.addListener((details) => {
       }
     }
   }
+});
+
+// Single-page-app navigations don't fire onCommitted; history updates catch them.
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  if (details.frameId !== 0) return;
+  reportActivity(details.url, details.title);
+});
+
+// Switching tabs is also a "what am I looking at now" change.
+chrome.tabs.onActivated.addListener(({ tabId }) => {
+  chrome.tabs.get(tabId, (tab) => { if (!chrome.runtime.lastError && tab) reportActivity(tab.url, tab.title); });
 });
 
 chrome.tabs.onCreated.addListener((tab) => {

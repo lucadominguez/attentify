@@ -572,12 +572,24 @@ video {
   }
 }
 
+.pointer-events-none{
+  pointer-events: none;
+}
+
 .visible{
   visibility: visible;
 }
 
+.invisible{
+  visibility: hidden;
+}
+
 .collapse{
   visibility: collapse;
+}
+
+.static{
+  position: static;
 }
 
 .\!fixed{
@@ -688,6 +700,22 @@ video {
   z-index: 71;
 }
 
+.z-\[80\]{
+  z-index: 80;
+}
+
+.z-\[81\]{
+  z-index: 81;
+}
+
+.z-\[90\]{
+  z-index: 90;
+}
+
+.z-\[91\]{
+  z-index: 91;
+}
+
 .col-span-2{
   grid-column: span 2 / span 2;
 }
@@ -719,6 +747,11 @@ video {
 .my-0\.5{
   margin-top: 0.125rem;
   margin-bottom: 0.125rem;
+}
+
+.my-1\.5{
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
 }
 
 .my-2{
@@ -785,6 +818,10 @@ video {
 
 .mb-8{
   margin-bottom: 2rem;
+}
+
+.mb-\[3px\]{
+  margin-bottom: 3px;
 }
 
 .mb-px{
@@ -1255,6 +1292,10 @@ video {
   animation: spin 1s linear infinite;
 }
 
+.cursor-grab{
+  cursor: grab;
+}
+
 .cursor-pointer{
   cursor: pointer;
 }
@@ -1277,10 +1318,6 @@ video {
 
 .resize{
   resize: both;
-}
-
-.grid-cols-1{
-  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .grid-cols-2{
@@ -1387,13 +1424,30 @@ video {
   gap: 1.5rem;
 }
 
+.gap-\[2px\]{
+  gap: 2px;
+}
+
+.gap-\[3px\]{
+  gap: 3px;
+}
+
 .gap-px{
   gap: 1px;
+}
+
+.gap-x-3{
+  -moz-column-gap: 0.75rem;
+       column-gap: 0.75rem;
 }
 
 .gap-x-4{
   -moz-column-gap: 1rem;
        column-gap: 1rem;
+}
+
+.gap-y-1{
+  row-gap: 0.25rem;
 }
 
 .gap-y-1\.5{
@@ -1672,6 +1726,11 @@ video {
   padding: 2rem;
 }
 
+.px-0{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .px-0\.5{
   padding-left: 0.125rem;
   padding-right: 0.125rem;
@@ -1757,6 +1816,11 @@ video {
   padding-bottom: 3rem;
 }
 
+.py-14{
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
 .py-2{
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -1797,6 +1861,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.py-\[3px\]{
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
 .pb-1{
   padding-bottom: 0.25rem;
 }
@@ -1823,6 +1892,10 @@ video {
 
 .pb-6{
   padding-bottom: 1.5rem;
+}
+
+.pl-0\.5{
+  padding-left: 0.125rem;
 }
 
 .pl-2{
@@ -1875,6 +1948,10 @@ video {
 
 .pt-3\.5{
   padding-top: 0.875rem;
+}
+
+.pt-4{
+  padding-top: 1rem;
 }
 
 .pt-5{
@@ -1958,6 +2035,10 @@ video {
 
 .text-\[26px\]{
   font-size: 26px;
+}
+
+.text-\[30px\]{
+  font-size: 30px;
 }
 
 .text-\[40px\]{
@@ -2116,24 +2197,25 @@ video {
   color: rgb(30 63 96 / var(--tw-text-opacity, 1));
 }
 
-.text-navy-500{
-  --tw-text-opacity: 1;
-  color: rgb(20 46 74 / var(--tw-text-opacity, 1));
-}
-
-.text-navy-600{
-  --tw-text-opacity: 1;
-  color: rgb(13 34 56 / var(--tw-text-opacity, 1));
-}
-
-.text-navy-700{
-  --tw-text-opacity: 1;
-  color: rgb(10 28 48 / var(--tw-text-opacity, 1));
-}
-
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.text-white\/40{
+  color: rgb(255 255 255 / 0.4);
+}
+
+.text-white\/50{
+  color: rgb(255 255 255 / 0.5);
+}
+
+.text-white\/60{
+  color: rgb(255 255 255 / 0.6);
+}
+
+.text-white\/75{
+  color: rgb(255 255 255 / 0.75);
 }
 
 .text-white\/80{
@@ -2203,6 +2285,10 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.backdrop-filter{
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+}
+
 .transition{
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -2255,6 +2341,16 @@ video {
 
 .ease-out{
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.\[column-count\:2\]{
+  -moz-column-count: 2;
+       column-count: 2;
+}
+
+.\[column-gap\:0\.625rem\]{
+  -moz-column-gap: 0.625rem;
+       column-gap: 0.625rem;
 }
 
 /* ── Theme variables (dark defaults, overridden by ThemeContext) ────────────── */
@@ -2408,6 +2504,15 @@ html.light .bg-grid {
 .card{
   border-radius: 0.75rem;
   padding: 1.25rem;
+}
+
+
+[data-glass="full"] .card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.card {
   background: var(--card-bg);
   border: 1px solid var(--border);
 }
@@ -2430,6 +2535,12 @@ html.light .bg-grid {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
+}
+
+
+[data-glass="full"] .btn-primary {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .btn-primary:hover{
@@ -2742,6 +2853,91 @@ html.light .bg-grid {
 
 .dot-pulse { animation: dotPulse 2s ease-in-out infinite; }
 
+/* ── Presence ────────────────────────────────────────────────────────────────
+   The aura behind the brand mark. The ONE thing in the app allowed to move, and
+   it barely does: a ~5s cycle at low amplitude reads as alive in peripheral
+   vision and disappears when looked at directly. An app that exists to protect
+   attention must not spend it, so nothing else loops. */
+
+@keyframes presenceBreathe {
+  0%, 100% { transform: scale(1);    opacity: 0.72; }
+  50%      { transform: scale(1.09); opacity: 1; }
+}
+
+.presence-breathe { animation: presenceBreathe 5s ease-in-out infinite; }
+
+/* ── Reduced motion ──────────────────────────────────────────────────────────
+   Respect the OS setting. Nothing here is load-bearing: the presence still reads
+   through colour and the ambient wash still shifts, they just stop moving. */
+
+@media (prefers-reduced-motion: reduce) {
+  .presence-breathe { animation: none; }
+  .dot-pulse { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ── Full-glass experiment ───────────────────────────────────────────────────
+   Opt-in via Settings. The translucency comes from the theme tokens (see
+   withGlass in ThemeContext); this only supplies the blur, because
+   backdrop-filter cannot ride on a colour token.
+
+   Scoped to panel-shaped containers rather than "*": blur is GPU work and this
+   app runs 24/7, so blurring every div would cost battery for nothing. Turning
+   the toggle off removes the attribute and every rule below stops matching, so
+   the revert is total. */
+
+/* ONE blurred plane, not one per panel. Every backdrop-filter re-blurs what is already
+   blurred beneath it, so blurring each nested card compounded the desktop into a smear.
+   #root frosts; panels are only tint on top of it. */
+
+[data-glass="full"] #root {
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+}
+
+/* Belt and braces: nothing inside the app frosts again. */
+
+[data-glass="full"] .section-panel,
+[data-glass="full"] .rounded-xl,
+[data-glass="full"] .rounded-2xl,
+[data-glass="full"] .rounded-lg {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ── Collapsed sidebar ───────────────────────────────────────────────────────
+   The rail is 56px. .sidebar-item is built for a labelled row (px-4, gap-3,
+   text-left), so with the label removed the icon sits off-centre and the badge,
+   which is absolutely positioned relative to the row, lands on top of it. These
+   rules re-centre the icon and pin the badge to the corner instead. */
+
+.sidebar-collapsed .sidebar-item {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  gap: 0;
+}
+
+/* ── Seeing the desktop through the window ───────────────────────────────────
+   globals sets `html, body, #root { background-color: var(--root-bg) }`. That is
+   three stacked layers painting the SAME colour, which is invisible while the
+   colour is opaque and fatal once it is not: three passes of a 0.3 alpha compose
+   to roughly 0.66, so the window would look nearly solid no matter how far the
+   opacity slider was pushed.
+
+   Under glass, exactly one layer paints. html and body go fully transparent so
+   the window's acrylic (and the user's actual desktop behind it) is what shows,
+   and #root carries the single tint. */
+
+html[data-glass="full"],
+html[data-glass="full"] body {
+  background-color: transparent;
+}
+
 .hover\:scale-105:hover{
   --tw-scale-x: 1.05;
   --tw-scale-y: 1.05;
@@ -2787,24 +2983,21 @@ html.light .bg-grid {
   color: rgb(165 180 252 / var(--tw-text-opacity, 1));
 }
 
-.hover\:text-navy-300:hover{
-  --tw-text-opacity: 1;
-  color: rgb(40 82 110 / var(--tw-text-opacity, 1));
-}
-
-.hover\:text-navy-400:hover{
-  --tw-text-opacity: 1;
-  color: rgb(30 63 96 / var(--tw-text-opacity, 1));
-}
-
-.hover\:text-navy-500:hover{
-  --tw-text-opacity: 1;
-  color: rgb(20 46 74 / var(--tw-text-opacity, 1));
-}
-
 .hover\:text-white:hover{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.hover\:text-white\/60:hover{
+  color: rgb(255 255 255 / 0.6);
+}
+
+.hover\:text-white\/75:hover{
+  color: rgb(255 255 255 / 0.75);
+}
+
+.hover\:text-white\/90:hover{
+  color: rgb(255 255 255 / 0.9);
 }
 
 .hover\:underline:hover{
@@ -2847,6 +3040,10 @@ html.light .bg-grid {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.active\:cursor-grabbing:active{
+  cursor: grabbing;
+}
+
 .disabled\:cursor-not-allowed:disabled{
   cursor: not-allowed;
 }
@@ -2872,15 +3069,19 @@ html.light .bg-grid {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
+.group\/code:hover .group-hover\/code\:opacity-100{
+  opacity: 1;
+}
+
 .group:hover .group-hover\:opacity-100{
   opacity: 1;
 }
 
-@media (min-width: 640px){
+.group:hover .group-hover\:opacity-60{
+  opacity: 0.6;
+}
 
-  .sm\:grid-cols-2{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+@media (min-width: 640px){
 
   .sm\:grid-cols-4{
     grid-template-columns: repeat(4, minmax(0, 1fr));

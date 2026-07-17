@@ -1,5 +1,5 @@
-import { b as reactExports, R as React, j as jsxRuntimeExports, c as client } from "./globals-CCfb2mVU.js";
-import { Z as Zap, E as Eye, B as Brain, A as AlertTriangle, S as Shield, X } from "./zap-NFnEc1cR.js";
+import { b as reactExports, R as React, j as jsxRuntimeExports, c as client } from "./globals-CPnurcRi.js";
+import { Z as Zap, E as Eye, B as Brain, A as AlertTriangle, S as Shield, X } from "./zap-BELc-k6-.js";
 const api = window.electronAPI;
 const DISMISS_AFTER = 12e3;
 const TYPE_CONFIG = {
@@ -107,11 +107,23 @@ function OverlayCard() {
           {
             style: {
               width: 400,
-              background: "rgba(4,10,20,0.97)",
-              border: `1px solid ${cfg.border}`,
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              boxShadow: `0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04), inset 0 0 40px ${cfg.dimColor}`,
+              borderRadius: 18,
+              overflow: "hidden",
+              background: `linear-gradient(160deg, rgba(10,18,34,0.62), rgba(4,10,20,0.72))`,
+              // Hairline edge, brightest at the top where light would catch it.
+              border: "1px solid rgba(255,255,255,0.10)",
+              backdropFilter: "blur(28px)",
+              WebkitBackdropFilter: "blur(28px)",
+              boxShadow: [
+                "0 24px 64px rgba(0,0,0,0.55)",
+                // lift off the desktop
+                `0 0 0 1px ${cfg.border}`,
+                // state colour, as an edge not a frame
+                "inset 0 1px 0 rgba(255,255,255,0.14)",
+                // top light catch
+                `inset 0 0 60px ${cfg.dimColor}`
+                // state bleed from within
+              ].join(", "),
               pointerEvents: "all",
               userSelect: "none",
               animation: "slideIn 0.22s cubic-bezier(0.34,1.56,0.64,1)"

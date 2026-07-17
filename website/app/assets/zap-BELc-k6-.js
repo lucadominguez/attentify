@@ -1,4 +1,4 @@
-import { a as createLucideIcon } from "./globals-CCfb2mVU.js";
+import { a as createLucideIcon } from "./globals-CPnurcRi.js";
 /**
  * @license lucide-react v0.312.0 - ISC
  *

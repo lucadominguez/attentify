@@ -1,5 +1,5 @@
-import { a as createLucideIcon, b as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-CCfb2mVU.js";
-import { a as Coffee, C as Clock } from "./coffee-Dp0X32Ge.js";
+import { a as createLucideIcon, b as reactExports, j as jsxRuntimeExports, c as client, R as React } from "./globals-CPnurcRi.js";
+import { a as Coffee, C as Clock } from "./coffee-BdKGZsry.js";
 /**
  * @license lucide-react v0.312.0 - ISC
  *
@@ -71,15 +71,23 @@ function InterstitialWarning() {
     {
       className: "flex flex-col w-screen h-screen overflow-hidden select-none rounded-2xl",
       style: {
-        background: "linear-gradient(160deg, #0d1e35 0%, #080f1e 100%)",
-        border: "1px solid rgba(255,107,53,0.25)"
+        background: "linear-gradient(160deg, rgba(13,30,53,0.66) 0%, rgba(8,15,30,0.76) 100%)",
+        border: "1px solid rgba(255,255,255,0.10)",
+        backdropFilter: "blur(30px)",
+        WebkitBackdropFilter: "blur(30px)",
+        boxShadow: [
+          "0 28px 72px rgba(0,0,0,0.6)",
+          "0 0 0 1px rgba(248,113,113,0.28)",
+          "inset 0 1px 0 rgba(255,255,255,0.14)",
+          "inset 0 0 80px rgba(248,113,113,0.07)"
+        ].join(", ")
       },
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "titlebar-drag flex items-center justify-end h-7 px-3 flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             onClick: handleGoBack,
-            className: "text-navy-600 hover:text-navy-400 transition-colors text-xs leading-none",
+            className: "text-white/50 hover:text-white/75 transition-colors text-xs leading-none",
             style: { WebkitAppRegion: "no-drag" },
             children: "✕"
           }
@@ -91,25 +99,24 @@ function InterstitialWarning() {
               {
                 className: "w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0",
                 style: {
-                  background: "rgba(255,107,53,0.12)",
-                  border: "1.5px solid rgba(255,107,53,0.35)",
-                  boxShadow: "0 0 24px rgba(255,107,53,0.18)"
+                  background: "rgba(248,113,113,0.12)",
+                  border: "1.5px solid rgba(248,113,113,0.35)",
+                  boxShadow: "0 0 24px rgba(248,113,113,0.18)"
                 },
-                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { size: 26, className: "text-accent-orange" })
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { size: 26, style: { color: "#f87171" } })
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-xl font-extrabold text-white leading-tight", style: { letterSpacing: "-0.01em" }, children: "Attention hazard" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-navy-400 text-sm mt-1 leading-snug", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-white/75 text-sm mt-1 leading-snug", children: [
                 "Blocked",
                 " ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-accent-orange font-semibold", children: data?.blocked ?? "…" }),
-                " ",
-                "You asked it to."
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", style: { color: "#f87171" }, children: data?.blocked ?? "…" }),
+                ". You asked it to."
               ] }),
-              sessionEnd && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-navy-600 text-xs mt-1", children: [
+              sessionEnd && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-white/50 text-xs mt-1", children: [
                 "Focus session ends at ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-navy-400", children: sessionEnd })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-white/75", children: sessionEnd })
               ] })
             ] })
           ] }),
@@ -118,8 +125,8 @@ function InterstitialWarning() {
               "button",
               {
                 onClick: handleGoBack,
-                className: "flex items-center gap-2 bg-accent-blue hover:bg-accent-blue-light text-white font-bold px-6 py-2.5 rounded-full text-sm transition-all w-full max-w-[220px] justify-center",
-                style: { boxShadow: "0 0 20px rgba(33,150,243,0.25)" },
+                className: "flex items-center gap-2 text-white font-bold px-6 py-2.5 rounded-full text-sm transition-all w-full max-w-[220px] justify-center hover:brightness-110",
+                style: { background: "#6366f1", boxShadow: "0 0 20px rgba(99,102,241,0.30)" },
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 15 }),
                   "Go back"
@@ -127,31 +134,31 @@ function InterstitialWarning() {
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 mt-1", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Coffee, { size: 10, className: "text-navy-600" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-navy-700 text-[10px]", children: "Take a break:" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Coffee, { size: 10, className: "text-white/50" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-white/40 text-[10px]", children: "Take a break:" }),
               BREAK_OPTIONS.map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
                 {
                   onClick: () => void handleBreak(opt.ms),
-                  className: "text-navy-600 hover:text-navy-300 text-[10px] transition-colors px-1.5 py-0.5 rounded",
+                  className: "text-white/50 hover:text-white/90 text-[10px] transition-colors px-1.5 py-0.5 rounded",
                   style: { border: "1px solid rgba(255,255,255,0.06)" },
                   children: opt.label
                 },
                 opt.ms
               ))
             ] }),
-            countdown !== null && !proceedReady ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-navy-600 text-xs", children: [
+            countdown !== null && !proceedReady ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-white/50 text-xs", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 11 }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
                 "Proceeding in ",
                 countdown,
                 "s…"
               ] })
-            ] }) : proceedReady ? /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleProceed, className: "text-navy-500 hover:text-navy-300 text-xs transition-colors", children: [
+            ] }) : proceedReady ? /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleProceed, className: "text-white/60 hover:text-white/90 text-xs transition-colors", children: [
               "Proceed to ",
               data?.blocked ?? "site"
-            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleProceedRequest, className: "text-navy-700 hover:text-navy-500 text-xs transition-colors", children: "Proceed anyway (30s delay)" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-navy-700 text-[10px]", children: "The good algorithm is protecting you." })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleProceedRequest, className: "text-white/40 hover:text-white/60 text-xs transition-colors", children: "Proceed anyway (30s delay)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-white/40 text-[10px]", children: "The good algorithm is protecting you." })
           ] })
         ] })
       ]
