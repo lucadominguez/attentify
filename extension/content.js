@@ -25,10 +25,43 @@
   let hiddenSel = [];                      // flattened selectors currently hidden — media-guard lookups
   let distractionProb = 0;                 // 0..1 from the context engine — raises auto-hide aggressiveness
   let assessment = null;                   // last context assessment {intent, distractionProbability, reason}
+  let suppressSelectors = new Set();       // selectors the user flagged "not a distraction" here — scanner must skip
   const STYLE_ID = 'pd-element-blocker';
+
+  // Load this domain's "not a distraction" corrections and keep them fresh. The scanner
+  // consults these so a flagged element is never auto-hidden (or re-surfaced) again — the
+  // client-side counterpart to the daemon's learned suppressions.
+  function loadSuppressions() {
+    try {
+      chrome.storage.local.get('autoHideSuppress', (d) => {
+        const map = (d && d.autoHideSuppress) || {};
+        const list = map[getDomain()] || [];
+        suppressSelectors = new Set(list.map(x => (x && x.selector) || (typeof x === 'string' ? x : null)).filter(Boolean));
+      });
+    } catch (_) {}
+  }
+  try {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes.autoHideSuppress) loadSuppressions();
+    });
+  } catch (_) {}
   const HIDE = '{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;overflow:hidden!important;pointer-events:none!important;max-height:0!important;}';
 
   function getDomain() { return location.hostname.replace(/^www\./, ''); }
+
+  // Search-engine results pages are never auto-hidden. A SERP is the user actively
+  // looking for something, and its results are dense repeated link-lists with headings
+  // like "Top stories" / "People also ask" — exactly the shape the distraction scanner
+  // scores as a feed, so without this guard auto-hide silently eats search results.
+  // (This mirrors the desktop classifier's "searches never auto-block" rule, which the
+  // extension's own scanner never had.) Manual scanning still works; only auto-hide is
+  // suppressed here.
+  const SEARCH_HOSTS = /(^|\.)(google\.[a-z.]+|bing\.com|duckduckgo\.com|search\.yahoo\.com|search\.brave\.com|ecosia\.org|startpage\.com|yandex\.[a-z.]+|baidu\.com|qwant\.com|kagi\.com|search\.marginalia\.nu)$/;
+  function isSearchResultsPage() {
+    if (!SEARCH_HOSTS.test(location.hostname)) return false;
+    const hasQuery = /[?&](q|query|search_query|p|text|wd|k)=/.test(location.search);
+    return hasQuery || /(^|\/)(search|s)(\/|\?|$)/.test(location.pathname);
+  }
 
   function rulesForPage() {
     const d = getDomain();
@@ -496,6 +529,8 @@
       if (nested) continue;
       const selector = selectorFor(el);
       if (!selector || seen.has(selector)) continue;
+      // The user flagged this element as "not a distraction" — never re-surface or auto-hide it.
+      if (suppressSelectors.has(selector)) continue;
       seen.add(selector);
       cands.push(scored);
       scored.selector = selector;
@@ -715,6 +750,7 @@
   window.addEventListener('pageshow', e => { if (e.persisted && !rulesReceived) requestRules(); });
 
   function init() {
+    loadSuppressions();
     installMediaGuard();
     installBehaviorTracking();
     installContentObserver();

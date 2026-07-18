@@ -209,6 +209,7 @@ let pausedSites = {};   // { 'youtube.com': true } — domains the user paused b
 let autoBlock = true;   // auto-hide high-confidence detected distractions (the scanner)
 let autoHideKeywords = []; // topics the user told the assistant to hide — feeds the scanner
 let titleBlocks = [];   // lowercase title substrings — videos whose TITLE matches are blocked
+let autoHideSuppress = {}; // { domain: [{selector,label,ts}] } — elements the user flagged "not a distraction"; the scanner must never auto-hide these again (client-side retraining)
 let lastAssessment = null; // most recent per-navigation context read (shown in the panel)
 let contextLog = [];    // chronological history of context reads — powers the flow view
 let cloudStatus = null; // { tier, status, aiRemaining, ... } from the cloud backend, or null
@@ -243,7 +244,7 @@ const DAEMON_PORTS = [9119, 9120, 9121, 9122, 9123];
 
 async function bootstrap() {
   addLog('boot', 'Extension started');
-  const d = await chrome.storage.local.get(['rules', 'rulesVersion', 'daemonPort', 'bypassScores', 'bypassAttempts', 'elementStats', 'pausedSites', 'autoBlock', 'autoHideKeywords', 'titleBlocks', 'feedbackLog', 'lastAssessment', 'contextLog']);
+  const d = await chrome.storage.local.get(['rules', 'rulesVersion', 'daemonPort', 'bypassScores', 'bypassAttempts', 'elementStats', 'pausedSites', 'autoBlock', 'autoHideKeywords', 'titleBlocks', 'autoHideSuppress', 'feedbackLog', 'lastAssessment', 'contextLog']);
 
   if (d.rules && d.rules.length > 0) {
     rules = d.rules;
@@ -285,6 +286,7 @@ async function bootstrap() {
   if (typeof d.autoBlock === 'boolean') autoBlock = d.autoBlock;
   if (Array.isArray(d.autoHideKeywords)) autoHideKeywords = d.autoHideKeywords;
   if (Array.isArray(d.titleBlocks)) titleBlocks = d.titleBlocks;
+  if (d.autoHideSuppress && typeof d.autoHideSuppress === 'object') autoHideSuppress = d.autoHideSuppress;
   if (Array.isArray(d.feedbackLog)) feedbackLog = d.feedbackLog;
   if (Array.isArray(d.contextLog)) contextLog = d.contextLog;
   if (d.lastAssessment) lastAssessment = d.lastAssessment;
@@ -1036,6 +1038,24 @@ async function queueFeedback(entry) {
   return feedbackLog.length;
 }
 
+// Retrain the client-side scanner from an explicit correction: when the user says an
+// auto-hidden element "isn't a distraction", persist its selector so the scanner never
+// auto-hides (or even re-surfaces) that element on this domain again. The content script
+// reads autoHideSuppress from storage and watches it, so this takes effect immediately on
+// the live tab and on every future page load.
+async function suppressAutoHide(entry) {
+  const domain = entry?.domain || domainOf(entry?.url);
+  const selector = entry?.selector;
+  if (!domain || !selector) return;
+  const list = Array.isArray(autoHideSuppress[domain]) ? autoHideSuppress[domain] : [];
+  if (!list.some(x => (x && x.selector) === selector)) {
+    list.push({ selector, label: entry?.label || '', ts: Date.now() });
+    autoHideSuppress[domain] = list.slice(-200);   // bound per-domain memory
+    await chrome.storage.local.set({ autoHideSuppress });
+    addLog('storage', `Learned: don't auto-hide on ${domain}`, entry?.label || selector);
+  }
+}
+
 // ── GitHub token + bug reporting ────────────────────────────────────────────────
 // Same durable storage strategy as the API key: sync (cross-device) + local mirror.
 
@@ -1256,6 +1276,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case 'report:feedback':
       queueFeedback({ kind: 'misprediction', ...(msg.entry || {}) }).then(n => sendResponse({ ok: true, queued: n }));
       queueCloudEvent({ type: 'misprediction', domain: msg.entry?.domain, label: msg.entry?.label, meta: { selector: msg.entry?.selector, score: msg.entry?.score } });
+      // Retrain the local scanner so it never auto-hides this element again.
+      if (msg.entry?.verdict === 'wrong-hide') suppressAutoHide(msg.entry);
+      // Mirror a "not a distraction" verdict into the daemon's self-evaluation ledger so the
+      // error detector sees auto-hide mistakes (it otherwise only watches the daemon's own
+      // classifier). Best-effort; the local queue above is the source of truth.
+      if (daemonPort && msg.entry?.verdict === 'wrong-hide') {
+        fetch(`http://127.0.0.1:${daemonPort}/extension/feedback`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            verdict: 'wrong-hide', domain: msg.entry.domain, url: msg.entry.url,
+            label: msg.entry.label, score: msg.entry.score, selector: msg.entry.selector,
+            signals: msg.entry.signals, confidence: msg.entry.confidence,
+          }),
+          signal: AbortSignal.timeout(1500),
+        }).catch(() => {});
+      }
       return true;
 
     case 'get:feedback-log':
@@ -1372,9 +1408,13 @@ chrome.alarms.onAlarm.addListener(alarm => {
 
 // Update metadata is served from the public website (the GitHub repos are private,
 // so the old raw.githubusercontent URLs 404'd and the auto-update reported failure).
-const GH_MANIFEST = 'https://attentify.ai/ext/manifest.json';
-const GH_ZIP      = 'https://attentify.ai/ext/attentify-extension.zip';
-const GH_RELEASES = 'https://attentify.ai/#download';
+// Update feed points at the LIVE deployment. attentify.ai/.ca is not on Cloudflare yet,
+// so the site is served from the Pages domain; the updater must target where the zip
+// actually lives or the "check for updates" silently fails. Move these to the custom
+// domain once it's live on Cloudflare.
+const GH_MANIFEST = 'https://productivity-daemon.pages.dev/ext/manifest.json';
+const GH_ZIP      = 'https://productivity-daemon.pages.dev/ext/attentify-extension.zip';
+const GH_RELEASES = 'https://productivity-daemon.pages.dev/#download';
 const UPDATE_TTL  = 60 * 60 * 1000;
 
 async function checkForUpdates(force = false) {

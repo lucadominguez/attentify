@@ -443,3 +443,164 @@ body {
 }
 .chat-send-btn:hover    { background: rgba(0,200,255,0.22); }
 .chat-send-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   MAIN-VIEW REDESIGN (2026-07-18)
+   Reorganized for clarity: one accent (cyan) for interaction, green only for
+   connected/clean/success, red only for distraction/error. Sans-serif everywhere;
+   monospace reserved for domains, numbers/counters and the version string. Section
+   spacing 16px / inner 8px. Cards get one border OR one tint, never both.
+   This block is appended last so it overrides the earlier .brand/.rule-card rules;
+   the old site-hero, section-label, tab and footer rules are now unreferenced.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --accent: #22c9ff;
+  --accent-soft: rgba(34,201,255,0.12);
+  --accent-line: rgba(34,201,255,0.28);
+  --ok: #34d39a;
+  --bad: #ff6b6b;
+  --ink: #e6eef7;
+  --ink-2: rgba(216,228,240,0.62);
+  --ink-3: rgba(216,228,240,0.4);
+  --line: rgba(255,255,255,0.08);
+  --tint: rgba(255,255,255,0.025);
+}
+
+/* ── Header ── */
+.header { padding: 10px 14px; }
+.brand { display: flex; align-items: center; gap: 7px; font-family: var(--font); letter-spacing: 0; }
+.brand-mark { color: var(--accent); display: flex; }
+.brand-name { font-size: 14px; font-weight: 650; color: var(--ink); }
+.header-actions { gap: 6px; }
+.icon-btn { font-size: 13px; line-height: 1; padding: 5px 7px; border-radius: 6px; }
+
+.conn-pill {
+  display: flex; align-items: center; gap: 6px; cursor: default;
+  padding: 3px 9px 3px 8px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--tint);
+}
+.conn-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); flex-shrink: 0; }
+.conn-dot.on         { background: var(--ok); box-shadow: 0 0 6px rgba(52,211,154,0.5); }
+.conn-dot.standalone { background: var(--accent); box-shadow: 0 0 5px rgba(34,201,255,0.4); }
+.conn-label { font-size: 11px; color: var(--ink-2); font-weight: 550; }
+
+/* ── Scroll body: consistent 16px between sections ── */
+.scroll-body { display: flex; flex-direction: column; gap: 16px; padding: 14px; }
+
+/* ── Cards: one border OR one tint, 8px inner rhythm ── */
+.card {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: transparent;
+}
+.card.dimmed { opacity: 0.42; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.card-title { font-size: 12px; font-weight: 600; color: var(--ink); }
+.field-label { font-size: 12px; font-weight: 600; color: var(--ink); }
+
+/* ── Buttons: one filled primary, one outlined secondary, one quiet ghost ── */
+.btn-primary {
+  border: none; border-radius: 7px; cursor: pointer;
+  background: var(--accent); color: #04121b; font-weight: 650;
+  font-size: 12px; padding: 7px 13px; font-family: var(--font); transition: filter 0.12s;
+}
+.btn-primary:hover    { filter: brightness(1.1); }
+.btn-primary:disabled { opacity: 0.4; cursor: default; }
+.btn-secondary {
+  border: 1px solid var(--accent-line); border-radius: 7px; cursor: pointer;
+  background: transparent; color: var(--accent); font-weight: 600;
+  font-size: 12px; padding: 6px 12px; font-family: var(--font); transition: background 0.12s;
+}
+.btn-secondary:hover { background: var(--accent-soft); }
+.btn-ghost {
+  border: 1px solid var(--line); border-radius: 6px; cursor: pointer;
+  background: transparent; color: var(--ink-2); font-weight: 550;
+  font-size: 11px; padding: 5px 10px; font-family: var(--font); transition: all 0.12s;
+}
+.btn-ghost:hover    { background: rgba(255,255,255,0.05); color: var(--ink); }
+.btn-ghost:disabled { opacity: 0.4; cursor: default; }
+
+/* ── This-page status (one of three states) ── */
+.page-status { display: flex; flex-direction: column; gap: 3px; }
+.ps-line { display: flex; align-items: baseline; gap: 7px; font-size: 12.5px; line-height: 1.35; color: var(--ink); font-weight: 550; }
+.ps-icon { flex-shrink: 0; font-size: 12px; width: 12px; text-align: center; color: var(--ink-3); }
+.page-status.clean   .ps-icon { color: var(--ok); }
+.page-status.alert   .ps-icon { color: var(--bad); }
+.page-status.neutral .ps-line { color: var(--ink-2); font-weight: 500; }
+.ps-sub { font-size: 10.5px; color: var(--ink-3); padding-left: 19px; }
+
+/* ── Setting rows (labeled toggles) ── */
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; }
+.setting-lbl { font-size: 11.5px; color: var(--ink-2); line-height: 1.35; }
+
+/* ── Collapsible groups (Rules, Advanced) ── */
+.group { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.group-head {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+  padding: 10px 12px; background: var(--tint);
+}
+.group-head:hover { background: rgba(255,255,255,0.04); }
+.group-arrow { font-size: 9px; color: var(--ink-3); width: 10px; flex-shrink: 0; }
+.group-title { flex: 1; font-size: 12px; font-weight: 600; color: var(--ink); }
+.group-sub { font-weight: 500; color: var(--ink-3); }
+.group-panel { padding: 4px 0; }
+.group.dimmed { opacity: 0.42; }
+
+/* Sub-collapsibles inside Advanced */
+.subhead {
+  cursor: pointer; user-select: none;
+  padding: 8px 12px 6px; font-size: 11px; font-weight: 600; color: var(--ink-2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.subhead:hover { color: var(--ink); }
+.subhead span { font-size: 9px; color: var(--ink-3); }
+.adv-stats { padding: 8px 12px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); }
+.adv-tools { display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 10px; }
+.adv-tools .btn-ghost { text-align: left; }
+
+/* ── Rules list (one state indicator: the toggle) ── */
+.rule-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); background: transparent;
+}
+.rule-card:last-child { border-bottom: none; }
+.rule-card:hover { background: rgba(255,255,255,0.02); }
+.rule-card.off .rule-name { color: var(--ink-3); }
+.rule-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.rule-name { font-size: 12px; font-weight: 550; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rule-meta { display: flex; align-items: center; gap: 6px; }
+.domain-pill { font-family: var(--mono); font-size: 10px; color: var(--ink-3); background: none; border: none; padding: 0; }
+.rule-count { font-family: var(--mono); font-size: 10px; color: var(--ok); }
+
+/* ── Scan rows: block/restore controls in the This-page card ── */
+.scan-list { gap: 6px; padding: 2px 0 0; }
+.scan-name { font-weight: 550; }
+.scan-grouplbl { font-family: var(--font); font-size: 10px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--ink-3); padding: 4px 0 2px; }
+.scan-hide-btn { font-family: var(--font); background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
+.scan-sig { font-size: 10px; }
+
+/* ── Footer plan (demoted upsell: one collapsed row) ── */
+.plan { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.plan-row {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 10px 12px; background: var(--tint);
+}
+.plan-row:hover { background: rgba(255,255,255,0.04); }
+.plan-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); flex-shrink: 0; }
+.plan-dot.on { background: var(--ok); }
+.plan-name { font-size: 12px; font-weight: 600; color: var(--ink); flex-shrink: 0; }
+.plan-meta { font-family: var(--mono); font-size: 10px; color: var(--ink-3); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.plan-bar { flex: 1; min-width: 24px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.plan-bar-fill { height: 100%; background: var(--accent); }
+.plan-bar-fill.out { background: var(--bad); }
+.plan-cta { margin-left: auto; flex-shrink: 0; font-size: 11px; font-weight: 600; color: var(--accent); }
+.cloud-box { margin: 0; border: none; border-top: 1px solid var(--line); border-radius: 0; background: transparent; padding: 12px; }
+
+/* ── Title-block input row ── */
+.title-block-row { padding: 0; gap: 8px; }
+.title-block-input { font-family: var(--font); min-width: 0; }
+#title-block-add { flex-shrink: 0; }
+
+/* Keep the whole popup free of horizontal scroll at 360–420px */
+.scroll-body, .card, .group, .plan { max-width: 100%; }

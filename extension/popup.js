@@ -29,6 +29,9 @@ function progDone(id='progress-fill', ok=true) { prog(id, 100, ok?'ok':'fail'); 
 // ── State ─────────────────────────────────────────────────────────────────────
 
 let currentTab = null;
+// Shared snapshot the page card renders from, so the scan result and the rules/tab
+// state can never paint contradictory things. `scan: undefined` = not scanned yet.
+let last = { allRules: null, status: null, tabSt: null, siteState: null, scan: undefined };
 
 // ═══════════════════════════════ MAIN VIEW ════════════════════════════════════
 
@@ -86,151 +89,131 @@ function renderDiag(status, allRules, tabSt, tab) {
   }).join('');
 }
 
-// ── Per-site hero ─────────────────────────────────────────────────────────────
-// The headline a normal user wants: "is this site's junk being blocked?" — plus a
-// one-tap master switch to pause/resume blocking on just this site.
-function renderSiteHero(allRules, tabSt, tab, paused) {
-  const hero    = document.getElementById('site-hero');
-  const icon    = document.getElementById('site-hero-icon');
-  const title   = document.getElementById('site-hero-title');
-  const subEl   = document.getElementById('site-hero-sub');
-  const tglWrap = document.getElementById('site-toggle-wrap');
-  const tgl     = document.getElementById('site-toggle');
-  hero.style.display = 'flex';
+// ── This-page card ────────────────────────────────────────────────────────────
+// One card answers "is this page being protected right now?" — merging what used to
+// be three separate, sometimes-contradictory pieces (the browser-page empty state,
+// the live analysis meter, and the "nothing distracting" line) into exactly one of
+// three states. Reads module state so the scan result and the rules/tab state can't
+// render out of sync. Also owns the per-site pause toggle and dims the sections
+// below when the current page isn't blockable.
+function renderPageCard() {
+  const statusEl = document.getElementById('page-status');
+  const scanEl   = document.getElementById('scan-list');
+  const tglWrap  = document.getElementById('site-toggle-wrap');
+  const tgl      = document.getElementById('site-toggle');
+  const blockCard = document.getElementById('block-card');
+  const rulesGrp  = document.getElementById('rules-group');
+  const setDim = (on) => { blockCard.classList.toggle('dimmed', on); rulesGrp.classList.toggle('dimmed', on); };
 
+  const tab = currentTab;
   const url = tab?.url || '';
   const isChrome = !url || url.startsWith('chrome://') || url.startsWith('chrome-extension://') || url.startsWith('about:') || url.startsWith('edge://');
+
+  // State (a): not a blockable page. Dim the sections below rather than hide them.
   if (isChrome) {
-    hero.className = 'site-hero neutral';
-    icon.textContent = '○';
-    title.textContent = 'Open a website to manage blocking';
-    subEl.textContent = 'This is a browser page — nothing to block here.';
+    statusEl.className = 'page-status neutral';
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">○</span>This is a browser page — nothing to block here.</div>`;
+    scanEl.style.display = 'none';
     tglWrap.style.display = 'none';
+    setDim(true);
     return;
   }
+  setDim(false);
 
   let domain; try { domain = new URL(url).hostname.replace(/^www\./,''); } catch(_) { domain = '?'; }
-  const enabled  = (allRules?.rules||[]).filter(r=>r.enabled);
+  const enabled  = (last.allRules?.rules || []).filter(r => r.enabled);
   const matching = enabled.filter(r => domain === r.domain || domain.endsWith('.'+r.domain));
-  const hidden   = tabSt?.totalHidden || 0;
+  const paused   = !!last.siteState?.paused;
 
-  if (matching.length === 0) {
-    hero.className = 'site-hero neutral';
-    icon.textContent = '○';
-    title.innerHTML = `No rules for <b>${esc(domain)}</b>`;
-    subEl.textContent = 'Nothing blocked here. Tap ✦ to add a rule with AI.';
-    tglWrap.style.display = 'none';
+  // Per-site pause toggle: only meaningful where rules actually apply.
+  if (matching.length > 0) { tglWrap.style.display = 'flex'; tgl.checked = !paused; }
+  else                     { tglWrap.style.display = 'none'; }
+
+  const scan = last.scan;
+  const auto  = scan?.autoHidden || [];
+  const cands = scan?.candidates || [];
+  const total = auto.length + cands.length;
+  const a = scan?.assessment || null;
+  const prob = (scan && (scan.distractionProb != null ? scan.distractionProb : a?.distractionProbability));
+  const pct = (prob != null) ? Math.round(prob * 100) : null;
+  const srcTxt = a ? (a.source === 'heuristic' ? 'local heuristic' : 'AI read') : '';
+  const estLine = (pct != null) ? `<div class="ps-sub">Distraction estimate: ${pct}%${srcTxt ? ' · ' + srcTxt : ''}</div>` : '';
+
+  // Not scanned yet.
+  if (scan === undefined) {
+    statusEl.className = 'page-status neutral';
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">○</span>This page hasn't been analyzed yet.</div><div class="ps-sub">Tap Scan to check it for distractions.</div>`;
+    scanEl.style.display = 'none';
     return;
   }
 
-  tglWrap.style.display = '';
-  tgl.checked = !paused;           // checked = blocking ON
-
-  if (paused) {
-    hero.className = 'site-hero paused';
-    icon.textContent = '⏸';
-    title.innerHTML = `Blocking paused on <b>${esc(domain)}</b>`;
-    subEl.textContent = 'Distractions are visible. Flip the switch to resume.';
-  } else {
-    hero.className = 'site-hero on';
-    icon.textContent = '✓';
-    title.innerHTML = `Blocking distractions on <b>${esc(domain)}</b>`;
-    if (hidden > 0)   subEl.textContent = `Hiding ${hidden} element${hidden!==1?'s':''} right now.`;
-    else if (tabSt)   subEl.textContent = `Active — ${matching.length} rule${matching.length!==1?'s':''} watching this site.`;
-    else              subEl.textContent = 'Applies automatically as the page loads.';
-  }
-}
-
-// ── Tab panel ─────────────────────────────────────────────────────────────────
-
-function renderTabPanel(allRules, tabSt, tab) {
-  const section = document.getElementById('tab-section');
-  const tabUrl  = tab?.url || '';
-  if (!tab || tabUrl.startsWith('chrome://') || tabUrl.startsWith('chrome-extension://')) { section.style.display = 'none'; return; }
-  section.style.display = 'block';
-  let domain; try { domain = new URL(tabUrl).hostname.replace(/^www\./,''); } catch(_) { domain = tab.title || '?'; }
-  document.getElementById('tab-domain-label').textContent = domain;
-
-  const detail = document.getElementById('tab-detail');
-  const enabled = (allRules?.rules||[]).filter(r=>r.enabled);
-  const matching = enabled.filter(r => domain === r.domain || domain.endsWith('.'+r.domain));
-
-  if (!tabSt) {
-    detail.innerHTML = `<div class="tab-warn-row"><span class="tab-warn-txt">${matching.length} rule${matching.length!==1?'s':''} apply here — activating…</span><button class="inline-btn" id="apply-tab-btn">Apply now</button></div>`;
-    document.getElementById('apply-tab-btn').onclick = async () => { if(tab?.id){ await ask({ type:'test:inject', tabId: tab.id }, 6000); setTimeout(refresh, 600); } };
+  // State (c): distractions found — list them with per-item controls.
+  if (total > 0) {
+    statusEl.className = 'page-status alert';
+    const n = total;
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">•</span>${n} distraction${n!==1?'s':''} found on this page.</div>${estLine}`;
+    let html = '';
+    if (auto.length) {
+      html += `<div class="scan-grouplbl">Auto-hidden now (${auto.length})</div>`;
+      auto.forEach((c, i) => { html += scanRowHtml(c, i, true); });
+    }
+    if (cands.length) {
+      if (auto.length) html += `<div class="scan-grouplbl">Also detected</div>`;
+      cands.forEach((c, i) => { html += scanRowHtml(c, i, false); });
+    }
+    scanEl.innerHTML = html;
+    scanEl.style.display = 'flex';
+    scanEl.querySelectorAll('.scan-hide-btn').forEach(btn => {
+      const i = Number(btn.dataset.idx);
+      btn.addEventListener('click', () => btn.dataset.kind === 'auto' ? restoreAutoHidden(i) : hideCandidate(i));
+    });
+    scanEl.querySelectorAll('.scan-wrong').forEach(btn => {
+      btn.addEventListener('click', () => reportMisprediction(Number(btn.dataset.idx), btn));
+    });
     return;
   }
 
-  const counts  = tabSt.elementCounts || {};
-  const maxN    = Math.max(1, ...Object.values(counts));
-
-  if (matching.length === 0) { detail.innerHTML = `<div class="tab-empty">No enabled rules match ${esc(domain)}</div>`; return; }
-
-  detail.innerHTML = matching.map(r => {
-    const n = counts[r.id] || 0;
-    const w = n > 0 ? Math.max(5, Math.round((n/maxN)*100)) : 0;
-    return `<div class="tab-rule-row">
-      <span class="tab-rule-lbl">${esc(r.displayName)}</span>
-      <div class="tab-bar"><div class="tab-bar-fill" style="width:${w}%"></div></div>
-      <span class="tab-count ${n===0?'z':''}">${n>0?n:'—'}</span>
-    </div>`;
-  }).join('');
+  // State (b): analyzed, clean.
+  statusEl.className = 'page-status clean';
+  statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">✓</span>Nothing distracting detected on this page.</div>${estLine}`;
+  scanEl.style.display = 'none';
 }
 
 // ── Rules list ────────────────────────────────────────────────────────────────
 
 function renderRules(allRules, status, tabSt) {
-  const rules       = allRules?.rules || [];
-  const bypassScores = status?.bypassScores || {};
-  const list        = document.getElementById('rules-list');
-  document.getElementById('rules-summary').textContent = rules.length ? `(${rules.filter(r=>r.enabled).length}/${rules.length} on)` : '';
+  const rules = allRules?.rules || [];
+  const list  = document.getElementById('rules-list');
+  const en    = rules.filter(r => r.enabled).length;
+  // "1 of 2 active" — pluralized, sentence case.
+  document.getElementById('rules-summary').textContent = rules.length ? ` · ${en} of ${rules.length} active` : '';
 
-  if (rules.length === 0) { list.innerHTML = '<div class="placeholder">No rules — click ↻ Sync or reload extension.</div>'; return; }
+  if (rules.length === 0) { list.innerHTML = '<div class="placeholder">No rules yet. Tap Sync, or ask the AI assistant to block something.</div>'; return; }
 
-  const maxElems = Math.max(1, ...rules.map(r => tabSt?.elementCounts?.[r.id]||0));
   list.innerHTML = '';
-
   for (const rule of rules) {
-    const bypasses = bypassScores[rule.id] || 0;
-    const tabElems = tabSt?.elementCounts?.[rule.id] ?? null;
-    const isActive = tabSt?.activeRuleIds?.includes(rule.id) ?? false;
-
-    let bCls='zero', bW='100%', bLbl='off', bLblCls='';
-    if (rule.enabled) {
-      if (tabElems===null)  { bCls='active'; bW='50%'; bLbl='enabled'; bLblCls='active'; }
-      else if (tabElems>0)  { bCls='blocked'; bW=Math.max(6,Math.round((tabElems/maxElems)*100))+'%'; bLbl=`${tabElems} hidden`; bLblCls='blocked'; }
-      else if (isActive)    { bCls='active'; bW='8%'; bLbl='no match'; bLblCls='active'; }
-      else                  { bCls='zero'; bW='100%'; bLbl='no match'; }
-    }
-
+    const tabElems = tabSt?.elementCounts?.[rule.id] || 0;   // hidden on this page right now
     const card = document.createElement('div');
-    card.className = 'rule-card';
+    card.className = 'rule-card' + (rule.enabled ? '' : ' off');
+    // One state indicator only: the toggle. The count is informational data, not a
+    // second status signal, and it's omitted when there's nothing to show.
     card.innerHTML = `
-      <div class="rule-top">
-        <div class="sev sev-${rule.severity||'medium'}"></div>
-        <div class="rule-info">
-          <div class="rule-name">${esc(rule.displayName||rule.id)}</div>
-          <div class="rule-meta">
-            <span class="domain-pill">${esc(rule.domain)}</span>
-            ${rule.enabled&&tabElems>0  ? `<span class="stat-elem">▸ ${tabElems}</span>` : ''}
-            ${bypasses>0                ? `<span class="stat-bypass">${bypasses}✗</span>` : ''}
-            ${!rule.enabled             ? `<span class="stat-none">off</span>` : ''}
-          </div>
+      <div class="rule-info">
+        <div class="rule-name">${esc(rule.displayName||rule.id)}</div>
+        <div class="rule-meta">
+          <span class="domain-pill">${esc(rule.domain)}</span>
+          ${rule.enabled && tabElems > 0 ? `<span class="rule-count">${tabElems} hidden here</span>` : ''}
         </div>
-        <label class="toggle">
-          <input type="checkbox"${rule.enabled?' checked':''}><span class="slider"></span>
-        </label>
       </div>
-      <div class="rule-bar-wrap">
-        <div class="rule-bar"><div class="rule-bar-fill ${bCls}" style="width:${bW}"></div></div>
-        <span class="rule-bar-lbl ${bLblCls}">${bLbl}</span>
-      </div>`;
+      <label class="toggle" title="${rule.enabled ? 'Turn off' : 'Turn on'} this rule">
+        <input type="checkbox"${rule.enabled?' checked':''} aria-label="${esc(rule.displayName||rule.id)}"><span class="slider"></span>
+      </label>`;
 
     card.querySelector('input').addEventListener('change', async e => {
-      const en = e.target.checked;
+      const on = e.target.checked;
       progSlide();
-      const res = await ask({ type: 'toggle:rule', ruleId: rule.id, enabled: en });
-      if (!res?.ok) { e.target.checked = !en; prog('progress-fill',0); return; }
+      const res = await ask({ type: 'toggle:rule', ruleId: rule.id, enabled: on });
+      if (!res?.ok) { e.target.checked = !on; prog('progress-fill',0); return; }
       progDone('progress-fill', true);
       setTimeout(refresh, 500);
     });
@@ -252,7 +235,7 @@ function scanRowHtml(c, i, isAuto) {
          <button class="scan-hide-btn restore" data-idx="${i}" data-kind="auto">Restore</button>
          <button class="scan-wrong" data-idx="${i}" title="This isn't a distraction — flag the AI's mistake">not a distraction?</button>
        </div>`
-    : `<button class="scan-hide-btn" data-idx="${i}" data-kind="cand">Hide</button>`;
+    : `<button class="scan-hide-btn" data-idx="${i}" data-kind="cand">Block</button>`;
   return `<div class="scan-row ${c.confidence} ${isAuto ? 'is-hidden' : ''}">
     <div class="scan-info">
       <div class="scan-name">${esc(c.label)} ${badge}</div>
@@ -261,54 +244,16 @@ function scanRowHtml(c, i, isAuto) {
     </div>${actions}</div>`;
 }
 
-// Shows the live context read: best-guess intent + a distraction meter the engine
-// derived this navigation. Drives how aggressively the scanner auto-hides.
-function renderContextBanner(a, prob) {
-  const el = document.getElementById('context-banner');
-  if (!el) return;
-  if (!a) { el.style.display = 'none'; el.innerHTML = ''; return; }
-  const pct = Math.round(((prob != null ? prob : a.distractionProbability) || 0) * 100);
-  const lvl = pct >= 70 ? 'hi' : pct >= 40 ? 'mid' : 'lo';
-  el.style.display = 'block';
-  el.className = `context-banner ${lvl}`;
-  el.innerHTML = `
-    <div class="ctx-intent">🧭 ${esc(a.intent || '—')}</div>
-    <div class="ctx-meter"><span>distraction</span><div class="ctx-bar"><div class="ctx-bar-fill" style="width:${pct}%"></div></div><b>${pct}%</b></div>
-    ${a.reason ? `<div class="ctx-reason">${esc(a.reason)}${a.source === 'heuristic' ? ' · local estimate' : ''}</div>` : ''}`;
-}
-
-function renderScan(result) {
-  const list = document.getElementById('scan-list');
-  const summary = document.getElementById('scan-summary');
+// Ingest a scan result into module state, then let the one card render it. Keeping
+// the intent/distraction read here (rather than a separate banner) means the page
+// card is the single source of truth for "what's on this page".
+function applyScan(result) {
+  last.scan = result || null;   // null = scanned, nothing found / no data; undefined = not scanned
   if (typeof result?.autoBlock === 'boolean') document.getElementById('autoblock-toggle').checked = result.autoBlock;
   renderLearnedTopics(result?.userKeywords || []);
-  renderContextBanner(result?.assessment || null, result?.distractionProb);
   autoHiddenItems = result?.autoHidden || [];
-  scanCandidates = result?.candidates || [];
-
-  if (!result) { summary.textContent = ''; list.innerHTML = '<div class="placeholder">Open a website, then tap ⟳ Scan.</div>'; return; }
-  const total = autoHiddenItems.length + scanCandidates.length;
-  summary.textContent = total ? `(${total})` : '';
-
-  if (!total) { list.innerHTML = '<div class="scan-empty">✓ Nothing obviously distracting detected here.</div>'; return; }
-
-  let html = '';
-  if (autoHiddenItems.length) {
-    html += `<div class="scan-grouplbl">Auto-hidden now (${autoHiddenItems.length})</div>`;
-    autoHiddenItems.forEach((c, i) => { html += scanRowHtml(c, i, true); });
-  }
-  if (scanCandidates.length) {
-    if (autoHiddenItems.length) html += `<div class="scan-grouplbl">Also detected</div>`;
-    scanCandidates.forEach((c, i) => { html += scanRowHtml(c, i, false); });
-  }
-  list.innerHTML = html;
-  list.querySelectorAll('.scan-hide-btn').forEach(btn => {
-    const i = Number(btn.dataset.idx);
-    btn.addEventListener('click', () => btn.dataset.kind === 'auto' ? restoreAutoHidden(i) : hideCandidate(i));
-  });
-  list.querySelectorAll('.scan-wrong').forEach(btn => {
-    btn.addEventListener('click', () => reportMisprediction(Number(btn.dataset.idx), btn));
-  });
+  scanCandidates  = result?.candidates || [];
+  renderPageCard();
 }
 
 // The user says this auto-hidden item wasn't actually a distraction. Restore it and
@@ -418,9 +363,9 @@ async function hideCandidate(i) {
 }
 
 async function scanCurrentTab(forceScan = true) {
-  if (!currentTab) { renderScan(null); return; }
+  if (!currentTab) { applyScan(null); return; }
   const res = await askTab(currentTab.id, { type: forceScan ? 'scan:page' : 'get:distractions' }, 4000);
-  renderScan(res);
+  applyScan(res);
 }
 
 document.getElementById('scan-btn').addEventListener('click', async () => {
@@ -428,7 +373,7 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
   btn.textContent = '…'; btn.disabled = true; progSlide();
   await scanCurrentTab(true);
   progDone('progress-fill', true);
-  btn.textContent = '⟳ Scan'; btn.disabled = false;
+  btn.textContent = 'Scan'; btn.disabled = false;
 });
 
 document.getElementById('autoblock-toggle').addEventListener('change', async e => {
@@ -482,28 +427,28 @@ async function refresh() {
     curDomain ? ask({ type: 'get:site-state', domain: curDomain }) : Promise.resolve(null),
   ]);
 
+  last.allRules = allRules; last.status = status; last.tabSt = tabSt; last.siteState = siteState;
+
   const connected = status?.connected || false;
-  document.getElementById('version-label').textContent = `v${chrome.runtime.getManifest().version}`;
+  const ver = chrome.runtime.getManifest().version;
   progDone('progress-fill', true);
 
+  // Connection pill: one dot + label, technical detail (and version) in the tooltip.
   const dot = document.getElementById('status-dot');
-  dot.className = 'status-dot ' + (connected ? 'on' : 'standalone');
+  dot.className = 'conn-dot ' + (connected ? 'on' : 'standalone');
+  document.getElementById('conn-label').textContent = connected ? 'Connected' : 'Standalone';
+  document.getElementById('conn-pill').title = connected
+    ? `Standalone + daemon :${status.daemonPort} · v${ver}`
+    : `Standalone · daemon optional · v${ver}`;
 
-  const rules = allRules?.rules || [];
-  const enCnt = rules.filter(r=>r.enabled).length;
-  const sub = document.getElementById('status-text');
-  sub.textContent = connected
-    ? `Standalone + daemon :${status.daemonPort} · ${enCnt} rules active`
-    : `Standalone · ${enCnt} rule${enCnt!==1?'s':''} active · daemon optional`;
-
+  // Advanced stats, plain language.
   const bypassTotal = Object.values(status?.bypassScores||{}).reduce((a,b)=>a+b,0);
   const elemTotal   = Object.values(status?.elementStats||{}).reduce((a,b)=>a+b,0);
-  document.getElementById('bypass-total').textContent  = bypassTotal;
-  document.getElementById('elements-total').textContent = elemTotal;
+  document.getElementById('adv-stats').textContent =
+    `${elemTotal} element${elemTotal!==1?'s':''} hidden today · ${bypassTotal} bypass${bypassTotal!==1?'es':''}`;
 
-  renderSiteHero(allRules, tabSt, currentTab, siteState?.paused || false);
+  renderPageCard();
   renderDiag(status, allRules, tabSt, currentTab);
-  renderTabPanel(allRules, tabSt, currentTab);
   renderRules(allRules, status, tabSt);
   renderLog(status?.activityLog || []);
   refreshTitleBlocks().catch(() => {});
@@ -534,6 +479,8 @@ function wireCollapse(toggleId, panelId, arrowId) {
     document.getElementById(arrowId).textContent = open ? '▾' : '▸';
   });
 }
+wireCollapse('rules-toggle',    'rules-panel',    'rules-arrow');     // default open
+wireCollapse('advanced-toggle', 'advanced-panel', 'advanced-arrow');  // default closed
 wireCollapse('diag-toggle', 'diag-panel', 'diag-arrow');
 wireCollapse('log-toggle',  'log-panel',  'log-arrow');
 
@@ -555,34 +502,35 @@ document.getElementById('test-btn').addEventListener('click', async () => {
   const tab = currentTab;
   if (!tab?.id) { btn.textContent = 'No tab'; progDone('progress-fill', false); setTimeout(()=>{btn.textContent='⚡ Test';btn.disabled=false;},1500); return; }
   const res = await ask({ type: 'test:inject', tabId: tab.id }, 6000);
-  if (res?.ok) { btn.textContent = `✓ ${res.rulesDelivered}`; progDone('progress-fill', true); }
-  else         { btn.textContent = `✗ fail`; progDone('progress-fill', false); }
-  setTimeout(() => { btn.textContent = '⚡ Test'; btn.disabled = false; }, 2000);
+  if (res?.ok) { btn.textContent = `✓ ${res.rulesDelivered} sent`; progDone('progress-fill', true); }
+  else         { btn.textContent = `✗ failed`; progDone('progress-fill', false); }
+  setTimeout(() => { btn.textContent = '⚡ Test blocking'; btn.disabled = false; }, 2000);
   setTimeout(refresh, 600);
 });
 
-// ── Sync button ───────────────────────────────────────────────────────────────
+// ── Sync button (header icon) ─────────────────────────────────────────────────
 
 document.getElementById('sync-btn').addEventListener('click', async () => {
   const btn = document.getElementById('sync-btn');
-  btn.textContent = '↻…'; btn.disabled = true; progSlide();
+  btn.textContent = '…'; btn.disabled = true; progSlide();
   const res = await ask({ type: 'force:sync' }, 10000);
   progDone('progress-fill', res?.connected);
   btn.textContent = res?.connected ? '✓' : '↻';
-  setTimeout(() => { btn.textContent = '↻ Sync'; btn.disabled = false; }, 2000);
+  setTimeout(() => { btn.textContent = '↻'; btn.disabled = false; }, 2000);
   await refresh();
 });
 
 document.getElementById('check-update-btn').addEventListener('click', async () => {
   const btn = document.getElementById('check-update-btn');
-  btn.textContent = '…'; btn.disabled = true;
+  btn.textContent = 'Checking…'; btn.disabled = true;
   await checkUpdate(true);
-  btn.textContent = '↑'; btn.disabled = false;
+  btn.textContent = '↑ Check for updates'; btn.disabled = false;
 });
 
-// ── Modify Rules button ───────────────────────────────────────────────────────
+// ── Edit rules button ─────────────────────────────────────────────────────────
 
-document.getElementById('modify-rules-btn').addEventListener('click', async () => {
+document.getElementById('modify-rules-btn').addEventListener('click', async (e) => {
+  e.stopPropagation();   // sits inside the collapsible Rules header — don't toggle it
   const res = await ask({ type: 'daemon:open-rules' });
   if (res?.ok) {
     // Daemon window brought to front — close popup
@@ -890,9 +838,10 @@ async function sendChat() {
     if (msg.type === 'error') {
       removeTypingIndicator();
       if (msg.message === 'paywall') {
-        addSysMsg("You've used up your $1 of free AI. Subscribe to Cloud for $5/mo (no key needed) — or add your own OpenRouter key above. Open the Cloud panel below to upgrade.");
-        document.getElementById('cloud-box')?.scrollIntoView({ behavior: 'smooth' });
+        addSysMsg("You've used up your $1 of free AI. Subscribe to Cloud for $5/mo (no key needed) — or add your own OpenRouter key above. Open the plan row at the bottom to upgrade.");
         renderCloud().catch(() => {});
+        const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
+        document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'no_key') {
         addSysMsg('No OpenRouter key set — enter one above. Get it free at openrouter.ai/keys');
         renderKeyUI(true);
@@ -1086,27 +1035,38 @@ document.getElementById('gh-token-remove').addEventListener('click', async (e) =
 // Paste a license key to unlock the managed AI (no OpenRouter key needed), managed
 // auto-site-blocking and analytics. Upgrade/manage go through Stripe.
 
-async function renderCloud() {
+// The upsell is demoted to a single collapsed footer row; tapping it expands the
+// full pitch. At most one upsell element is ever visible without interaction.
+function wireCloudExpand() {
+  const summary = document.getElementById('cloud-summary');
   const box = document.getElementById('cloud-box');
-  const badge = document.getElementById('cloud-badge');
-  if (!box) return;
+  const toggle = (e) => { if (e) e.stopPropagation(); box.style.display = box.style.display === 'none' ? 'block' : 'none'; };
+  summary.onclick = toggle;
+  summary.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } };
+}
+
+async function renderCloud() {
+  const summary = document.getElementById('cloud-summary');
+  const box = document.getElementById('cloud-box');
+  if (!summary) return;
   const res = await ask({ type: 'get:cloud' });
   const st = res?.cloudStatus;
   const active = st && st.tier === 'cloud' && st.status === 'active';
+  wireCloudExpand();
 
   if (active) {
-    badge.textContent = 'ACTIVE';
-    badge.className = 'cloud-badge on';
-    const used = st.aiUsed ?? 0, quota = st.aiQuota ?? 0;
+    const used = st.aiUsed ?? 0, quota = st.aiQuota ?? 0, left = Math.max(0, quota - used);
+    summary.innerHTML = `<span class="plan-dot on"></span><span class="plan-name">Cloud plan</span>
+      <span class="plan-meta">${left} managed AI left</span><span class="plan-cta">Manage</span>`;
     box.innerHTML = `
       <div class="cloud-row"><span class="cloud-ok">✓ Cloud active</span>
         <span class="cloud-sub">${esc(st.email || '')}</span></div>
-      <div class="cloud-meter"><span>managed AI</span>
+      <div class="cloud-meter"><span>Managed AI</span>
         <div class="cloud-bar"><div class="cloud-bar-fill" style="width:${quota ? Math.min(100, Math.round(used / quota * 100)) : 0}%"></div></div>
-        <b>${Math.max(0, quota - used)} left</b></div>
+        <b>${left} left</b></div>
       <div class="cloud-btns">
-        <button class="pill-btn" id="cloud-manage">Manage billing</button>
-        <button class="pill-btn" id="cloud-signout">Sign out</button>
+        <button class="btn-secondary" id="cloud-manage">Manage billing</button>
+        <button class="btn-secondary" id="cloud-signout">Sign out</button>
       </div>`;
     document.getElementById('cloud-manage').onclick = async () => {
       const r = await ask({ type: 'cloud:portal' }, 15000);
@@ -1116,35 +1076,38 @@ async function renderCloud() {
     return;
   }
 
-  badge.textContent = res?.hasKey ? 'CHECK KEY' : 'FREE';
-  badge.className = 'cloud-badge';
   const invalid = res?.hasKey && st && st.status !== 'active';
-  // Free-AI meter: how much of the included $1 allowance is left (unless the user
-  // brought their own key, in which case there's nothing to meter).
   const u = res?.usage;
-  let meterHtml = '';
-  if (u && !u.hasOwnKey) {
+  const ownKey = u?.hasOwnKey;
+  // Collapsed summary row: plan name + credit used + one Upgrade link.
+  if (ownKey) {
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Free plan</span>
+      <span class="plan-meta">Using your own AI key</span><span class="plan-cta">Upgrade</span>`;
+  } else if (u) {
     const pct = Math.min(100, Math.round((u.usedUsd / (u.limitUsd || 1)) * 100));
-    meterHtml = `<div class="cloud-meter"><span>${u.exhausted ? 'free AI used up' : 'free AI'}</span>
-      <div class="cloud-bar"><div class="cloud-bar-fill" style="width:${pct}%;${u.exhausted ? 'background:#ff5252' : ''}"></div></div>
-      <b>$${u.usedUsd.toFixed(2)}/$${u.limitUsd.toFixed(2)}</b></div>`;
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Free plan</span>
+      <span class="plan-meta">$${u.usedUsd.toFixed(2)} of $${u.limitUsd.toFixed(2)} AI credit used</span>
+      <div class="plan-bar"><div class="plan-bar-fill${u.exhausted ? ' out' : ''}" style="width:${pct}%"></div></div>
+      <span class="plan-cta">Upgrade</span>`;
+  } else {
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Free plan</span>
+      <span class="plan-meta">Upgrade for unlimited AI</span><span class="plan-cta">Upgrade</span>`;
   }
+
   box.innerHTML = `
-    ${meterHtml}
     <p class="cloud-pitch">${u && u.exhausted ? 'Your free AI is used up. ' : ''}Unlock <b>unlimited managed AI</b> (no API key needed), <b>automatic site blocking</b> and <b>analytics</b> for <b>$5/mo</b>.</p>
     ${invalid ? `<p class="cloud-err">That license key isn't active. Re-enter it or upgrade below.</p>` : ''}
     <div class="cloud-btns">
-      <button class="pill-btn accent" id="cloud-upgrade">Upgrade to Cloud</button>
-      <button class="pill-btn" id="cloud-have">I have a key</button>
+      <button class="btn-primary" id="cloud-upgrade">Upgrade to Cloud</button>
+      <button class="btn-secondary" id="cloud-have">I have a key</button>
     </div>
     <div id="cloud-key-row" class="cloud-key-row" style="display:${invalid ? 'flex' : 'none'}">
       <input id="cloud-key-input" class="cloud-key-input" placeholder="pd_live_…" type="password">
-      <button class="pill-btn accent" id="cloud-key-save">Save</button>
+      <button class="btn-primary" id="cloud-key-save">Save</button>
     </div>`;
   document.getElementById('cloud-upgrade').onclick = async () => {
     const r = await ask({ type: 'cloud:checkout' }, 15000);
     if (r?.url) chrome.tabs.create({ url: r.url });
-    else addToast?.('Could not start checkout — try the website.');
   };
   document.getElementById('cloud-have').onclick = () => {
     const row = document.getElementById('cloud-key-row');
