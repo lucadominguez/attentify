@@ -18,12 +18,11 @@ workers_dev = true
 # Live site for Stripe success/cancel redirects. Points at the current Pages deployment
 # until the attentify.ca cutover (D1); do NOT set to attentify.ca before that zone is live.
 SITE_URL = "https://productivity-daemon.pages.dev"
-STRIPE_PRICE_ID = "price_1Te4T74HbvDyQQl1XKQBhM7Q"   # $9.99/mo subscription — REPLACE via setup-stripe.mjs output
-# One-time credit-pack prices (created by setup-stripe.mjs). Empty until provisioned;
-# the /v1/billing/credits route returns 503 until these are set.
-STRIPE_PRICE_CREDITS_5 = ""
-STRIPE_PRICE_CREDITS_10 = ""
-STRIPE_PRICE_CREDITS_20 = ""
+STRIPE_PRICE_ID = "price_1Tupe5Q53G5tVW1jDR3yDFrX"   # $9.99/mo subscription (LIVE)
+# One-time credit-pack prices (LIVE), created by setup-stripe.mjs.
+STRIPE_PRICE_CREDITS_5 = "price_1Tupe5Q53G5tVW1jbG7AZ7zp"
+STRIPE_PRICE_CREDITS_10 = "price_1Tupe5Q53G5tVW1jozSfNLV7"
+STRIPE_PRICE_CREDITS_20 = "price_1Tupe6Q53G5tVW1jDjrbqPDQ"
 
 # D1 database binding. Create it once with:
 #   wrangler d1 create pd-cloud
