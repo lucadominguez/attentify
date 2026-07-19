@@ -2,7 +2,9 @@
 // instead of bringing their own key — the provider key lives only here, in env.
 
 const OR_URL = 'https://openrouter.ai/api/v1/messages';
-const DEFAULT_MODEL = 'anthropic/claude-haiku-4.5';
+// DeepSeek is what the account's OpenRouter keys currently serve (Anthropic/Google are
+// not enabled on that account). Cheap and reliable; the app also passes explicit models.
+const DEFAULT_MODEL = 'deepseek/deepseek-chat';
 
 // Two provider keys so app vs extension spend is separable in the OpenRouter
 // dashboard and can be rotated independently. The client identifies itself with the
