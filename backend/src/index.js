@@ -80,8 +80,13 @@ async function createUser(store, { email, tier = 'free', source = 'self', stripe
   return u;
 }
 
-// Which client is calling (picks the app vs extension provider key + spend attribution).
-const clientOf = (request) => (request.headers.get('X-Attentify-Client') === 'ext' ? 'ext' : 'app');
+// Which client is calling. 'app'/'ext' send an explicit header (picks the provider key +
+// spend attribution); a browser sends none → 'web'. Turnstile is enforced for 'web' only,
+// since the desktop app can't render the widget (it relies on the device fingerprint).
+const clientOf = (request) => {
+  const c = request.headers.get('X-Attentify-Client');
+  return c === 'ext' ? 'ext' : c === 'app' ? 'app' : 'web';
+};
 
 // Cloudflare Turnstile check on sign-up (anti-bot). If TURNSTILE_SECRET is unset (local
 // dev / tests) it is skipped so nothing breaks; production sets the secret.
@@ -133,7 +138,9 @@ export async function router(request, env, store, ctx) {
       const em = String(email || '').toLowerCase().trim();
       if (!isEmail(em)) return err('a valid email is required');
       if (!password || String(password).length < 8) return err('password must be at least 8 characters');
-      if (!(await verifyTurnstile(env, cf_token, request))) return err('could not verify you are human, please try again', 400, { reason: 'captcha' });
+      // Turnstile is a browser widget → enforced for web signups only; the desktop app is
+      // gated by its device fingerprint instead.
+      if (clientOf(request) === 'web' && !(await verifyTurnstile(env, cf_token, request))) return err('could not verify you are human, please try again', 400, { reason: 'captcha' });
       if (await store.getUserByEmail(em)) return err('an account with this email already exists', 409);
       let user = await createUser(store, { email: em, tier: 'free', source: 'self' });
       const { hash, salt } = await hashPassword(String(password));

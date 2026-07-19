@@ -29,6 +29,7 @@
       <label class="fld"><span>Password</span>
         <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required>
       </label>
+      <div id="ts" style="display:none"></div>
       <button id="submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
     </form>
 
@@ -51,24 +52,44 @@
   .fld input:focus{border-color:var(--cyan)}
 </style>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
 const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+// Cloudflare Turnstile site key (public). Set at deploy; empty = challenge skipped.
+const TURNSTILE_SITE_KEY = '';
 const $ = id => document.getElementById(id);
 let mode = 'login'; // 'login' | 'signup'
+let tsWidgetId = null;
 
 // If already signed in, skip straight to the dashboard.
 if (localStorage.getItem('attentify_session')) location.replace('dashboard.html');
+
+// A stable-ish browser fingerprint so the backend grants the free trial once per device.
+async function browserFingerprint() {
+  const n = navigator;
+  const basis = [n.userAgent, n.platform, n.language, n.hardwareConcurrency, n.deviceMemory, screen.width + 'x' + screen.height].join('|');
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(basis));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+}
+
+function renderTurnstile() {
+  if (!TURNSTILE_SITE_KEY || !window.turnstile || tsWidgetId !== null) return;
+  try { tsWidgetId = window.turnstile.render('#ts', { sitekey: TURNSTILE_SITE_KEY }); } catch (_) {}
+}
 
 function setMode(m) {
   mode = m;
   const signup = m === 'signup';
   $('title').textContent = signup ? 'Create your account' : 'Welcome back';
-  $('subtitle').textContent = signup ? 'Free to start, no card required.' : 'Sign in to see your focus dashboard.';
+  $('subtitle').textContent = signup ? 'Free AI credit to start, no card required.' : 'Sign in to see your focus dashboard.';
   $('submit').textContent = signup ? 'Create account' : 'Sign in';
   $('password').setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
   $('switchText').textContent = signup ? 'Already have an account?' : 'New here?';
   $('switchLink').textContent = signup ? 'Sign in' : 'Create an account';
   $('msg').textContent = '';
+  // The challenge is only needed to create an account.
+  $('ts').style.display = (signup && TURNSTILE_SITE_KEY) ? 'block' : 'none';
+  if (signup) renderTurnstile();
 }
 $('switchLink').addEventListener('click', (e) => { e.preventDefault(); setMode(mode === 'login' ? 'signup' : 'login'); });
 
@@ -76,12 +97,19 @@ $('form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = $('email').value.trim();
   const password = $('password').value;
+  const signup = mode === 'signup';
+  let cf_token;
+  if (signup && TURNSTILE_SITE_KEY) {
+    cf_token = window.turnstile?.getResponse(tsWidgetId);
+    if (!cf_token) { $('msg').style.color = '#ff9d7a'; $('msg').textContent = 'Please complete the challenge.'; return; }
+  }
   $('msg').style.color = 'var(--muted)'; $('msg').textContent = 'Working…';
   $('submit').disabled = true;
   try {
-    const r = await fetch(API + '/v1/auth/' + (mode === 'signup' ? 'signup' : 'login'), {
+    const fingerprint = await browserFingerprint();
+    const r = await fetch(API + '/v1/auth/' + (signup ? 'signup' : 'login'), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, ...(signup ? { cf_token, fingerprint } : {}) }),
     });
     const d = await r.json();
     if (!r.ok || !d.token) throw new Error(d.error || 'Something went wrong');
@@ -90,6 +118,7 @@ $('form').addEventListener('submit', async (e) => {
   } catch (err) {
     $('msg').style.color = '#ff9d7a'; $('msg').textContent = err.message;
     $('submit').disabled = false;
+    if (tsWidgetId !== null && window.turnstile) try { window.turnstile.reset(tsWidgetId); } catch (_) {}
   }
 });
 </script>

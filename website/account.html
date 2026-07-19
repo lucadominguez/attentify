@@ -15,10 +15,10 @@
 <main style="max-width:560px;margin:0 auto;padding:90px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
   <div class="dl-card">
     <h2 style="font-size:30px;text-align:center">Your <span class="grad">account</span></h2>
-    <p style="color:var(--muted);text-align:center;margin:12px 0 24px">Paste your license key to check your subscription or manage billing.</p>
+    <p style="color:var(--muted);text-align:center;margin:12px 0 24px">Your credits, subscription and billing.</p>
 
-    <div class="acct-row">
-      <input id="key" class="report-desc" style="min-height:auto;padding:11px 12px;font-family:var(--mono)" placeholder="pd_live_…" type="password">
+    <div id="keyrow" class="acct-row">
+      <input id="key" class="report-desc" style="min-height:auto;padding:11px 12px;font-family:var(--mono)" placeholder="License key or sign in" type="password">
       <button id="check" class="btn btn-primary">Check</button>
     </div>
     <p id="msg" style="margin-top:14px;font-size:14px"></p>
@@ -27,9 +27,15 @@
       <div class="acct-grid">
         <div><span>Plan</span><b id="tier">…</b></div>
         <div><span>Status</span><b id="status">…</b></div>
-        <div><span>AI remaining</span><b id="ai">…</b></div>
+        <div><span>Credits</span><b id="credits">…</b></div>
       </div>
-      <button id="manage" class="btn btn-glass btn-block" style="margin-top:16px">Manage / cancel billing</button>
+      <div id="buycredits" class="acct-row" style="margin-top:14px;gap:8px">
+        <button class="btn btn-glass buy" data-pack="5" style="flex:1">+$5</button>
+        <button class="btn btn-glass buy" data-pack="10" style="flex:1">+$10</button>
+        <button class="btn btn-glass buy" data-pack="20" style="flex:1">+$20</button>
+      </div>
+      <button id="subscribe" class="btn btn-primary btn-block" style="margin-top:10px">Subscribe $9.99/mo, unlimited</button>
+      <button id="manage" class="btn btn-glass btn-block" style="margin-top:10px">Manage / cancel billing</button>
     </div>
     <p style="text-align:center;margin-top:18px;font-size:13.5px;color:var(--muted)">
       Prefer email &amp; password? <a href="auth.html" style="color:var(--cyan);font-weight:600">Sign in →</a>
@@ -50,18 +56,21 @@
 const API = 'https://attentify-cloud.ludomi2502.workers.dev';
 const $ = id => document.getElementById(id);
 let key = '';
+let email = '';
 
-$('check').addEventListener('click', async () => {
-  key = $('key').value.trim();
-  if (!key) return;
+async function loadAccount() {
   $('msg').textContent = 'Checking…'; $('msg').style.color = 'var(--muted)';
   try {
     const r = await fetch(API + '/v1/me', { headers: { Authorization: 'Bearer ' + key } });
     const d = await r.json();
-    if (!r.ok || !d.user) throw new Error(d.error || 'License key not recognised');
+    if (!r.ok || !d.user) throw new Error(d.error || 'Account not recognised');
     const u = d.user;
-    $('tier').textContent = u.tier; $('status').textContent = u.status;
-    $('ai').textContent = (u.aiRemaining ?? '…');
+    email = u.email || '';
+    $('tier').textContent = u.subscribed ? 'Unlimited' : 'Free';
+    $('status').textContent = u.status;
+    $('credits').textContent = u.subscribed ? '∞' : (u.credits ?? 0).toLocaleString();
+    $('subscribe').style.display = u.subscribed ? 'none' : 'block';
+    $('buycredits').style.display = u.subscribed ? 'none' : 'flex';
     $('panel').style.display = 'block';
     $('msg').textContent = '✓ ' + (u.email || 'Account found');
     $('msg').style.color = 'var(--green)';
@@ -69,6 +78,31 @@ $('check').addEventListener('click', async () => {
     $('panel').style.display = 'none';
     $('msg').textContent = e.message; $('msg').style.color = '#ff9d7a';
   }
+}
+
+$('check').addEventListener('click', () => {
+  key = $('key').value.trim();
+  if (key) loadAccount();
+});
+
+// A signed-in session (from auth.html) skips the license paste entirely.
+const session = localStorage.getItem('attentify_session');
+if (session) { key = session; $('keyrow').style.display = 'none'; loadAccount(); }
+
+document.querySelectorAll('.buy').forEach(b => b.addEventListener('click', async () => {
+  try {
+    const r = await fetch(API + '/v1/billing/credits', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' }, body: JSON.stringify({ pack: b.dataset.pack }) });
+    const d = await r.json();
+    if (d.url) location.href = d.url; else throw new Error(d.error || 'Could not start checkout');
+  } catch (e) { $('msg').textContent = e.message; $('msg').style.color = '#ff9d7a'; }
+}));
+
+$('subscribe').addEventListener('click', async () => {
+  try {
+    const r = await fetch(API + '/v1/billing/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+    const d = await r.json();
+    if (d.url) location.href = d.url; else throw new Error(d.error || 'Could not start checkout');
+  } catch (e) { $('msg').textContent = e.message; $('msg').style.color = '#ff9d7a'; }
 });
 
 $('manage').addEventListener('click', async () => {

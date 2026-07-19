@@ -700,19 +700,15 @@ chrome.runtime.onConnect.addListener(port => {
       if (okStream) return;   // else fall through to a user key if they have one
     }
 
-    // Direct path — user's own key if set, otherwise the bundled free key (metered).
-    const usage = await freeUsageState();
-    if (usage.exhausted) {
-      port.postMessage({ type: 'error', message: 'paywall' });
-      return;
-    }
+    // Direct path — the user's own key, if they pasted one (never metered).
     const key = apiKey || await getEffectiveKey();
-    if (!key) {
-      port.postMessage({ type: 'error', message: cloudStatus ? 'cloud_unavailable' : 'no_key' });
+    if (key) {
+      await chatDirect(messages, systemWithCtx, key, port);
       return;
     }
 
-    await chatDirect(messages, systemWithCtx, key, port);
+    // No own key and the managed AI isn't available: either out of credit, or not signed in.
+    port.postMessage({ type: 'error', message: cloudOutOfCredit() ? 'out_of_credit' : (isSignedInCloud() ? 'cloud_unavailable' : 'signin_required') });
   });
 });
 
@@ -897,18 +893,65 @@ async function clearCloudKey() {
   cloudStatus = null; await chrome.storage.local.set({ cloudStatus: null });
 }
 
+// A stable-ish per-device fingerprint from navigator signals, so the backend grants the
+// free trial credit at most once per device (the extension half of the anti-abuse gate).
+async function deviceFingerprintExt() {
+  const n = navigator;
+  const basis = [n.userAgent, n.platform, n.language, n.hardwareConcurrency, n.deviceMemory].join('|');
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(basis));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+}
+
+// Create / sign in to an Attentify account straight from the extension (no license paste).
+// The returned session token becomes the cloud credential; a new account gets trial credit.
+async function authCloud(path, body) {
+  try {
+    const fp = await deviceFingerprintExt();
+    const r = await fetch(cloudApi.replace(/\/$/, '') + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Attentify-Client': 'ext' },
+      body: JSON.stringify({ ...body, fingerprint: fp }),
+      signal: AbortSignal.timeout(12000),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok || !data.token) return { ok: false, error: data.error || `Request failed (${r.status})` };
+    await setCloudKey(data.token);
+    cloudStatus = data.user || null;
+    if (cloudStatus) cloudStatus.checkedAt = Date.now();
+    await chrome.storage.local.set({ cloudStatus });
+    return { ok: true, user: data.user };
+  } catch (e) {
+    return { ok: false, error: String(e).includes('timeout') ? 'Could not reach the server.' : 'Something went wrong.' };
+  }
+}
+const signupCloud = (email, password) => authCloud('/v1/auth/signup', { email, password });
+const loginCloud = (email, password) => authCloud('/v1/auth/login', { email, password });
+
+// Start a one-time credit-pack checkout ('5' | '10' | '20'); returns the hosted Stripe URL.
+async function buyCreditsCloud(pack) {
+  try {
+    const r = await cloudFetch('/v1/billing/credits', { method: 'POST', body: JSON.stringify({ pack }) }, 15000);
+    const data = await r.json().catch(() => ({}));
+    return { url: data.url, error: data.error };
+  } catch (e) { return { error: String(e) }; }
+}
+
 async function cloudFetch(path, opts = {}, ms = 20000) {
   const key = await getCloudKey();
   if (!key) throw new Error('no_cloud_key');
   return fetch(cloudApi.replace(/\/$/, '') + path, {
     ...opts,
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}`, ...(opts.headers || {}) },
+    // X-Attentify-Client picks the extension provider key + spend attribution on the backend.
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key}`, 'X-Attentify-Client': 'ext', ...(opts.headers || {}) },
     signal: AbortSignal.timeout(ms),
   });
 }
 
-// Is the cloud AI usable right now? (active subscription with quota left.)
-const cloudAiReady = () => !!cloudStatus && cloudStatus.status === 'active' && (cloudStatus.aiRemaining ?? 1) > 0;
+// Is the cloud AI usable right now? True for a subscriber OR a signed-in account with
+// credit left — the backend computes this and returns it as `canUseAi` on /v1/me.
+const cloudAiReady = () => !!cloudStatus && cloudStatus.canUseAi === true;
+const cloudOutOfCredit = () => !!cloudStatus && cloudStatus.outOfCredit === true;
+const isSignedInCloud = () => !!(cloudStatus && cloudStatus.email);
 
 async function refreshCloudStatus() {
   const key = await getCloudKey();
@@ -1458,12 +1501,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       chrome.storage.local.set({ cloudApiBase: cloudApi }).then(() => refreshCloudStatus()).then(() => sendResponse({ ok: true, api: cloudApi }));
       return true;
 
-    case 'cloud:checkout':   // get a Stripe checkout URL to open
+    case 'cloud:checkout':   // get a Stripe subscription checkout URL to open
       fetch(cloudApi.replace(/\/$/, '') + '/v1/billing/checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: msg.email || undefined }), signal: AbortSignal.timeout(15000),
+        body: JSON.stringify({ email: msg.email || cloudStatus?.email || undefined }), signal: AbortSignal.timeout(15000),
       }).then(r => r.json()).then(d => sendResponse({ ok: !!d.url, url: d.url, error: d.error }))
         .catch(e => sendResponse({ ok: false, error: e.message }));
+      return true;
+
+    case 'cloud:signup':     // create an account from the extension (grants trial credit)
+      signupCloud(msg.email || '', msg.password || '').then(r => sendResponse({ ...r, cloudStatus })).catch(e => sendResponse({ ok: false, error: String(e) }));
+      return true;
+
+    case 'cloud:login':      // sign in to an existing account
+      loginCloud(msg.email || '', msg.password || '').then(r => sendResponse({ ...r, cloudStatus })).catch(e => sendResponse({ ok: false, error: String(e) }));
+      return true;
+
+    case 'cloud:logout':
+      clearCloudKey().then(() => sendResponse({ ok: true }));
+      return true;
+
+    case 'cloud:buy-credits': // one-time credit-pack checkout URL ('5'|'10'|'20')
+      buyCreditsCloud(String(msg.pack || '')).then(d => sendResponse({ ok: !!d.url, url: d.url, error: d.error })).catch(e => sendResponse({ ok: false, error: String(e) }));
       return true;
 
     case 'cloud:portal':     // manage/cancel via Stripe billing portal

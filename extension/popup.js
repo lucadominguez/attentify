@@ -1041,8 +1041,13 @@ async function sendChat() {
     }
     if (msg.type === 'error') {
       removeTypingIndicator();
-      if (msg.message === 'paywall') {
-        addSysMsg("You've used up your $1 of free AI. Subscribe to Cloud for $5/mo (no key needed), or add your own OpenRouter key above. Open the plan row at the bottom to upgrade.");
+      if (msg.message === 'paywall' || msg.message === 'out_of_credit') {
+        addSysMsg("You're out of AI credits. Top up ($5 / $10 / $20) or subscribe for $9.99/mo, no key needed. Open the plan row at the bottom.");
+        renderCloud().catch(() => {});
+        const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
+        document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (msg.message === 'signin_required') {
+        addSysMsg('Sign in to use AI. Create a free account to get free credit to start, or add your own OpenRouter key.');
         renderCloud().catch(() => {});
         const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -1255,71 +1260,90 @@ async function renderCloud() {
   if (!summary) return;
   const res = await ask({ type: 'get:cloud' });
   const st = res?.cloudStatus;
-  const active = st && st.tier === 'cloud' && st.status === 'active';
+  const u = res?.usage;
+  const ownKey = u?.hasOwnKey;
   wireCloudExpand();
 
-  if (active) {
-    const used = st.aiUsed ?? 0, quota = st.aiQuota ?? 0, left = Math.max(0, quota - used);
-    summary.innerHTML = `<span class="plan-dot on"></span><span class="plan-name">Cloud plan</span>
-      <span class="plan-meta">${left} managed AI left</span><span class="plan-cta">Manage</span>`;
+  const signedIn = !!(st && st.email);
+  const subscribed = !!(st && st.subscribed);
+  const credits = st?.credits ?? 0;
+  const openUrl = async (type, extra) => { const r = await ask({ type, ...(extra || {}) }, 15000); if (r?.url) chrome.tabs.create({ url: r.url }); };
+
+  // ── Collapsed summary row ──
+  if (subscribed) {
+    summary.innerHTML = `<span class="plan-dot on"></span><span class="plan-name">Subscribed</span>
+      <span class="plan-meta">Unlimited AI</span><span class="plan-cta">Manage</span>`;
+  } else if (ownKey) {
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Your own key</span>
+      <span class="plan-meta">AI billed to you</span>`;
+  } else if (signedIn) {
+    summary.innerHTML = `<span class="plan-dot${st.outOfCredit ? ' out' : ''}"></span><span class="plan-name">Credits</span>
+      <span class="plan-meta">${credits.toLocaleString()} left</span><span class="plan-cta">${st.outOfCredit ? 'Top up' : 'Add'}</span>`;
+  } else {
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Sign in</span>
+      <span class="plan-meta">Free credit to start</span><span class="plan-cta">Sign in</span>`;
+  }
+
+  // ── Expanded box ──
+  if (subscribed) {
     box.innerHTML = `
-      <div class="cloud-row"><span class="cloud-ok">✓ Cloud active</span>
-        <span class="cloud-sub">${esc(st.email || '')}</span></div>
-      <div class="cloud-meter"><span>Managed AI</span>
-        <div class="cloud-bar"><div class="cloud-bar-fill" style="width:${quota ? Math.min(100, Math.round(used / quota * 100)) : 0}%"></div></div>
-        <b>${left} left</b></div>
+      <div class="cloud-row"><span class="cloud-ok">✓ Subscribed</span><span class="cloud-sub">${esc(st.email || '')}</span></div>
+      <p class="cloud-pitch">Unlimited managed AI plus more custom analytics.</p>
       <div class="cloud-btns">
         <button class="btn-secondary" id="cloud-manage">Manage billing</button>
         <button class="btn-secondary" id="cloud-signout">Sign out</button>
       </div>`;
-    document.getElementById('cloud-manage').onclick = async () => {
-      const r = await ask({ type: 'cloud:portal' }, 15000);
-      if (r?.url) chrome.tabs.create({ url: r.url });
-    };
-    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'clear:cloud-key' }); renderCloud(); };
+    document.getElementById('cloud-manage').onclick = () => openUrl('cloud:portal');
+    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'cloud:logout' }); renderCloud(); };
     return;
   }
 
-  const invalid = res?.hasKey && st && st.status !== 'active';
-  const u = res?.usage;
-  const ownKey = u?.hasOwnKey;
-  // Collapsed summary row: plan name + credit used + one Upgrade link.
   if (ownKey) {
-    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Free plan</span>
-      <span class="plan-meta">Using your own AI key</span><span class="plan-cta">Upgrade</span>`;
-  } else if (u) {
-    const pct = Math.min(100, Math.round((u.usedUsd / (u.limitUsd || 1)) * 100));
-    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Free plan</span>
-      <span class="plan-meta">$${u.usedUsd.toFixed(2)} of $${u.limitUsd.toFixed(2)} AI credit used</span>
-      <div class="plan-bar"><div class="plan-bar-fill${u.exhausted ? ' out' : ''}" style="width:${pct}%"></div></div>
-      <span class="plan-cta">Upgrade</span>`;
-  } else {
-    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Free plan</span>
-      <span class="plan-meta">Upgrade for unlimited AI</span><span class="plan-cta">Upgrade</span>`;
+    box.innerHTML = `<p class="cloud-pitch">Using your own API key. AI is billed directly to you and is never metered here.</p>`;
+    return;
   }
 
+  if (signedIn) {
+    box.innerHTML = `
+      <div class="cloud-row"><span class="cloud-sub">${esc(st.email || '')}</span>
+        <b class="${st.outOfCredit ? 'cloud-err' : ''}">${credits.toLocaleString()} credits</b></div>
+      ${st.outOfCredit ? `<p class="cloud-err">You are out of credits. AI features and adaptive blocking pause until you top up or subscribe. Your rules and keyword blocks keep working.</p>` : `<p class="cloud-pitch">Credits power the AI. Top up any time, or subscribe for unlimited.</p>`}
+      <div class="cloud-btns">
+        <button class="btn-secondary buy-credit" data-pack="5">+$5</button>
+        <button class="btn-secondary buy-credit" data-pack="10">+$10</button>
+        <button class="btn-secondary buy-credit" data-pack="20">+$20</button>
+      </div>
+      <button class="btn-primary" id="cloud-sub" style="width:100%;margin-top:6px">Subscribe $9.99/mo, unlimited</button>
+      <button class="btn-secondary" id="cloud-signout" style="width:100%;margin-top:6px">Sign out</button>`;
+    box.querySelectorAll('.buy-credit').forEach((b) => { b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack }); });
+    document.getElementById('cloud-sub').onclick = () => openUrl('cloud:checkout');
+    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'cloud:logout' }); renderCloud(); };
+    return;
+  }
+
+  // Not signed in → email/password account form (a new account gets free trial credit).
   box.innerHTML = `
-    <p class="cloud-pitch">${u && u.exhausted ? 'Your free AI is used up. ' : ''}Unlock <b>unlimited managed AI</b> (no API key needed), <b>automatic site blocking</b> and <b>analytics</b> for <b>$5/mo</b>.</p>
-    ${invalid ? `<p class="cloud-err">That license key isn't active. Re-enter it or upgrade below.</p>` : ''}
+    <p class="cloud-pitch">Create a free account to get <b>free AI credit</b> to start. Top up or subscribe for unlimited any time.</p>
+    <div class="cloud-key-row"><input id="auth-email" class="cloud-key-input" placeholder="you@email.com" type="email" autocomplete="email"></div>
+    <div class="cloud-key-row"><input id="auth-pass" class="cloud-key-input" placeholder="Password (8+ characters)" type="password" autocomplete="current-password"></div>
+    <p id="auth-err" class="cloud-err" style="display:none"></p>
     <div class="cloud-btns">
-      <button class="btn-primary" id="cloud-upgrade">Upgrade to Cloud</button>
-      <button class="btn-secondary" id="cloud-have">I have a key</button>
-    </div>
-    <div id="cloud-key-row" class="cloud-key-row" style="display:${invalid ? 'flex' : 'none'}">
-      <input id="cloud-key-input" class="cloud-key-input" placeholder="pd_live_…" type="password">
-      <button class="btn-primary" id="cloud-key-save">Save</button>
+      <button class="btn-primary" id="auth-signup">Create account</button>
+      <button class="btn-secondary" id="auth-login">Sign in</button>
     </div>`;
-  document.getElementById('cloud-upgrade').onclick = async () => {
-    const r = await ask({ type: 'cloud:checkout' }, 15000);
-    if (r?.url) chrome.tabs.create({ url: r.url });
+  const doAuth = async (type) => {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-pass').value;
+    const errEl = document.getElementById('auth-err');
+    errEl.style.display = 'none';
+    if (!email || password.length < 8) { errEl.textContent = 'Enter your email and a password of at least 8 characters.'; errEl.style.display = 'block'; return; }
+    const r = await ask({ type, email, password }, 15000);
+    if (r?.ok) renderCloud();
+    else { errEl.textContent = r?.error || 'Could not sign in.'; errEl.style.display = 'block'; }
   };
-  document.getElementById('cloud-have').onclick = () => {
-    const row = document.getElementById('cloud-key-row');
-    row.style.display = row.style.display === 'none' ? 'flex' : 'none';
-    document.getElementById('cloud-key-input').focus();
-  };
-  document.getElementById('cloud-key-save').onclick = saveCloudKey;
-  document.getElementById('cloud-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveCloudKey(); });
+  document.getElementById('auth-signup').onclick = () => doAuth('cloud:signup');
+  document.getElementById('auth-login').onclick = () => doAuth('cloud:login');
+  document.getElementById('auth-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAuth('cloud:login'); });
 }
 
 async function saveCloudKey() {

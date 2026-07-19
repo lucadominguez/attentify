@@ -109,7 +109,16 @@ document.getElementById('setpw').addEventListener('click', async () => {
     msg.style.color = 'var(--green)'; msg.textContent = 'Saved. You can now sign in on the website.';
   } catch (e) { msg.style.color = '#ff9d7a'; msg.textContent = e.message; }
 });
-poll();
+// A credit-pack purchase has no license to issue — the webhook just tops up the balance.
+if (new URLSearchParams(location.search).get('credits') === '1') {
+  const el = document.querySelector('main') || document.body;
+  el.innerHTML = '<div class="dl-card" style="max-width:460px;margin:0 auto;text-align:center">'
+    + '<h2 style="font-size:28px">Credits <span class="grad">added</span></h2>'
+    + '<p style="color:var(--muted);margin:14px 0 22px">Your top-up is on its way to your account (it can take a few seconds). Thanks!</p>'
+    + '<a href="account.html" class="btn btn-primary btn-block">View your account</a></div>';
+} else {
+  poll();
+}
 </script>
 </body>
 </html>
