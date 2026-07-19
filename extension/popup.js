@@ -541,6 +541,210 @@ document.getElementById('modify-rules-btn').addEventListener('click', async (e) 
   }
 });
 
+// ═══════════════════════════════ SECTION TABS ═════════════════════════════════
+// The popup is a mini-app. Every tab reads the extension's OWN storage (via background),
+// so it all works standalone — no desktop app required (Mac included). When the daemon
+// is connected it's an enhancement, never a requirement.
+
+function fmtDur(ms) {
+  const s = Math.round((ms || 0) / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  return `${h}h ${m % 60}m`;
+}
+function bar(pct, cls = '') { return `<div class="bar"><div class="barfill ${cls}" style="width:${Math.max(0, Math.min(100, pct))}%"></div></div>`; }
+
+let activeSection = 'home';
+const renderers = {};
+
+function showTab(name) {
+  activeSection = name;
+  document.querySelectorAll('#tabstrip .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  ['home', 'insights', 'activity', 'focus', 'logic', 'actions'].forEach(n => {
+    const el = document.getElementById('view-' + n);
+    if (el) el.hidden = (n !== name);
+  });
+  const scroller = document.querySelector('.scroll-body');
+  if (scroller) scroller.scrollTop = 0;
+  if (name !== 'home' && renderers[name]) renderers[name]().catch(() => {});
+}
+
+document.getElementById('tabstrip').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tab');
+  if (btn) showTab(btn.dataset.tab);
+});
+document.getElementById('askbar').addEventListener('click', () => showChat());
+
+// ── Insights (analytics + timesheets, browser-adapted) ──
+renderers.insights = async function () {
+  const el = document.getElementById('view-insights');
+  const d = await ask({ type: 'get:insights' });
+  if (!d) { el.innerHTML = '<div class="placeholder">No data yet.</div>'; return; }
+  const t = d.today || {};
+  const top = d.topSites || [];
+  const week = d.week || [];
+  const trend = d.trend || [];
+  const maxSite = Math.max(1, ...top.map(s => s.ms));
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-title">Today</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num data-value">${t.focusRatio ?? 0}%</div><div class="kpi-lbl">focused</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${fmtDur(t.trackedMs)}</div><div class="kpi-lbl">tracked</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${t.visits ?? 0}</div><div class="kpi-lbl">visits</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${t.blocked ?? 0}</div><div class="kpi-lbl">blocked</div></div>
+      </div>
+      ${t.trackedMs ? `<div class="split">${bar(t.focusRatio, 'ok')}<span class="split-lbl">${fmtDur(t.focusedMs)} focused · ${fmtDur(t.distractedMs)} distracted</span></div>` : '<div class="ps-sub">Browse a little and your focus breakdown appears here.</div>'}
+    </section>
+
+    ${trend.length ? `<section class="card">
+      <div class="card-title">Distraction trend</div>
+      <div class="spark">${trend.map(p => `<div class="spark-bar ${p.pct >= 60 ? 'hi' : p.pct >= 35 ? 'mid' : 'lo'}" style="height:${Math.max(6, p.pct)}%" title="${esc(p.domain || '')} · ${p.pct}%"></div>`).join('')}</div>
+      <div class="ps-sub">Recent pages, oldest to newest. Taller = more distracting.</div>
+    </section>` : ''}
+
+    <section class="card">
+      <div class="card-title">Top sites · last 7 days</div>
+      ${top.length ? top.map(s => `
+        <div class="site-row">
+          <span class="site-dom">${esc(s.domain)}</span>
+          <div class="site-bar">${bar(Math.round(s.ms / maxSite * 100), s.distraction >= 0.5 ? 'bad' : 'ok')}</div>
+          <span class="site-ms">${fmtDur(s.ms)}</span>
+        </div>`).join('') : '<div class="ps-sub">No sites tracked yet.</div>'}
+    </section>
+
+    ${week.some(w => w.trackedMs) ? `<section class="card">
+      <div class="card-title">This week · focus by day</div>
+      <div class="week">${week.map(w => `<div class="week-col"><div class="week-bar"><div class="week-fill ok" style="height:${w.focusRatio}%"></div></div><div class="week-lbl">${esc(w.label)}</div></div>`).join('')}</div>
+    </section>` : ''}
+  `;
+};
+
+// ── Activity (attention timeline, browser-adapted) ──
+renderers.activity = async function () {
+  const el = document.getElementById('view-activity');
+  const d = await ask({ type: 'get:context-log' });
+  const log = (d?.contextLog || []);
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-head"><span class="card-title">Recent activity</span>
+        <button class="btn-ghost" id="act-timeline" aria-label="Open full timeline">Timeline</button></div>
+      ${log.length ? log.slice(0, 40).map(e => {
+        const pct = Math.round((e.distractionProbability || 0) * 100);
+        const lvl = pct >= 60 ? 'bad' : pct >= 35 ? 'mid' : 'ok';
+        return `<div class="act-row">
+          <span class="act-dot ${lvl}"></span>
+          <div class="act-body">
+            <div class="act-top"><span class="act-dom">${esc(e.domain || '?')}</span><span class="act-ago">${ago(e.ts)}</span></div>
+            ${e.intent ? `<div class="act-intent">${esc(e.intent)}</div>` : ''}
+          </div>
+          <span class="act-pct data-value">${pct}%</span>
+        </div>`;
+      }).join('') : '<div class="ps-sub">Nothing tracked yet. Browse a few sites.</div>'}
+    </section>`;
+  const tl = document.getElementById('act-timeline');
+  if (tl) tl.addEventListener('click', () => showFlow());
+};
+
+// ── Focus (deep-focus control, browser-adapted) ──
+renderers.focus = async function () {
+  const el = document.getElementById('view-focus');
+  const [f, ins] = await Promise.all([ask({ type: 'get:focus' }), ask({ type: 'get:insights' })]);
+  const active = f?.active;
+  const remainMs = active ? Math.max(0, f.focusUntil - Date.now()) : 0;
+  const t = ins?.today || {};
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-title">Focus mode</div>
+      ${active ? `
+        <div class="focus-live"><div class="focus-num data-value">${fmtDur(remainMs)}</div><div class="kpi-lbl">remaining · distractions hidden everywhere</div></div>
+        <button class="btn-secondary" id="focus-end">End focus</button>
+      ` : `
+        <div class="ps-sub">Start a session and Attentify hides distractions on every page until it ends.</div>
+        <div class="focus-presets">
+          ${[25, 50, 90].map(m => `<button class="btn-primary focus-start" data-min="${m}">${m} min</button>`).join('')}
+        </div>
+      `}
+    </section>
+    <section class="card">
+      <div class="card-title">Today</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num data-value">${t.focusRatio ?? 0}%</div><div class="kpi-lbl">focused</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${fmtDur(t.focusedMs)}</div><div class="kpi-lbl">focus time</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${t.blocked ?? 0}</div><div class="kpi-lbl">blocked</div></div>
+      </div>
+    </section>`;
+  el.querySelectorAll('.focus-start').forEach(b => b.addEventListener('click', async () => {
+    await ask({ type: 'set:focus', minutes: Number(b.dataset.min) });
+    renderers.focus();
+  }));
+  const end = document.getElementById('focus-end');
+  if (end) end.addEventListener('click', async () => { await ask({ type: 'set:focus', minutes: 0 }); renderers.focus(); });
+};
+
+// ── Logic (what the AI has learned/does, browser-adapted) ──
+renderers.logic = async function () {
+  const el = document.getElementById('view-logic');
+  const [ab, sup, ar] = await Promise.all([
+    ask({ type: 'get:auto-block' }), ask({ type: 'get:suppressions' }), ask({ type: 'get:all-rules' }),
+  ]);
+  const topics = ab?.autoHideKeywords || [];
+  const supMap = sup?.autoHideSuppress || {};
+  const corrections = Object.entries(supMap).reduce((n, [, v]) => n + (Array.isArray(v) ? v.length : 0), 0);
+  const rules = ar?.rules || [];
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-title">Topics I auto-hide</div>
+      ${topics.length ? `<div class="chips">${topics.map(k => `<span class="chip" data-k="${esc(k)}">${esc(k)} ✕</span>`).join('')}</div>`
+        : '<div class="ps-sub">None yet. Ask the AI to "hide anything about X" and it learns it here.</div>'}
+    </section>
+    <section class="card">
+      <div class="card-title">Corrections you taught it</div>
+      <div class="ps-line"><span class="data-value">${corrections}</span>&nbsp;element${corrections !== 1 ? 's' : ''} across ${Object.keys(supMap).length} site${Object.keys(supMap).length !== 1 ? 's' : ''} flagged "not a distraction" — the scanner now skips these.</div>
+    </section>
+    <section class="card">
+      <div class="card-title">Active rules</div>
+      <div class="ps-line"><span class="data-value">${rules.filter(r => r.enabled).length}</span>&nbsp;of ${rules.length} element rules on. Manage them on the Home tab.</div>
+      ${ar?.connected ? '' : '<div class="ps-sub">Goals &amp; preferences from the desktop app appear here when it’s connected.</div>'}
+    </section>`;
+  el.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', async () => {
+    const cur = (await ask({ type: 'get:auto-block' }))?.autoHideKeywords || [];
+    await ask({ type: 'set:auto-hide-prefs', keywords: cur.filter(x => x !== ch.dataset.k), replace: true });
+    renderers.logic();
+  }));
+};
+
+// ── Actions (what Attentify did, browser-adapted) ──
+renderers.actions = async function () {
+  const el = document.getElementById('view-actions');
+  const st = await ask({ type: 'get:status' });
+  const log = st?.activityLog || [];
+  const hidden = Object.values(st?.elementStats || {}).reduce((a, b) => a + (b || 0), 0);
+  const bypasses = Object.values(st?.bypassScores || {}).reduce((a, b) => a + (b || 0), 0);
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-title">Quick actions</div>
+      <div class="qa-grid">
+        <button class="btn-secondary" id="qa-focus">Start 25m focus</button>
+        <button class="btn-secondary" id="qa-scan">Scan this page</button>
+        <button class="btn-secondary" id="qa-ask">Ask AI</button>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-title">What Attentify did</div>
+      <div class="ps-sub">${hidden} element${hidden !== 1 ? 's' : ''} hidden today · ${bypasses} bypass${bypasses !== 1 ? 'es' : ''}</div>
+      ${log.length ? `<div class="act-log">${log.map(e => `
+        <div class="log-entry t-${esc(e.type)}"><span class="log-ts">${sSago(e.ts)}</span><span class="log-icon">${LOG_ICON[e.type] || '·'}</span>
+        <div class="log-body"><div class="log-msg">${esc(e.msg)}</div>${e.detail ? `<div class="log-sub">${esc(e.detail)}</div>` : ''}</div></div>`).join('')}</div>`
+        : '<div class="ps-sub">No activity yet.</div>'}
+    </section>`;
+  document.getElementById('qa-focus')?.addEventListener('click', async () => { await ask({ type: 'set:focus', minutes: 25 }); showTab('focus'); });
+  document.getElementById('qa-scan')?.addEventListener('click', () => { showTab('home'); document.getElementById('scan-btn')?.click(); });
+  document.getElementById('qa-ask')?.addEventListener('click', () => showChat());
+};
+
 // ═══════════════════════════════ CHAT VIEW ════════════════════════════════════
 
 let chatHistory = [];  // {role, content}

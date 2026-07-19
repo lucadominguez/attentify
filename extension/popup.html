@@ -32,7 +32,26 @@
   <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
   <div id="update-banner" class="update-banner" style="display:none"></div>
 
+  <!-- Section tabs: the popup is a mini-app. Everything is browser-native so it works standalone. -->
+  <nav class="tabstrip" id="tabstrip" role="tablist">
+    <button class="tab active" data-tab="home"     role="tab">Home</button>
+    <button class="tab"        data-tab="insights" role="tab">Insights</button>
+    <button class="tab"        data-tab="activity" role="tab">Activity</button>
+    <button class="tab"        data-tab="focus"    role="tab">Focus</button>
+    <button class="tab"        data-tab="logic"    role="tab">Logic</button>
+    <button class="tab"        data-tab="actions"  role="tab">Actions</button>
+  </nav>
+
+  <!-- Prominent, always-visible AI entry (chat-first, like the desktop app). -->
+  <button class="askbar" id="askbar" aria-label="Ask the AI assistant">
+    <span class="askbar-icon" aria-hidden="true">✦</span>
+    <span class="askbar-text">Ask AI to block something, or about your focus…</span>
+    <span class="askbar-go" aria-hidden="true">→</span>
+  </button>
+
   <div class="scroll-body">
+
+    <div id="view-home" class="view">
 
     <!-- ── 2. THIS PAGE ── -->
     <section class="card" id="page-card">
@@ -103,6 +122,15 @@
       <div class="plan-row" id="cloud-summary" role="button" tabindex="0" aria-label="Plan details"></div>
       <div id="cloud-box" class="cloud-box" style="display:none"></div>
     </section>
+
+    </div><!-- /view-home -->
+
+    <!-- Data tabs — populated by popup.js from the extension's own storage (standalone). -->
+    <div id="view-insights" class="view" hidden></div>
+    <div id="view-activity" class="view" hidden></div>
+    <div id="view-focus"    class="view" hidden></div>
+    <div id="view-logic"    class="view" hidden></div>
+    <div id="view-actions"  class="view" hidden></div>
 
   </div><!-- /scroll-body -->
 

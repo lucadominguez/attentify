@@ -210,6 +210,8 @@ let autoBlock = true;   // auto-hide high-confidence detected distractions (the 
 let autoHideKeywords = []; // topics the user told the assistant to hide — feeds the scanner
 let titleBlocks = [];   // lowercase title substrings — videos whose TITLE matches are blocked
 let autoHideSuppress = {}; // { domain: [{selector,label,ts}] } — elements the user flagged "not a distraction"; the scanner must never auto-hide these again (client-side retraining)
+let visitStats = {};    // { 'YYYY-MM-DD': { domain: { visits, distractionSum, ms } } } — the extension's OWN analytics DB, so Insights/Timesheets work standalone (no daemon needed, Mac included)
+let focusUntil = 0;     // epoch ms until which a focus session is active (aggressive auto-hide)
 let lastAssessment = null; // most recent per-navigation context read (shown in the panel)
 let contextLog = [];    // chronological history of context reads — powers the flow view
 let cloudStatus = null; // { tier, status, aiRemaining, ... } from the cloud backend, or null
@@ -244,7 +246,7 @@ const DAEMON_PORTS = [9119, 9120, 9121, 9122, 9123];
 
 async function bootstrap() {
   addLog('boot', 'Extension started');
-  const d = await chrome.storage.local.get(['rules', 'rulesVersion', 'daemonPort', 'bypassScores', 'bypassAttempts', 'elementStats', 'pausedSites', 'autoBlock', 'autoHideKeywords', 'titleBlocks', 'autoHideSuppress', 'feedbackLog', 'lastAssessment', 'contextLog']);
+  const d = await chrome.storage.local.get(['rules', 'rulesVersion', 'daemonPort', 'bypassScores', 'bypassAttempts', 'elementStats', 'pausedSites', 'autoBlock', 'autoHideKeywords', 'titleBlocks', 'autoHideSuppress', 'visitStats', 'focusUntil', 'feedbackLog', 'lastAssessment', 'contextLog']);
 
   if (d.rules && d.rules.length > 0) {
     rules = d.rules;
@@ -287,6 +289,8 @@ async function bootstrap() {
   if (Array.isArray(d.autoHideKeywords)) autoHideKeywords = d.autoHideKeywords;
   if (Array.isArray(d.titleBlocks)) titleBlocks = d.titleBlocks;
   if (d.autoHideSuppress && typeof d.autoHideSuppress === 'object') autoHideSuppress = d.autoHideSuppress;
+  if (d.visitStats && typeof d.visitStats === 'object') visitStats = d.visitStats;
+  if (typeof d.focusUntil === 'number') focusUntil = d.focusUntil;
   if (Array.isArray(d.feedbackLog)) feedbackLog = d.feedbackLog;
   if (Array.isArray(d.contextLog)) contextLog = d.contextLog;
   if (d.lastAssessment) lastAssessment = d.lastAssessment;
@@ -1018,15 +1022,98 @@ async function logContext(info, val) {
   const last = contextLog[0];
   const sameSpot = last && last.url === info.url && (Date.now() - last.ts) < 8000;
   if (sameSpot) return;
+  const now = Date.now();
+  // Feed the standalone analytics DB: attribute dwell to the page we're leaving, and
+  // count this visit + its distraction for the page we're arriving at.
+  if (last && last.domain) trackVisit(last.domain, null, Math.min(now - last.ts, 5 * 60 * 1000), last.ts);
+  trackVisit(info.domain, clamp01(val.distractionProbability), 0, now);
   contextLog.unshift({
-    ts: Date.now(), url: info.url, domain: info.domain,
+    ts: now, url: info.url, domain: info.domain,
     intent: val.intent, distractionProbability: val.distractionProbability,
     goalAligned: val.goalAligned, reason: val.reason, source: val.source,
     navType: (info.behavior && info.behavior.navType) || 'load',
     searchQuery: info.searchQuery || '',
   });
   if (contextLog.length > 100) contextLog.pop();
-  await chrome.storage.local.set({ contextLog });
+  await chrome.storage.local.set({ contextLog, visitStats });
+}
+
+// ── Standalone analytics DB (chrome.storage) ────────────────────────────────────
+// The extension's own attention record, so Insights/Timesheets/Activity work with no
+// desktop app. Per-day, per-domain visits + summed distraction + dwell ms; 14-day window.
+function dayKey(ts) {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+function trackVisit(domain, distraction, dwellMs, ts) {
+  if (!domain) return;
+  const day = dayKey(ts || Date.now());
+  const d = visitStats[day] || (visitStats[day] = {});
+  const s = d[domain] || (d[domain] = { visits: 0, distractionSum: 0, ms: 0 });
+  if (distraction != null) { s.visits += 1; s.distractionSum += distraction; }
+  if (dwellMs) s.ms += dwellMs;
+  // Retention: keep the most recent 14 day-buckets.
+  const days = Object.keys(visitStats).sort();
+  while (days.length > 14) delete visitStats[days.shift()];
+}
+
+// Aggregate the analytics DB + live counters into everything the popup tabs render.
+function buildInsights() {
+  const days = Object.keys(visitStats).sort();          // ascending
+  const today = dayKey(Date.now());
+  const last7 = days.slice(-7);
+  const sumDay = (day) => {
+    const dd = visitStats[day] || {};
+    let visits = 0, distractionSum = 0, ms = 0;
+    for (const dom in dd) { visits += dd[dom].visits; distractionSum += dd[dom].distractionSum; ms += dd[dom].ms; }
+    const avg = visits ? distractionSum / visits : 0;
+    return { visits, ms, avg, focusedMs: Math.round(ms * (1 - avg)), distractedMs: Math.round(ms * avg) };
+  };
+  const t = sumDay(today);
+  const blocked = Object.values(elementStats || {}).reduce((a, b) => a + (b || 0), 0);
+
+  // Top sites over the last 7 days by time.
+  const agg = {};
+  for (const day of last7) {
+    const dd = visitStats[day] || {};
+    for (const dom in dd) {
+      const a = agg[dom] || (agg[dom] = { domain: dom, ms: 0, visits: 0, distractionSum: 0 });
+      a.ms += dd[dom].ms; a.visits += dd[dom].visits; a.distractionSum += dd[dom].distractionSum;
+    }
+  }
+  const topSites = Object.values(agg)
+    .map(a => ({ domain: a.domain, ms: a.ms, visits: a.visits, distraction: a.visits ? a.distractionSum / a.visits : 0 }))
+    .sort((a, b) => b.ms - a.ms).slice(0, 8);
+
+  const week = last7.map(day => {
+    const s = sumDay(day);
+    return { day, label: new Date(day).toLocaleDateString([], { weekday: 'short' }), trackedMs: s.ms, focusRatio: s.ms ? Math.round((s.focusedMs / s.ms) * 100) : 0 };
+  });
+
+  // Recent distraction trend from the flow log (oldest → newest).
+  const trend = contextLog.slice(0, 24).reverse().map(e => ({ ts: e.ts, pct: Math.round((e.distractionProbability || 0) * 100), domain: e.domain }));
+
+  return {
+    today: { visits: t.visits, trackedMs: t.ms, focusedMs: t.focusedMs, distractedMs: t.distractedMs, focusRatio: t.ms ? Math.round((t.focusedMs / t.ms) * 100) : 0, blocked },
+    topSites, week, trend,
+    connected: daemonConnected,
+  };
+}
+
+// ── Focus session ───────────────────────────────────────────────────────────────
+// Client-side: force aggressive auto-hide for a set duration. Standalone-friendly.
+let focusPrevAuto = null;
+async function setFocusSession(minutes) {
+  const mins = Math.max(0, Math.min(240, minutes));
+  if (mins > 0) {
+    if (focusPrevAuto === null) focusPrevAuto = autoBlock;
+    focusUntil = Date.now() + mins * 60000;
+    if (!autoBlock) await setAutoBlock(true);
+  } else {
+    focusUntil = 0;
+    if (focusPrevAuto !== null) { await setAutoBlock(focusPrevAuto); focusPrevAuto = null; }
+  }
+  await chrome.storage.local.set({ focusUntil });
 }
 
 // ── Feedback log — mispredictions + bug reports, queued for the future backend ──
@@ -1173,6 +1260,25 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
     case 'get:auto-block':
       ensureReady().then(() => sendResponse({ autoBlock, autoHideKeywords, titleBlocks }));
+      return true;
+
+    // ── Standalone data for the popup's Insights/Activity/Logic/Actions/Focus tabs ──
+    // Everything here is browser-native (chrome.storage), so the whole multi-view popup
+    // works with no desktop app — the extension is a complete product on its own (Mac too).
+    case 'get:insights':
+      ensureReady().then(() => sendResponse(buildInsights()));
+      return true;
+
+    case 'get:suppressions':
+      sendResponse({ autoHideSuppress });
+      return true;
+
+    case 'get:focus':
+      sendResponse({ focusUntil, active: focusUntil > Date.now() });
+      return true;
+
+    case 'set:focus':
+      setFocusSession(Number(msg.minutes) || 0).then(() => sendResponse({ ok: true, focusUntil, active: focusUntil > Date.now() }));
       return true;
 
     case 'get:title-blocks':
