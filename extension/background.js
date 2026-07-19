@@ -277,7 +277,7 @@ async function bootstrap() {
     rules = PREDEFINED_RULES.map(r => ({ ...r }));
     await chrome.storage.local.set({ rules, rulesVersion: RULES_VERSION });
     const enabledCount = rules.filter(r => r.enabled).length;
-    addLog('storage', `First run — ${rules.length} rules installed`, `${enabledCount} enabled by default (YouTube Shorts, Instagram Reels, TikTok FYP, Facebook Reels, Reddit, Twitter/X)`);
+    addLog('storage', `First run: ${rules.length} rules installed`, `${enabledCount} enabled by default (YouTube Shorts, Instagram Reels, TikTok FYP, Facebook Reels, Reddit, Twitter/X)`);
   }
 
   if (d.bypassScores)   bypassScores   = d.bypassScores;
@@ -448,7 +448,7 @@ async function tryDaemonSync() {
   if (!port) {
     daemonConnected = false;
     lastDaemonError = `Not found on ports ${DAEMON_PORTS.join(', ')}`;
-    addLog('daemon', 'Running standalone — Attentify app not found');
+    addLog('daemon', 'Running standalone. Attentify app not found');
     await chrome.storage.local.set({ daemonConnected: false });
     return;
   }

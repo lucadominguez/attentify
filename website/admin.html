@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Attentify — Admin</title>
+<title>Attentify Admin</title>
 <link rel="icon" href="attentify-logo.png" />
 <style>
   :root { --bg:#0a0e1a; --panel:#111726; --panel2:#0d1320; --border:#1e2740; --text:#e8edf7; --muted:#8a97b4; --dim:#5a6683; --accent:#6366f1; --brand:#3b9eff; --pos:#34d399; --warn:#fbbf24; --neg:#f87171; }
@@ -108,7 +108,7 @@ function render(usage, issues) {
       <td class="num">${fmtTok(m.input_tokens)}</td>
       <td class="num">${fmtTok(m.output_tokens)}</td>
       <td class="num">${fmtN(m.calls)}</td>
-      <td class="num">${m.installs ?? '—'}</td>
+      <td class="num">${m.installs ?? 'n/a'}</td>
       <td class="num">${fmtUsd(m.cost_usd)}</td>
       <td style="width:120px"><div class="bar" style="width:${Math.round((m.cost_usd/maxCost)*100)}%"></div></td>
     </tr>`).join('') || '<tr><td colspan="7" class="muted">No usage recorded yet.</td></tr>';

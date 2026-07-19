@@ -3273,7 +3273,7 @@ function HeatmapViz({ cells, max, unit }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-[2px] flex-1", children: (byDay[day] ?? []).map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
         {
-          title: `${WEEKDAY_SHORT[day]} ${c.hour}:00 — ${fmtValue(c.value, unit)}`,
+          title: `${WEEKDAY_SHORT[day]} ${c.hour}:00 · ${fmtValue(c.value, unit)}`,
           style: {
             flex: 1,
             height: 10,

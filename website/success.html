@@ -93,7 +93,7 @@ document.getElementById('setpw').addEventListener('click', async () => {
   const pw = document.getElementById('pw').value;
   const msg = document.getElementById('pwmsg');
   if (!pw || pw.length < 8) { msg.style.color = '#ff9d7a'; msg.textContent = 'Password must be at least 8 characters.'; return; }
-  if (!licenseKey) { msg.style.color = '#ff9d7a'; msg.textContent = 'Still activating — try again in a moment.'; return; }
+  if (!licenseKey) { msg.style.color = '#ff9d7a'; msg.textContent = 'Still activating. Try again in a moment.'; return; }
   msg.style.color = 'var(--muted)'; msg.textContent = 'Saving…';
   try {
     const setr = await fetch(API + '/v1/auth/set-password', {

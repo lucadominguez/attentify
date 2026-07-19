@@ -129,9 +129,9 @@
   // Behavioural patterns (clean, work-context) — power the Logic page + Analytics.
   var alerts = [
     { id: 'h1', type: 'doom-loop', severity: 'high', title: 'Doom-loop on Reddit', description: 'You cycled Reddit → X → Reddit six times in 40 minutes this afternoon, each visit a little longer than the last.', detectedAt: now - 95 * MIN, app: 'chrome', dismissed: false, switchRate: 0 },
-    { id: 'h2', type: 'rapid-switching', severity: 'medium', title: 'Rapid context switching', description: '72 app switches per hour around 3pm — well above your focused baseline of ~18/hour.', detectedAt: now - 3 * HOUR, app: 'chrome', dismissed: false, switchRate: 72 },
+    { id: 'h2', type: 'rapid-switching', severity: 'medium', title: 'Rapid context switching', description: '72 app switches per hour around 3pm, well above your focused baseline of ~18/hour.', detectedAt: now - 3 * HOUR, app: 'chrome', dismissed: false, switchRate: 72 },
     { id: 'h3', type: 'tab-anxiety', severity: 'medium', title: 'Tab anxiety while writing', description: 'You reopened X five times in ten minutes while working on the design doc.', detectedAt: now - 5 * HOUR, app: 'chrome', dismissed: false },
-    { id: 'h4', type: 'late-night', severity: 'low', title: 'Late-night scrolling', description: '17 minutes on TikTok after 11pm on Tuesday — your focus the next morning dipped ~15%.', detectedAt: now - 30 * HOUR, app: 'chrome', dismissed: false },
+    { id: 'h4', type: 'late-night', severity: 'low', title: 'Late-night scrolling', description: '17 minutes on TikTok after 11pm on Tuesday, and your focus the next morning dipped ~15%.', detectedAt: now - 30 * HOUR, app: 'chrome', dismissed: false },
   ];
 
   function analytics() {
@@ -355,8 +355,8 @@
     getBreakStatus: function () { return Promise.resolve(null); },
 
     getInferences: function () { return Promise.resolve([
-      { id: 'inf1', type: 'domain', value: 'news.ycombinator.com', confidence: 0.74, reasoning: 'Opened 9 times today in short bursts between coding tasks, each under a minute — classic micro-escape, not a deliberate read.', status: 'pending', action: 'block' },
-      { id: 'inf2', type: 'domain', value: 'amazon.com', confidence: 0.66, reasoning: 'Three visits during your afternoon work block, none tied to a search you started — likely idle browsing.', status: 'pending', action: 'block' },
+      { id: 'inf1', type: 'domain', value: 'news.ycombinator.com', confidence: 0.74, reasoning: 'Opened 9 times today in short bursts between coding tasks, each under a minute. Classic micro-escape, not a deliberate read.', status: 'pending', action: 'block' },
+      { id: 'inf2', type: 'domain', value: 'amazon.com', confidence: 0.66, reasoning: 'Three visits during your afternoon work block, none tied to a search you started, so likely idle browsing.', status: 'pending', action: 'block' },
       { id: 'inf3', type: 'app', value: 'Discord', confidence: 0.58, reasoning: 'Frequent tab-outs to #dev-team during deep-work blocks; some are work chatter, some are drift.', status: 'pending', action: 'block' },
     ]); },
     resolveInference: function () { return Promise.resolve({ ok: true }); },
@@ -396,7 +396,7 @@
         { id: 'm1', role: 'user', content: "I'm writing until 5, keep me off social.", ts: now - 3 * HOUR },
         { id: 'm2', role: 'assistant', content: "On it. I've muted Reddit, X, Instagram and TikTok until 5pm and I'll nudge you if you start drifting. Go write. 🛡️", ts: now - 3 * HOUR + 6000 },
         { id: 'm3', role: 'user', content: "What's been eating my focus this week?", ts: now - 2 * HOUR },
-        { id: 'm4', role: 'assistant', content: "**Reddit** and **X** took the most off-task time this week — about 3h40m combined, mostly afternoon micro-breaks that turned into scrolls. Your strongest focus is mornings before noon (81% focus ratio). Want me to lock social after 2pm?", ts: now - 2 * HOUR + 6000 },
+        { id: 'm4', role: 'assistant', content: "**Reddit** and **X** took the most off-task time this week, about 3h40m combined, mostly afternoon micro-breaks that turned into scrolls. Your strongest focus is mornings before noon (81% focus ratio). Want me to lock social after 2pm?", ts: now - 2 * HOUR + 6000 },
       ]);
     },
     renameConversation: function () { return Promise.resolve({ ok: true }); },

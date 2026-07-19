@@ -63,7 +63,7 @@ function setMode(m) {
   mode = m;
   const signup = m === 'signup';
   $('title').textContent = signup ? 'Create your account' : 'Welcome back';
-  $('subtitle').textContent = signup ? 'Free to start — no card required.' : 'Sign in to see your focus dashboard.';
+  $('subtitle').textContent = signup ? 'Free to start, no card required.' : 'Sign in to see your focus dashboard.';
   $('submit').textContent = signup ? 'Create account' : 'Sign in';
   $('password').setAttribute('autocomplete', signup ? 'new-password' : 'current-password');
   $('switchText').textContent = signup ? 'Already have an account?' : 'New here?';

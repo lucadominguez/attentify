@@ -46,13 +46,13 @@ function renderDiag(status, allRules, tabSt, tab) {
   rows.push({ ok: true, main: `Service worker running`, sub: status?.bootAt ? `started ${ago(status.bootAt)}` : '' });
 
   if (rules.length === 0) {
-    rows.push({ ok: false, warn: true, main: `No rules loaded — try reloading the extension`, sub: '' });
+    rows.push({ ok: false, warn: true, main: `No rules loaded. Try reloading the extension`, sub: '' });
   } else {
     rows.push({ ok: true, main: `<b>${rules.length}</b> rules loaded`, sub: `${enabled.length} enabled` });
   }
 
   if (enabled.length === 0) {
-    rows.push({ ok: false, warn: true, main: `No rules enabled — toggle rules on below or use AI chat`, sub: 'CSS blocking is inactive' });
+    rows.push({ ok: false, warn: true, main: `No rules enabled. Toggle rules on below or use AI chat`, sub: 'CSS blocking is inactive' });
   } else {
     const doms = [...new Set(enabled.map(r=>r.domain))].join(', ');
     rows.push({ ok: true, main: `Blocking on: <b>${esc(doms)}</b>` });
@@ -63,7 +63,7 @@ function renderDiag(status, allRules, tabSt, tab) {
   if (isChromeTab) {
     rows.push({ ok: null, main: `Current tab is a browser page`, sub: 'Navigate to a real site to test blocking' });
   } else if (!tabSt) {
-    rows.push({ ok: false, warn: true, main: `Blocking not applied on this tab yet`, sub: 'It applies automatically — switch tabs or give it a moment' });
+    rows.push({ ok: false, warn: true, main: `Blocking not applied on this tab yet`, sub: 'It applies automatically. Switch tabs or give it a moment' });
   } else {
     const n = tabSt.totalHidden || 0;
     rows.push({ ok: true, main: `Content script active · <b>${esc(tabSt.domain||'?')}</b>`, sub: n > 0 ? `Hiding ${n} element${n!==1?'s':''} right now` : 'No matching elements on this page' });
@@ -72,7 +72,7 @@ function renderDiag(status, allRules, tabSt, tab) {
   if (status?.connected) {
     rows.push({ ok: true, main: `Daemon on <b>:${status.daemonPort}</b>`, sub: `Synced ${ago(status.lastSyncAt)} · AI tools active` });
   } else {
-    rows.push({ ok: null, main: `Daemon not connected <span style="opacity:0.35">(optional)</span>`, sub: status?.lastDaemonError || 'Works standalone — daemon adds AI tools' });
+    rows.push({ ok: null, main: `Daemon not connected <span style="opacity:0.35">(optional)</span>`, sub: status?.lastDaemonError || 'Works standalone. The daemon adds AI tools' });
   }
 
   const icons = { true: '✓', false: '✗', null: '·' };
@@ -112,7 +112,7 @@ function renderPageCard() {
   // State (a): not a blockable page. Dim the sections below rather than hide them.
   if (isChrome) {
     statusEl.className = 'page-status neutral';
-    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">○</span>This is a browser page — nothing to block here.</div>`;
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">○</span>This is a browser page, so there's nothing to block here.</div>`;
     scanEl.style.display = 'none';
     tglWrap.style.display = 'none';
     setDim(true);
@@ -233,7 +233,7 @@ function scanRowHtml(c, i, isAuto) {
   const actions = isAuto
     ? `<div class="scan-actions">
          <button class="scan-hide-btn restore" data-idx="${i}" data-kind="auto">Restore</button>
-         <button class="scan-wrong" data-idx="${i}" title="This isn't a distraction — flag the AI's mistake">not a distraction?</button>
+         <button class="scan-wrong" data-idx="${i}" title="This isn't a distraction? Flag the AI's mistake">not a distraction?</button>
        </div>`
     : `<button class="scan-hide-btn" data-idx="${i}" data-kind="cand">Block</button>`;
   return `<div class="scan-row ${c.confidence} ${isAuto ? 'is-hidden' : ''}">
@@ -275,7 +275,7 @@ async function reportMisprediction(i, btn) {
       version: chrome.runtime.getManifest().version, userAgent: navigator.userAgent,
     },
   });
-  if (btn) { btn.textContent = '✓ thanks — noted'; btn.classList.add('done'); }
+  if (btn) { btn.textContent = '✓ thanks, noted'; btn.classList.add('done'); }
   setTimeout(() => scanCurrentTab(true), 700);
 }
 
@@ -702,7 +702,7 @@ renderers.logic = async function () {
     </section>
     <section class="card">
       <div class="card-title">Corrections you taught it</div>
-      <div class="ps-line"><span class="data-value">${corrections}</span>&nbsp;element${corrections !== 1 ? 's' : ''} across ${Object.keys(supMap).length} site${Object.keys(supMap).length !== 1 ? 's' : ''} flagged "not a distraction" — the scanner now skips these.</div>
+      <div class="ps-line"><span class="data-value">${corrections}</span>&nbsp;element${corrections !== 1 ? 's' : ''} across ${Object.keys(supMap).length} site${Object.keys(supMap).length !== 1 ? 's' : ''} flagged "not a distraction". The scanner now skips these.</div>
     </section>
     <section class="card">
       <div class="card-title">Active rules</div>
@@ -833,7 +833,7 @@ function renderKeyUI(editing = false) {
 document.getElementById('api-key-save-btn').addEventListener('click', async () => {
   const key = document.getElementById('api-key-input').value.trim();
   if (!key.startsWith('sk-or-')) {
-    document.getElementById('api-key-err').textContent = 'OpenRouter keys start with sk-or- — get one at openrouter.ai/keys';
+    document.getElementById('api-key-err').textContent = 'OpenRouter keys start with sk-or-. Get one at openrouter.ai/keys';
     document.getElementById('api-key-err').style.display = 'block';
     return;
   }
@@ -926,7 +926,7 @@ function addAiMsg(text) {
         const kws = (pref.keywords || []).map(k => String(k).toLowerCase().trim()).filter(Boolean);
         if (kws.length) {
           ask({ type: 'set:auto-hide-prefs', keywords: kws });   // learn it (auto-applies across sites)
-          html += `</div><div class="pref-learned">🧠 Got it — I'll auto-hide content about <b>${esc(kws.join(', '))}</b> across sites.</div><div class="bubble" style="margin-top:5px">`;
+          html += `</div><div class="pref-learned">🧠 Got it. I'll auto-hide content about <b>${esc(kws.join(', '))}</b> across sites.</div><div class="bubble" style="margin-top:5px">`;
         }
       } catch(_) { html += esc(part); }
     } else if (part.startsWith('<titleblock>')) {
@@ -936,7 +936,7 @@ function addAiMsg(text) {
         if (kws.length) {
           ask({ type: 'set:title-blocks', keywords: kws });
           refreshTitleBlocks?.();
-          html += `</div><div class="pref-learned tb">🛡️ I'll block videos whose title contains <b>${esc(kws.join(', '))}</b> — in your feed and the moment they open.</div><div class="bubble" style="margin-top:5px">`;
+          html += `</div><div class="pref-learned tb">🛡️ I'll block videos whose title contains <b>${esc(kws.join(', '))}</b>, in your feed and the moment they open.</div><div class="bubble" style="margin-top:5px">`;
         }
       } catch(_) { html += esc(part); }
     } else {
@@ -951,7 +951,7 @@ function addAiMsg(text) {
   d.querySelectorAll('.add-rule-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const rule = pendingRules[Number(btn.dataset.ruleIdx)];
-      if (!rule) { addSysMsg('Sorry — that rule was malformed. Ask me to try again.'); return; }
+      if (!rule) { addSysMsg('Sorry, that rule was malformed. Ask me to try again.'); return; }
       const payload = normalizeRule(rule);
       if (!payload) { addSysMsg('That rule is missing a domain or selectors, so it can’t block anything. Ask me to be more specific.'); return; }
       const orig = btn.textContent;
@@ -964,7 +964,7 @@ function addAiMsg(text) {
         refresh().catch(() => {});   // reflect it in the main view immediately
       } else {
         btn.disabled = false; btn.textContent = orig;
-        addSysMsg('Could not add that rule — please try again.');
+        addSysMsg('Could not add that rule. Please try again.');
       }
     });
   });
@@ -1042,12 +1042,12 @@ async function sendChat() {
     if (msg.type === 'error') {
       removeTypingIndicator();
       if (msg.message === 'paywall') {
-        addSysMsg("You've used up your $1 of free AI. Subscribe to Cloud for $5/mo (no key needed) — or add your own OpenRouter key above. Open the plan row at the bottom to upgrade.");
+        addSysMsg("You've used up your $1 of free AI. Subscribe to Cloud for $5/mo (no key needed), or add your own OpenRouter key above. Open the plan row at the bottom to upgrade.");
         renderCloud().catch(() => {});
         const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'no_key') {
-        addSysMsg('No OpenRouter key set — enter one above. Get it free at openrouter.ai/keys');
+        addSysMsg('No OpenRouter key set. Enter one above; get it free at openrouter.ai/keys');
         renderKeyUI(true);
       } else if (msg.message === 'daemon_fail') {
         // Retry with direct API
@@ -1181,7 +1181,7 @@ async function buildReportBody(desc) {
   if (tabCtx?.autoHidden?.length) lines.push(`- Auto-hidden here: ${tabCtx.autoHidden.map(a => a.label).join(', ')}`);
   if (status?.activityLog?.length) {
     lines.push('', '**Recent activity**');
-    for (const e of status.activityLog.slice(0, 8)) lines.push(`- ${e.type}: ${e.msg}${e.detail ? ' — ' + e.detail : ''}`);
+    for (const e of status.activityLog.slice(0, 8)) lines.push(`- ${e.type}: ${e.msg}${e.detail ? ' (' + e.detail + ')' : ''}`);
   }
   lines.push('', `_UA: ${navigator.userAgent}_`);
   return lines.join('\n');
@@ -1199,7 +1199,7 @@ async function submitReport() {
   progDone('report-progress-fill', !!res?.ok);
   btn.disabled = false; btn.textContent = 'Submit bug report';
   if (res?.ok) {
-    st.innerHTML = `✓ Filed <a href="${esc(res.url)}" target="_blank">#${res.number}</a> — thank you!`;
+    st.innerHTML = `✓ Filed <a href="${esc(res.url)}" target="_blank">#${res.number}</a>. Thank you!`;
     st.className = 'report-status ok';
     document.getElementById('report-desc').value = '';
   } else if (res?.error === 'no_token') {
@@ -1207,7 +1207,7 @@ async function submitReport() {
     st.className = 'report-status err';
     document.getElementById('gh-token-panel').style.display = 'block';
   } else {
-    st.textContent = `Couldn’t file it: ${res?.error || 'unknown error'} — saved locally.`;
+    st.textContent = `Couldn’t file it: ${res?.error || 'unknown error'}. Saved locally.`;
     st.className = 'report-status err';
   }
 }
