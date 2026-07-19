@@ -691,8 +691,8 @@ chrome.runtime.onConnect.addListener(port => {
 
     // Route: daemon proxy → cloud (managed AI) → direct OpenRouter
     if (daemonConnected && daemonPort && !useOrProxy) {
-      await chatViaDaemon(text, port);
-      return;
+      const ok = await chatViaDaemon(messages, systemWithCtx, port);
+      if (ok) return;   // else fall through to cloud / own key
     }
 
     if (cloudAiReady() && !useOrProxy) {
@@ -748,22 +748,33 @@ async function chatViaCloud(messages, system, port) {
   }
 }
 
-async function chatViaDaemon(text, port) {
+// Use the daemon purely as a free AI PROVIDER (its raw /ai/chat proxy), with the
+// EXTENSION's own system prompt — NOT /inject/chat, which runs the daemon's generic
+// desktop agent and therefore can't emit the extension's <rule>/<pref>/<titleblock>
+// blocking DSL (that's why "via daemon" used to refuse to block music videos, edits,
+// etc.). Now the assistant has the same blocking abilities regardless of AI source.
+async function chatViaDaemon(messages, system, port) {
   try {
-    port.postMessage({ type: 'chunk', text: '*(via daemon)* ' });
-    const res = await fetch(`http://127.0.0.1:${daemonPort}/inject/chat`, {
+    const input = (messages || [])
+      .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+      .join('\n\n');
+    const res = await fetch(`http://127.0.0.1:${daemonPort}/ai/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text }),
+      body: JSON.stringify({ system, input, max_tokens: 800 }),
       signal: AbortSignal.timeout(30000),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    port.postMessage({ type: 'chunk', text: data.content || '' });
+    if (data.error) throw new Error(data.error);
+    const text = data.content || data.text || '';
+    if (!text) throw new Error('empty response');
+    port.postMessage({ type: 'chunk', text });   // single full reply (not deltas)
     port.postMessage({ type: 'done' });
+    return true;
   } catch (e) {
-    addLog('error', `Daemon chat failed, falling back`, e.message);
-    port.postMessage({ type: 'error', message: 'daemon_fail' });
+    addLog('error', 'Daemon chat failed, falling back', e.message);
+    return false;   // let the caller try cloud / own key instead of dead-ending
   }
 }
 
