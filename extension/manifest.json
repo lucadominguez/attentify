@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Attentify Element Blocker",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "Surgically remove addictive UI elements, with AI that reads your browsing context. Works standalone or enhanced by the Attentify desktop app.",
   "permissions": ["storage", "tabs", "webNavigation", "scripting", "alarms", "sidePanel"],
   "host_permissions": [

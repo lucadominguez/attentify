@@ -1547,7 +1547,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
 
     case 'content:ready':
-      addLog('inject', 'Content script confirmed', (sender.tab?.url || '').slice(0, 50));
+      // The content script loaded. This fires on every page, so it is NOT logged to the
+      // activity feed (it would dump the user's whole browsing history into "What Attentify
+      // did" and read as noise). Kept as a no-op case so the message isn't treated as unknown.
       break;
 
     case 'test:inject': {
