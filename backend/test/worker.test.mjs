@@ -23,7 +23,7 @@ globalThis.fetch = async (url, init = {}) => {
     return jres({ url: 'https://billing.stripe/portal' });
   }
   if (url.includes('openrouter.ai')) {
-    return jres({ content: [{ text: '{"intent":"coding","distractionProbability":0.1}' }] });
+    return jres({ content: [{ text: '{"intent":"coding","distractionProbability":0.1}' }], usage: { input_tokens: 1000, output_tokens: 500 } });
   }
   throw new Error('unexpected fetch ' + url);
 };
@@ -76,24 +76,78 @@ test('cloud grant unlocks managed rules; free gets none', async () => {
   assert.equal(fr.body.rules.length, 0, 'free gets no managed rules');
 });
 
-test('AI proxy works for cloud user and increments quota', async () => {
+test('AI proxy works for a subscriber and does not touch the credit balance', async () => {
   const s = new FakeStore();
   const key = (await call(s, 'POST', '/v1/admin/grant', admin({ body: { email: 'e@x.com', tier: 'cloud' } }))).body.user.license_key;
   const r = await call(s, 'POST', '/v1/ai/json', bearer(key, { body: { system: 'sys', input: 'hi' } }));
   assert.equal(r.status, 200);
   assert.match(r.body.text, /intent/);
   const me = await call(s, 'GET', '/v1/me', bearer(key));
-  assert.equal(me.body.user.aiUsed, 1);
+  assert.equal(me.body.user.subscribed, true);
+  assert.equal(me.body.user.credits, 0);          // subscriber spend accrues against fair-use, not credits
+  const u = await s.getUserByLicense(key);
+  assert.ok(u.sub_used_micros > 0, 'fair-use accrued');
 });
 
-test('AI quota is enforced (free tier)', async () => {
+test('AI is blocked for a free user with no credit (402 out_of_credit)', async () => {
   const s = new FakeStore();
   const key = (await call(s, 'POST', '/v1/admin/grant', admin({ body: { email: 'f@x.com' } }))).body.user.license_key;
-  // exhaust the free quota directly
-  const u = await s.getUserByLicense(key);
-  u.ai_calls_used = 60; u.ai_period_start = Date.now();
   const r = await call(s, 'POST', '/v1/ai/json', bearer(key, { body: { input: 'hi' } }));
-  assert.equal(r.status, 429);
+  assert.equal(r.status, 402);
+  assert.equal(r.body.reason, 'out_of_credit');
+});
+
+test('trial signup grants 25c of credit and AI debits it with markup', async () => {
+  const s = new FakeStore();
+  const su = await call(s, 'POST', '/v1/auth/signup', { body: { email: 'trial@x.com', password: 'longpassword1', fingerprint: 'fp-abc' } });
+  assert.equal(su.status, 200);
+  assert.equal(su.body.user.credits, 250);        // $0.25 → 250 credits
+  const tok = su.body.token;
+  const r = await call(s, 'POST', '/v1/ai/json', bearer(tok, { body: { input: 'hi' } }));
+  assert.equal(r.status, 200);
+  const me = await call(s, 'GET', '/v1/me', bearer(tok));
+  // cost = (1000*1 + 500*5)/1e6 = 3500 micros; debit = ceil(3500*1.25) = 4375 micros
+  const u = await s.getUserByEmail('trial@x.com');
+  assert.equal(u.credit_micros, 250_000 - 4375);
+  assert.equal(me.body.user.credits, Math.round((250_000 - 4375) / 1000));
+});
+
+test('a device fingerprint only gets one trial grant', async () => {
+  const s = new FakeStore();
+  const a = await call(s, 'POST', '/v1/auth/signup', { body: { email: 'one@x.com', password: 'longpassword1', fingerprint: 'same-device' } });
+  assert.equal(a.body.user.credits, 250);
+  const b = await call(s, 'POST', '/v1/auth/signup', { body: { email: 'two@x.com', password: 'longpassword1', fingerprint: 'same-device' } });
+  assert.equal(b.body.user.credits, 0, 'second signup from the same device gets no free credit');
+});
+
+test('credit-pack purchase webhook credits the balance', async () => {
+  const s = new FakeStore();
+  const su = await call(s, 'POST', '/v1/auth/signup', { body: { email: 'buyer2@x.com', password: 'longpassword1', fingerprint: 'fp-buy' } });
+  const uid = (await s.getUserByEmail('buyer2@x.com')).id;
+  const payload = JSON.stringify({
+    id: 'evt_credits', type: 'checkout.session.completed',
+    data: { object: { mode: 'payment', metadata: { kind: 'credits', user_id: uid, credit_micros: '10000000' } } },
+  });
+  const t = Math.floor(Date.now() / 1000);
+  const sig = await hmac(`${t}.${payload}`, ENV.STRIPE_WEBHOOK_SECRET);
+  const res = await router(new Request('https://api.test/v1/webhooks/stripe', {
+    method: 'POST', headers: { 'Stripe-Signature': `t=${t},v1=${sig}` }, body: payload,
+  }), ENV, s);
+  assert.equal(res.status, 200);
+  const u = await s.getUserByEmail('buyer2@x.com');
+  assert.equal(u.credit_micros, 250_000 + 10_000_000);   // trial + $10 pack
+});
+
+test('/v1/messages passthrough meters and returns the provider body (x-api-key auth)', async () => {
+  const s = new FakeStore();
+  const su = await call(s, 'POST', '/v1/auth/signup', { body: { email: 'sdk@x.com', password: 'longpassword1', fingerprint: 'fp-sdk' } });
+  const key = su.body.user.license_key;
+  // Authenticate the way the Anthropic SDK does: x-api-key, not a Bearer header.
+  const r = await call(s, 'POST', '/v1/messages', { headers: { 'x-api-key': key }, body: { model: 'anthropic/claude-haiku-4.5', max_tokens: 100, messages: [{ role: 'user', content: 'hi' }] } });
+  assert.equal(r.status, 200);
+  assert.ok(r.body.content, 'returns the provider content block verbatim');
+  const u = await s.getUserByEmail('sdk@x.com');
+  assert.equal(u.credit_micros, 250_000 - 4375);   // metered the same as /v1/ai/json
 });
 
 test('invalid license key is rejected', async () => {

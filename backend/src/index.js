@@ -7,11 +7,12 @@
 
 import { D1Store } from './store.js';
 import {
-  json, ok, err, newId, newLicense, readJson, CORS, TIERS, tierOf, quotaState, publicUser,
+  json, ok, err, newId, newLicense, readJson, CORS, TIERS, tierOf, publicUser,
   hashPassword, verifyPassword, newSessionToken, isEmail, isSessionToken, SESSION_TTL_MS,
+  isSubscriber, subUsageState, costMicros, debitMicros, TRIAL_GRANT_MICROS, CREDIT_PACKS,
 } from './util.js';
 import { stripe, verifyStripeSig } from './stripe.js';
-import { aiJson, aiChatStream, SEED_RULES } from './ai.js';
+import { aiJson, aiChatStream, aiProxy, SEED_RULES } from './ai.js';
 import {
   enabledProviders, providerCreds, signState, verifyState, isLoopbackCallback,
   authorizeUrl, exchangeCode, fetchEmail,
@@ -30,7 +31,10 @@ export default {
 // route works from the app and the website alike.
 function bearer(request) {
   const h = request.headers.get('Authorization') || '';
-  return h.startsWith('Bearer ') ? h.slice(7).trim() : '';
+  if (h.startsWith('Bearer ')) return h.slice(7).trim();
+  // The Anthropic SDK (used by the desktop app through the passthrough proxy) sends the
+  // credential as x-api-key instead of a Bearer header.
+  return (request.headers.get('x-api-key') || '').trim();
 }
 async function authUser(request, store) {
   const key = bearer(request);
@@ -68,10 +72,47 @@ async function createUser(store, { email, tier = 'free', source = 'self', stripe
   const u = {
     id: newId('usr'), email: String(email).toLowerCase().trim(), license_key: newLicense(),
     tier, status: 'active', source, stripe_customer, stripe_sub, current_period_end,
-    ai_calls_used: 0, ai_period_start: now, created_at: now, updated_at: now,
+    ai_calls_used: 0, ai_period_start: now,
+    credit_micros: 0, trial_granted: 0, sub_used_micros: 0, sub_period_start: 0,
+    created_at: now, updated_at: now,
   };
   await store.insertUser(u);
   return u;
+}
+
+// Which client is calling (picks the app vs extension provider key + spend attribution).
+const clientOf = (request) => (request.headers.get('X-Attentify-Client') === 'ext' ? 'ext' : 'app');
+
+// Cloudflare Turnstile check on sign-up (anti-bot). If TURNSTILE_SECRET is unset (local
+// dev / tests) it is skipped so nothing breaks; production sets the secret.
+async function verifyTurnstile(env, tokenStr, request) {
+  if (!env.TURNSTILE_SECRET) return true;
+  if (!tokenStr) return false;
+  try {
+    const body = new URLSearchParams({ secret: String(env.TURNSTILE_SECRET), response: String(tokenStr) });
+    const ip = request.headers.get('CF-Connecting-IP');
+    if (ip) body.set('remoteip', ip);
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
+    const data = await res.json();
+    return !!data.success;
+  } catch { return false; }
+}
+
+// Grant the one-time $0.25 trial, unless this device fingerprint already claimed one
+// (anti-abuse: stops re-signup farming). Per-email uniqueness is enforced separately by
+// the users table. Safe to call more than once — trial_granted guards it.
+async function grantTrialIfEligible(store, user, fingerprint) {
+  if (user.trial_granted) return user;
+  const fp = String(fingerprint || '').trim().slice(0, 128);
+  if (fp && await store.fingerprintGranted(fp)) {
+    await store.updateUser(user.id, { trial_granted: 1 });   // mark, but no credit for a repeat device
+    return { ...user, trial_granted: 1 };
+  }
+  const after = await store.addCredits(user.id, TRIAL_GRANT_MICROS);
+  await store.updateUser(user.id, { trial_granted: 1 });
+  if (fp) await store.recordFingerprint(fp, user.id);
+  await store.addLedger({ user_id: user.id, kind: 'grant', micros: TRIAL_GRANT_MICROS, balance_after: after });
+  return { ...user, trial_granted: 1, credit_micros: after };
 }
 
 // ── router ────────────────────────────────────────────────────────────────────
@@ -88,14 +129,16 @@ export async function router(request, env, store, ctx) {
 
     // ---- auth: sign up (email + password) ----
     if (p === '/v1/auth/signup' && method === 'POST') {
-      const { email, password } = await readJson(request);
+      const { email, password, cf_token, fingerprint } = await readJson(request);
       const em = String(email || '').toLowerCase().trim();
       if (!isEmail(em)) return err('a valid email is required');
       if (!password || String(password).length < 8) return err('password must be at least 8 characters');
+      if (!(await verifyTurnstile(env, cf_token, request))) return err('could not verify you are human, please try again', 400, { reason: 'captcha' });
       if (await store.getUserByEmail(em)) return err('an account with this email already exists', 409);
-      const user = await createUser(store, { email: em, tier: 'free', source: 'self' });
+      let user = await createUser(store, { email: em, tier: 'free', source: 'self' });
       const { hash, salt } = await hashPassword(String(password));
       await store.setPassword(user.id, hash, salt);
+      user = await grantTrialIfEligible(store, user, fingerprint);
       const session = await issueSession(store, user, request);
       return ok({ token: session.token, user: publicUser(user) });
     }
@@ -187,7 +230,12 @@ export async function router(request, env, store, ctx) {
         if (!email) return backToApp({ error: 'no_email' });
 
         let user = await store.getUserByEmail(email);
-        if (!user) user = await createUser(store, { email, tier: 'free', source: provider });
+        if (!user) {
+          user = await createUser(store, { email, tier: 'free', source: provider });
+          // Social sign-in has no device fingerprint to bind, so the trial is gated by
+          // the (verified) email alone here.
+          user = await grantTrialIfEligible(store, user, '');
+        }
         const session = await issueSession(store, user, request);
         return backToApp({ token: session.token });
       }
@@ -240,17 +288,47 @@ export async function router(request, env, store, ctx) {
       return new Response(obj.body, { headers });
     }
 
-    // ---- billing: start a $5/mo Cloud checkout ----
+    // ---- billing: start a $9.99/mo subscription checkout ----
     if (p === '/v1/billing/checkout' && method === 'POST') {
       const { email } = await readJson(request);
-      const site = env.SITE_URL || 'https://attentify.ai';
+      const site = env.SITE_URL || 'https://attentify.ca';
       const session = await stripe.createCheckoutSession(env.STRIPE_SECRET, {
         priceId: env.STRIPE_PRICE_ID,
         successUrl: `${site}/success.html?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${site}/#pricing`,
         email,
+        metadata: { kind: 'subscription' },
       });
       return ok({ url: session.url, id: session.id });
+    }
+
+    // ---- billing: buy a one-time credit pack (authenticated) ----
+    if (p === '/v1/billing/credits' && method === 'POST') {
+      const user = await authUser(request, store);
+      if (!user) return err('unauthorized', 401);
+      const { pack } = await readJson(request);
+      const def = CREDIT_PACKS[String(pack)];
+      if (!def) return err('unknown credit pack', 400);
+      const priceId = env[def.priceEnv];
+      if (!priceId) return err('credit packs not configured', 503);
+      const site = env.SITE_URL || 'https://attentify.ca';
+      const session = await stripe.createPaymentSession(env.STRIPE_SECRET, {
+        priceId,
+        successUrl: `${site}/success.html?session_id={CHECKOUT_SESSION_ID}&credits=1`,
+        cancelUrl: `${site}/account.html`,
+        email: user.email,
+        // The webhook credits by these — user_id avoids an email-matching race.
+        metadata: { kind: 'credits', user_id: user.id, credit_micros: String(def.micros) },
+      });
+      return ok({ url: session.url, id: session.id });
+    }
+
+    // ---- billing: recent credit movements (for the account page) ----
+    if (p === '/v1/billing/ledger' && method === 'GET') {
+      const user = await authUser(request, store);
+      if (!user) return err('unauthorized', 401);
+      const entries = await store.listLedger(user.id, 50);
+      return ok({ entries });
     }
 
     // ---- billing: success page fetches the issued license key ----
@@ -297,22 +375,41 @@ export async function router(request, env, store, ctx) {
     // ---- AI proxy: non-streaming (context engine) ----
     if (p === '/v1/ai/json' && method === 'POST') {
       const gate = await gateAI(request, store);
-      if (gate.error) return err(gate.error, gate.status);
+      if (gate.error) return err(gate.error, gate.status, gate.reason ? { reason: gate.reason } : {});
       const { system, input, model } = await readJson(request);
-      const out = await aiJson(env, { system, input, model });
-      await bumpAI(store, gate.user);
+      const out = await aiJson(env, { system, input, model }, clientOf(request));
+      await settleAI(store, gate, out.model, out.inputTokens, out.outputTokens);
       return ok(out);
+    }
+
+    // ---- AI passthrough: Anthropic-compatible /v1/messages (used by the desktop app SDK) ----
+    // Forwards the full request (incl. tools) to the provider, metering real cost. Streams
+    // when the body asks to; otherwise returns the provider's JSON verbatim.
+    if (p === '/v1/messages' && method === 'POST') {
+      const gate = await gateAI(request, store);
+      if (gate.error) return err(gate.error, gate.status, gate.reason ? { reason: gate.reason } : {});
+      const bodyObj = await readJson(request);
+      const out = await aiProxy(env, bodyObj, clientOf(request));
+      if (out.kind === 'stream') {
+        const settle = out.usage.then(u => settleAI(store, gate, u.model, u.inputTokens, u.outputTokens)).catch(() => {});
+        if (ctx && ctx.waitUntil) ctx.waitUntil(settle);
+        return new Response(out.stream, { status: out.status, headers: { 'Content-Type': 'text/event-stream; charset=utf-8', ...CORS } });
+      }
+      await settleAI(store, gate, out.usage.model, out.usage.inputTokens, out.usage.outputTokens);
+      return new Response(out.body, { status: out.status, headers: { 'Content-Type': 'application/json', ...CORS } });
     }
 
     // ---- AI proxy: streaming chat ----
     if (p === '/v1/ai/chat' && method === 'POST') {
       const gate = await gateAI(request, store);
-      if (gate.error) return err(gate.error, gate.status);
+      if (gate.error) return err(gate.error, gate.status, gate.reason ? { reason: gate.reason } : {});
       const { system, messages, model } = await readJson(request);
-      const upstream = await aiChatStream(env, { system, messages, model });
-      await bumpAI(store, gate.user);
-      return new Response(upstream.body, {
-        status: upstream.status,
+      const { status, stream, usage } = await aiChatStream(env, { system, messages, model }, clientOf(request));
+      // Settle the true cost once the stream completes, off the response path.
+      const settle = usage.then(u => settleAI(store, gate, u.model, u.inputTokens, u.outputTokens)).catch(() => {});
+      if (ctx && ctx.waitUntil) ctx.waitUntil(settle);
+      return new Response(stream, {
+        status,
         headers: { 'Content-Type': 'text/event-stream; charset=utf-8', ...CORS },
       });
     }
@@ -392,18 +489,36 @@ export async function router(request, env, store, ctx) {
   }
 }
 
-// ── AI gating (tier + monthly quota) ─────────────────────────────────────────────
+// ── AI gating (subscription fair-use OR credit balance) ──────────────────────────
 async function gateAI(request, store) {
   const user = await authUser(request, store);
   if (!user) return { error: 'invalid license key', status: 401 };
-  if (user.status !== 'active') return { error: 'subscription inactive', status: 402 };
-  const q = quotaState(user);
-  if (q.remaining <= 0) return { error: `AI quota reached for the ${tierOf(user)} tier`, status: 429 };
-  return { user };
+  if (user.status !== 'active') return { error: 'subscription inactive', status: 402, reason: 'inactive' };
+  if (isSubscriber(user)) {
+    const su = subUsageState(user);
+    if (su.remaining <= 0) return { error: 'monthly fair-use limit reached', status: 429, reason: 'fair_use' };
+    return { user, mode: 'sub', su };
+  }
+  if ((user.credit_micros || 0) <= 0) return { error: 'out of credit', status: 402, reason: 'out_of_credit' };
+  return { user, mode: 'credit' };
 }
-async function bumpAI(store, user) {
-  const q = quotaState(user);
-  await store.updateUser(user.id, { ai_calls_used: q.used + 1, ai_period_start: q.periodStart });
+
+// Record the true cost of a completed call. Subscribers accrue against the fair-use
+// ceiling; everyone else is debited (cost × markup) from their credit balance. Never
+// throws into the caller — accounting must not break a successful response.
+async function settleAI(store, gate, model, inputTokens, outputTokens) {
+  const cost = costMicros(model, inputTokens, outputTokens);
+  if (cost <= 0) return;
+  try {
+    if (gate.mode === 'sub') {
+      const su = subUsageState(gate.user);
+      await store.updateUser(gate.user.id, { sub_used_micros: su.used + cost, sub_period_start: su.periodStart });
+      await store.addLedger({ user_id: gate.user.id, kind: 'debit', micros: -cost, balance_after: gate.user.credit_micros || 0, model });
+    } else {
+      const after = await store.debitCredits(gate.user.id, debitMicros(cost));
+      await store.addLedger({ user_id: gate.user.id, kind: 'debit', micros: -debitMicros(cost), balance_after: after, model });
+    }
+  } catch { /* ignore accounting failure */ }
 }
 
 // ── Stripe event handling ────────────────────────────────────────────────────────
@@ -411,6 +526,19 @@ async function handleStripeEvent(store, evt) {
   const o = evt.data?.object || {};
   switch (evt.type) {
     case 'checkout.session.completed': {
+      // One-time credit-pack purchase: credit the balance the metadata points at.
+      if (o.mode === 'payment' && o.metadata?.kind === 'credits') {
+        const uid = o.metadata.user_id;
+        const micros = parseInt(o.metadata.credit_micros, 10) || 0;
+        if (uid && micros > 0) {
+          const user = await store.getUserById(uid);
+          if (user) {
+            const after = await store.addCredits(uid, micros);
+            await store.addLedger({ user_id: uid, kind: 'purchase', micros, balance_after: after });
+          }
+        }
+        return;
+      }
       const email = (o.customer_details?.email || o.customer_email || '').toLowerCase();
       const customer = typeof o.customer === 'string' ? o.customer : o.customer?.id;
       const sub = typeof o.subscription === 'string' ? o.subscription : o.subscription?.id;
@@ -488,6 +616,16 @@ async function adminRoutes(p, method, request, url, store) {
     if (!user) return err('user not found', 404);
     await store.updateUser(user.id, { tier: 'free', status: 'canceled' });
     return ok({ email: user.email, revoked: true });
+  }
+  // add/remove credit balance for support (usd can be negative to deduct)
+  if (p === '/v1/admin/credit' && method === 'POST') {
+    const { email, usd } = await readJson(request);
+    const user = await store.getUserByEmail(String(email || '').toLowerCase());
+    if (!user) return err('user not found', 404);
+    const micros = Math.round((Number(usd) || 0) * 1_000_000);
+    const after = micros >= 0 ? await store.addCredits(user.id, micros) : await store.debitCredits(user.id, -micros);
+    await store.addLedger({ user_id: user.id, kind: 'adjust', micros, balance_after: after });
+    return ok({ email: user.email, balanceMicros: after });
   }
   if (p === '/v1/admin/lookup' && method === 'GET') {
     const email = url.searchParams.get('email');

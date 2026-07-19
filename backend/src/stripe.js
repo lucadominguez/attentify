@@ -30,7 +30,8 @@ async function call(secret, method, path, body) {
 }
 
 export const stripe = {
-  createCheckoutSession: (secret, { priceId, successUrl, cancelUrl, email, clientRef }) =>
+  // Recurring $9.99/mo subscription checkout.
+  createCheckoutSession: (secret, { priceId, successUrl, cancelUrl, email, clientRef, metadata }) =>
     call(secret, 'POST', '/checkout/sessions', {
       mode: 'subscription',
       'line_items': [{ price: priceId, quantity: 1 }],
@@ -39,6 +40,19 @@ export const stripe = {
       customer_email: email || undefined,
       client_reference_id: clientRef || undefined,
       allow_promotion_codes: true,
+      metadata: metadata || undefined,
+    }),
+  // One-time credit-pack purchase (mode:'payment'). metadata carries user_id + credit_micros
+  // so the webhook can credit the right account without a lookup race.
+  createPaymentSession: (secret, { priceId, successUrl, cancelUrl, email, metadata }) =>
+    call(secret, 'POST', '/checkout/sessions', {
+      mode: 'payment',
+      'line_items': [{ price: priceId, quantity: 1 }],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      customer_email: email || undefined,
+      'payment_intent_data': metadata ? { metadata } : undefined,
+      metadata: metadata || undefined,
     }),
   getCheckoutSession: (secret, id) => call(secret, 'GET', `/checkout/sessions/${id}`),
   createPortalSession: (secret, { customer, returnUrl }) =>

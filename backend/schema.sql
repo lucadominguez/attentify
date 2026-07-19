@@ -13,7 +13,14 @@ CREATE TABLE IF NOT EXISTS users (
   stripe_sub        TEXT,
   current_period_end INTEGER,                    -- epoch ms; for comped accounts too
   ai_calls_used     INTEGER NOT NULL DEFAULT 0,
-  ai_period_start   INTEGER NOT NULL DEFAULT 0,  -- epoch ms; quota window start
+  ai_period_start   INTEGER NOT NULL DEFAULT 0,  -- epoch ms; legacy call-count window (no longer gates)
+  -- Credit-balance billing. Balance is micro-USD (1 micro = $0.000001); users see it
+  -- as "credits" (1 credit = $0.001). Subscribers draw against a fair-use ceiling
+  -- (sub_used_micros) instead of the balance.
+  credit_micros     INTEGER NOT NULL DEFAULT 0,
+  trial_granted     INTEGER NOT NULL DEFAULT 0,
+  sub_used_micros   INTEGER NOT NULL DEFAULT 0,
+  sub_period_start  INTEGER NOT NULL DEFAULT 0,
   -- Password auth for website sign-in. Nullable: Stripe/admin-created users may not
   -- have set one yet — they can add it via /v1/auth/set-password. PBKDF2-SHA256
   -- (100k iterations); salt + hash stored as hex.
@@ -65,6 +72,26 @@ CREATE INDEX IF NOT EXISTS idx_rules_user ON managed_rules(user_id);
 CREATE TABLE IF NOT EXISTS processed_events (
   id  TEXT PRIMARY KEY,
   ts  INTEGER NOT NULL
+);
+
+-- Every credit movement (grant/purchase/debit/refund/adjust), for the account page + auditing.
+CREATE TABLE IF NOT EXISTS credit_ledger (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id       TEXT NOT NULL,
+  ts            INTEGER NOT NULL,
+  kind          TEXT NOT NULL,
+  micros        INTEGER NOT NULL,       -- signed: credits +, debits -
+  balance_after INTEGER,
+  model         TEXT,
+  meta          TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_ledger_user ON credit_ledger(user_id, ts);
+
+-- One trial grant per device/install fingerprint (anti-abuse; paired with per-email uniqueness).
+CREATE TABLE IF NOT EXISTS trial_grants (
+  fingerprint TEXT PRIMARY KEY,
+  user_id     TEXT,
+  ts          INTEGER NOT NULL
 );
 
 -- ── Diagnostics (beta self-improvement pipeline) ───────────────────────────────

@@ -15,8 +15,15 @@ workers_dev = true
 
 # Non-secret config (override per-environment as needed)
 [vars]
-SITE_URL = "https://attentify.ai"
-STRIPE_PRICE_ID = "price_1Te4T74HbvDyQQl1XKQBhM7Q"   # $5/mo (Stripe TEST mode)
+# Live site for Stripe success/cancel redirects. Points at the current Pages deployment
+# until the attentify.ca cutover (D1); do NOT set to attentify.ca before that zone is live.
+SITE_URL = "https://productivity-daemon.pages.dev"
+STRIPE_PRICE_ID = "price_1Te4T74HbvDyQQl1XKQBhM7Q"   # $9.99/mo subscription — REPLACE via setup-stripe.mjs output
+# One-time credit-pack prices (created by setup-stripe.mjs). Empty until provisioned;
+# the /v1/billing/credits route returns 503 until these are set.
+STRIPE_PRICE_CREDITS_5 = ""
+STRIPE_PRICE_CREDITS_10 = ""
+STRIPE_PRICE_CREDITS_20 = ""
 
 # D1 database binding. Create it once with:
 #   wrangler d1 create pd-cloud
@@ -33,7 +40,10 @@ binding = "DOWNLOADS"
 bucket_name = "pd-downloads"
 
 # Secrets are NOT stored here. Set them with `wrangler secret put <NAME>`:
-#   OPENROUTER_KEY         provider key used for the managed AI proxy
-#   STRIPE_SECRET          sk_live_... / sk_test_...
+#   OPENROUTER_KEY_APP     provider key for the desktop app's AI (spend attribution)
+#   OPENROUTER_KEY_EXT     provider key for the extension's AI (spend attribution)
+#   OPENROUTER_KEY         legacy single-key fallback (optional once the two above are set)
+#   STRIPE_SECRET          rk_live_... / rk_test_... (restricted key preferred)
 #   STRIPE_WEBHOOK_SECRET  whsec_... (from the webhook endpoint you create)
+#   TURNSTILE_SECRET       Cloudflare Turnstile secret (anti-abuse on signup; unset = skip)
 #   ADMIN_TOKEN            long random string guarding /v1/admin/*

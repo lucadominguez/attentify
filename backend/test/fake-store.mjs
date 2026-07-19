@@ -1,6 +1,6 @@
 // In-memory implementation of the D1Store method surface, for unit tests.
 export class FakeStore {
-  constructor() { this.users = []; this.events = []; this.rules = []; this.processed = new Set(); this.sessions = []; }
+  constructor() { this.users = []; this.events = []; this.rules = []; this.processed = new Set(); this.sessions = []; this.ledger = []; this.fingerprints = new Set(); }
 
   async getUserByLicense(k) { return this.users.find(u => u.license_key === k) || null; }
   async getUserById(id) { return this.users.find(u => u.id === id) || null; }
@@ -25,6 +25,21 @@ export class FakeStore {
     if (u) Object.assign(u, patch, { updated_at: Date.now() });
   }
   async listUsers(limit = 100) { return this.users.slice().sort((a, b) => b.created_at - a.created_at).slice(0, limit); }
+
+  async debitCredits(userId, micros) {
+    const u = this.users.find(x => x.id === userId);
+    if (u) u.credit_micros = Math.max(0, (u.credit_micros || 0) - micros);
+    return u ? u.credit_micros : 0;
+  }
+  async addCredits(userId, micros) {
+    const u = this.users.find(x => x.id === userId);
+    if (u) u.credit_micros = (u.credit_micros || 0) + micros;
+    return u ? u.credit_micros : 0;
+  }
+  async addLedger(e) { this.ledger.push({ ...e, ts: e.ts || Date.now() }); }
+  async listLedger(userId, limit = 50) { return this.ledger.filter(l => l.user_id === userId).slice(-limit).reverse(); }
+  async fingerprintGranted(fp) { return this.fingerprints.has(fp); }
+  async recordFingerprint(fp) { this.fingerprints.add(fp); }
 
   async insertEvent(e) { this.events.push({ ...e }); }
   async analyticsSummary(userId, since) {

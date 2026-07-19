@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Provisions everything Stripe needs for the Cloud tier, idempotently:
-//   • a "Attentify Cloud" product
-//   • a $5.00 / month recurring Price (lookup_key: pd_cloud_monthly)
+// Provisions everything Stripe needs, idempotently:
+//   • an "Attentify Cloud" product + a $9.99/month recurring Price (lookup: attentify_cloud_monthly)
+//   • an "Attentify Credits" product + three one-time Prices: $5 / $10 / $20
+//     (lookups: attentify_credits_5/10/20; each carries credit_micros in metadata)
 //   • (optional) a webhook endpoint → <worker>/v1/webhooks/stripe
 //
 // Usage:
@@ -15,7 +16,13 @@ const SECRET = process.env.STRIPE_SECRET;
 const WORKER = (process.env.WORKER_URL || '').replace(/\/$/, '');
 const API = 'https://api.stripe.com/v1';
 const VERSION = '2026-05-27.dahlia';
-const LOOKUP = 'pd_cloud_monthly';
+const LOOKUP = 'attentify_cloud_monthly';
+// $5/$10/$20 packs → face-value micro-USD credited on purchase (markup is applied at debit time).
+const CREDIT_PACKS = [
+  { usd: 5,  micros: 5_000_000,  lookup: 'attentify_credits_5',  varName: 'STRIPE_PRICE_CREDITS_5'  },
+  { usd: 10, micros: 10_000_000, lookup: 'attentify_credits_10', varName: 'STRIPE_PRICE_CREDITS_10' },
+  { usd: 20, micros: 20_000_000, lookup: 'attentify_credits_20', varName: 'STRIPE_PRICE_CREDITS_20' },
+];
 const EVENTS = ['checkout.session.completed', 'customer.subscription.updated', 'customer.subscription.deleted', 'customer.subscription.created'];
 
 if (!SECRET) { console.error('✗ Set STRIPE_SECRET (a restricted key rk_… is recommended).'); process.exit(1); }
@@ -46,24 +53,44 @@ async function stripe(method, path, body) {
   const mode = SECRET.includes('_test_') || SECRET.includes('_test') ? 'TEST' : 'LIVE';
   console.log(`→ Stripe ${mode} mode\n`);
 
-  // 1. Price (idempotent via lookup_key) — reuse if it already exists.
-  let price;
-  const existing = await stripe('GET', `/prices?lookup_keys[0]=${LOOKUP}&active=true&limit=1`);
-  if (existing.data?.length) {
-    price = existing.data[0];
-    console.log(`✓ Reusing existing price ${price.id} ($${(price.unit_amount / 100).toFixed(2)}/${price.recurring?.interval})`);
-  } else {
+  // Reuse a price by lookup_key if present, else create product+price.
+  async function ensurePrice(lookup, make) {
+    const existing = await stripe('GET', `/prices?lookup_keys[0]=${lookup}&active=true&limit=1`);
+    if (existing.data?.length) { console.log(`✓ Reusing price ${existing.data[0].id} (${lookup})`); return existing.data[0]; }
+    return make();
+  }
+
+  // 1. $9.99/month subscription price.
+  const price = await ensurePrice(LOOKUP, async () => {
     const product = await stripe('POST', '/products', {
       name: 'Attentify Cloud',
-      description: 'Managed AI (no API key needed), automatic site blocking, and analytics.',
+      description: 'Unlimited managed AI, more custom analytics, automatic site blocking.',
     });
-    price = await stripe('POST', '/prices', {
-      product: product.id, currency: 'usd', unit_amount: 500,
+    const pr = await stripe('POST', '/prices', {
+      product: product.id, currency: 'usd', unit_amount: 999,
       recurring: { interval: 'month' }, lookup_key: LOOKUP,
       metadata: { app: 'attentify', tier: 'cloud' },
     });
-    console.log(`✓ Created product ${product.id}`);
-    console.log(`✓ Created price   ${price.id}  ($5.00/month)`);
+    console.log(`✓ Created subscription price ${pr.id}  ($9.99/month)`);
+    return pr;
+  });
+
+  // 2. One-time credit packs.
+  let creditsProduct = null;
+  const packPrices = [];
+  for (const pk of CREDIT_PACKS) {
+    const pr = await ensurePrice(pk.lookup, async () => {
+      if (!creditsProduct) creditsProduct = await stripe('POST', '/products', {
+        name: 'Attentify Credits', description: 'Pay-as-you-go AI credits.',
+      });
+      const p = await stripe('POST', '/prices', {
+        product: creditsProduct.id, currency: 'usd', unit_amount: pk.usd * 100,
+        lookup_key: pk.lookup, metadata: { app: 'attentify', kind: 'credits', credit_micros: String(pk.micros) },
+      });
+      console.log(`✓ Created credit price ${p.id}  ($${pk.usd})`);
+      return p;
+    });
+    packPrices.push({ ...pk, id: pr.id });
   }
 
   // 2. Webhook endpoint (optional — needs the deployed Worker URL).
@@ -84,8 +111,9 @@ async function stripe(method, path, body) {
 
   // 3. Next steps
   console.log('\n──────────────────────────────────────────────');
-  console.log('Put this in wrangler.toml  →  [vars] STRIPE_PRICE_ID:');
-  console.log(`   ${price.id}`);
+  console.log('Put these in wrangler.toml  →  [vars]:');
+  console.log(`   STRIPE_PRICE_ID = "${price.id}"`);
+  for (const p of packPrices) console.log(`   ${p.varName} = "${p.id}"`);
   if (whSecret) {
     console.log('\nSet the webhook signing secret as a Worker secret:');
     console.log(`   wrangler secret put STRIPE_WEBHOOK_SECRET   # paste: ${whSecret}`);

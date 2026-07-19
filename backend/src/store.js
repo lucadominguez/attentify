@@ -68,6 +68,43 @@ export class D1Store {
     return r.results || [];
   }
 
+  // ── Credit balance + ledger ─────────────────────────────────────────────────
+  // Atomic, never-negative debit: the MAX(0, …) clamp means concurrent calls that
+  // both passed the >0 gate can at worst slightly over-serve, never overdraw.
+  async debitCredits(userId, micros) {
+    await this.db.prepare('UPDATE users SET credit_micros = MAX(0, credit_micros - ?), updated_at = ? WHERE id = ?')
+      .bind(micros, Date.now(), userId).run();
+    const row = await this.db.prepare('SELECT credit_micros FROM users WHERE id = ?').bind(userId).first();
+    return row ? row.credit_micros : 0;
+  }
+  async addCredits(userId, micros) {
+    await this.db.prepare('UPDATE users SET credit_micros = credit_micros + ?, updated_at = ? WHERE id = ?')
+      .bind(micros, Date.now(), userId).run();
+    const row = await this.db.prepare('SELECT credit_micros FROM users WHERE id = ?').bind(userId).first();
+    return row ? row.credit_micros : 0;
+  }
+  async addLedger(e) {
+    await this.db.prepare(
+      'INSERT INTO credit_ledger (user_id,ts,kind,micros,balance_after,model,meta) VALUES (?,?,?,?,?,?,?)'
+    ).bind(e.user_id, e.ts || Date.now(), e.kind, e.micros | 0, e.balance_after ?? null,
+      e.model ?? null, e.meta ? JSON.stringify(e.meta) : null).run();
+  }
+  async listLedger(userId, limit = 50) {
+    const r = await this.db.prepare('SELECT * FROM credit_ledger WHERE user_id = ? ORDER BY ts DESC LIMIT ?')
+      .bind(userId, limit).all();
+    return r.results || [];
+  }
+
+  // ── Trial anti-abuse: one grant per device fingerprint ──────────────────────
+  async fingerprintGranted(fp) {
+    const row = await this.db.prepare('SELECT fingerprint FROM trial_grants WHERE fingerprint = ?').bind(fp).first();
+    return !!row;
+  }
+  async recordFingerprint(fp, userId) {
+    await this.db.prepare('INSERT OR IGNORE INTO trial_grants (fingerprint,user_id,ts) VALUES (?,?,?)')
+      .bind(fp, userId, Date.now()).run();
+  }
+
   async insertEvent(e) {
     await this.db.prepare('INSERT INTO events (user_id,type,domain,label,value,meta,ts) VALUES (?,?,?,?,?,?,?)')
       .bind(e.user_id, e.type, e.domain ?? null, e.label ?? null, e.value ?? null,
