@@ -616,6 +616,37 @@
     }, true);
   }
 
+  // ── Foreground attention tracking ─────────────────────────────────────────────
+  // Time only counts when this page is BOTH visible (Page Visibility API) AND its
+  // window is focused — i.e. actually in the user's field of view, not a background
+  // tab or a visible-but-unfocused window. Eyes-on ms are flushed to the background on
+  // a heartbeat and whenever the page leaves the foreground, so analytics reflect
+  // attention, not tabs left open. This replaces the old "elapsed time between context
+  // reads" attribution, which counted background tabs as if the user were watching them.
+  let fgActiveSince = 0;   // timestamp the page entered the foreground, or 0 when not
+  let fgPending = 0;       // accrued foreground ms not yet flushed
+  function fgIsForeground() { return document.visibilityState === 'visible' && document.hasFocus(); }
+  function fgAccrue() { if (fgActiveSince) { fgPending += Date.now() - fgActiveSince; fgActiveSince = 0; } }
+  function fgResume() { if (!fgActiveSince && fgIsForeground()) fgActiveSince = Date.now(); }
+  function fgFlush() {
+    fgAccrue();
+    if (fgPending >= 1000) {
+      // Cap each flush so a sleep/hibernate gap can't dump hours onto one domain.
+      const ms = Math.min(fgPending, 10 * 60 * 1000);
+      fgPending = 0;
+      send({ type: 'track:foreground', domain: getDomain(), ms });
+    }
+    fgResume();
+  }
+  function installForegroundTracking() {
+    fgResume();
+    document.addEventListener('visibilitychange', () => { if (fgIsForeground()) fgResume(); else fgAccrue(); });
+    addEventListener('focus', fgResume);
+    addEventListener('blur', fgAccrue);
+    addEventListener('pagehide', fgFlush);
+    setInterval(fgFlush, 15000);
+  }
+
   function reportContext(reason) {
     const { intentText, searchQuery } = extractIntent();
     send({
@@ -753,6 +784,7 @@
     loadSuppressions();
     installMediaGuard();
     installBehaviorTracking();
+    installForegroundTracking();
     installContentObserver();
     installTitleObserver();
     requestRules();

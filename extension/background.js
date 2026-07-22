@@ -857,18 +857,51 @@ function extractJson(s) { const i = s.indexOf('{'), j = s.lastIndexOf('}'); retu
 
 // Local fallback — coarse but useful when the model is unreachable.
 const FEED_DOMAINS = ['youtube.com', 'tiktok.com', 'instagram.com', 'facebook.com', 'x.com', 'twitter.com', 'reddit.com'];
+
+// The built-in distraction taxonomy: WHY these categories are treated as distracting by
+// default. Surfaced verbatim on the Logic page so the reasoning is inspectable, never a
+// black box. `weight` is the baseline distraction each category carries before behaviour.
+const DISTRACTION_TAXONOMY = [
+  { key: 'short-form', label: 'Short-form video feeds', weight: 0.75, examples: 'Shorts, Reels, TikTok FYP', why: 'Autoplaying, algorithm-picked clips with no endpoint — engineered so one more is always one swipe away.' },
+  { key: 'algo-feed', label: 'Algorithmic home feeds', weight: 0.60, examples: 'X/Twitter, Facebook, Reddit, IG home', why: 'An endless, personalised stream with no goal state. You did not come for a specific thing, so there is no "done".' },
+  { key: 'recommended', label: 'Recommendation rails', weight: 0.40, examples: 'YouTube "Up next", "Recommended for you"', why: 'Sidebars that hijack a purposeful visit into a chain of one-more-click suggestions.' },
+];
+
+// Deterministic signal breakdown. Returns the factors that observably contributed, each
+// with a signed weight (+ = more distracting). Their clamped sum is the heuristic score.
+// Used by BOTH the AI and heuristic paths so the Logic page always has a "why", even when
+// the final probability came from the model.
+function signalFactors(info) {
+  const d = info.domain || '';
+  const url = info.url || '';
+  const b = info.behavior || {};
+  let path = ''; try { path = new URL(url).pathname; } catch (_) {}
+  const feedy = FEED_DOMAINS.some(f => d === f || d.endsWith('.' + f));
+  const shortForm = /\/(shorts|reels)\b/i.test(url) || d === 'tiktok.com' || d.endsWith('.tiktok.com');
+  const factors = [];
+  const add = (w, label, detail) => factors.push({ w: +Number(w).toFixed(2), label, detail: detail || '' });
+
+  // Base intent (mutually exclusive) — what kind of visit this is.
+  if (info.searchQuery) add(0.12, 'Searching something specific', `“${String(info.searchQuery).slice(0, 48)}”`);
+  else if (shortForm) add(0.75, 'Short-form video feed', 'autoplaying, algorithm-picked clips with no endpoint');
+  else if (/\/(watch|video|status|comments|p|article|wiki)\b/.test(url)) add(0.20, 'Viewing one chosen page', path || 'a specific item');
+  else if (feedy) add(0.60, 'Algorithmic feed or home', `${d} opens to an endless recommended stream`);
+  else add(0.10, 'General browsing', d + (path && path !== '/' ? path : ''));
+
+  // Behaviour — how they are actually engaging.
+  if (b.maxScroll > 0.6) add(0.15, 'Deep scrolling', `reached ${Math.round(b.maxScroll * 100)}% down the page`);
+  if (b.recoClicks > 0) add(0.15, 'Clicked recommended items', `${b.recoClicks} click${b.recoClicks !== 1 ? 's' : ''} into suggested content`);
+  if ((b.dwellMs || 0) > 120000 && feedy) add(0.10, 'Long dwell on a feed', `over ${Math.round(b.dwellMs / 60000)} min here`);
+
+  const category = shortForm ? 'short-form' : feedy ? 'feed' : info.searchQuery ? 'search' : /\/(watch|video|status|comments|p|article|wiki)\b/.test(url) ? 'page' : 'browse';
+  return { factors, category };
+}
+
 function heuristicAssess(info) {
   const d = info.domain || '';
-  const feedy = FEED_DOMAINS.some(f => d === f || d.endsWith('.' + f));
-  let p = 0;
-  if (info.searchQuery) p = 0.12;
-  else if (/\/(watch|video|status|comments|p|article|wiki)\b/.test(info.url || '')) p = 0.2;
-  else if (feedy) p = 0.6;
-  const b = info.behavior || {};
-  if (b.maxScroll > 0.6) p += 0.15;
-  if (b.recoClicks > 0)  p += 0.15;
-  if ((b.dwellMs || 0) > 120000 && feedy) p += 0.1;
-  return { intent: info.intentText || `on ${d}`, goalAligned: p < 0.5, distractionProbability: clamp01(p), reason: 'local heuristic' };
+  const { factors, category } = signalFactors(info);
+  const p = clamp01(factors.reduce((s, f) => s + f.w, 0));
+  return { intent: info.intentText || `on ${d}`, goalAligned: p < 0.5, distractionProbability: p, reason: 'local heuristic', factors, category };
 }
 
 // ══ Attentify Cloud ══════════════════════════════════════════════════
@@ -1052,11 +1085,15 @@ async function assessContext(info) {
       intentGuess: info.intentText, searchQuery: info.searchQuery, behavior: info.behavior,
     }));
     const p = JSON.parse(extractJson(txt));
+    const sig = signalFactors(info);
     val = {
       intent: String(p.intent || info.intentText || '').slice(0, 140),
       goalAligned: !!p.goalAligned,
       distractionProbability: clamp01(p.distractionProbability),
       reason: String(p.reason || '').slice(0, 160), source: 'ai',
+      // The deterministic signals stay attached so the Logic page can always show WHY,
+      // even when the model set the final number. `category` names the visit type.
+      factors: sig.factors, category: sig.category,
     };
   } catch (e) {
     val = { ...heuristicAssess(info), source: 'heuristic' };
@@ -1077,14 +1114,15 @@ async function logContext(info, val) {
   const sameSpot = last && last.url === info.url && (Date.now() - last.ts) < 8000;
   if (sameSpot) return;
   const now = Date.now();
-  // Feed the standalone analytics DB: attribute dwell to the page we're leaving, and
-  // count this visit + its distraction for the page we're arriving at.
-  if (last && last.domain) trackVisit(last.domain, null, Math.min(now - last.ts, 5 * 60 * 1000), last.ts);
+  // Count this visit + its distraction for the page we're arriving at. Dwell/time is NOT
+  // attributed here anymore — it comes only from the content script's foreground
+  // heartbeat (track:foreground), so a tab sitting in the background counts zero time.
   trackVisit(info.domain, clamp01(val.distractionProbability), 0, now);
   contextLog.unshift({
     ts: now, url: info.url, domain: info.domain,
     intent: val.intent, distractionProbability: val.distractionProbability,
     goalAligned: val.goalAligned, reason: val.reason, source: val.source,
+    factors: Array.isArray(val.factors) ? val.factors : [], category: val.category || '',
     navType: (info.behavior && info.behavior.navType) || 'load',
     searchQuery: info.searchQuery || '',
   });
@@ -1323,6 +1361,20 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       ensureReady().then(() => sendResponse(buildInsights()));
       return true;
 
+    case 'get:analytics-raw':
+      // Raw material for the custom analytics builder: the per-day/per-domain DB plus a
+      // category breakdown (from the context log, since visitStats has no category axis).
+      ensureReady().then(() => {
+        const cat = {};
+        for (const e of contextLog) {
+          const c = e.category || 'other';
+          const a = cat[c] || (cat[c] = { category: c, visits: 0, distractionSum: 0 });
+          a.visits += 1; a.distractionSum += (e.distractionProbability || 0);
+        }
+        sendResponse({ visitStats, categories: Object.values(cat) });
+      });
+      return true;
+
     case 'get:suppressions':
       sendResponse({ autoHideSuppress });
       return true;
@@ -1425,9 +1477,51 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       break;
     }
 
+    case 'track:foreground': {
+      // Real "eyes-on" time from a content script: the page was visible AND focused for
+      // msg.ms. This is the ONLY source of dwell now, so background tabs never accrue.
+      const ms = Math.min(Math.max(0, Number(msg.ms) || 0), 10 * 60 * 1000);
+      if (msg.domain && ms >= 1000) { trackVisit(msg.domain, null, ms, Date.now()); chrome.storage.local.set({ visitStats }); }
+      break;
+    }
+
     case 'get:context-log':
       sendResponse({ contextLog: contextLog.slice(0, 60) });
       return true;
+
+    case 'get:reasoning': {
+      // Everything the Logic page needs to explain the classifier: the built-in taxonomy,
+      // recent classified pages with their factor breakdowns, per-category aggregates, and
+      // a calibration snapshot (how the scores are distributed + how often the user
+      // corrected the classifier). All derived, no new storage.
+      const recent = contextLog.slice(0, 40).map(e => ({
+        ts: e.ts, domain: e.domain, url: e.url, intent: e.intent,
+        p: e.distractionProbability || 0, category: e.category || '', source: e.source || '',
+        reason: e.reason || '', factors: Array.isArray(e.factors) ? e.factors : [],
+      }));
+      const byCat = {};
+      for (const e of recent) {
+        const c = e.category || 'other';
+        const a = byCat[c] || (byCat[c] = { category: c, n: 0, sum: 0 });
+        a.n += 1; a.sum += e.p;
+      }
+      const categories = Object.values(byCat).map(a => ({ category: a.category, n: a.n, avg: a.n ? a.sum / a.n : 0 })).sort((x, y) => y.n - x.n);
+      const bands = { high: 0, mid: 0, low: 0 };
+      for (const e of recent) bands[e.p >= 0.6 ? 'high' : e.p >= 0.35 ? 'mid' : 'low'] += 1;
+      const supMap = autoHideSuppress || {};
+      const corrections = Object.entries(supMap).map(([domain, arr]) => ({ domain, n: Array.isArray(arr) ? arr.length : 0 })).filter(x => x.n).sort((a, b) => b.n - a.n);
+      const correctionTotal = corrections.reduce((s, c) => s + c.n, 0);
+      sendResponse({
+        taxonomy: DISTRACTION_TAXONOMY,
+        recent, categories, bands,
+        corrections, correctionTotal,
+        keywords: autoHideKeywords || [],
+        rulesActive: (rules || []).filter(r => r.enabled).length,
+        rulesTotal: (rules || []).length,
+        assessedTotal: contextLog.length,
+      });
+      return true;
+    }
 
     case 'get:context-state':
       getGithubToken().then(token => sendResponse({ assessment: lastAssessment, feedbackCount: feedbackLog.length, hasGithubToken: !!token }));

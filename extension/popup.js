@@ -29,6 +29,25 @@ function applyTheme(mode) {
   } catch (_) { /* storage unavailable: stays on the OS-following default */ }
 })();
 
+// ── Full-screen mode ───────────────────────────────────────────────────────────
+// The panel opens as a full browser tab (popup.html?full=1). In that mode the wide
+// layout kicks in (see the min-width media queries) and the expand button hides —
+// there's nothing left to expand into.
+const IS_FULLSCREEN = new URLSearchParams(location.search).get('full') === '1';
+(function initFullscreen() {
+  if (IS_FULLSCREEN) document.documentElement.classList.add('fullscreen');
+  const wire = () => {
+    const btn = document.getElementById('expand-btn');
+    if (!btn) return;
+    if (IS_FULLSCREEN) { btn.style.display = 'none'; return; }
+    btn.addEventListener('click', () => {
+      try { chrome.tabs.create({ url: chrome.runtime.getURL('popup.html?full=1') }); window.close?.(); }
+      catch (_) { location.href = 'popup.html?full=1'; }
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
+})();
+
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
 function ask(msg, ms = 5000) {
@@ -435,9 +454,11 @@ async function checkUpdate(force=false) {
   const info = res?.info;
   const b = document.getElementById('update-banner');
   if (info?.updateAvailable) {
-    b.innerHTML = `⬆ v${esc(info.latestVersion)} &nbsp;<a href="${esc(info.downloadUrl)}" target="_blank" class="update-link">ZIP</a> · <a href="${esc(info.releasesUrl)}" target="_blank" class="update-link">Releases</a>`;
+    b.classList.remove('ok');
+    b.innerHTML = `⬆ Update available: v${esc(info.latestVersion)} &nbsp;<a href="${esc(info.downloadUrl)}" target="_blank" class="update-link">Download ZIP</a> · <a href="${esc(info.releasesUrl)}" target="_blank" class="update-link">How to update</a>`;
     b.style.display = 'flex';
   } else b.style.display = 'none';
+  return info;
 }
 
 // ── Main refresh ──────────────────────────────────────────────────────────────
@@ -552,8 +573,24 @@ document.getElementById('sync-btn').addEventListener('click', async () => {
 document.getElementById('check-update-btn').addEventListener('click', async () => {
   const btn = document.getElementById('check-update-btn');
   btn.textContent = 'Checking…'; btn.disabled = true;
-  await checkUpdate(true);
-  btn.textContent = '↑ Check for updates'; btn.disabled = false;
+  const info = await checkUpdate(true);
+  btn.disabled = false;
+  const cur = chrome.runtime.getManifest().version;
+  if (!info) {
+    // Network/offline: give feedback instead of silently reverting.
+    btn.textContent = '⚠ Could not check';
+    setTimeout(() => { btn.textContent = '↑ Check for updates'; }, 2400);
+  } else if (info.updateAvailable) {
+    btn.textContent = `↑ Update to v${info.latestVersion}`;
+  } else {
+    // Up to date: the banner shows nothing, so confirm it on the button itself.
+    const b = document.getElementById('update-banner');
+    b.classList.add('ok');
+    b.innerHTML = `✓ You’re on the latest version (v${esc(cur)})`;
+    b.style.display = 'flex';
+    btn.textContent = '✓ Up to date';
+    setTimeout(() => { b.style.display = 'none'; b.classList.remove('ok'); btn.textContent = '↑ Check for updates'; }, 3200);
+  }
 });
 
 // ── Edit rules button ─────────────────────────────────────────────────────────
@@ -606,17 +643,63 @@ document.getElementById('tabstrip').addEventListener('click', (e) => {
 });
 document.getElementById('askbar').addEventListener('click', () => showChat());
 
+// ── Custom analytics builder (standalone, over the extension's own DB) ──────────
+// Mirrors the app's "build your own analytics": pick a metric/grouping/range and it
+// charts from the extension's own visit DB. Pinned cards store a SPEC and recompute
+// on every open (never a stale snapshot), and it all works with no desktop app.
+const A_METRICS = { time: 'Time on site', visits: 'Visits', distraction: 'Avg distraction' };
+const A_GROUPS = { site: 'By site', day: 'By day' };
+const A_RANGES = { 1: 'Today', 7: 'Last 7 days', 14: 'Last 14 days' };
+function analyticsTitle(s) { return `${A_METRICS[s.metric]} · ${A_GROUPS[s.group].toLowerCase()} · ${A_RANGES[s.range].toLowerCase()}`; }
+function fmtMetric(metric, v) { return metric === 'time' ? fmtDur(v) : metric === 'distraction' ? Math.round(v * 100) + '%' : String(Math.round(v)); }
+
+function buildSeries(raw, spec) {
+  const vs = raw?.visitStats || {};
+  const use = Object.keys(vs).sort().slice(-Number(spec.range || 7));
+  const val = (ms, visits, dsum) => spec.metric === 'time' ? ms : spec.metric === 'visits' ? visits : (visits ? dsum / visits : 0);
+  let rows = [];
+  if (spec.group === 'site') {
+    const agg = {};
+    for (const day of use) { const dd = vs[day] || {}; for (const dom in dd) { const a = agg[dom] || (agg[dom] = { ms: 0, visits: 0, dsum: 0 }); a.ms += dd[dom].ms; a.visits += dd[dom].visits; a.dsum += dd[dom].distractionSum; } }
+    rows = Object.entries(agg).map(([label, a]) => ({ label, value: val(a.ms, a.visits, a.dsum), distraction: a.visits ? a.dsum / a.visits : 0 }));
+    rows.sort((x, y) => y.value - x.value); rows = rows.slice(0, 8);
+  } else {
+    rows = use.map(day => { const dd = vs[day] || {}; let ms = 0, visits = 0, dsum = 0; for (const dom in dd) { ms += dd[dom].ms; visits += dd[dom].visits; dsum += dd[dom].distractionSum; } return { label: new Date(day).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }), value: val(ms, visits, dsum), distraction: visits ? dsum / visits : 0 }; });
+  }
+  return rows;
+}
+
+function chartCardHtml(spec, rows, pinned) {
+  const max = Math.max(1, ...rows.map(r => r.value));
+  const body = rows.length ? rows.map(r => `
+    <div class="site-row">
+      <span class="site-dom">${esc(r.label)}</span>
+      <div class="site-bar">${bar(Math.round(r.value / max * 100), (spec.metric === 'distraction' ? r.value : r.distraction) >= 0.5 ? 'bad' : 'ok')}</div>
+      <span class="site-ms data-value">${fmtMetric(spec.metric, r.value)}</span>
+    </div>`).join('') : '<div class="ps-sub">No data in this range yet.</div>';
+  return `<section class="card gen-card">
+    <div class="card-head"><span class="card-title">${esc(spec.title || analyticsTitle(spec))}</span>
+      ${pinned ? `<button class="btn-ghost gen-unpin" data-id="${esc(spec.id)}" title="Remove this card">✕</button>` : ''}</div>
+    ${body}
+  </section>`;
+}
+
+async function getPinnedCards() { try { const r = await chrome.storage.local.get('analyticsCards'); return Array.isArray(r.analyticsCards) ? r.analyticsCards : []; } catch { return []; } }
+async function setPinnedCards(cards) { try { await chrome.storage.local.set({ analyticsCards: cards }); } catch {} }
+
 // ── Insights (analytics + timesheets, browser-adapted) ──
 renderers.insights = async function () {
   const el = document.getElementById('view-insights');
-  const d = await ask({ type: 'get:insights' });
+  const [d, raw, pinned] = await Promise.all([ask({ type: 'get:insights' }), ask({ type: 'get:analytics-raw' }), getPinnedCards()]);
   if (!d) { el.innerHTML = '<div class="placeholder">No data yet.</div>'; return; }
   const t = d.today || {};
   const top = d.topSites || [];
   const week = d.week || [];
   const trend = d.trend || [];
   const maxSite = Math.max(1, ...top.map(s => s.ms));
+  const pinnedHtml = pinned.map(spec => chartCardHtml(spec, buildSeries(raw, spec), true)).join('');
   el.innerHTML = `
+    ${pinnedHtml}
     <section class="card">
       <div class="card-title">Today</div>
       <div class="kpi-row">
@@ -648,7 +731,50 @@ renderers.insights = async function () {
       <div class="card-title">This week · focus by day</div>
       <div class="week">${week.map(w => `<div class="week-col"><div class="week-bar"><div class="week-fill ok" style="height:${w.focusRatio}%"></div></div><div class="week-lbl">${esc(w.label)}</div></div>`).join('')}</div>
     </section>` : ''}
+
+    <section class="card gen-builder">
+      <div class="card-head"><span class="card-title">Generate analytics</span><span class="gen-badge">custom</span></div>
+      <div class="ps-sub">Chart your own attention data. Pin a chart and it recomputes every time you open this.</div>
+      <div class="gen-controls">
+        <label>Show<select id="gen-metric"><option value="time">Time on site</option><option value="visits">Visits</option><option value="distraction">Avg distraction</option></select></label>
+        <label>Grouped<select id="gen-group"><option value="site">By site</option><option value="day">By day</option></select></label>
+        <label>Over<select id="gen-range"><option value="7">Last 7 days</option><option value="1">Today</option><option value="14">Last 14 days</option></select></label>
+      </div>
+      <div class="gen-actions"><button class="btn-primary" id="gen-run">Generate</button><button class="btn-secondary" id="gen-ai">Ask AI to build one</button></div>
+      <div id="gen-output"></div>
+    </section>
   `;
+
+  // Pinned card removal
+  el.querySelectorAll('.gen-unpin').forEach(b => b.addEventListener('click', async () => {
+    const cards = (await getPinnedCards()).filter(c => c.id !== b.dataset.id);
+    await setPinnedCards(cards); renderers.insights();
+  }));
+
+  // Builder: generate a preview with a Pin button
+  const run = document.getElementById('gen-run');
+  if (run) run.addEventListener('click', () => {
+    const spec = {
+      id: 'c' + Date.now(),
+      metric: document.getElementById('gen-metric').value,
+      group: document.getElementById('gen-group').value,
+      range: Number(document.getElementById('gen-range').value),
+    };
+    spec.title = analyticsTitle(spec);
+    const rows = buildSeries(raw, spec);
+    const out = document.getElementById('gen-output');
+    out.innerHTML = chartCardHtml(spec, rows, false) + `<button class="btn-secondary gen-pin-btn">📌 Pin this chart</button>`;
+    out.querySelector('.gen-pin-btn')?.addEventListener('click', async () => {
+      const cards = await getPinnedCards();
+      if (cards.length >= 6) cards.shift();
+      cards.push(spec); await setPinnedCards(cards); renderers.insights();
+    });
+  });
+  document.getElementById('gen-ai')?.addEventListener('click', () => {
+    showChat();
+    const inp = document.getElementById('chat-input');
+    if (inp) { inp.value = 'Build me an analytics chart of '; inp.focus(); }
+  });
 };
 
 // ── Activity (attention timeline, browser-adapted) ──
@@ -713,31 +839,125 @@ renderers.focus = async function () {
   if (end) end.addEventListener('click', async () => { await ask({ type: 'set:focus', minutes: 0 }); renderers.focus(); });
 };
 
-// ── Logic (what the AI has learned/does, browser-adapted) ──
+// ── Logic — the reasoning showcase ──────────────────────────────────────────────
+// Explains, transparently, WHY pages are classified as distractions: the live factor
+// breakdown for recent pages, the built-in taxonomy behind default classifications, and
+// how the classifier calibrates + learns from corrections. Animated so it reads as a
+// living decision, not a black box. Every number is derived from the extension's own
+// storage, so it works fully standalone.
+
+// Colour a signed factor weight by how strongly it pushes toward distraction.
+function factorTone(w) { return w >= 0.4 ? 'bad' : w >= 0.2 ? 'mid' : 'ok'; }
+function pctVal(p) { return Math.round((p || 0) * 100); }
+
+// A circular score meter (SVG). Renders empty; the .go pass animates the arc + number.
+function scoreRing(p) {
+  const pct = pctVal(p);
+  const tone = p >= 0.6 ? 'bad' : p >= 0.35 ? 'mid' : 'ok';
+  const C = 2 * Math.PI * 22; // r=22
+  return `<div class="ring ${tone}" style="--dash:${C.toFixed(1)};--off:${(C * (1 - (p || 0))).toFixed(1)}">
+    <svg viewBox="0 0 52 52" width="52" height="52" aria-hidden="true">
+      <circle class="ring-bg" cx="26" cy="26" r="22"></circle>
+      <circle class="ring-fg" cx="26" cy="26" r="22" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"></circle>
+    </svg>
+    <span class="ring-num data-value">${pct}<i>%</i></span>
+  </div>`;
+}
+
+function whyCard(e, i) {
+  const factors = (e.factors || []).slice().sort((a, b) => Math.abs(b.w) - Math.abs(a.w));
+  const maxW = Math.max(0.75, ...factors.map(f => Math.abs(f.w)));
+  const verdict = e.p >= 0.6 ? 'Likely a distraction' : e.p >= 0.35 ? 'Could go either way' : 'Looks intentional';
+  return `<div class="why-card" style="animation-delay:${i * 60}ms">
+    <div class="why-head">
+      ${scoreRing(e.p)}
+      <div class="why-id">
+        <div class="why-dom">${esc(e.domain || '?')}</div>
+        <div class="why-intent">${esc(e.intent || '')}</div>
+        <div class="why-verdict ${e.p >= 0.6 ? 'bad' : e.p >= 0.35 ? 'mid' : 'ok'}">${verdict}</div>
+      </div>
+      <span class="why-src" title="How the score was set">${e.source === 'ai' ? '✦ AI read' : '◇ signals'}</span>
+    </div>
+    <div class="factors">
+      ${factors.length ? factors.map(f => `
+        <div class="factor">
+          <div class="factor-top"><span class="factor-lbl">${esc(f.label)}</span><span class="factor-w data-value ${factorTone(f.w)}">${f.w >= 0 ? '+' : ''}${Math.round(f.w * 100)}</span></div>
+          <div class="factor-bar"><span class="factor-fill ${factorTone(f.w)}" style="--w:${Math.round(Math.abs(f.w) / maxW * 100)}%"></span></div>
+          ${f.detail ? `<div class="factor-detail">${esc(f.detail)}</div>` : ''}
+        </div>`).join('') : '<div class="ps-sub">No signals recorded for this page.</div>'}
+    </div>
+    ${e.reason && e.source === 'ai' ? `<div class="why-note">“${esc(e.reason)}”</div>` : ''}
+  </div>`;
+}
+
 renderers.logic = async function () {
   const el = document.getElementById('view-logic');
-  const [ab, sup, ar] = await Promise.all([
-    ask({ type: 'get:auto-block' }), ask({ type: 'get:suppressions' }), ask({ type: 'get:all-rules' }),
-  ]);
-  const topics = ab?.autoHideKeywords || [];
-  const supMap = sup?.autoHideSuppress || {};
-  const corrections = Object.entries(supMap).reduce((n, [, v]) => n + (Array.isArray(v) ? v.length : 0), 0);
-  const rules = ar?.rules || [];
+  const r = await ask({ type: 'get:reasoning' });
+  if (!r) { el.innerHTML = '<div class="placeholder">No reasoning data yet. Browse a few sites and it fills in.</div>'; return; }
+  const recent = (r.recent || []).slice(0, 6);
+  const tax = r.taxonomy || [];
+  const bands = r.bands || { high: 0, mid: 0, low: 0 };
+  const bandTotal = Math.max(1, bands.high + bands.mid + bands.low);
+  const cats = r.categories || [];
+  const corr = r.corrections || [];
+  const topics = r.keywords || [];
+
   el.innerHTML = `
-    <section class="card">
-      <div class="card-title">Topics I auto-hide</div>
+    <section class="logic-hero">
+      <div class="logic-hero-title">How Attentify decides</div>
+      <div class="logic-hero-sub">Every page gets a distraction score from signals you can see. Nothing is hidden by a black box, and you can correct it.</div>
+      <div class="logic-hero-stats">
+        <div class="lh-stat"><span class="data-value">${r.assessedTotal || 0}</span><label>pages read</label></div>
+        <div class="lh-stat"><span class="data-value">${r.rulesActive || 0}/${r.rulesTotal || 0}</span><label>rules on</label></div>
+        <div class="lh-stat"><span class="data-value">${r.correctionTotal || 0}</span><label>your corrections</label></div>
+      </div>
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">Why recent pages were classified</div>
+      <div class="ps-sub">The exact signals behind each score, strongest first.</div>
+      ${recent.length ? `<div class="why-list">${recent.map((e, i) => whyCard(e, i)).join('')}</div>`
+        : '<div class="ps-sub">Nothing classified yet. Open a few sites and their reasoning appears here.</div>'}
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">What counts as a distraction, and why</div>
+      <div class="ps-sub">The built-in taxonomy. These carry a baseline score before your behaviour is even considered.</div>
+      <div class="tax-list">
+        ${tax.map((t, i) => `
+          <div class="tax-card" style="animation-delay:${i * 70}ms">
+            <div class="tax-top">
+              <span class="tax-lbl">${esc(t.label)}</span>
+              <span class="tax-weight data-value ${t.weight >= 0.6 ? 'bad' : 'mid'}">${Math.round(t.weight * 100)}<i>%</i></span>
+            </div>
+            <div class="tax-bar"><span class="tax-fill ${t.weight >= 0.6 ? 'bad' : 'mid'}" style="--w:${Math.round(t.weight * 100)}%"></span></div>
+            <div class="tax-ex">${esc(t.examples)}</div>
+            <div class="tax-why">${esc(t.why)}</div>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">How confident it is</div>
+      <div class="ps-sub">Distribution of recent scores. A healthy classifier is decisive, not stuck in the middle.</div>
+      <div class="calib">
+        <div class="calib-row"><span class="calib-lbl ok">Looks intentional</span><div class="calib-bar"><span class="calib-fill ok" style="--w:${Math.round(bands.low / bandTotal * 100)}%"></span></div><span class="calib-n data-value">${bands.low}</span></div>
+        <div class="calib-row"><span class="calib-lbl mid">Ambiguous</span><div class="calib-bar"><span class="calib-fill mid" style="--w:${Math.round(bands.mid / bandTotal * 100)}%"></span></div><span class="calib-n data-value">${bands.mid}</span></div>
+        <div class="calib-row"><span class="calib-lbl bad">Likely distraction</span><div class="calib-bar"><span class="calib-fill bad" style="--w:${Math.round(bands.high / bandTotal * 100)}%"></span></div><span class="calib-n data-value">${bands.high}</span></div>
+      </div>
+      ${cats.length ? `<div class="cat-strip">${cats.map(c => `<span class="cat-pill ${c.avg >= 0.6 ? 'bad' : c.avg >= 0.35 ? 'mid' : 'ok'}">${esc(c.category)} <b class="data-value">${pctVal(c.avg)}%</b></span>`).join('')}</div>` : ''}
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">What you taught it</div>
+      ${corr.length ? `<div class="ps-line"><span class="data-value">${r.correctionTotal}</span>&nbsp;element${r.correctionTotal !== 1 ? 's' : ''} you flagged "not a distraction". The scanner now skips these:</div>
+        <div class="corr-list">${corr.slice(0, 8).map(c => `<div class="corr-row"><span class="corr-dom">${esc(c.domain)}</span><span class="corr-n data-value">${c.n}</span></div>`).join('')}</div>`
+        : '<div class="ps-sub">Nothing yet. Flag any wrongly-hidden element as "not a distraction" and the scanner learns to leave it alone.</div>'}
+      <div class="logic-subhead">Topics you asked it to hide</div>
       ${topics.length ? `<div class="chips">${topics.map(k => `<span class="chip" data-k="${esc(k)}">${esc(k)} ✕</span>`).join('')}</div>`
         : '<div class="ps-sub">None yet. Ask the AI to "hide anything about X" and it learns it here.</div>'}
-    </section>
-    <section class="card">
-      <div class="card-title">Corrections you taught it</div>
-      <div class="ps-line"><span class="data-value">${corrections}</span>&nbsp;element${corrections !== 1 ? 's' : ''} across ${Object.keys(supMap).length} site${Object.keys(supMap).length !== 1 ? 's' : ''} flagged "not a distraction". The scanner now skips these.</div>
-    </section>
-    <section class="card">
-      <div class="card-title">Active rules</div>
-      <div class="ps-line"><span class="data-value">${rules.filter(r => r.enabled).length}</span>&nbsp;of ${rules.length} element rules on. Manage them on the Home tab.</div>
-      ${ar?.connected ? '' : '<div class="ps-sub">Goals &amp; preferences from the desktop app appear here when it’s connected.</div>'}
     </section>`;
+
   el.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', async () => {
     const cur = (await ask({ type: 'get:auto-block' }))?.autoHideKeywords || [];
     await ask({ type: 'set:auto-hide-prefs', keywords: cur.filter(x => x !== ch.dataset.k), replace: true });

@@ -107,6 +107,7 @@ body {
 
 .update-banner { display: flex; align-items: center; gap: 5px; padding: 5px 12px; background: rgba(251,191,36,0.06); border-bottom: 1px solid rgba(251,191,36,0.14); font-size: 10px; color: #fbbf24; font-family: var(--mono); flex-shrink: 0; }
 .update-link { color: #6366f1; text-decoration: none; border-bottom: 1px solid rgba(99,102,241,0.2); }
+.update-banner.ok { color: var(--ok); background: rgba(52,211,153,0.07); border-bottom-color: rgba(52,211,153,0.2); }
 
 /* ── Per-site hero ── */
 .site-hero {
@@ -780,3 +781,141 @@ html.light {
   --shadow: 0 10px 30px rgba(15,23,42,0.10);
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   LOGIC — the reasoning showcase (2026-07-22). Deep, transparent classification:
+   live factor breakdowns, the built-in taxonomy, and calibration — animated so it
+   reads as a living decision. Built to double as the product-site demo.
+   Tone classes: .ok = intentional (emerald), .mid = ambiguous (amber),
+   .bad = distraction (coral). Meters/bars animate when the view gains .go.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.logic-block { gap: 10px; }
+.logic-subhead { font-size: 11px; font-weight: 600; color: var(--ink-2); margin-top: 4px; }
+
+/* Hero */
+.logic-hero {
+  border: 1px solid var(--accent-line); border-radius: var(--radius);
+  background:
+    radial-gradient(120% 120% at 100% 0%, var(--accent-soft), transparent 55%),
+    var(--card-bg);
+  padding: 14px; display: flex; flex-direction: column; gap: 6px;
+  animation: logicUp .5s cubic-bezier(.2,.8,.2,1) both;
+}
+.logic-hero-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+.logic-hero-sub { font-size: 11.5px; color: var(--ink-2); line-height: 1.45; }
+.logic-hero-stats { display: flex; gap: 8px; margin-top: 6px; }
+.lh-stat { flex: 1; text-align: center; padding: 8px 4px; border-radius: 8px; background: var(--tint); }
+.lh-stat .data-value { font-size: 17px; font-weight: 700; color: var(--accent); }
+.lh-stat label { display: block; font-size: 9.5px; color: var(--ink-3); margin-top: 2px; }
+
+/* Why-cards (per-page reasoning) */
+.why-list { display: flex; flex-direction: column; gap: 10px; }
+.why-card {
+  border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px;
+  background: var(--tint); animation: logicUp .5s cubic-bezier(.2,.8,.2,1) both;
+}
+.why-head { display: flex; align-items: center; gap: 11px; }
+.why-id { flex: 1; min-width: 0; }
+.why-dom { font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.why-intent { font-size: 10.5px; color: var(--ink-3); line-height: 1.3; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.why-verdict { font-size: 10px; font-weight: 600; margin-top: 3px; }
+.why-verdict.ok { color: var(--ok); } .why-verdict.mid { color: var(--warning); } .why-verdict.bad { color: var(--bad); }
+.why-src { flex-shrink: 0; font-size: 9px; color: var(--ink-3); font-family: var(--mono); align-self: flex-start; }
+.why-note { font-size: 10.5px; color: var(--ink-2); font-style: italic; margin-top: 8px; padding-left: 10px; border-left: 2px solid var(--accent-line); line-height: 1.4; }
+
+/* Score ring */
+.ring { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+.ring svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--line); stroke-width: 5; }
+/* Final state is the DEFAULT (stroke-dashoffset: var(--off)); the arc animates in from
+   empty via a keyframe on insert, so it never depends on a JS class toggle firing. */
+.ring-fg { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dashoffset: var(--off); animation: ringGrow 1.1s cubic-bezier(.2,.8,.2,1) both; }
+.ring.ok .ring-fg { stroke: var(--ok); } .ring.mid .ring-fg { stroke: var(--warning); } .ring.bad .ring-fg { stroke: var(--bad); }
+@keyframes ringGrow { from { stroke-dashoffset: var(--dash); } }
+.ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--ink); }
+.ring-num i { font-size: 8px; font-style: normal; color: var(--ink-3); margin-left: 1px; }
+
+/* Factor rows */
+.factors { display: flex; flex-direction: column; gap: 8px; margin-top: 11px; }
+.factor-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.factor-lbl { font-size: 11px; color: var(--ink); font-weight: 550; }
+.factor-w { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.factor-w.ok { color: var(--ok); } .factor-w.mid { color: var(--warning); } .factor-w.bad { color: var(--bad); }
+.factor-bar { height: 5px; border-radius: 3px; background: var(--tint); overflow: hidden; margin-top: 3px; }
+.factor-fill { display: block; height: 100%; width: var(--w); border-radius: 3px; animation: growW .7s cubic-bezier(.2,.8,.2,1) both; }
+.factor-fill.ok { background: var(--ok); } .factor-fill.mid { background: var(--warning); } .factor-fill.bad { background: var(--bad); }
+.factor-detail { font-size: 10px; color: var(--ink-3); margin-top: 3px; line-height: 1.35; }
+
+/* Taxonomy */
+.tax-list { display: flex; flex-direction: column; gap: 9px; }
+.tax-card { border: 1px solid var(--line); border-radius: 9px; padding: 10px 11px; background: var(--tint); animation: logicUp .5s cubic-bezier(.2,.8,.2,1) both; }
+.tax-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.tax-lbl { font-size: 12px; font-weight: 600; color: var(--ink); }
+.tax-weight { font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.tax-weight.mid { color: var(--warning); } .tax-weight.bad { color: var(--bad); }
+.tax-weight i { font-size: 8px; font-style: normal; color: var(--ink-3); }
+.tax-bar { height: 5px; border-radius: 3px; background: var(--tint); overflow: hidden; margin: 6px 0; }
+.tax-fill { display: block; height: 100%; width: var(--w); border-radius: 3px; animation: growW .8s cubic-bezier(.2,.8,.2,1) both; }
+.tax-fill.mid { background: var(--warning); } .tax-fill.bad { background: var(--bad); }
+.tax-ex { font-size: 10px; color: var(--accent); font-family: var(--mono); }
+.tax-why { font-size: 11px; color: var(--ink-2); line-height: 1.45; margin-top: 4px; }
+
+/* Calibration */
+.calib { display: flex; flex-direction: column; gap: 7px; margin-top: 2px; }
+.calib-row { display: flex; align-items: center; gap: 9px; }
+.calib-lbl { font-size: 10.5px; width: 100px; flex-shrink: 0; }
+.calib-lbl.ok { color: var(--ok); } .calib-lbl.mid { color: var(--warning); } .calib-lbl.bad { color: var(--bad); }
+.calib-bar { flex: 1; height: 8px; border-radius: 4px; background: var(--tint); overflow: hidden; }
+.calib-fill { display: block; height: 100%; width: var(--w); border-radius: 4px; animation: growW .8s cubic-bezier(.2,.8,.2,1) both; }
+.calib-fill.ok { background: var(--ok); } .calib-fill.mid { background: var(--warning); } .calib-fill.bad { background: var(--bad); }
+.calib-n { font-size: 11px; font-weight: 700; color: var(--ink-2); width: 22px; text-align: right; flex-shrink: 0; }
+.cat-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.cat-pill { font-size: 10px; padding: 3px 9px; border-radius: 999px; background: var(--tint); border: 1px solid var(--line); color: var(--ink-2); }
+.cat-pill b { font-weight: 700; margin-left: 3px; }
+.cat-pill.ok b { color: var(--ok); } .cat-pill.mid b { color: var(--warning); } .cat-pill.bad b { color: var(--bad); }
+
+/* Corrections */
+.corr-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.corr-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 9px; border-radius: 7px; background: var(--tint); }
+.corr-dom { font-family: var(--mono); font-size: 11px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.corr-n { font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+
+@keyframes logicUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes growW { from { width: 0; } }
+
+/* Full-screen tab: keep content readable rather than stretching edge to edge. */
+html.fullscreen .view { max-width: 1100px; margin: 0 auto; width: 100%; }
+html.fullscreen .askbar { max-width: 1100px; margin-left: auto; margin-right: auto; }
+
+/* Wide layout (full-screen tab): flow the reasoning + taxonomy into columns. */
+@media (min-width: 720px) {
+  .why-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .tax-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .why-card, .tax-card, .logic-hero, .factor-fill, .tax-fill, .calib-fill, .ring-fg { animation: none !important; }
+  .factor-fill, .tax-fill, .calib-fill { width: var(--w); }
+  .ring-fg { stroke-dashoffset: var(--off); }
+}
+
+/* ── Custom analytics builder (Insights) ── */
+.gen-builder { border-color: var(--accent-line); }
+.gen-badge { font-size: 9px; font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent-line); padding: 1px 6px; border-radius: 999px; }
+.gen-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.gen-controls label { flex: 1 1 30%; min-width: 96px; display: flex; flex-direction: column; gap: 3px; font-size: 10px; color: var(--ink-3); }
+.gen-controls select {
+  width: 100%; background: var(--input-bg); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px;
+  font-size: 11.5px; font-family: var(--font); cursor: pointer;
+}
+.gen-controls select:focus { outline: none; border-color: var(--accent-line); }
+.gen-actions { display: flex; gap: 8px; }
+.gen-actions .btn-primary, .gen-actions .btn-secondary { flex: 1; }
+#gen-output { display: flex; flex-direction: column; gap: 8px; }
+#gen-output:empty { display: none; }
+.gen-pin-btn { align-self: flex-start; }
+.gen-card { border-color: var(--accent-line); background: var(--accent-soft); gap: 6px; }
+.gen-card .site-row { gap: 8px; }
+.bar-list { display: flex; flex-direction: column; gap: 6px; }
