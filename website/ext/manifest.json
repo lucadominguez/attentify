@@ -1,8 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Attentify Element Blocker",
-  "version": "0.16.1",
+  "version": "0.17.0",
   "description": "Surgically remove addictive UI elements, with AI that reads your browsing context. Works standalone or enhanced by the Attentify desktop app.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "permissions": ["storage", "tabs", "webNavigation", "scripting", "alarms", "sidePanel"],
   "host_permissions": [
     "<all_urls>",
@@ -21,7 +27,11 @@
     "all_frames": true
   }],
   "action": {
-    "default_title": "Attentify (click to open panel)"
+    "default_title": "Attentify (click to open panel)",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
   },
   "side_panel": {
     "default_path": "popup.html"

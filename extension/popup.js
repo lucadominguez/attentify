@@ -1,5 +1,34 @@
 'use strict';
 
+// ── Theme (light / dark, mirrors the desktop app) ──────────────────────────────
+// Default follows the OS via the @media rule in popup.css (no class = auto). A user
+// who taps the toggle pins a choice in chrome.storage, which sets html.light/.dark
+// and wins over the media query. Kept minimal so it can apply before first paint.
+function effectiveTheme() {
+  const el = document.documentElement;
+  if (el.classList.contains('light')) return 'light';
+  if (el.classList.contains('dark')) return 'dark';
+  try { return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } catch { return 'dark'; }
+}
+function applyTheme(mode) {
+  const el = document.documentElement;
+  el.classList.remove('light', 'dark');
+  if (mode === 'light' || mode === 'dark') el.classList.add(mode); // absent = auto
+}
+(function initTheme() {
+  try {
+    chrome.storage?.local.get('pd-theme', (r) => {
+      applyTheme(r && r['pd-theme']);
+      const btn = document.getElementById('theme-btn');
+      if (btn) btn.addEventListener('click', () => {
+        const next = effectiveTheme() === 'light' ? 'dark' : 'light';
+        applyTheme(next);
+        try { chrome.storage?.local.set({ 'pd-theme': next }); } catch (_) {}
+      });
+    });
+  } catch (_) { /* storage unavailable: stays on the OS-following default */ }
+})();
+
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
 function ask(msg, ms = 5000) {

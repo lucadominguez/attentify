@@ -326,17 +326,17 @@
     const s = document.createElement('style');
     s.id = 'pd-wb-style';
     s.textContent =
-      "#pd-watch-block{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:rgba(7,15,30,0.96);font-family:'Segoe UI',system-ui,sans-serif;}" +
-      "#pd-watch-block .pd-wb-card{max-width:420px;text-align:center;color:#d8e4f0;padding:28px 26px;}" +
+      "#pd-watch-block{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:rgba(2,9,18,0.96);font-family:'Segoe UI Variable Text','Segoe UI',system-ui,sans-serif;}" +
+      "#pd-watch-block .pd-wb-card{max-width:420px;text-align:center;color:#e8e8e8;padding:28px 26px;}" +
       "#pd-watch-block .pd-wb-icon{font-size:42px;margin-bottom:10px;}" +
       "#pd-watch-block .pd-wb-title{font-size:20px;font-weight:700;margin-bottom:8px;}" +
-      "#pd-watch-block .pd-wb-sub{font-size:14px;color:rgba(216,228,240,0.7);margin-bottom:12px;line-height:1.5;}" +
-      "#pd-watch-block .pd-wb-sub b{color:#00c8ff;}" +
-      "#pd-watch-block .pd-wb-name{font-size:13px;color:rgba(216,228,240,0.45);font-style:italic;margin-bottom:20px;}" +
+      "#pd-watch-block .pd-wb-sub{font-size:14px;color:#9a9a9a;margin-bottom:12px;line-height:1.5;}" +
+      "#pd-watch-block .pd-wb-sub b{color:#818cf8;}" +
+      "#pd-watch-block .pd-wb-name{font-size:13px;color:#6a6a6a;font-style:italic;margin-bottom:20px;}" +
       "#pd-watch-block .pd-wb-btns{display:flex;gap:10px;justify-content:center;}" +
-      "#pd-watch-block button{cursor:pointer;border-radius:7px;padding:9px 16px;font-size:13px;font-weight:600;border:1px solid rgba(0,200,255,0.3);}" +
-      "#pd-watch-block #pd-wb-back{background:#00c8ff;color:#04121f;border-color:#00c8ff;}" +
-      "#pd-watch-block #pd-wb-watch{background:transparent;color:rgba(216,228,240,0.6);}" +
+      "#pd-watch-block button{cursor:pointer;border-radius:7px;padding:9px 16px;font-size:13px;font-weight:600;border:1px solid rgba(99,102,241,0.35);}" +
+      "#pd-watch-block #pd-wb-back{background:#6366f1;color:#fff;border-color:#6366f1;}" +
+      "#pd-watch-block #pd-wb-watch{background:transparent;color:#9a9a9a;}" +
       "#pd-watch-block #pd-wb-watch:hover{color:#fff;}";
     (document.head || document.documentElement).appendChild(s);
   }
