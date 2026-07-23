@@ -1,5 +1,53 @@
 'use strict';
 
+// ── Theme (light / dark, mirrors the desktop app) ──────────────────────────────
+// Default follows the OS via the @media rule in popup.css (no class = auto). A user
+// who taps the toggle pins a choice in chrome.storage, which sets html.light/.dark
+// and wins over the media query. Kept minimal so it can apply before first paint.
+function effectiveTheme() {
+  const el = document.documentElement;
+  if (el.classList.contains('light')) return 'light';
+  if (el.classList.contains('dark')) return 'dark';
+  try { return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } catch { return 'dark'; }
+}
+function applyTheme(mode) {
+  const el = document.documentElement;
+  el.classList.remove('light', 'dark');
+  if (mode === 'light' || mode === 'dark') el.classList.add(mode); // absent = auto
+}
+(function initTheme() {
+  try {
+    chrome.storage?.local.get('pd-theme', (r) => {
+      applyTheme(r && r['pd-theme']);
+      const btn = document.getElementById('theme-btn');
+      if (btn) btn.addEventListener('click', () => {
+        const next = effectiveTheme() === 'light' ? 'dark' : 'light';
+        applyTheme(next);
+        try { chrome.storage?.local.set({ 'pd-theme': next }); } catch (_) {}
+      });
+    });
+  } catch (_) { /* storage unavailable: stays on the OS-following default */ }
+})();
+
+// ── Full-screen mode ───────────────────────────────────────────────────────────
+// The panel opens as a full browser tab (popup.html?full=1). In that mode the wide
+// layout kicks in (see the min-width media queries) and the expand button hides —
+// there's nothing left to expand into.
+const IS_FULLSCREEN = new URLSearchParams(location.search).get('full') === '1';
+(function initFullscreen() {
+  if (IS_FULLSCREEN) document.documentElement.classList.add('fullscreen');
+  const wire = () => {
+    const btn = document.getElementById('expand-btn');
+    if (!btn) return;
+    if (IS_FULLSCREEN) { btn.style.display = 'none'; return; }
+    btn.addEventListener('click', () => {
+      try { chrome.tabs.create({ url: chrome.runtime.getURL('popup.html?full=1') }); window.close?.(); }
+      catch (_) { location.href = 'popup.html?full=1'; }
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
+})();
+
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
 function ask(msg, ms = 5000) {
@@ -29,6 +77,9 @@ function progDone(id='progress-fill', ok=true) { prog(id, 100, ok?'ok':'fail'); 
 // ── State ─────────────────────────────────────────────────────────────────────
 
 let currentTab = null;
+// Shared snapshot the page card renders from, so the scan result and the rules/tab
+// state can never paint contradictory things. `scan: undefined` = not scanned yet.
+let last = { allRules: null, status: null, tabSt: null, siteState: null, scan: undefined };
 
 // ═══════════════════════════════ MAIN VIEW ════════════════════════════════════
 
@@ -43,13 +94,13 @@ function renderDiag(status, allRules, tabSt, tab) {
   rows.push({ ok: true, main: `Service worker running`, sub: status?.bootAt ? `started ${ago(status.bootAt)}` : '' });
 
   if (rules.length === 0) {
-    rows.push({ ok: false, warn: true, main: `No rules loaded — try reloading the extension`, sub: '' });
+    rows.push({ ok: false, warn: true, main: `No rules loaded. Try reloading the extension`, sub: '' });
   } else {
     rows.push({ ok: true, main: `<b>${rules.length}</b> rules loaded`, sub: `${enabled.length} enabled` });
   }
 
   if (enabled.length === 0) {
-    rows.push({ ok: false, warn: true, main: `No rules enabled — toggle rules on below or use AI chat`, sub: 'CSS blocking is inactive' });
+    rows.push({ ok: false, warn: true, main: `No rules enabled. Toggle rules on below or use AI chat`, sub: 'CSS blocking is inactive' });
   } else {
     const doms = [...new Set(enabled.map(r=>r.domain))].join(', ');
     rows.push({ ok: true, main: `Blocking on: <b>${esc(doms)}</b>` });
@@ -60,7 +111,7 @@ function renderDiag(status, allRules, tabSt, tab) {
   if (isChromeTab) {
     rows.push({ ok: null, main: `Current tab is a browser page`, sub: 'Navigate to a real site to test blocking' });
   } else if (!tabSt) {
-    rows.push({ ok: false, warn: true, main: `Blocking not applied on this tab yet`, sub: 'It applies automatically — switch tabs or give it a moment' });
+    rows.push({ ok: false, warn: true, main: `Blocking not applied on this tab yet`, sub: 'It applies automatically. Switch tabs or give it a moment' });
   } else {
     const n = tabSt.totalHidden || 0;
     rows.push({ ok: true, main: `Content script active · <b>${esc(tabSt.domain||'?')}</b>`, sub: n > 0 ? `Hiding ${n} element${n!==1?'s':''} right now` : 'No matching elements on this page' });
@@ -69,7 +120,7 @@ function renderDiag(status, allRules, tabSt, tab) {
   if (status?.connected) {
     rows.push({ ok: true, main: `Daemon on <b>:${status.daemonPort}</b>`, sub: `Synced ${ago(status.lastSyncAt)} · AI tools active` });
   } else {
-    rows.push({ ok: null, main: `Daemon not connected <span style="opacity:0.35">(optional)</span>`, sub: status?.lastDaemonError || 'Works standalone — daemon adds AI tools' });
+    rows.push({ ok: null, main: `Daemon not connected <span style="opacity:0.35">(optional)</span>`, sub: status?.lastDaemonError || 'Works standalone. The daemon adds AI tools' });
   }
 
   const icons = { true: '✓', false: '✗', null: '·' };
@@ -86,151 +137,131 @@ function renderDiag(status, allRules, tabSt, tab) {
   }).join('');
 }
 
-// ── Per-site hero ─────────────────────────────────────────────────────────────
-// The headline a normal user wants: "is this site's junk being blocked?" — plus a
-// one-tap master switch to pause/resume blocking on just this site.
-function renderSiteHero(allRules, tabSt, tab, paused) {
-  const hero    = document.getElementById('site-hero');
-  const icon    = document.getElementById('site-hero-icon');
-  const title   = document.getElementById('site-hero-title');
-  const subEl   = document.getElementById('site-hero-sub');
-  const tglWrap = document.getElementById('site-toggle-wrap');
-  const tgl     = document.getElementById('site-toggle');
-  hero.style.display = 'flex';
+// ── This-page card ────────────────────────────────────────────────────────────
+// One card answers "is this page being protected right now?" — merging what used to
+// be three separate, sometimes-contradictory pieces (the browser-page empty state,
+// the live analysis meter, and the "nothing distracting" line) into exactly one of
+// three states. Reads module state so the scan result and the rules/tab state can't
+// render out of sync. Also owns the per-site pause toggle and dims the sections
+// below when the current page isn't blockable.
+function renderPageCard() {
+  const statusEl = document.getElementById('page-status');
+  const scanEl   = document.getElementById('scan-list');
+  const tglWrap  = document.getElementById('site-toggle-wrap');
+  const tgl      = document.getElementById('site-toggle');
+  const blockCard = document.getElementById('block-card');
+  const rulesGrp  = document.getElementById('rules-group');
+  const setDim = (on) => { blockCard.classList.toggle('dimmed', on); rulesGrp.classList.toggle('dimmed', on); };
 
+  const tab = currentTab;
   const url = tab?.url || '';
   const isChrome = !url || url.startsWith('chrome://') || url.startsWith('chrome-extension://') || url.startsWith('about:') || url.startsWith('edge://');
+
+  // State (a): not a blockable page. Dim the sections below rather than hide them.
   if (isChrome) {
-    hero.className = 'site-hero neutral';
-    icon.textContent = '○';
-    title.textContent = 'Open a website to manage blocking';
-    subEl.textContent = 'This is a browser page — nothing to block here.';
+    statusEl.className = 'page-status neutral';
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">○</span>This is a browser page, so there's nothing to block here.</div>`;
+    scanEl.style.display = 'none';
     tglWrap.style.display = 'none';
+    setDim(true);
     return;
   }
+  setDim(false);
 
   let domain; try { domain = new URL(url).hostname.replace(/^www\./,''); } catch(_) { domain = '?'; }
-  const enabled  = (allRules?.rules||[]).filter(r=>r.enabled);
+  const enabled  = (last.allRules?.rules || []).filter(r => r.enabled);
   const matching = enabled.filter(r => domain === r.domain || domain.endsWith('.'+r.domain));
-  const hidden   = tabSt?.totalHidden || 0;
+  const paused   = !!last.siteState?.paused;
 
-  if (matching.length === 0) {
-    hero.className = 'site-hero neutral';
-    icon.textContent = '○';
-    title.innerHTML = `No rules for <b>${esc(domain)}</b>`;
-    subEl.textContent = 'Nothing blocked here. Tap ✦ to add a rule with AI.';
-    tglWrap.style.display = 'none';
+  // Per-site pause toggle: only meaningful where rules actually apply.
+  if (matching.length > 0) { tglWrap.style.display = 'flex'; tgl.checked = !paused; }
+  else                     { tglWrap.style.display = 'none'; }
+
+  const scan = last.scan;
+  const auto  = scan?.autoHidden || [];
+  const cands = scan?.candidates || [];
+  const total = auto.length + cands.length;
+  const a = scan?.assessment || null;
+  const prob = (scan && (scan.distractionProb != null ? scan.distractionProb : a?.distractionProbability));
+  const pct = (prob != null) ? Math.round(prob * 100) : null;
+  const srcTxt = a ? (a.source === 'heuristic' ? 'local heuristic' : 'AI read') : '';
+  const estLine = (pct != null) ? `<div class="ps-sub">Distraction estimate: ${pct}%${srcTxt ? ' · ' + srcTxt : ''}</div>` : '';
+
+  // Not scanned yet.
+  if (scan === undefined) {
+    statusEl.className = 'page-status neutral';
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">○</span>This page hasn't been analyzed yet.</div><div class="ps-sub">Tap Scan to check it for distractions.</div>`;
+    scanEl.style.display = 'none';
     return;
   }
 
-  tglWrap.style.display = '';
-  tgl.checked = !paused;           // checked = blocking ON
-
-  if (paused) {
-    hero.className = 'site-hero paused';
-    icon.textContent = '⏸';
-    title.innerHTML = `Blocking paused on <b>${esc(domain)}</b>`;
-    subEl.textContent = 'Distractions are visible. Flip the switch to resume.';
-  } else {
-    hero.className = 'site-hero on';
-    icon.textContent = '✓';
-    title.innerHTML = `Blocking distractions on <b>${esc(domain)}</b>`;
-    if (hidden > 0)   subEl.textContent = `Hiding ${hidden} element${hidden!==1?'s':''} right now.`;
-    else if (tabSt)   subEl.textContent = `Active — ${matching.length} rule${matching.length!==1?'s':''} watching this site.`;
-    else              subEl.textContent = 'Applies automatically as the page loads.';
-  }
-}
-
-// ── Tab panel ─────────────────────────────────────────────────────────────────
-
-function renderTabPanel(allRules, tabSt, tab) {
-  const section = document.getElementById('tab-section');
-  const tabUrl  = tab?.url || '';
-  if (!tab || tabUrl.startsWith('chrome://') || tabUrl.startsWith('chrome-extension://')) { section.style.display = 'none'; return; }
-  section.style.display = 'block';
-  let domain; try { domain = new URL(tabUrl).hostname.replace(/^www\./,''); } catch(_) { domain = tab.title || '?'; }
-  document.getElementById('tab-domain-label').textContent = domain;
-
-  const detail = document.getElementById('tab-detail');
-  const enabled = (allRules?.rules||[]).filter(r=>r.enabled);
-  const matching = enabled.filter(r => domain === r.domain || domain.endsWith('.'+r.domain));
-
-  if (!tabSt) {
-    detail.innerHTML = `<div class="tab-warn-row"><span class="tab-warn-txt">${matching.length} rule${matching.length!==1?'s':''} apply here — activating…</span><button class="inline-btn" id="apply-tab-btn">Apply now</button></div>`;
-    document.getElementById('apply-tab-btn').onclick = async () => { if(tab?.id){ await ask({ type:'test:inject', tabId: tab.id }, 6000); setTimeout(refresh, 600); } };
+  // State (c): distractions found — list them with per-item controls.
+  if (total > 0) {
+    statusEl.className = 'page-status alert';
+    const n = total;
+    statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">•</span>${n} distraction${n!==1?'s':''} found on this page.</div>${estLine}`;
+    let html = '';
+    if (auto.length) {
+      html += `<div class="scan-grouplbl">Auto-hidden now (${auto.length})</div>`;
+      auto.forEach((c, i) => { html += scanRowHtml(c, i, true); });
+    }
+    if (cands.length) {
+      if (auto.length) html += `<div class="scan-grouplbl">Also detected</div>`;
+      cands.forEach((c, i) => { html += scanRowHtml(c, i, false); });
+    }
+    scanEl.innerHTML = html;
+    scanEl.style.display = 'flex';
+    scanEl.querySelectorAll('.scan-hide-btn').forEach(btn => {
+      const i = Number(btn.dataset.idx);
+      btn.addEventListener('click', () => btn.dataset.kind === 'auto' ? restoreAutoHidden(i) : hideCandidate(i));
+    });
+    scanEl.querySelectorAll('.scan-wrong').forEach(btn => {
+      btn.addEventListener('click', () => reportMisprediction(Number(btn.dataset.idx), btn));
+    });
     return;
   }
 
-  const counts  = tabSt.elementCounts || {};
-  const maxN    = Math.max(1, ...Object.values(counts));
-
-  if (matching.length === 0) { detail.innerHTML = `<div class="tab-empty">No enabled rules match ${esc(domain)}</div>`; return; }
-
-  detail.innerHTML = matching.map(r => {
-    const n = counts[r.id] || 0;
-    const w = n > 0 ? Math.max(5, Math.round((n/maxN)*100)) : 0;
-    return `<div class="tab-rule-row">
-      <span class="tab-rule-lbl">${esc(r.displayName)}</span>
-      <div class="tab-bar"><div class="tab-bar-fill" style="width:${w}%"></div></div>
-      <span class="tab-count ${n===0?'z':''}">${n>0?n:'—'}</span>
-    </div>`;
-  }).join('');
+  // State (b): analyzed, clean.
+  statusEl.className = 'page-status clean';
+  statusEl.innerHTML = `<div class="ps-line"><span class="ps-icon">✓</span>Nothing distracting detected on this page.</div>${estLine}`;
+  scanEl.style.display = 'none';
 }
 
 // ── Rules list ────────────────────────────────────────────────────────────────
 
 function renderRules(allRules, status, tabSt) {
-  const rules       = allRules?.rules || [];
-  const bypassScores = status?.bypassScores || {};
-  const list        = document.getElementById('rules-list');
-  document.getElementById('rules-summary').textContent = rules.length ? `(${rules.filter(r=>r.enabled).length}/${rules.length} on)` : '';
+  const rules = allRules?.rules || [];
+  const list  = document.getElementById('rules-list');
+  const en    = rules.filter(r => r.enabled).length;
+  // "1 of 2 active" — pluralized, sentence case.
+  document.getElementById('rules-summary').textContent = rules.length ? ` · ${en} of ${rules.length} active` : '';
 
-  if (rules.length === 0) { list.innerHTML = '<div class="placeholder">No rules — click ↻ Sync or reload extension.</div>'; return; }
+  if (rules.length === 0) { list.innerHTML = '<div class="placeholder">No rules yet. Tap Sync, or ask the AI assistant to block something.</div>'; return; }
 
-  const maxElems = Math.max(1, ...rules.map(r => tabSt?.elementCounts?.[r.id]||0));
   list.innerHTML = '';
-
   for (const rule of rules) {
-    const bypasses = bypassScores[rule.id] || 0;
-    const tabElems = tabSt?.elementCounts?.[rule.id] ?? null;
-    const isActive = tabSt?.activeRuleIds?.includes(rule.id) ?? false;
-
-    let bCls='zero', bW='100%', bLbl='off', bLblCls='';
-    if (rule.enabled) {
-      if (tabElems===null)  { bCls='active'; bW='50%'; bLbl='enabled'; bLblCls='active'; }
-      else if (tabElems>0)  { bCls='blocked'; bW=Math.max(6,Math.round((tabElems/maxElems)*100))+'%'; bLbl=`${tabElems} hidden`; bLblCls='blocked'; }
-      else if (isActive)    { bCls='active'; bW='8%'; bLbl='no match'; bLblCls='active'; }
-      else                  { bCls='zero'; bW='100%'; bLbl='no match'; }
-    }
-
+    const tabElems = tabSt?.elementCounts?.[rule.id] || 0;   // hidden on this page right now
     const card = document.createElement('div');
-    card.className = 'rule-card';
+    card.className = 'rule-card' + (rule.enabled ? '' : ' off');
+    // One state indicator only: the toggle. The count is informational data, not a
+    // second status signal, and it's omitted when there's nothing to show.
     card.innerHTML = `
-      <div class="rule-top">
-        <div class="sev sev-${rule.severity||'medium'}"></div>
-        <div class="rule-info">
-          <div class="rule-name">${esc(rule.displayName||rule.id)}</div>
-          <div class="rule-meta">
-            <span class="domain-pill">${esc(rule.domain)}</span>
-            ${rule.enabled&&tabElems>0  ? `<span class="stat-elem">▸ ${tabElems}</span>` : ''}
-            ${bypasses>0                ? `<span class="stat-bypass">${bypasses}✗</span>` : ''}
-            ${!rule.enabled             ? `<span class="stat-none">off</span>` : ''}
-          </div>
+      <div class="rule-info">
+        <div class="rule-name">${esc(rule.displayName||rule.id)}</div>
+        <div class="rule-meta">
+          <span class="domain-pill">${esc(rule.domain)}</span>
+          ${rule.enabled && tabElems > 0 ? `<span class="rule-count">${tabElems} hidden here</span>` : ''}
         </div>
-        <label class="toggle">
-          <input type="checkbox"${rule.enabled?' checked':''}><span class="slider"></span>
-        </label>
       </div>
-      <div class="rule-bar-wrap">
-        <div class="rule-bar"><div class="rule-bar-fill ${bCls}" style="width:${bW}"></div></div>
-        <span class="rule-bar-lbl ${bLblCls}">${bLbl}</span>
-      </div>`;
+      <label class="toggle" title="${rule.enabled ? 'Turn off' : 'Turn on'} this rule">
+        <input type="checkbox"${rule.enabled?' checked':''} aria-label="${esc(rule.displayName||rule.id)}"><span class="slider"></span>
+      </label>`;
 
     card.querySelector('input').addEventListener('change', async e => {
-      const en = e.target.checked;
+      const on = e.target.checked;
       progSlide();
-      const res = await ask({ type: 'toggle:rule', ruleId: rule.id, enabled: en });
-      if (!res?.ok) { e.target.checked = !en; prog('progress-fill',0); return; }
+      const res = await ask({ type: 'toggle:rule', ruleId: rule.id, enabled: on });
+      if (!res?.ok) { e.target.checked = !on; prog('progress-fill',0); return; }
       progDone('progress-fill', true);
       setTimeout(refresh, 500);
     });
@@ -250,9 +281,9 @@ function scanRowHtml(c, i, isAuto) {
   const actions = isAuto
     ? `<div class="scan-actions">
          <button class="scan-hide-btn restore" data-idx="${i}" data-kind="auto">Restore</button>
-         <button class="scan-wrong" data-idx="${i}" title="This isn't a distraction — flag the AI's mistake">not a distraction?</button>
+         <button class="scan-wrong" data-idx="${i}" title="This isn't a distraction? Flag the AI's mistake">not a distraction?</button>
        </div>`
-    : `<button class="scan-hide-btn" data-idx="${i}" data-kind="cand">Hide</button>`;
+    : `<button class="scan-hide-btn" data-idx="${i}" data-kind="cand">Block</button>`;
   return `<div class="scan-row ${c.confidence} ${isAuto ? 'is-hidden' : ''}">
     <div class="scan-info">
       <div class="scan-name">${esc(c.label)} ${badge}</div>
@@ -261,54 +292,16 @@ function scanRowHtml(c, i, isAuto) {
     </div>${actions}</div>`;
 }
 
-// Shows the live context read: best-guess intent + a distraction meter the engine
-// derived this navigation. Drives how aggressively the scanner auto-hides.
-function renderContextBanner(a, prob) {
-  const el = document.getElementById('context-banner');
-  if (!el) return;
-  if (!a) { el.style.display = 'none'; el.innerHTML = ''; return; }
-  const pct = Math.round(((prob != null ? prob : a.distractionProbability) || 0) * 100);
-  const lvl = pct >= 70 ? 'hi' : pct >= 40 ? 'mid' : 'lo';
-  el.style.display = 'block';
-  el.className = `context-banner ${lvl}`;
-  el.innerHTML = `
-    <div class="ctx-intent">🧭 ${esc(a.intent || '—')}</div>
-    <div class="ctx-meter"><span>distraction</span><div class="ctx-bar"><div class="ctx-bar-fill" style="width:${pct}%"></div></div><b>${pct}%</b></div>
-    ${a.reason ? `<div class="ctx-reason">${esc(a.reason)}${a.source === 'heuristic' ? ' · local estimate' : ''}</div>` : ''}`;
-}
-
-function renderScan(result) {
-  const list = document.getElementById('scan-list');
-  const summary = document.getElementById('scan-summary');
+// Ingest a scan result into module state, then let the one card render it. Keeping
+// the intent/distraction read here (rather than a separate banner) means the page
+// card is the single source of truth for "what's on this page".
+function applyScan(result) {
+  last.scan = result || null;   // null = scanned, nothing found / no data; undefined = not scanned
   if (typeof result?.autoBlock === 'boolean') document.getElementById('autoblock-toggle').checked = result.autoBlock;
   renderLearnedTopics(result?.userKeywords || []);
-  renderContextBanner(result?.assessment || null, result?.distractionProb);
   autoHiddenItems = result?.autoHidden || [];
-  scanCandidates = result?.candidates || [];
-
-  if (!result) { summary.textContent = ''; list.innerHTML = '<div class="placeholder">Open a website, then tap ⟳ Scan.</div>'; return; }
-  const total = autoHiddenItems.length + scanCandidates.length;
-  summary.textContent = total ? `(${total})` : '';
-
-  if (!total) { list.innerHTML = '<div class="scan-empty">✓ Nothing obviously distracting detected here.</div>'; return; }
-
-  let html = '';
-  if (autoHiddenItems.length) {
-    html += `<div class="scan-grouplbl">Auto-hidden now (${autoHiddenItems.length})</div>`;
-    autoHiddenItems.forEach((c, i) => { html += scanRowHtml(c, i, true); });
-  }
-  if (scanCandidates.length) {
-    if (autoHiddenItems.length) html += `<div class="scan-grouplbl">Also detected</div>`;
-    scanCandidates.forEach((c, i) => { html += scanRowHtml(c, i, false); });
-  }
-  list.innerHTML = html;
-  list.querySelectorAll('.scan-hide-btn').forEach(btn => {
-    const i = Number(btn.dataset.idx);
-    btn.addEventListener('click', () => btn.dataset.kind === 'auto' ? restoreAutoHidden(i) : hideCandidate(i));
-  });
-  list.querySelectorAll('.scan-wrong').forEach(btn => {
-    btn.addEventListener('click', () => reportMisprediction(Number(btn.dataset.idx), btn));
-  });
+  scanCandidates  = result?.candidates || [];
+  renderPageCard();
 }
 
 // The user says this auto-hidden item wasn't actually a distraction. Restore it and
@@ -330,7 +323,7 @@ async function reportMisprediction(i, btn) {
       version: chrome.runtime.getManifest().version, userAgent: navigator.userAgent,
     },
   });
-  if (btn) { btn.textContent = '✓ thanks — noted'; btn.classList.add('done'); }
+  if (btn) { btn.textContent = '✓ thanks, noted'; btn.classList.add('done'); }
   setTimeout(() => scanCurrentTab(true), 700);
 }
 
@@ -418,9 +411,9 @@ async function hideCandidate(i) {
 }
 
 async function scanCurrentTab(forceScan = true) {
-  if (!currentTab) { renderScan(null); return; }
+  if (!currentTab) { applyScan(null); return; }
   const res = await askTab(currentTab.id, { type: forceScan ? 'scan:page' : 'get:distractions' }, 4000);
-  renderScan(res);
+  applyScan(res);
 }
 
 document.getElementById('scan-btn').addEventListener('click', async () => {
@@ -428,7 +421,7 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
   btn.textContent = '…'; btn.disabled = true; progSlide();
   await scanCurrentTab(true);
   progDone('progress-fill', true);
-  btn.textContent = '⟳ Scan'; btn.disabled = false;
+  btn.textContent = 'Scan'; btn.disabled = false;
 });
 
 document.getElementById('autoblock-toggle').addEventListener('change', async e => {
@@ -461,9 +454,11 @@ async function checkUpdate(force=false) {
   const info = res?.info;
   const b = document.getElementById('update-banner');
   if (info?.updateAvailable) {
-    b.innerHTML = `⬆ v${esc(info.latestVersion)} &nbsp;<a href="${esc(info.downloadUrl)}" target="_blank" class="update-link">ZIP</a> · <a href="${esc(info.releasesUrl)}" target="_blank" class="update-link">Releases</a>`;
+    b.classList.remove('ok');
+    b.innerHTML = `⬆ Update available: v${esc(info.latestVersion)} &nbsp;<a href="${esc(info.downloadUrl)}" target="_blank" class="update-link">Download ZIP</a> · <a href="${esc(info.releasesUrl)}" target="_blank" class="update-link">How to update</a>`;
     b.style.display = 'flex';
   } else b.style.display = 'none';
+  return info;
 }
 
 // ── Main refresh ──────────────────────────────────────────────────────────────
@@ -482,28 +477,28 @@ async function refresh() {
     curDomain ? ask({ type: 'get:site-state', domain: curDomain }) : Promise.resolve(null),
   ]);
 
+  last.allRules = allRules; last.status = status; last.tabSt = tabSt; last.siteState = siteState;
+
   const connected = status?.connected || false;
-  document.getElementById('version-label').textContent = `v${chrome.runtime.getManifest().version}`;
+  const ver = chrome.runtime.getManifest().version;
   progDone('progress-fill', true);
 
+  // Connection pill: one dot + label, technical detail (and version) in the tooltip.
   const dot = document.getElementById('status-dot');
-  dot.className = 'status-dot ' + (connected ? 'on' : 'standalone');
+  dot.className = 'conn-dot ' + (connected ? 'on' : 'standalone');
+  document.getElementById('conn-label').textContent = connected ? 'Connected' : 'Standalone';
+  document.getElementById('conn-pill').title = connected
+    ? `Standalone + daemon :${status.daemonPort} · v${ver}`
+    : `Standalone · daemon optional · v${ver}`;
 
-  const rules = allRules?.rules || [];
-  const enCnt = rules.filter(r=>r.enabled).length;
-  const sub = document.getElementById('status-text');
-  sub.textContent = connected
-    ? `Standalone + daemon :${status.daemonPort} · ${enCnt} rules active`
-    : `Standalone · ${enCnt} rule${enCnt!==1?'s':''} active · daemon optional`;
-
+  // Advanced stats, plain language.
   const bypassTotal = Object.values(status?.bypassScores||{}).reduce((a,b)=>a+b,0);
   const elemTotal   = Object.values(status?.elementStats||{}).reduce((a,b)=>a+b,0);
-  document.getElementById('bypass-total').textContent  = bypassTotal;
-  document.getElementById('elements-total').textContent = elemTotal;
+  document.getElementById('adv-stats').textContent =
+    `${elemTotal} element${elemTotal!==1?'s':''} hidden today · ${bypassTotal} bypass${bypassTotal!==1?'es':''}`;
 
-  renderSiteHero(allRules, tabSt, currentTab, siteState?.paused || false);
+  renderPageCard();
   renderDiag(status, allRules, tabSt, currentTab);
-  renderTabPanel(allRules, tabSt, currentTab);
   renderRules(allRules, status, tabSt);
   renderLog(status?.activityLog || []);
   refreshTitleBlocks().catch(() => {});
@@ -534,6 +529,8 @@ function wireCollapse(toggleId, panelId, arrowId) {
     document.getElementById(arrowId).textContent = open ? '▾' : '▸';
   });
 }
+wireCollapse('rules-toggle',    'rules-panel',    'rules-arrow');     // default open
+wireCollapse('advanced-toggle', 'advanced-panel', 'advanced-arrow');  // default closed
 wireCollapse('diag-toggle', 'diag-panel', 'diag-arrow');
 wireCollapse('log-toggle',  'log-panel',  'log-arrow');
 
@@ -555,34 +552,51 @@ document.getElementById('test-btn').addEventListener('click', async () => {
   const tab = currentTab;
   if (!tab?.id) { btn.textContent = 'No tab'; progDone('progress-fill', false); setTimeout(()=>{btn.textContent='⚡ Test';btn.disabled=false;},1500); return; }
   const res = await ask({ type: 'test:inject', tabId: tab.id }, 6000);
-  if (res?.ok) { btn.textContent = `✓ ${res.rulesDelivered}`; progDone('progress-fill', true); }
-  else         { btn.textContent = `✗ fail`; progDone('progress-fill', false); }
-  setTimeout(() => { btn.textContent = '⚡ Test'; btn.disabled = false; }, 2000);
+  if (res?.ok) { btn.textContent = `✓ ${res.rulesDelivered} sent`; progDone('progress-fill', true); }
+  else         { btn.textContent = `✗ failed`; progDone('progress-fill', false); }
+  setTimeout(() => { btn.textContent = '⚡ Test blocking'; btn.disabled = false; }, 2000);
   setTimeout(refresh, 600);
 });
 
-// ── Sync button ───────────────────────────────────────────────────────────────
+// ── Sync button (header icon) ─────────────────────────────────────────────────
 
 document.getElementById('sync-btn').addEventListener('click', async () => {
   const btn = document.getElementById('sync-btn');
-  btn.textContent = '↻…'; btn.disabled = true; progSlide();
+  btn.textContent = '…'; btn.disabled = true; progSlide();
   const res = await ask({ type: 'force:sync' }, 10000);
   progDone('progress-fill', res?.connected);
   btn.textContent = res?.connected ? '✓' : '↻';
-  setTimeout(() => { btn.textContent = '↻ Sync'; btn.disabled = false; }, 2000);
+  setTimeout(() => { btn.textContent = '↻'; btn.disabled = false; }, 2000);
   await refresh();
 });
 
 document.getElementById('check-update-btn').addEventListener('click', async () => {
   const btn = document.getElementById('check-update-btn');
-  btn.textContent = '…'; btn.disabled = true;
-  await checkUpdate(true);
-  btn.textContent = '↑'; btn.disabled = false;
+  btn.textContent = 'Checking…'; btn.disabled = true;
+  const info = await checkUpdate(true);
+  btn.disabled = false;
+  const cur = chrome.runtime.getManifest().version;
+  if (!info) {
+    // Network/offline: give feedback instead of silently reverting.
+    btn.textContent = '⚠ Could not check';
+    setTimeout(() => { btn.textContent = '↑ Check for updates'; }, 2400);
+  } else if (info.updateAvailable) {
+    btn.textContent = `↑ Update to v${info.latestVersion}`;
+  } else {
+    // Up to date: the banner shows nothing, so confirm it on the button itself.
+    const b = document.getElementById('update-banner');
+    b.classList.add('ok');
+    b.innerHTML = `✓ You’re on the latest version (v${esc(cur)})`;
+    b.style.display = 'flex';
+    btn.textContent = '✓ Up to date';
+    setTimeout(() => { b.style.display = 'none'; b.classList.remove('ok'); btn.textContent = '↑ Check for updates'; }, 3200);
+  }
 });
 
-// ── Modify Rules button ───────────────────────────────────────────────────────
+// ── Edit rules button ─────────────────────────────────────────────────────────
 
-document.getElementById('modify-rules-btn').addEventListener('click', async () => {
+document.getElementById('modify-rules-btn').addEventListener('click', async (e) => {
+  e.stopPropagation();   // sits inside the collapsible Rules header — don't toggle it
   const res = await ask({ type: 'daemon:open-rules' });
   if (res?.ok) {
     // Daemon window brought to front — close popup
@@ -592,6 +606,408 @@ document.getElementById('modify-rules-btn').addEventListener('click', async () =
     showChat();
   }
 });
+
+// ═══════════════════════════════ SECTION TABS ═════════════════════════════════
+// The popup is a mini-app. Every tab reads the extension's OWN storage (via background),
+// so it all works standalone — no desktop app required (Mac included). When the daemon
+// is connected it's an enhancement, never a requirement.
+
+function fmtDur(ms) {
+  const s = Math.round((ms || 0) / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  return `${h}h ${m % 60}m`;
+}
+function bar(pct, cls = '') { return `<div class="bar"><div class="barfill ${cls}" style="width:${Math.max(0, Math.min(100, pct))}%"></div></div>`; }
+
+let activeSection = 'home';
+const renderers = {};
+
+function showTab(name) {
+  activeSection = name;
+  document.querySelectorAll('#tabstrip .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  ['home', 'insights', 'activity', 'focus', 'logic', 'actions'].forEach(n => {
+    const el = document.getElementById('view-' + n);
+    if (el) el.hidden = (n !== name);
+  });
+  const scroller = document.querySelector('.scroll-body');
+  if (scroller) scroller.scrollTop = 0;
+  if (name !== 'home' && renderers[name]) renderers[name]().catch(() => {});
+}
+
+document.getElementById('tabstrip').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tab');
+  if (btn) showTab(btn.dataset.tab);
+});
+// Inline AI composer: type on Home and go straight into a live conversation, no
+// intermediate click. Enter sends (Shift+Enter = newline); the field auto-grows.
+const askboxInput = document.getElementById('askbox-input');
+const askbox = document.getElementById('askbox');
+function askboxGrow() { askboxInput.style.height = 'auto'; askboxInput.style.height = Math.min(120, askboxInput.scrollHeight) + 'px'; }
+askboxInput.addEventListener('input', askboxGrow);
+askboxInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); askbox.requestSubmit(); }
+});
+askbox.addEventListener('submit', async e => {
+  e.preventDefault();
+  const text = askboxInput.value.trim();
+  if (!text) return;
+  askboxInput.value = ''; askboxGrow();
+  await startChatWith(text);
+});
+
+// ── Custom analytics builder (standalone, over the extension's own DB) ──────────
+// Mirrors the app's "build your own analytics": pick a metric/grouping/range and it
+// charts from the extension's own visit DB. Pinned cards store a SPEC and recompute
+// on every open (never a stale snapshot), and it all works with no desktop app.
+const A_METRICS = { time: 'Time on site', visits: 'Visits', distraction: 'Avg distraction' };
+const A_GROUPS = { site: 'By site', day: 'By day' };
+const A_RANGES = { 1: 'Today', 7: 'Last 7 days', 14: 'Last 14 days' };
+function analyticsTitle(s) { return `${A_METRICS[s.metric]} · ${A_GROUPS[s.group].toLowerCase()} · ${A_RANGES[s.range].toLowerCase()}`; }
+function fmtMetric(metric, v) { return metric === 'time' ? fmtDur(v) : metric === 'distraction' ? Math.round(v * 100) + '%' : String(Math.round(v)); }
+
+function buildSeries(raw, spec) {
+  const vs = raw?.visitStats || {};
+  const use = Object.keys(vs).sort().slice(-Number(spec.range || 7));
+  const val = (ms, visits, dsum) => spec.metric === 'time' ? ms : spec.metric === 'visits' ? visits : (visits ? dsum / visits : 0);
+  let rows = [];
+  if (spec.group === 'site') {
+    const agg = {};
+    for (const day of use) { const dd = vs[day] || {}; for (const dom in dd) { const a = agg[dom] || (agg[dom] = { ms: 0, visits: 0, dsum: 0 }); a.ms += dd[dom].ms; a.visits += dd[dom].visits; a.dsum += dd[dom].distractionSum; } }
+    rows = Object.entries(agg).map(([label, a]) => ({ label, value: val(a.ms, a.visits, a.dsum), distraction: a.visits ? a.dsum / a.visits : 0 }));
+    rows.sort((x, y) => y.value - x.value); rows = rows.slice(0, 8);
+  } else {
+    rows = use.map(day => { const dd = vs[day] || {}; let ms = 0, visits = 0, dsum = 0; for (const dom in dd) { ms += dd[dom].ms; visits += dd[dom].visits; dsum += dd[dom].distractionSum; } return { label: new Date(day).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }), value: val(ms, visits, dsum), distraction: visits ? dsum / visits : 0 }; });
+  }
+  return rows;
+}
+
+function chartCardHtml(spec, rows, pinned) {
+  const max = Math.max(1, ...rows.map(r => r.value));
+  const body = rows.length ? rows.map(r => `
+    <div class="site-row">
+      <span class="site-dom">${esc(r.label)}</span>
+      <div class="site-bar">${bar(Math.round(r.value / max * 100), (spec.metric === 'distraction' ? r.value : r.distraction) >= 0.5 ? 'bad' : 'ok')}</div>
+      <span class="site-ms data-value">${fmtMetric(spec.metric, r.value)}</span>
+    </div>`).join('') : '<div class="ps-sub">No data in this range yet.</div>';
+  return `<section class="card gen-card">
+    <div class="card-head"><span class="card-title">${esc(spec.title || analyticsTitle(spec))}</span>
+      ${pinned ? `<button class="btn-ghost gen-unpin" data-id="${esc(spec.id)}" title="Remove this card">✕</button>` : ''}</div>
+    ${body}
+  </section>`;
+}
+
+async function getPinnedCards() { try { const r = await chrome.storage.local.get('analyticsCards'); return Array.isArray(r.analyticsCards) ? r.analyticsCards : []; } catch { return []; } }
+async function setPinnedCards(cards) { try { await chrome.storage.local.set({ analyticsCards: cards }); } catch {} }
+
+// ── Insights (analytics + timesheets, browser-adapted) ──
+renderers.insights = async function () {
+  const el = document.getElementById('view-insights');
+  const [d, raw, pinned] = await Promise.all([ask({ type: 'get:insights' }), ask({ type: 'get:analytics-raw' }), getPinnedCards()]);
+  if (!d) { el.innerHTML = '<div class="placeholder">No data yet.</div>'; return; }
+  const t = d.today || {};
+  const top = d.topSites || [];
+  const week = d.week || [];
+  const trend = d.trend || [];
+  const maxSite = Math.max(1, ...top.map(s => s.ms));
+  const pinnedHtml = pinned.map(spec => chartCardHtml(spec, buildSeries(raw, spec), true)).join('');
+  el.innerHTML = `
+    ${pinnedHtml}
+    <section class="card">
+      <div class="card-title">Today</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num data-value">${t.focusRatio ?? 0}%</div><div class="kpi-lbl">focused</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${fmtDur(t.trackedMs)}</div><div class="kpi-lbl">tracked</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${t.visits ?? 0}</div><div class="kpi-lbl">visits</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${t.blocked ?? 0}</div><div class="kpi-lbl">blocked</div></div>
+      </div>
+      ${t.trackedMs ? `<div class="split">${bar(t.focusRatio, 'ok')}<span class="split-lbl">${fmtDur(t.focusedMs)} focused · ${fmtDur(t.distractedMs)} distracted</span></div>` : '<div class="ps-sub">Browse a little and your focus breakdown appears here.</div>'}
+    </section>
+
+    ${trend.length ? `<section class="card">
+      <div class="card-title">Distraction trend</div>
+      <div class="spark">${trend.map(p => `<div class="spark-bar ${p.pct >= 60 ? 'hi' : p.pct >= 35 ? 'mid' : 'lo'}" style="height:${Math.max(6, p.pct)}%" title="${esc(p.domain || '')} · ${p.pct}%"></div>`).join('')}</div>
+      <div class="ps-sub">Recent pages, oldest to newest. Taller = more distracting.</div>
+    </section>` : ''}
+
+    <section class="card">
+      <div class="card-title">Top sites · last 7 days</div>
+      ${top.length ? top.map(s => `
+        <div class="site-row">
+          <span class="site-dom">${esc(s.domain)}</span>
+          <div class="site-bar">${bar(Math.round(s.ms / maxSite * 100), s.distraction >= 0.5 ? 'bad' : 'ok')}</div>
+          <span class="site-ms">${fmtDur(s.ms)}</span>
+        </div>`).join('') : '<div class="ps-sub">No sites tracked yet.</div>'}
+    </section>
+
+    ${week.some(w => w.trackedMs) ? `<section class="card">
+      <div class="card-title">This week · focus by day</div>
+      <div class="week">${week.map(w => `<div class="week-col"><div class="week-bar"><div class="week-fill ok" style="height:${w.focusRatio}%"></div></div><div class="week-lbl">${esc(w.label)}</div></div>`).join('')}</div>
+    </section>` : ''}
+
+    <section class="card gen-builder">
+      <div class="card-head"><span class="card-title">Generate analytics</span><span class="gen-badge">custom</span></div>
+      <div class="ps-sub">Chart your own attention data. Pin a chart and it recomputes every time you open this.</div>
+      <div class="gen-controls">
+        <label>Show<select id="gen-metric"><option value="time">Time on site</option><option value="visits">Visits</option><option value="distraction">Avg distraction</option></select></label>
+        <label>Grouped<select id="gen-group"><option value="site">By site</option><option value="day">By day</option></select></label>
+        <label>Over<select id="gen-range"><option value="7">Last 7 days</option><option value="1">Today</option><option value="14">Last 14 days</option></select></label>
+      </div>
+      <div class="gen-actions"><button class="btn-primary" id="gen-run">Generate</button><button class="btn-secondary" id="gen-ai">Ask AI to build one</button></div>
+      <div id="gen-output"></div>
+    </section>
+  `;
+
+  // Pinned card removal
+  el.querySelectorAll('.gen-unpin').forEach(b => b.addEventListener('click', async () => {
+    const cards = (await getPinnedCards()).filter(c => c.id !== b.dataset.id);
+    await setPinnedCards(cards); renderers.insights();
+  }));
+
+  // Builder: generate a preview with a Pin button
+  const run = document.getElementById('gen-run');
+  if (run) run.addEventListener('click', () => {
+    const spec = {
+      id: 'c' + Date.now(),
+      metric: document.getElementById('gen-metric').value,
+      group: document.getElementById('gen-group').value,
+      range: Number(document.getElementById('gen-range').value),
+    };
+    spec.title = analyticsTitle(spec);
+    const rows = buildSeries(raw, spec);
+    const out = document.getElementById('gen-output');
+    out.innerHTML = chartCardHtml(spec, rows, false) + `<button class="btn-secondary gen-pin-btn">📌 Pin this chart</button>`;
+    out.querySelector('.gen-pin-btn')?.addEventListener('click', async () => {
+      const cards = await getPinnedCards();
+      if (cards.length >= 6) cards.shift();
+      cards.push(spec); await setPinnedCards(cards); renderers.insights();
+    });
+  });
+  document.getElementById('gen-ai')?.addEventListener('click', () => {
+    showChat();
+    const inp = document.getElementById('chat-input');
+    if (inp) { inp.value = 'Build me an analytics chart of '; inp.focus(); }
+  });
+};
+
+// ── Activity (attention timeline, browser-adapted) ──
+renderers.activity = async function () {
+  const el = document.getElementById('view-activity');
+  const d = await ask({ type: 'get:context-log' });
+  const log = (d?.contextLog || []);
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-head"><span class="card-title">Recent activity</span>
+        <button class="btn-ghost" id="act-timeline" aria-label="Open full timeline">Timeline</button></div>
+      ${log.length ? log.slice(0, 40).map(e => {
+        const pct = Math.round((e.distractionProbability || 0) * 100);
+        const lvl = pct >= 60 ? 'bad' : pct >= 35 ? 'mid' : 'ok';
+        return `<div class="act-row">
+          <span class="act-dot ${lvl}"></span>
+          <div class="act-body">
+            <div class="act-top"><span class="act-dom">${esc(e.domain || '?')}</span><span class="act-ago">${ago(e.ts)}</span></div>
+            ${e.intent ? `<div class="act-intent">${esc(e.intent)}</div>` : ''}
+          </div>
+          <span class="act-pct data-value">${pct}%</span>
+        </div>`;
+      }).join('') : '<div class="ps-sub">Nothing tracked yet. Browse a few sites.</div>'}
+    </section>`;
+  const tl = document.getElementById('act-timeline');
+  if (tl) tl.addEventListener('click', () => showFlow());
+};
+
+// ── Focus (deep-focus control, browser-adapted) ──
+renderers.focus = async function () {
+  const el = document.getElementById('view-focus');
+  const [f, ins] = await Promise.all([ask({ type: 'get:focus' }), ask({ type: 'get:insights' })]);
+  const active = f?.active;
+  const remainMs = active ? Math.max(0, f.focusUntil - Date.now()) : 0;
+  const t = ins?.today || {};
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-title">Focus mode</div>
+      ${active ? `
+        <div class="focus-live"><div class="focus-num data-value">${fmtDur(remainMs)}</div><div class="kpi-lbl">remaining · distractions hidden everywhere</div></div>
+        <button class="btn-secondary" id="focus-end">End focus</button>
+      ` : `
+        <div class="ps-sub">Start a session and Attentify hides distractions on every page until it ends.</div>
+        <div class="focus-presets">
+          ${[25, 50, 90].map(m => `<button class="btn-primary focus-start" data-min="${m}">${m} min</button>`).join('')}
+        </div>
+      `}
+    </section>
+    <section class="card">
+      <div class="card-title">Today</div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-num data-value">${t.focusRatio ?? 0}%</div><div class="kpi-lbl">focused</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${fmtDur(t.focusedMs)}</div><div class="kpi-lbl">focus time</div></div>
+        <div class="kpi"><div class="kpi-num data-value">${t.blocked ?? 0}</div><div class="kpi-lbl">blocked</div></div>
+      </div>
+    </section>`;
+  el.querySelectorAll('.focus-start').forEach(b => b.addEventListener('click', async () => {
+    await ask({ type: 'set:focus', minutes: Number(b.dataset.min) });
+    renderers.focus();
+  }));
+  const end = document.getElementById('focus-end');
+  if (end) end.addEventListener('click', async () => { await ask({ type: 'set:focus', minutes: 0 }); renderers.focus(); });
+};
+
+// ── Logic — the reasoning showcase ──────────────────────────────────────────────
+// Explains, transparently, WHY pages are classified as distractions: the live factor
+// breakdown for recent pages, the built-in taxonomy behind default classifications, and
+// how the classifier calibrates + learns from corrections. Animated so it reads as a
+// living decision, not a black box. Every number is derived from the extension's own
+// storage, so it works fully standalone.
+
+// Colour a signed factor weight by how strongly it pushes toward distraction.
+function factorTone(w) { return w >= 0.4 ? 'bad' : w >= 0.2 ? 'mid' : 'ok'; }
+function pctVal(p) { return Math.round((p || 0) * 100); }
+
+// A circular score meter (SVG). Renders empty; the .go pass animates the arc + number.
+function scoreRing(p) {
+  const pct = pctVal(p);
+  const tone = p >= 0.6 ? 'bad' : p >= 0.35 ? 'mid' : 'ok';
+  const C = 2 * Math.PI * 22; // r=22
+  return `<div class="ring ${tone}" style="--dash:${C.toFixed(1)};--off:${(C * (1 - (p || 0))).toFixed(1)}">
+    <svg viewBox="0 0 52 52" width="52" height="52" aria-hidden="true">
+      <circle class="ring-bg" cx="26" cy="26" r="22"></circle>
+      <circle class="ring-fg" cx="26" cy="26" r="22" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"></circle>
+    </svg>
+    <span class="ring-num data-value">${pct}<i>%</i></span>
+  </div>`;
+}
+
+function whyCard(e, i) {
+  const factors = (e.factors || []).slice().sort((a, b) => Math.abs(b.w) - Math.abs(a.w));
+  const maxW = Math.max(0.75, ...factors.map(f => Math.abs(f.w)));
+  const verdict = e.p >= 0.6 ? 'Likely a distraction' : e.p >= 0.35 ? 'Could go either way' : 'Looks intentional';
+  return `<div class="why-card" style="animation-delay:${i * 60}ms">
+    <div class="why-head">
+      ${scoreRing(e.p)}
+      <div class="why-id">
+        <div class="why-dom">${esc(e.domain || '?')}</div>
+        <div class="why-intent">${esc(e.intent || '')}</div>
+        <div class="why-verdict ${e.p >= 0.6 ? 'bad' : e.p >= 0.35 ? 'mid' : 'ok'}">${verdict}</div>
+      </div>
+      <span class="why-src" title="How the score was set">${e.source === 'ai' ? '✦ AI read' : '◇ signals'}</span>
+    </div>
+    <div class="factors">
+      ${factors.length ? factors.map(f => `
+        <div class="factor">
+          <div class="factor-top"><span class="factor-lbl">${esc(f.label)}</span><span class="factor-w data-value ${factorTone(f.w)}">${f.w >= 0 ? '+' : ''}${Math.round(f.w * 100)}</span></div>
+          <div class="factor-bar"><span class="factor-fill ${factorTone(f.w)}" style="--w:${Math.round(Math.abs(f.w) / maxW * 100)}%"></span></div>
+          ${f.detail ? `<div class="factor-detail">${esc(f.detail)}</div>` : ''}
+        </div>`).join('') : '<div class="ps-sub">No signals recorded for this page.</div>'}
+    </div>
+    ${e.reason && e.source === 'ai' ? `<div class="why-note">“${esc(e.reason)}”</div>` : ''}
+  </div>`;
+}
+
+renderers.logic = async function () {
+  const el = document.getElementById('view-logic');
+  const r = await ask({ type: 'get:reasoning' });
+  if (!r) { el.innerHTML = '<div class="placeholder">No reasoning data yet. Browse a few sites and it fills in.</div>'; return; }
+  const recent = (r.recent || []).slice(0, 6);
+  const tax = r.taxonomy || [];
+  const bands = r.bands || { high: 0, mid: 0, low: 0 };
+  const bandTotal = Math.max(1, bands.high + bands.mid + bands.low);
+  const cats = r.categories || [];
+  const corr = r.corrections || [];
+  const topics = r.keywords || [];
+
+  el.innerHTML = `
+    <section class="logic-hero">
+      <div class="logic-hero-title">How Attentify decides</div>
+      <div class="logic-hero-sub">Every page gets a distraction score from signals you can see. Nothing is hidden by a black box, and you can correct it.</div>
+      <div class="logic-hero-stats">
+        <div class="lh-stat"><span class="data-value">${r.assessedTotal || 0}</span><label>pages read</label></div>
+        <div class="lh-stat"><span class="data-value">${r.rulesActive || 0}/${r.rulesTotal || 0}</span><label>rules on</label></div>
+        <div class="lh-stat"><span class="data-value">${r.correctionTotal || 0}</span><label>your corrections</label></div>
+      </div>
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">Why recent pages were classified</div>
+      <div class="ps-sub">The exact signals behind each score, strongest first.</div>
+      ${recent.length ? `<div class="why-list">${recent.map((e, i) => whyCard(e, i)).join('')}</div>`
+        : '<div class="ps-sub">Nothing classified yet. Open a few sites and their reasoning appears here.</div>'}
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">What counts as a distraction, and why</div>
+      <div class="ps-sub">The built-in taxonomy. These carry a baseline score before your behaviour is even considered.</div>
+      <div class="tax-list">
+        ${tax.map((t, i) => `
+          <div class="tax-card" style="animation-delay:${i * 70}ms">
+            <div class="tax-top">
+              <span class="tax-lbl">${esc(t.label)}</span>
+              <span class="tax-weight data-value ${t.weight >= 0.6 ? 'bad' : 'mid'}">${Math.round(t.weight * 100)}<i>%</i></span>
+            </div>
+            <div class="tax-bar"><span class="tax-fill ${t.weight >= 0.6 ? 'bad' : 'mid'}" style="--w:${Math.round(t.weight * 100)}%"></span></div>
+            <div class="tax-ex">${esc(t.examples)}</div>
+            <div class="tax-why">${esc(t.why)}</div>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">How confident it is</div>
+      <div class="ps-sub">Distribution of recent scores. A healthy classifier is decisive, not stuck in the middle.</div>
+      <div class="calib">
+        <div class="calib-row"><span class="calib-lbl ok">Looks intentional</span><div class="calib-bar"><span class="calib-fill ok" style="--w:${Math.round(bands.low / bandTotal * 100)}%"></span></div><span class="calib-n data-value">${bands.low}</span></div>
+        <div class="calib-row"><span class="calib-lbl mid">Ambiguous</span><div class="calib-bar"><span class="calib-fill mid" style="--w:${Math.round(bands.mid / bandTotal * 100)}%"></span></div><span class="calib-n data-value">${bands.mid}</span></div>
+        <div class="calib-row"><span class="calib-lbl bad">Likely distraction</span><div class="calib-bar"><span class="calib-fill bad" style="--w:${Math.round(bands.high / bandTotal * 100)}%"></span></div><span class="calib-n data-value">${bands.high}</span></div>
+      </div>
+      ${cats.length ? `<div class="cat-strip">${cats.map(c => `<span class="cat-pill ${c.avg >= 0.6 ? 'bad' : c.avg >= 0.35 ? 'mid' : 'ok'}">${esc(c.category)} <b class="data-value">${pctVal(c.avg)}%</b></span>`).join('')}</div>` : ''}
+    </section>
+
+    <section class="card logic-block">
+      <div class="card-title">What you taught it</div>
+      ${corr.length ? `<div class="ps-line"><span class="data-value">${r.correctionTotal}</span>&nbsp;element${r.correctionTotal !== 1 ? 's' : ''} you flagged "not a distraction". The scanner now skips these:</div>
+        <div class="corr-list">${corr.slice(0, 8).map(c => `<div class="corr-row"><span class="corr-dom">${esc(c.domain)}</span><span class="corr-n data-value">${c.n}</span></div>`).join('')}</div>`
+        : '<div class="ps-sub">Nothing yet. Flag any wrongly-hidden element as "not a distraction" and the scanner learns to leave it alone.</div>'}
+      <div class="logic-subhead">Topics you asked it to hide</div>
+      ${topics.length ? `<div class="chips">${topics.map(k => `<span class="chip" data-k="${esc(k)}">${esc(k)} ✕</span>`).join('')}</div>`
+        : '<div class="ps-sub">None yet. Ask the AI to "hide anything about X" and it learns it here.</div>'}
+    </section>`;
+
+  el.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', async () => {
+    const cur = (await ask({ type: 'get:auto-block' }))?.autoHideKeywords || [];
+    await ask({ type: 'set:auto-hide-prefs', keywords: cur.filter(x => x !== ch.dataset.k), replace: true });
+    renderers.logic();
+  }));
+};
+
+// ── Actions (what Attentify did, browser-adapted) ──
+renderers.actions = async function () {
+  const el = document.getElementById('view-actions');
+  const st = await ask({ type: 'get:status' });
+  const log = st?.activityLog || [];
+  const hidden = Object.values(st?.elementStats || {}).reduce((a, b) => a + (b || 0), 0);
+  const bypasses = Object.values(st?.bypassScores || {}).reduce((a, b) => a + (b || 0), 0);
+  el.innerHTML = `
+    <section class="card">
+      <div class="card-title">Quick actions</div>
+      <div class="qa-grid">
+        <button class="btn-secondary" id="qa-focus">Start 25m focus</button>
+        <button class="btn-secondary" id="qa-scan">Scan this page</button>
+        <button class="btn-secondary" id="qa-ask">Ask AI</button>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-title">What Attentify did</div>
+      <div class="ps-sub">${hidden} element${hidden !== 1 ? 's' : ''} hidden today · ${bypasses} bypass${bypasses !== 1 ? 'es' : ''}</div>
+      ${log.length ? `<div class="act-log">${log.map(e => `
+        <div class="log-entry t-${esc(e.type)}"><span class="log-ts">${sSago(e.ts)}</span><span class="log-icon">${LOG_ICON[e.type] || '·'}</span>
+        <div class="log-body"><div class="log-msg">${esc(e.msg)}</div>${e.detail ? `<div class="log-sub">${esc(e.detail)}</div>` : ''}</div></div>`).join('')}</div>`
+        : '<div class="ps-sub">No activity yet.</div>'}
+    </section>`;
+  document.getElementById('qa-focus')?.addEventListener('click', async () => { await ask({ type: 'set:focus', minutes: 25 }); showTab('focus'); });
+  document.getElementById('qa-scan')?.addEventListener('click', () => { showTab('home'); document.getElementById('scan-btn')?.click(); });
+  document.getElementById('qa-ask')?.addEventListener('click', () => showChat());
+};
 
 // ═══════════════════════════════ CHAT VIEW ════════════════════════════════════
 
@@ -605,6 +1021,18 @@ function showChat() {
   document.getElementById('main-view').style.display = 'none';
   document.getElementById('chat-view').style.display  = 'flex';
   initChat();
+}
+
+// Open the chat view and immediately send `text` (from the Home composer). Awaits
+// initChat so apiKey/connection/free-credit state is loaded before sendChat decides
+// whether AI can run — otherwise the first message could wrongly hit the paywall.
+async function startChatWith(text) {
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('chat-view').style.display  = 'flex';
+  try { await initChat(); } catch (_) {}
+  const input = document.getElementById('chat-input');
+  if (input) input.value = text;
+  sendChat();
 }
 
 function hideChat() {
@@ -681,7 +1109,7 @@ function renderKeyUI(editing = false) {
 document.getElementById('api-key-save-btn').addEventListener('click', async () => {
   const key = document.getElementById('api-key-input').value.trim();
   if (!key.startsWith('sk-or-')) {
-    document.getElementById('api-key-err').textContent = 'OpenRouter keys start with sk-or- — get one at openrouter.ai/keys';
+    document.getElementById('api-key-err').textContent = 'OpenRouter keys start with sk-or-. Get one at openrouter.ai/keys';
     document.getElementById('api-key-err').style.display = 'block';
     return;
   }
@@ -774,7 +1202,7 @@ function addAiMsg(text) {
         const kws = (pref.keywords || []).map(k => String(k).toLowerCase().trim()).filter(Boolean);
         if (kws.length) {
           ask({ type: 'set:auto-hide-prefs', keywords: kws });   // learn it (auto-applies across sites)
-          html += `</div><div class="pref-learned">🧠 Got it — I'll auto-hide content about <b>${esc(kws.join(', '))}</b> across sites.</div><div class="bubble" style="margin-top:5px">`;
+          html += `</div><div class="pref-learned">🧠 Got it. I'll auto-hide content about <b>${esc(kws.join(', '))}</b> across sites.</div><div class="bubble" style="margin-top:5px">`;
         }
       } catch(_) { html += esc(part); }
     } else if (part.startsWith('<titleblock>')) {
@@ -784,7 +1212,7 @@ function addAiMsg(text) {
         if (kws.length) {
           ask({ type: 'set:title-blocks', keywords: kws });
           refreshTitleBlocks?.();
-          html += `</div><div class="pref-learned tb">🛡️ I'll block videos whose title contains <b>${esc(kws.join(', '))}</b> — in your feed and the moment they open.</div><div class="bubble" style="margin-top:5px">`;
+          html += `</div><div class="pref-learned tb">🛡️ I'll block videos whose title contains <b>${esc(kws.join(', '))}</b>, in your feed and the moment they open.</div><div class="bubble" style="margin-top:5px">`;
         }
       } catch(_) { html += esc(part); }
     } else {
@@ -799,7 +1227,7 @@ function addAiMsg(text) {
   d.querySelectorAll('.add-rule-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const rule = pendingRules[Number(btn.dataset.ruleIdx)];
-      if (!rule) { addSysMsg('Sorry — that rule was malformed. Ask me to try again.'); return; }
+      if (!rule) { addSysMsg('Sorry, that rule was malformed. Ask me to try again.'); return; }
       const payload = normalizeRule(rule);
       if (!payload) { addSysMsg('That rule is missing a domain or selectors, so it can’t block anything. Ask me to be more specific.'); return; }
       const orig = btn.textContent;
@@ -812,7 +1240,7 @@ function addAiMsg(text) {
         refresh().catch(() => {});   // reflect it in the main view immediately
       } else {
         btn.disabled = false; btn.textContent = orig;
-        addSysMsg('Could not add that rule — please try again.');
+        addSysMsg('Could not add that rule. Please try again.');
       }
     });
   });
@@ -889,12 +1317,18 @@ async function sendChat() {
     }
     if (msg.type === 'error') {
       removeTypingIndicator();
-      if (msg.message === 'paywall') {
-        addSysMsg("You've used up your $1 of free AI. Subscribe to Cloud for $5/mo (no key needed) — or add your own OpenRouter key above. Open the Cloud panel below to upgrade.");
-        document.getElementById('cloud-box')?.scrollIntoView({ behavior: 'smooth' });
+      if (msg.message === 'paywall' || msg.message === 'out_of_credit') {
+        addSysMsg("You're out of AI credits. Top up ($5 / $10 / $20) or subscribe for $9.99/mo, no key needed. Open the plan row at the bottom.");
         renderCloud().catch(() => {});
+        const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
+        document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (msg.message === 'signin_required') {
+        addSysMsg('Sign in to use AI. Create a free account to get free credit to start, or add your own OpenRouter key.');
+        renderCloud().catch(() => {});
+        const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
+        document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'no_key') {
-        addSysMsg('No OpenRouter key set — enter one above. Get it free at openrouter.ai/keys');
+        addSysMsg('No OpenRouter key set. Enter one above; get it free at openrouter.ai/keys');
         renderKeyUI(true);
       } else if (msg.message === 'daemon_fail') {
         // Retry with direct API
@@ -1028,7 +1462,7 @@ async function buildReportBody(desc) {
   if (tabCtx?.autoHidden?.length) lines.push(`- Auto-hidden here: ${tabCtx.autoHidden.map(a => a.label).join(', ')}`);
   if (status?.activityLog?.length) {
     lines.push('', '**Recent activity**');
-    for (const e of status.activityLog.slice(0, 8)) lines.push(`- ${e.type}: ${e.msg}${e.detail ? ' — ' + e.detail : ''}`);
+    for (const e of status.activityLog.slice(0, 8)) lines.push(`- ${e.type}: ${e.msg}${e.detail ? ' (' + e.detail + ')' : ''}`);
   }
   lines.push('', `_UA: ${navigator.userAgent}_`);
   return lines.join('\n');
@@ -1046,7 +1480,7 @@ async function submitReport() {
   progDone('report-progress-fill', !!res?.ok);
   btn.disabled = false; btn.textContent = 'Submit bug report';
   if (res?.ok) {
-    st.innerHTML = `✓ Filed <a href="${esc(res.url)}" target="_blank">#${res.number}</a> — thank you!`;
+    st.innerHTML = `✓ Filed <a href="${esc(res.url)}" target="_blank">#${res.number}</a>. Thank you!`;
     st.className = 'report-status ok';
     document.getElementById('report-desc').value = '';
   } else if (res?.error === 'no_token') {
@@ -1054,7 +1488,7 @@ async function submitReport() {
     st.className = 'report-status err';
     document.getElementById('gh-token-panel').style.display = 'block';
   } else {
-    st.textContent = `Couldn’t file it: ${res?.error || 'unknown error'} — saved locally.`;
+    st.textContent = `Couldn’t file it: ${res?.error || 'unknown error'}. Saved locally.`;
     st.className = 'report-status err';
   }
 }
@@ -1086,73 +1520,106 @@ document.getElementById('gh-token-remove').addEventListener('click', async (e) =
 // Paste a license key to unlock the managed AI (no OpenRouter key needed), managed
 // auto-site-blocking and analytics. Upgrade/manage go through Stripe.
 
-async function renderCloud() {
+// The upsell is demoted to a single collapsed footer row; tapping it expands the
+// full pitch. At most one upsell element is ever visible without interaction.
+function wireCloudExpand() {
+  const summary = document.getElementById('cloud-summary');
   const box = document.getElementById('cloud-box');
-  const badge = document.getElementById('cloud-badge');
-  if (!box) return;
+  const toggle = (e) => { if (e) e.stopPropagation(); box.style.display = box.style.display === 'none' ? 'block' : 'none'; };
+  summary.onclick = toggle;
+  summary.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } };
+}
+
+async function renderCloud() {
+  const summary = document.getElementById('cloud-summary');
+  const box = document.getElementById('cloud-box');
+  if (!summary) return;
   const res = await ask({ type: 'get:cloud' });
   const st = res?.cloudStatus;
-  const active = st && st.tier === 'cloud' && st.status === 'active';
+  const u = res?.usage;
+  const ownKey = u?.hasOwnKey;
+  wireCloudExpand();
 
-  if (active) {
-    badge.textContent = 'ACTIVE';
-    badge.className = 'cloud-badge on';
-    const used = st.aiUsed ?? 0, quota = st.aiQuota ?? 0;
+  const signedIn = !!(st && st.email);
+  const subscribed = !!(st && st.subscribed);
+  const credits = st?.credits ?? 0;
+  const openUrl = async (type, extra) => { const r = await ask({ type, ...(extra || {}) }, 15000); if (r?.url) chrome.tabs.create({ url: r.url }); };
+
+  // ── Collapsed summary row ──
+  if (subscribed) {
+    summary.innerHTML = `<span class="plan-dot on"></span><span class="plan-name">Subscribed</span>
+      <span class="plan-meta">Unlimited AI</span><span class="plan-cta">Manage</span>`;
+  } else if (ownKey) {
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Your own key</span>
+      <span class="plan-meta">AI billed to you</span>`;
+  } else if (signedIn) {
+    summary.innerHTML = `<span class="plan-dot${st.outOfCredit ? ' out' : ''}"></span><span class="plan-name">Credits</span>
+      <span class="plan-meta">${credits.toLocaleString()} left</span><span class="plan-cta">${st.outOfCredit ? 'Top up' : 'Add'}</span>`;
+  } else {
+    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Sign in</span>
+      <span class="plan-meta">Free credit to start</span><span class="plan-cta">Sign in</span>`;
+  }
+
+  // ── Expanded box ──
+  if (subscribed) {
     box.innerHTML = `
-      <div class="cloud-row"><span class="cloud-ok">✓ Cloud active</span>
-        <span class="cloud-sub">${esc(st.email || '')}</span></div>
-      <div class="cloud-meter"><span>managed AI</span>
-        <div class="cloud-bar"><div class="cloud-bar-fill" style="width:${quota ? Math.min(100, Math.round(used / quota * 100)) : 0}%"></div></div>
-        <b>${Math.max(0, quota - used)} left</b></div>
+      <div class="cloud-row"><span class="cloud-ok">✓ Subscribed</span><span class="cloud-sub">${esc(st.email || '')}</span></div>
+      <p class="cloud-pitch">Unlimited managed AI plus more custom analytics.</p>
       <div class="cloud-btns">
-        <button class="pill-btn" id="cloud-manage">Manage billing</button>
-        <button class="pill-btn" id="cloud-signout">Sign out</button>
+        <button class="btn-secondary" id="cloud-manage">Manage billing</button>
+        <button class="btn-secondary" id="cloud-signout">Sign out</button>
       </div>`;
-    document.getElementById('cloud-manage').onclick = async () => {
-      const r = await ask({ type: 'cloud:portal' }, 15000);
-      if (r?.url) chrome.tabs.create({ url: r.url });
-    };
-    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'clear:cloud-key' }); renderCloud(); };
+    document.getElementById('cloud-manage').onclick = () => openUrl('cloud:portal');
+    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'cloud:logout' }); renderCloud(); };
     return;
   }
 
-  badge.textContent = res?.hasKey ? 'CHECK KEY' : 'FREE';
-  badge.className = 'cloud-badge';
-  const invalid = res?.hasKey && st && st.status !== 'active';
-  // Free-AI meter: how much of the included $1 allowance is left (unless the user
-  // brought their own key, in which case there's nothing to meter).
-  const u = res?.usage;
-  let meterHtml = '';
-  if (u && !u.hasOwnKey) {
-    const pct = Math.min(100, Math.round((u.usedUsd / (u.limitUsd || 1)) * 100));
-    meterHtml = `<div class="cloud-meter"><span>${u.exhausted ? 'free AI used up' : 'free AI'}</span>
-      <div class="cloud-bar"><div class="cloud-bar-fill" style="width:${pct}%;${u.exhausted ? 'background:#ff5252' : ''}"></div></div>
-      <b>$${u.usedUsd.toFixed(2)}/$${u.limitUsd.toFixed(2)}</b></div>`;
+  if (ownKey) {
+    box.innerHTML = `<p class="cloud-pitch">Using your own API key. AI is billed directly to you and is never metered here.</p>`;
+    return;
   }
+
+  if (signedIn) {
+    box.innerHTML = `
+      <div class="cloud-row"><span class="cloud-sub">${esc(st.email || '')}</span>
+        <b class="${st.outOfCredit ? 'cloud-err' : ''}">${credits.toLocaleString()} credits</b></div>
+      ${st.outOfCredit ? `<p class="cloud-err">You are out of credits. AI features and adaptive blocking pause until you top up or subscribe. Your rules and keyword blocks keep working.</p>` : `<p class="cloud-pitch">Credits power the AI. Top up any time, or subscribe for unlimited.</p>`}
+      <div class="cloud-btns">
+        <button class="btn-secondary buy-credit" data-pack="5">+$5</button>
+        <button class="btn-secondary buy-credit" data-pack="10">+$10</button>
+        <button class="btn-secondary buy-credit" data-pack="20">+$20</button>
+      </div>
+      <button class="btn-primary" id="cloud-sub" style="width:100%;margin-top:6px">Subscribe $9.99/mo, unlimited</button>
+      <button class="btn-secondary" id="cloud-signout" style="width:100%;margin-top:6px">Sign out</button>`;
+    box.querySelectorAll('.buy-credit').forEach((b) => { b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack }); });
+    document.getElementById('cloud-sub').onclick = () => openUrl('cloud:checkout');
+    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'cloud:logout' }); renderCloud(); };
+    return;
+  }
+
+  // Not signed in → email/password account form (a new account gets free trial credit).
   box.innerHTML = `
-    ${meterHtml}
-    <p class="cloud-pitch">${u && u.exhausted ? 'Your free AI is used up. ' : ''}Unlock <b>unlimited managed AI</b> (no API key needed), <b>automatic site blocking</b> and <b>analytics</b> for <b>$5/mo</b>.</p>
-    ${invalid ? `<p class="cloud-err">That license key isn't active. Re-enter it or upgrade below.</p>` : ''}
+    <p class="cloud-pitch">Create a free account to get <b>free AI credit</b> to start. Top up or subscribe for unlimited any time.</p>
+    <div class="cloud-key-row"><input id="auth-email" class="cloud-key-input" placeholder="you@email.com" type="email" autocomplete="email"></div>
+    <div class="cloud-key-row"><input id="auth-pass" class="cloud-key-input" placeholder="Password (8+ characters)" type="password" autocomplete="current-password"></div>
+    <p id="auth-err" class="cloud-err" style="display:none"></p>
     <div class="cloud-btns">
-      <button class="pill-btn accent" id="cloud-upgrade">Upgrade to Cloud</button>
-      <button class="pill-btn" id="cloud-have">I have a key</button>
-    </div>
-    <div id="cloud-key-row" class="cloud-key-row" style="display:${invalid ? 'flex' : 'none'}">
-      <input id="cloud-key-input" class="cloud-key-input" placeholder="pd_live_…" type="password">
-      <button class="pill-btn accent" id="cloud-key-save">Save</button>
+      <button class="btn-primary" id="auth-signup">Create account</button>
+      <button class="btn-secondary" id="auth-login">Sign in</button>
     </div>`;
-  document.getElementById('cloud-upgrade').onclick = async () => {
-    const r = await ask({ type: 'cloud:checkout' }, 15000);
-    if (r?.url) chrome.tabs.create({ url: r.url });
-    else addToast?.('Could not start checkout — try the website.');
+  const doAuth = async (type) => {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-pass').value;
+    const errEl = document.getElementById('auth-err');
+    errEl.style.display = 'none';
+    if (!email || password.length < 8) { errEl.textContent = 'Enter your email and a password of at least 8 characters.'; errEl.style.display = 'block'; return; }
+    const r = await ask({ type, email, password }, 15000);
+    if (r?.ok) renderCloud();
+    else { errEl.textContent = r?.error || 'Could not sign in.'; errEl.style.display = 'block'; }
   };
-  document.getElementById('cloud-have').onclick = () => {
-    const row = document.getElementById('cloud-key-row');
-    row.style.display = row.style.display === 'none' ? 'flex' : 'none';
-    document.getElementById('cloud-key-input').focus();
-  };
-  document.getElementById('cloud-key-save').onclick = saveCloudKey;
-  document.getElementById('cloud-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') saveCloudKey(); });
+  document.getElementById('auth-signup').onclick = () => doAuth('cloud:signup');
+  document.getElementById('auth-login').onclick = () => doAuth('cloud:login');
+  document.getElementById('auth-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAuth('cloud:login'); });
 }
 
 async function saveCloudKey() {

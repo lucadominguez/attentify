@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="pd-ext-shim.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attentify</title>
   <link rel="stylesheet" href="popup.css">
+  <!-- Demo shim: fakes chrome.* with sample data so the REAL popup runs live on the site. -->
+  <script src="pd-ext-shim.js"></script>
 </head>
 <body>
 
@@ -13,86 +14,127 @@
 <div id="main-view">
 
   <div class="header">
-    <span class="brand">ATTENTIFY <span id="version-label" class="version"></span></span>
+    <div class="brand">
+      <span class="brand-mark" role="img" aria-label="Attentify"></span>
+      <span class="brand-name">Attentify</span>
+    </div>
     <div class="header-actions">
-      <button id="flow-btn" class="icon-btn" title="Context timeline">◷</button>
-      <button id="chat-btn" class="icon-btn" title="AI Assistant">✦</button>
-      <div id="status-dot" class="status-dot"></div>
+      <button id="theme-btn" class="icon-btn" title="Toggle light / dark" aria-label="Toggle light or dark theme">◐</button>
+      <button id="expand-btn" class="icon-btn" title="Open full screen" aria-label="Open in a full tab">⛶</button>
+      <button id="sync-btn"  class="icon-btn" title="Sync now"          aria-label="Sync now">↻</button>
+      <button id="flow-btn"  class="icon-btn" title="Context timeline"  aria-label="Context timeline">◷</button>
+      <button id="chat-btn"  class="icon-btn" title="AI assistant"      aria-label="AI assistant">✦</button>
+      <div id="conn-pill" class="conn-pill" title="">
+        <span id="status-dot" class="conn-dot"></span>
+        <span id="conn-label" class="conn-label">…</span>
+      </div>
     </div>
   </div>
 
   <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
-  <div id="status-text" class="subtitle">Loading…</div>
-
   <div id="update-banner" class="update-banner" style="display:none"></div>
 
-  <!-- Per-site hero: plain-language status + one-tap pause for the current site -->
-  <div id="site-hero" class="site-hero" style="display:none">
-    <span id="site-hero-icon" class="site-hero-icon">✓</span>
-    <div class="site-hero-text">
-      <div id="site-hero-title" class="site-hero-title">—</div>
-      <div id="site-hero-sub" class="site-hero-sub"></div>
-    </div>
-    <label class="toggle site-toggle" id="site-toggle-wrap" style="display:none" title="Block distractions on this site">
-      <input type="checkbox" id="site-toggle"><span class="slider"></span>
-    </label>
-  </div>
+  <!-- Section tabs: the popup is a mini-app. Everything is browser-native so it works standalone. -->
+  <nav class="tabstrip" id="tabstrip" role="tablist">
+    <button class="tab active" data-tab="home"     role="tab">Home</button>
+    <button class="tab"        data-tab="insights" role="tab">Insights</button>
+    <button class="tab"        data-tab="activity" role="tab">Activity</button>
+    <button class="tab"        data-tab="focus"    role="tab">Focus</button>
+    <button class="tab"        data-tab="logic"    role="tab">Logic</button>
+    <button class="tab"        data-tab="actions"  role="tab">Actions</button>
+  </nav>
 
-  <!-- Diagnostics (advanced — collapsed by default) -->
-  <div class="section-label collapsible" id="diag-toggle">DIAGNOSTICS <span id="diag-arrow">▸</span></div>
-  <div id="diag-panel" class="diag-panel" style="display:none"></div>
+  <!-- Inline AI composer (chat-first): type and talk to the AI instantly, no extra click. -->
+  <form class="askbox" id="askbox">
+    <span class="askbox-icon" aria-hidden="true">✦</span>
+    <textarea id="askbox-input" class="askbox-input" rows="1" placeholder="Ask AI to block something, or about your focus…" aria-label="Ask the AI assistant"></textarea>
+    <button type="submit" class="askbox-send" id="askbox-send" aria-label="Send message" title="Send">↑</button>
+  </form>
 
-  <!-- Active tab -->
-  <div id="tab-section" style="display:none">
-    <div class="section-label">ACTIVE TAB: <span id="tab-domain-label" class="tab-domain-hl"></span></div>
-    <div id="tab-detail" class="tab-detail"></div>
-  </div>
+  <div class="scroll-body">
 
-  <!-- Auto-detected distractions on the current page -->
-  <div class="section-label">
-    DISTRACTIONS DETECTED <span id="scan-summary" class="rules-summary"></span>
-    <button id="scan-btn" class="pill-btn accent" style="float:right;margin-top:-1px">⟳ Scan</button>
-  </div>
-  <div class="scan-controls">
-    <label class="toggle scan-toggle"><input type="checkbox" id="autoblock-toggle"><span class="slider"></span></label>
-    <span class="scan-auto-lbl">Auto-hide obvious distractions on every page</span>
-  </div>
-  <!-- Live context read: why you're here + how distracted you look right now -->
-  <div id="context-banner" class="context-banner" style="display:none"></div>
-  <div id="learned-topics" class="learned-topics" style="display:none"></div>
+    <div id="view-home" class="view">
 
-  <!-- Block whole videos by words in their title (feed + watch page) -->
-  <div class="title-block-row">
-    <input id="title-block-input" class="title-block-input" placeholder="Block videos whose title contains…">
-    <button id="title-block-add" class="pill-btn accent">Block</button>
-  </div>
-  <div id="title-blocks" class="title-blocks" style="display:none"></div>
-  <div id="scan-list" class="scan-list"><div class="placeholder">Tap <b>⟳ Scan</b> to spot distracting elements on this page.</div></div>
+    <!-- ── 2. THIS PAGE ── -->
+    <section class="card" id="page-card">
+      <div class="card-head">
+        <span class="card-title">This page</span>
+        <button id="scan-btn" class="btn-ghost" title="Scan this page for distractions" aria-label="Scan this page for distractions">Scan</button>
+      </div>
+      <div id="page-status" class="page-status"><div class="ps-line">Checking this page…</div></div>
+      <div id="scan-list" class="scan-list" style="display:none"></div>
+      <div id="learned-topics" class="learned-topics" style="display:none"></div>
+      <label class="setting-row" id="site-toggle-wrap" style="display:none">
+        <span class="setting-lbl">Blocking on this site</span>
+        <span class="toggle"><input type="checkbox" id="site-toggle"><span class="slider"></span></span>
+      </label>
+    </section>
 
-  <!-- Attentify Cloud -->
-  <div class="section-label">ATTENTIFY CLOUD <span id="cloud-badge" class="cloud-badge"></span></div>
-  <div id="cloud-box" class="cloud-box"></div>
+    <!-- ── 3. QUICK BLOCK ── -->
+    <section class="card" id="block-card">
+      <div class="field-label">Block by keyword</div>
+      <div class="title-block-row">
+        <input id="title-block-input" class="title-block-input" placeholder="Block videos whose title contains…" aria-label="Block videos whose title contains">
+        <button id="title-block-add" class="btn-primary">Block</button>
+      </div>
+      <div id="title-blocks" class="title-blocks" style="display:none"></div>
+      <label class="setting-row">
+        <span class="setting-lbl">Auto-hide obvious distractions on every page</span>
+        <span class="toggle"><input type="checkbox" id="autoblock-toggle"><span class="slider"></span></span>
+      </label>
+    </section>
 
-  <!-- Rules -->
-  <div class="section-label">
-    ELEMENT RULES <span id="rules-summary" class="rules-summary"></span>
-    <button id="modify-rules-btn" class="pill-btn" style="float:right;margin-top:-1px">Modify Rules</button>
-  </div>
-  <div id="rules-list" class="rules-list"><div class="placeholder">Loading…</div></div>
+    <!-- ── 4. RULES ── -->
+    <section class="group" id="rules-group">
+      <div class="group-head" id="rules-toggle">
+        <span class="group-arrow" id="rules-arrow">▾</span>
+        <span class="group-title">Rules<span id="rules-summary" class="group-sub"></span></span>
+        <button id="modify-rules-btn" class="btn-ghost" title="Edit rules in the app" aria-label="Edit rules">Edit</button>
+      </div>
+      <div id="rules-panel" class="group-panel">
+        <div id="rules-list" class="rules-list"><div class="placeholder">Loading…</div></div>
+      </div>
+    </section>
 
-  <!-- Log -->
-  <div class="section-label collapsible" id="log-toggle">ACTIVITY LOG <span id="log-arrow">▸</span></div>
-  <div id="log-panel" class="log-panel" style="display:none"></div>
+    <!-- ── 5. ADVANCED ── -->
+    <section class="group" id="advanced-group">
+      <div class="group-head" id="advanced-toggle">
+        <span class="group-arrow" id="advanced-arrow">▸</span>
+        <span class="group-title">Advanced</span>
+      </div>
+      <div id="advanced-panel" class="group-panel" style="display:none">
+        <div id="adv-stats" class="adv-stats"></div>
 
-  <div class="footer">
-    <span class="footer-stat"><span id="bypass-total">0</span> bypasses · <span id="elements-total">0</span> hidden</span>
-    <div class="footer-btns">
-      <button id="report-btn"       class="footer-btn" title="Report a bug to GitHub">🐞 Bug</button>
-      <button id="test-btn"         class="footer-btn">⚡ Test</button>
-      <button id="check-update-btn" class="footer-btn">↑</button>
-      <button id="sync-btn"         class="footer-btn accent">↻ Sync</button>
-    </div>
-  </div>
+        <div class="subhead" id="diag-toggle">Diagnostics <span id="diag-arrow">▸</span></div>
+        <div id="diag-panel" class="diag-panel" style="display:none"></div>
+
+        <div class="subhead" id="log-toggle">Activity log <span id="log-arrow">▸</span></div>
+        <div id="log-panel" class="log-panel" style="display:none"></div>
+
+        <div class="adv-tools">
+          <button id="report-btn"       class="btn-ghost" title="Report a bug to GitHub"   aria-label="Report a bug">🐞 Report a bug</button>
+          <button id="test-btn"         class="btn-ghost" title="Test blocking on this tab" aria-label="Test blocking on this tab">⚡ Test blocking</button>
+          <button id="check-update-btn" class="btn-ghost" title="Check for updates"         aria-label="Check for updates">↑ Check for updates</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 6. FOOTER — PLAN ── -->
+    <section class="plan" id="cloud-section">
+      <div class="plan-row" id="cloud-summary" role="button" tabindex="0" aria-label="Plan details"></div>
+      <div id="cloud-box" class="cloud-box" style="display:none"></div>
+    </section>
+
+    </div><!-- /view-home -->
+
+    <!-- Data tabs — populated by popup.js from the extension's own storage (standalone). -->
+    <div id="view-insights" class="view" hidden></div>
+    <div id="view-activity" class="view" hidden></div>
+    <div id="view-focus"    class="view" hidden></div>
+    <div id="view-logic"    class="view" hidden></div>
+    <div id="view-actions"  class="view" hidden></div>
+
+  </div><!-- /scroll-body -->
 
 </div>
 
@@ -116,7 +158,7 @@
       <button id="api-key-save-btn" class="pill-btn accent">Save</button>
     </div>
     <p id="api-key-err" class="api-key-err" style="display:none"></p>
-    <p id="api-key-saved" class="api-key-saved" style="display:none">✓ OpenRouter key saved — remembered across restarts. <a href="#" id="api-key-remove">remove</a></p>
+    <p id="api-key-saved" class="api-key-saved" style="display:none">✓ OpenRouter key saved and remembered across restarts. <a href="#" id="api-key-remove">remove</a></p>
   </div>
 
   <!-- Messages -->
@@ -158,7 +200,7 @@
   <div class="progress-track"><div id="report-progress-fill" class="progress-fill"></div></div>
 
   <div class="report-body">
-    <p class="report-lede">Found a bug or a wrong block? Tell us what happened — diagnostic context (version, current site, rules, recent activity) is attached automatically.</p>
+    <p class="report-lede">Found a bug or a wrong block? Tell us what happened. Diagnostic context (version, current site, rules, recent activity) is attached automatically.</p>
     <textarea id="report-desc" class="report-desc" rows="5" placeholder="What went wrong? What did you expect instead?"></textarea>
     <button id="report-submit" class="pill-btn accent report-submit">Submit bug report</button>
     <p id="report-status" class="report-status"></p>
@@ -172,7 +214,7 @@
       </div>
       <p id="gh-token-err" class="gh-token-err" style="display:none"></p>
     </div>
-    <p id="gh-token-saved" class="gh-token-saved" style="display:none">✓ GitHub token saved — reports file directly to Issues. <a href="#" id="gh-token-remove">remove</a></p>
+    <p id="gh-token-saved" class="gh-token-saved" style="display:none">✓ GitHub token saved. Reports file directly to Issues. <a href="#" id="gh-token-remove">remove</a></p>
   </div>
 
 </div>
@@ -181,13 +223,13 @@
 <div id="onboarding" class="onboarding" style="display:none">
   <div class="onboard-card">
     <div class="onboard-title">Welcome 👋</div>
-    <p class="onboard-lede">Attentify strips the addictive feeds out of the sites you visit — automatically.</p>
+    <p class="onboard-lede">Attentify strips the addictive feeds out of the sites you visit, automatically.</p>
     <ul class="onboard-list">
-      <li><span class="ob-i">✓</span> Blocks YouTube Shorts, Reels, TikTok FYP &amp; more the moment a page loads — nothing to set up.</li>
+      <li><span class="ob-i">✓</span> Blocks YouTube Shorts, Reels, TikTok FYP &amp; more the moment a page loads, with nothing to set up.</li>
       <li><span class="ob-i">⏸</span> Hit the toggle at the top to pause blocking on any single site.</li>
       <li><span class="ob-i">✦</span> Open the AI assistant to block anything custom in plain English.</li>
     </ul>
-    <button id="onboard-dismiss" class="onboard-btn">Got it — start blocking</button>
+    <button id="onboard-dismiss" class="onboard-btn">Got it, start blocking</button>
   </div>
 </div>
 

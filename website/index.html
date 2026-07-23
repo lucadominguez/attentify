@@ -13,6 +13,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="attentify-logo.png">
+<!-- Force the embedded app demo (same-origin iframe) into light theme: its ThemeContext
+     reads this shared localStorage key on mount, and this runs before the iframe loads. -->
+<script>try{localStorage.setItem('pd-theme','light')}catch(e){}</script>
 </head>
 <body>
 
@@ -83,11 +86,11 @@
   <!-- BROWSER EXTENSION PREVIEW (AI reasoning side panel + live blocking / circumvention) -->
   <div class="preview-pane" data-pane="ext">
     <div class="extwin reveal">
-      <!-- realistic browser chrome -->
+      <!-- light browser chrome -->
       <div class="bchrome">
         <div class="btabs">
           <span class="dots"><i></i><i></i><i></i></span>
-          <div class="btab active" id="demo-tab"><span class="btab-fav" id="demo-fav"></span><span id="demo-tabtitle">reddit.com</span> <span class="btab-x">×</span></div>
+          <div class="btab active"><span class="btab-fav"></span>reddit.com <span class="btab-x">×</span></div>
           <div class="btab"><span class="btab-fav"></span>Docs · the work</div>
           <span class="btab-add">+</span>
         </div>
@@ -95,36 +98,39 @@
           <span class="bnav">‹</span><span class="bnav">›</span><span class="bnav">⟳</span>
           <div class="bomni">
             <svg viewBox="0 0 24 24" class="lock"><path d="M6 10V7a6 6 0 1112 0v3h1a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1v-9a1 1 0 011-1h1zm2 0h8V7a4 4 0 10-8 0v3z"/></svg>
-            <span class="bomni-host" id="demo-host">reddit.com</span><span class="bomni-path" id="demo-path"></span>
+            <span class="bomni-host">reddit.com</span><span class="bomni-path"></span>
             <span class="bstar">☆</span>
           </div>
           <span class="bpinned" title="Attentify is guarding this browser">
             <svg viewBox="0 0 24 24" class="pdshield"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
-            <span class="bpin-badge" id="demo-badge">1</span>
+            <span class="bpin-badge">3</span>
           </span>
           <span class="bmenu">⋮</span>
         </div>
       </div>
 
       <div class="extwin-body">
-        <!-- LEFT: the Attentify side panel, showing the AI's live reasoning as a flowchart -->
-        <aside class="ai-think">
-          <div class="ai-th-head">
-            <img class="logomark" src="attentify-logo.png" width="22" height="22" alt="" style="border-radius:6px">
-            <div class="ai-th-id"><b>Attentify</b><span id="demo-status">watching</span></div>
-            <span class="ai-th-live"><i></i> live</span>
+        <!-- the webpage, with distractions stripped out by Attentify -->
+        <div class="ext-page">
+          <div class="ext-page-row"><span class="epr-av"></span><div class="epr-l"><b>r/programming</b><span>What's your terminal setup this year?</span></div></div>
+          <div class="ext-blocked">
+            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
+            <div><b>Home feed hidden by Attentify</b><span>r/popular &middot; off-goal for “deep work”</span></div>
           </div>
-          <div class="ai-th-goal">Your goal <b>Deep work until 5:00 PM &middot; no social or short-form video</b></div>
-          <div class="flow" id="demo-flow" aria-label="Attentify reasoning"></div>
-        </aside>
-
-        <!-- MAIN: the page being blocked -->
-        <div class="block-stage" id="demo-stage"></div>
+          <div class="ext-page-row"><span class="epr-av"></span><div class="epr-l"><b>r/rust</b><span>Comparing async runtimes</span></div></div>
+          <div class="ext-blocked sm">
+            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
+            <div><b>“Trending today” rail hidden</b></div>
+          </div>
+          <div class="ext-page-row"><span class="epr-av"></span><div class="epr-l"><b>r/webdev</b><span>CSS grid tricks I wish I knew sooner</span></div></div>
+        </div>
+        <!-- the REAL extension side panel, running live on sample data -->
+        <iframe class="ext-panel" src="./ext/popup.html" title="Attentify browser extension, live" loading="eager"></iframe>
       </div>
     </div>
-    <p class="appdemo-foot">This is Attentify thinking out loud. It blocks a distracting site, then when you try a back
-       door, a different URL, an old-domain alias, a mirror site, it recognises the pattern as an attempt to get around it
-       and blocks the alternatives <b>before</b> you reach them. The panel on the left is its live reasoning.</p>
+    <p class="appdemo-foot">That side panel is the <b>real extension</b>, running live on sample data. It reads each page's
+       context, explains on the <b>Logic</b> tab exactly why something counts as a distraction, and strips those elements
+       out of the page on the left. Nothing here is a mockup, and nothing you do leaves this page.</p>
   </div>
 
   <div class="hero-cta center" id="download-hero">
