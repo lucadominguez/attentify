@@ -636,3 +636,60 @@ section[id],[id]{scroll-margin-top:84px}
 .pm-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:auto}
 .pm-row span{height:44px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid rgba(159,178,201,.1)}
 @media(max-width:760px){.platforms .plat-grid{grid-template-columns:1fr;gap:22px}}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   EXTENSION PREVIEW — LIGHT (2026-07-22). The featured hero preview shows the browser
+   extension in its real light theme: a light browser chrome, the extension's light side
+   panel streaming its reasoning, and a light block screen. Overrides the dark mockup
+   rules above (later + equal specificity wins). Semantic colours (violet accent, red
+   block, green live) are kept; only the dark surfaces/text move to light.
+   ══════════════════════════════════════════════════════════════════════════════ */
+.extwin{background:#fff;border-color:rgba(15,23,42,.12);box-shadow:0 30px 70px -34px rgba(15,23,42,.30)}
+/* light browser chrome */
+.bchrome{background:#dfe3ea;border-bottom-color:#c7cdd8}
+.btab{background:#cdd3dd;color:#5a6472}
+.btab.active{background:#fff;color:#1a1f28}
+.btab-fav{background:#b7bfcc}
+.btab-x{color:#8b93a0}
+.btab-add{color:#5a6472}
+.btoolbar{background:#fff}
+.bnav{color:#5a6472}
+.bomni{background:#eef1f5;color:#3a424e}
+.bomni-host{color:#1a1f28}.bomni-path{color:#8b93a0}
+.bstar{color:#8b93a0}.bmenu{color:#5a6472}
+.bpinned{background:rgba(99,102,241,.12)}
+/* extension light side panel */
+.ai-think{background:#f4f7fb;border-right-color:rgba(15,23,42,.08)}
+.ai-th-head{border-bottom-color:rgba(15,23,42,.08)}
+.ai-th-id b{color:#0f172a}
+.ai-th-id span{color:#6366f1}
+.ai-th-live{color:#5a6472}
+.ai-th-goal{color:#4a5568;border-bottom-color:rgba(15,23,42,.08)}
+.ai-th-goal b{color:#0f172a}
+.fconn{background:linear-gradient(180deg,rgba(15,23,42,.12),rgba(99,102,241,.55))}
+.fnode{background:#fff;border-color:rgba(15,23,42,.09);box-shadow:0 4px 14px -10px rgba(15,23,42,.4)}
+.fnode-k{color:#8593a8}
+.fnode-t{color:#1a1f28}
+.fnode-t b{color:#0f172a}
+.fnode-s{color:#5a6472}
+.fnode.k-nav .fnode-ic{background:rgba(99,102,241,.13);color:#4f46e5}
+.fnode.k-think .fnode-ic{background:rgba(124,58,237,.12);color:#7c3aed}
+.fnode.k-match .fnode-ic{background:rgba(217,119,6,.14);color:#b45309}
+.fnode.k-infer .fnode-ic{background:rgba(234,88,12,.14);color:#c2410c}
+.fnode.k-block{background:rgba(225,29,72,.06);border-color:rgba(225,29,72,.24)}
+.fnode.k-block .fnode-ic{background:rgba(225,29,72,.14);color:#e11d48}
+.fnode.k-block .fnode-t b{color:#be123c}
+/* light block screen */
+.block-stage{background:radial-gradient(120% 80% at 50% -10%,#eef1f7 0%,#f6f8fc 60%)}
+.block-shield{background:radial-gradient(circle at 50% 35%,rgba(225,29,72,.16),rgba(225,29,72,.04));border-color:rgba(225,29,72,.28)}
+.block-shield svg{fill:#e11d48}
+.block-eyebrow{color:#e11d48}
+.block-host{color:#0f172a}
+.block-why{color:#4a5568}.block-why b{color:#1a1f28}
+.block-tag{color:#be123c;background:rgba(225,29,72,.09);border-color:rgba(225,29,72,.2)}
+.block-similar{border-top-color:rgba(15,23,42,.14)}
+.block-similar-h{color:#5a6472}.block-similar-h b{color:#1a1f28}
+.bs-row{background:#fff;border-color:rgba(15,23,42,.09);color:#3a424e}
+.bs-row .bs-x{background:rgba(225,29,72,.12);color:#e11d48}
+.bs-row code{color:#0f172a}
+.bs-row .bs-rsn{color:#8593a8}

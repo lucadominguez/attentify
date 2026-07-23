@@ -56,20 +56,20 @@
     </p>
   </div>
 
-  <!-- flip between the desktop app and the browser extension -->
+  <!-- flip between the browser extension (featured) and the desktop app -->
   <div class="prev-switch">
-    <button class="ps-btn on" data-prev="app">Desktop app</button>
-    <button class="ps-btn" data-prev="ext">Browser extension</button>
+    <button class="ps-btn on" data-prev="ext">Browser extension</button>
+    <button class="ps-btn" data-prev="app">Desktop app</button>
   </div>
 
   <!-- DESKTOP APP PREVIEW -->
-  <div class="preview-pane" data-pane="app">
+  <div class="preview-pane hidden" data-pane="app">
     <div class="appwin reveal">
       <!-- Neutral demo container bar — no window controls here; the app inside
            renders its own native (Windows) title bar, so duplicating controls
            would show two sets at once. -->
       <div class="aw-bar">
-        <svg class="aw-logo" viewBox="0 0 28 28" aria-hidden="true"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg>
+        <svg class="aw-logo" viewBox="0 0 28 28" aria-hidden="true"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#6366f1" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#6366f1"/></svg>
         <span class="aw-title">Attentify</span>
         <span class="aw-badge"><span class="ctx-dot"></span> Live demo · sample data</span>
         <button class="aw-pop" onclick="window.open('./app/index.html','_blank','noopener')" title="Open full screen">⛶ Full screen</button>
@@ -81,7 +81,7 @@
   </div>
 
   <!-- BROWSER EXTENSION PREVIEW (AI reasoning side panel + live blocking / circumvention) -->
-  <div class="preview-pane hidden" data-pane="ext">
+  <div class="preview-pane" data-pane="ext">
     <div class="extwin reveal">
       <!-- realistic browser chrome -->
       <div class="bchrome">
@@ -110,7 +110,7 @@
         <!-- LEFT: the Attentify side panel, showing the AI's live reasoning as a flowchart -->
         <aside class="ai-think">
           <div class="ai-th-head">
-            <svg class="logomark" viewBox="0 0 32 32" aria-hidden="true"><path class="lm-o" d="M16 2.8 26.5 6.6 26.5 15.4C26.5 21.6 22.2 25.9 16 28.8 9.8 25.9 5.5 21.6 5.5 15.4L5.5 6.6Z"/><circle class="lm-o" cx="16" cy="15.6" r="4" fill="none"/><circle class="lm-i" cx="16" cy="15.6" r="1.9"/></svg>
+            <img class="logomark" src="attentify-logo.png" width="22" height="22" alt="" style="border-radius:6px">
             <div class="ai-th-id"><b>Attentify</b><span id="demo-status">watching</span></div>
             <span class="ai-th-live"><i></i> live</span>
           </div>
@@ -369,7 +369,7 @@
     <figure class="plat reveal">
       <div class="pwin pwin--win">
         <div class="pbar pbar--win">
-          <span class="pbar-left"><svg class="pbar-logo" viewBox="0 0 28 28"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg> Attentify</span>
+          <span class="pbar-left"><svg class="pbar-logo" viewBox="0 0 28 28"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#6366f1" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#6366f1"/></svg> Attentify</span>
           <span class="wctl"><i class="wmin"></i><i class="wmax"></i><i class="wcls"></i></span>
         </div>
         <div class="pbody"><div class="pmock">
