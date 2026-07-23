@@ -110,27 +110,54 @@
       </div>
 
       <div class="extwin-body">
-        <!-- the webpage, with distractions stripped out by Attentify -->
-        <div class="ext-page">
-          <div class="ext-page-row"><span class="epr-av"></span><div class="epr-l"><b>r/programming</b><span>What's your terminal setup this year?</span></div></div>
-          <div class="ext-blocked">
-            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
-            <div><b>Home feed hidden by Attentify</b><span>r/popular &middot; off-goal for “deep work”</span></div>
+        <!-- LEFT: a realistic feed. Attentify scans it and removes the distracting
+             elements live (driven by app.js); the status pill narrates the reasoning. -->
+        <div class="ext-page" id="ext-page">
+          <div class="ext-scan" id="ext-scan"></div>
+          <div class="ext-status" id="ext-status"><span class="exs-dot"></span><span id="ext-status-tx">Attentify is reading this page…</span></div>
+
+          <div class="epost keep">
+            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">2.4k</span><span class="ev-dn">▼</span></div>
+            <div class="ec"><div class="ec-sub">r/programming · 3h</div><div class="ec-ti">What's your terminal setup this year?</div><div class="ec-meta">312 comments · share · save</div></div>
           </div>
-          <div class="ext-page-row"><span class="epr-av"></span><div class="epr-l"><b>r/rust</b><span>Comparing async runtimes</span></div></div>
-          <div class="ext-blocked sm">
-            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
-            <div><b>“Trending today” rail hidden</b></div>
+
+          <div class="epost block" data-kind="feed" data-reason="Off-goal home feed">
+            <div class="eblk-h"><span class="eblk-tag">Popular right now</span><span class="eblk-x">promoted feed</span></div>
+            <div class="eblk-rail"><i></i><i></i><i></i><i></i></div>
           </div>
-          <div class="ext-page-row"><span class="epr-av"></span><div class="epr-l"><b>r/webdev</b><span>CSS grid tricks I wish I knew sooner</span></div></div>
+
+          <div class="epost keep">
+            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">876</span><span class="ev-dn">▼</span></div>
+            <div class="ec"><div class="ec-sub">r/rust · 5h</div><div class="ec-ti">Comparing async runtimes: tokio vs async-std</div><div class="ec-meta">98 comments · share · save</div></div>
+          </div>
+
+          <div class="epost block" data-kind="short-form" data-reason="Short-form video shelf">
+            <div class="eblk-h"><span class="eblk-tag">▶ Watch — trending clips</span><span class="eblk-x">short-form</span></div>
+            <div class="eblk-vids"><span></span><span></span><span></span><span></span></div>
+          </div>
+
+          <div class="epost keep">
+            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">1.1k</span><span class="ev-dn">▼</span></div>
+            <div class="ec"><div class="ec-sub">r/webdev · 6h</div><div class="ec-ti">CSS grid tricks I wish I knew sooner</div><div class="ec-meta">144 comments · share · save</div></div>
+          </div>
+
+          <div class="epost block" data-kind="promoted" data-reason="Sponsored ad">
+            <div class="eblk-h"><span class="eblk-tag">Promoted</span><span class="eblk-x">ad</span></div>
+            <div class="eblk-ad"><span class="eblk-ad-img"></span><div><b>You won't believe these 10 tricks</b><span>sponsored · getdistracted.co</span></div></div>
+          </div>
+
+          <div class="epost keep">
+            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">540</span><span class="ev-dn">▼</span></div>
+            <div class="ec"><div class="ec-sub">r/golang · 8h</div><div class="ec-ti">Structuring a mid-size Go service</div><div class="ec-meta">61 comments · share · save</div></div>
+          </div>
         </div>
-        <!-- the REAL extension side panel, running live on sample data -->
+        <!-- RIGHT: the REAL extension side panel, running live on sample data -->
         <iframe class="ext-panel" src="./ext/popup.html" title="Attentify browser extension, live" loading="eager"></iframe>
       </div>
     </div>
-    <p class="appdemo-foot">That side panel is the <b>real extension</b>, running live on sample data. It reads each page's
-       context, explains on the <b>Logic</b> tab exactly why something counts as a distraction, and strips those elements
-       out of the page on the left. Nothing here is a mockup, and nothing you do leaves this page.</p>
+    <p class="appdemo-foot">On the left is a real page. Watch Attentify <b>read it, flag the feeds, Shorts and ads, and strip
+       them out</b> while the keepers stay. On the right is the <b>actual extension</b>, running live: open its <b>Logic</b>
+       tab to see exactly why each thing was called a distraction. Nothing here is a mockup.</p>
   </div>
 
   <div class="hero-cta center" id="download-hero">

@@ -108,117 +108,55 @@
 
   // The app demo is the real renderer embedded via <iframe src="./app/">, so no JS is needed here.
 
-  // ============ EXTENSION DEMO: live AI reasoning flowchart + circumvention blocking ============
-  // The left "side panel" streams Attentify's reasoning as a downward flowchart while the main
-  // stage shows it blocking a site, then inferring a circumvention attempt and auto-blocking the
-  // alternatives. Pure presentation, looped.
+  // ============ EXTENSION DEMO: live page-cleaning animation ============
+  // The left "page" is a realistic feed. On a loop, Attentify reads it (scan line),
+  // flags each distracting element with the reason, then removes it — while the status
+  // pill narrates the reasoning. The real extension popup runs live in the iframe beside
+  // it (see pd-ext-shim.js), so together this shows reasoning + removal, not a mockup.
   (function () {
-    const flow = $('#demo-flow'), stage = $('#demo-stage');
-    if (!flow || !stage) return;
-    const host = $('#demo-host'), path = $('#demo-path'), badge = $('#demo-badge'),
-          status = $('#demo-status'), tabTitle = $('#demo-tabtitle');
-
-    const SHIELD = '<svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>';
-    const IC = { nav: '→', think: '◆', match: '≈', infer: '!', block: '✕' };
-    const KN = { nav: 'Navigation', think: 'Reasoning', match: 'Pattern match', infer: 'Inference', block: 'Action' };
+    const page = $('#ext-page');
+    if (!page) return;
+    const status = $('#ext-status'), statusTx = $('#ext-status-tx');
+    const blocks = () => Array.prototype.slice.call(page.querySelectorAll('.epost.block'));
 
     let timers = [];
     const after = (ms, fn) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
     const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+    const say = (tx, done) => { if (statusTx) statusTx.textContent = tx; if (status) status.classList.toggle('done', !!done); };
 
-    const setUrl = (h, p) => { host.textContent = h; path.textContent = p || ''; if (tabTitle) tabTitle.textContent = h; };
-
-    function addNode(n) {
-      if (flow.children.length) {
-        const c = document.createElement('div'); c.className = 'fconn';
-        flow.appendChild(c); requestAnimationFrame(() => c.classList.add('in'));
-      }
-      const el = document.createElement('div');
-      el.className = 'fnode k-' + n.k;
-      el.innerHTML = '<div class="fnode-ic">' + IC[n.k] + '</div><div class="fnode-tx">' +
-        '<div class="fnode-k">' + KN[n.k] + '</div><div class="fnode-t">' + n.t + '</div>' +
-        (n.s ? '<div class="fnode-s">' + n.s + '</div>' : '') + '</div>';
-      flow.appendChild(el);
-      requestAnimationFrame(() => el.classList.add('in'));
-      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-
-    function renderBlock(b) {
-      stage.innerHTML = '<div class="block-card">' +
-        '<div class="block-shield">' + SHIELD + '</div>' +
-        '<div class="block-eyebrow">Blocked by Attentify</div>' +
-        '<div class="block-host">' + b.host + '</div>' +
-        '<div class="block-why">' + b.why + '</div>' +
-        (b.tags ? '<div class="block-tags">' + b.tags.map(t => '<span class="block-tag">' + t + '</span>').join('') + '</div>' : '') +
-        (b.similar ? '<div class="block-similar"><div class="block-similar-h"><b>' + b.similarHead + '</b></div><div class="bs-list"></div></div>' : '') +
-        '</div>';
-      const card = stage.querySelector('.block-card');
-      requestAnimationFrame(() => card.classList.add('in'));
-      if (b.similar) {
-        const sim = stage.querySelector('.block-similar'), list = stage.querySelector('.bs-list');
-        after(480, () => sim.classList.add('in'));
-        b.similar.forEach((s, i) => after(640 + i * 240, () => {
-          const r = document.createElement('div'); r.className = 'bs-row';
-          r.innerHTML = '<span class="bs-x">×</span><code>' + s.u + '</code><span class="bs-rsn">' + s.r + '</span>';
-          list.appendChild(r); requestAnimationFrame(() => r.classList.add('in'));
-        }));
-      }
+    function reset() {
+      blocks().forEach(b => b.classList.remove('flagged', 'removed'));
+      page.classList.remove('scanning');
+      say('Attentify is reading this page…', false);
     }
 
     function cycle() {
       clearTimers();
-      flow.innerHTML = ''; stage.innerHTML = '';
-      setUrl('reddit.com', '/r/all'); status.textContent = 'analyzing'; badge.textContent = '0';
+      reset();
 
-      // PHASE 1 — block the distracting site
-      after(350,  () => addNode({ k: 'nav',   t: 'You opened <b>reddit.com</b>', s: '/r/all · social feed' }));
-      after(1350, () => addNode({ k: 'think', t: 'Check it against your goal', s: '“no social or short-form video”' }));
-      after(2400, () => addNode({ k: 'think', t: 'Classified as a <b>social feed</b>', s: 'distraction score 0.94' }));
-      after(3450, () => {
-        addNode({ k: 'block', t: 'Block <b>reddit.com</b>' });
-        badge.textContent = '1';
-        renderBlock({ host: 'reddit.com',
-          why: 'An infinite social feed, exactly the kind of place you said you wanted to stay out of.',
-          tags: ['Social feed', 'Infinite scroll'] });
+      // 1) scan the page
+      after(600, () => { page.classList.add('scanning'); say('Reading page context…'); });
+      after(2200, () => { page.classList.remove('scanning'); });
+
+      // 2) flag every distraction at once (found them)
+      const bl = blocks();
+      after(2300, () => { say('Found ' + bl.length + ' distractions off your goal'); });
+      after(2900, () => bl.forEach((b, i) => after(i * 180, () => b.classList.add('flagged'))));
+
+      // 3) remove them one by one, narrating the reason
+      const removeStart = 4200, step = 1500;
+      bl.forEach((b, i) => {
+        after(removeStart + i * step, () => { say('Removing: ' + (b.dataset.reason || 'distraction')); });
+        after(removeStart + i * step + 500, () => { b.classList.remove('flagged'); b.classList.add('removed'); });
       });
 
-      // PHASE 2 — first circumvention: an old-domain alias
-      after(5400, () => { status.textContent = 'watching'; setUrl('old.reddit.com', '/r/all');
-        addNode({ k: 'nav', t: 'You opened <b>old.reddit.com</b>', s: '14 seconds later' }); });
-      after(6500, () => addNode({ k: 'match', t: 'Same site, different subdomain', s: 'matches reddit.com, blocked moments ago' }));
-      after(7550, () => addNode({ k: 'infer', t: 'Looks like a way around the block', s: 'attempt #1' }));
-      after(8600, () => {
-        addNode({ k: 'block', t: 'Block <b>old.reddit.com</b>', s: 'extend pattern → *.reddit.com' });
-        badge.textContent = '2';
-        renderBlock({ host: 'old.reddit.com',
-          why: 'The same destination through a different door. Attentify recognised the alias and <b>extended the block to every reddit.com subdomain</b>.',
-          tags: ['Alias', '*.reddit.com'] });
-      });
-
-      // PHASE 3 — escalated circumvention: a mirror → auto-block the alternatives
-      after(10600, () => { status.textContent = 'protecting'; setUrl('libreddit.com', '/r/all');
-        addNode({ k: 'nav', t: 'You opened <b>libreddit.com</b>' }); });
-      after(11700, () => addNode({ k: 'match', t: 'A known <b>Reddit mirror</b>', s: 'a proxy front-end for the same content' }));
-      after(12750, () => addNode({ k: 'infer', t: 'Repeated attempts to get around me', s: 'attempt #3 · escalating' }));
-      after(13800, () => {
-        addNode({ k: 'block', t: 'Close the alternatives too', s: '5 known mirrors · matching tightened' });
-        badge.textContent = '7';
-        renderBlock({ host: 'libreddit.com',
-          why: 'You keep reaching for the same thing through new doors, so Attentify closed the rest of them <b>before</b> you got there.',
-          tags: ['Mirror', 'Circumvention inferred'],
-          similarHead: 'Also blocked, same thing through a different door',
-          similar: [
-            { u: 'teddit.net',          r: 'reddit mirror' },
-            { u: 'redlib.catsarch.com', r: 'reddit proxy' },
-            { u: 'eddrit.com',          r: 'reddit mirror' },
-            { u: 'i.reddit.com',        r: 'mobile alias' },
-            { u: 'm.reddit.com',        r: 'mobile alias' },
-          ] });
-      });
-
-      after(21500, cycle); // loop
+      // 4) done state, hold, then loop
+      const doneAt = removeStart + bl.length * step + 400;
+      after(doneAt, () => say(bl.length + ' distractions removed · page cleaned', true));
+      after(doneAt + 4200, cycle);
     }
 
+    // Autoplay when the extension pane is visible; (re)start when it's switched to.
     let started = false;
     const start = () => { if (started) return; started = true; cycle(); };
     const extBtn = $('.ps-btn[data-prev="ext"]');

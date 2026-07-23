@@ -703,48 +703,98 @@ async function getPinnedCards() { try { const r = await chrome.storage.local.get
 async function setPinnedCards(cards) { try { await chrome.storage.local.set({ analyticsCards: cards }); } catch {} }
 
 // ── Insights (analytics + timesheets, browser-adapted) ──
+// A focus donut: an SVG ring showing focus %, with the number centered. Emerald when
+// focused, amber mid, coral low — matching the app's semantic colours.
+function focusDonut(pct) {
+  const p = Math.max(0, Math.min(100, pct)) / 100;
+  const tone = p >= 0.6 ? 'ok' : p >= 0.4 ? 'mid' : 'bad';
+  const C = 2 * Math.PI * 26; // r=26
+  return `<div class="donut ${tone}" style="--off:${(C * (1 - p)).toFixed(1)}">
+    <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+      <circle class="donut-bg" cx="32" cy="32" r="26"></circle>
+      <circle class="donut-fg" cx="32" cy="32" r="26" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"></circle>
+    </svg>
+    <div class="donut-c"><span class="data-value">${Math.round(pct)}<i>%</i></span><label>focused</label></div>
+  </div>`;
+}
+
 renderers.insights = async function () {
   const el = document.getElementById('view-insights');
-  const [d, raw, pinned] = await Promise.all([ask({ type: 'get:insights' }), ask({ type: 'get:analytics-raw' }), getPinnedCards()]);
+  const [d, raw, reas, pinned] = await Promise.all([
+    ask({ type: 'get:insights' }), ask({ type: 'get:analytics-raw' }), ask({ type: 'get:reasoning' }), getPinnedCards(),
+  ]);
   if (!d) { el.innerHTML = '<div class="placeholder">No data yet.</div>'; return; }
   const t = d.today || {};
   const top = d.topSites || [];
   const week = d.week || [];
   const trend = d.trend || [];
+  const cats = (reas && reas.categories) || [];
+  const CAT_LABEL = { 'short-form': 'Short-form video', feed: 'Algorithmic feeds', search: 'Searching', page: 'Reading a page', browse: 'General browsing', other: 'Other' };
   const maxSite = Math.max(1, ...top.map(s => s.ms));
+  const maxCat = Math.max(1, ...cats.map(c => c.n));
+  const maxWeek = Math.max(1, ...week.map(w => w.trackedMs || 0));
   const pinnedHtml = pinned.map(spec => chartCardHtml(spec, buildSeries(raw, spec), true)).join('');
   el.innerHTML = `
     ${pinnedHtml}
-    <section class="card">
-      <div class="card-title">Today</div>
-      <div class="kpi-row">
-        <div class="kpi"><div class="kpi-num data-value">${t.focusRatio ?? 0}%</div><div class="kpi-lbl">focused</div></div>
-        <div class="kpi"><div class="kpi-num data-value">${fmtDur(t.trackedMs)}</div><div class="kpi-lbl">tracked</div></div>
-        <div class="kpi"><div class="kpi-num data-value">${t.visits ?? 0}</div><div class="kpi-lbl">visits</div></div>
-        <div class="kpi"><div class="kpi-num data-value">${t.blocked ?? 0}</div><div class="kpi-lbl">blocked</div></div>
+    <!-- Today hero: focus donut + stat tiles + a focused/distracted split bar -->
+    <section class="card ins-today">
+      <div class="ins-hero">
+        ${focusDonut(t.focusRatio ?? 0)}
+        <div class="ins-tiles">
+          <div class="ins-tile"><span class="data-value">${fmtDur(t.trackedMs)}</span><label>tracked today</label></div>
+          <div class="ins-tile"><span class="data-value bad">${t.blocked ?? 0}</span><label>distractions blocked</label></div>
+          <div class="ins-tile"><span class="data-value">${t.visits ?? 0}</span><label>sites visited</label></div>
+        </div>
       </div>
-      ${t.trackedMs ? `<div class="split">${bar(t.focusRatio, 'ok')}<span class="split-lbl">${fmtDur(t.focusedMs)} focused · ${fmtDur(t.distractedMs)} distracted</span></div>` : '<div class="ps-sub">Browse a little and your focus breakdown appears here.</div>'}
+      ${t.trackedMs ? `<div class="ins-split" title="${fmtDur(t.focusedMs)} focused vs ${fmtDur(t.distractedMs)} distracted">
+        <span class="ins-split-ok" style="width:${t.focusRatio}%"></span>
+        <span class="ins-split-bad" style="width:${100 - (t.focusRatio || 0)}%"></span>
+      </div>
+      <div class="ins-split-lbl"><span><b class="ok">${fmtDur(t.focusedMs)}</b> focused</span><span><b class="bad">${fmtDur(t.distractedMs)}</b> distracted</span></div>`
+      : '<div class="ps-sub">Browse a little and your focus breakdown appears here.</div>'}
     </section>
 
+    ${cats.length ? `<section class="card">
+      <div class="card-title">Where your attention went</div>
+      <div class="ps-sub">By the kind of page you spent time on, most-visited first.</div>
+      <div class="catbars">
+        ${cats.slice(0, 6).map(c => {
+          const tone = c.avg >= 0.6 ? 'bad' : c.avg >= 0.35 ? 'mid' : 'ok';
+          return `<div class="catbar">
+            <div class="catbar-top"><span class="catbar-lbl">${esc(CAT_LABEL[c.category] || c.category)}</span><span class="catbar-n data-value">${c.n}</span></div>
+            <div class="catbar-track"><span class="catbar-fill ${tone}" style="width:${Math.round(c.n / maxCat * 100)}%"></span></div>
+            <div class="catbar-sub"><span class="dotpct ${tone}"></span>${pctVal(c.avg)}% avg distraction</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>` : ''}
+
     ${trend.length ? `<section class="card">
-      <div class="card-title">Distraction trend</div>
+      <div class="card-title">Distraction through your session</div>
       <div class="spark">${trend.map(p => `<div class="spark-bar ${p.pct >= 60 ? 'hi' : p.pct >= 35 ? 'mid' : 'lo'}" style="height:${Math.max(6, p.pct)}%" title="${esc(p.domain || '')} · ${p.pct}%"></div>`).join('')}</div>
       <div class="ps-sub">Recent pages, oldest to newest. Taller = more distracting.</div>
     </section>` : ''}
 
     <section class="card">
       <div class="card-title">Top sites · last 7 days</div>
-      ${top.length ? top.map(s => `
-        <div class="site-row">
+      ${top.length ? `<div class="sitelist">${top.map(s => {
+        const tone = s.distraction >= 0.6 ? 'bad' : s.distraction >= 0.35 ? 'mid' : 'ok';
+        return `<div class="site-row2">
+          <span class="dotpct ${tone}" title="${pctVal(s.distraction)}% distraction"></span>
           <span class="site-dom">${esc(s.domain)}</span>
-          <div class="site-bar">${bar(Math.round(s.ms / maxSite * 100), s.distraction >= 0.5 ? 'bad' : 'ok')}</div>
-          <span class="site-ms">${fmtDur(s.ms)}</span>
-        </div>`).join('') : '<div class="ps-sub">No sites tracked yet.</div>'}
+          <div class="site-bar">${bar(Math.round(s.ms / maxSite * 100), tone)}</div>
+          <span class="site-ms data-value">${fmtDur(s.ms)}</span>
+        </div>`;
+      }).join('')}</div>` : '<div class="ps-sub">No sites tracked yet.</div>'}
     </section>
 
     ${week.some(w => w.trackedMs) ? `<section class="card">
       <div class="card-title">This week · focus by day</div>
-      <div class="week">${week.map(w => `<div class="week-col"><div class="week-bar"><div class="week-fill ok" style="height:${w.focusRatio}%"></div></div><div class="week-lbl">${esc(w.label)}</div></div>`).join('')}</div>
+      <div class="week">${week.map(w => `<div class="week-col">
+        <span class="week-val data-value">${w.focusRatio}%</span>
+        <div class="week-bar"><div class="week-fill ${w.focusRatio >= 60 ? 'ok' : w.focusRatio >= 40 ? 'mid' : 'bad'}" style="height:${Math.max(4, w.focusRatio)}%"></div></div>
+        <div class="week-lbl">${esc(w.label)}</div>
+      </div>`).join('')}</div>
     </section>` : ''}
 
     <section class="card gen-builder">

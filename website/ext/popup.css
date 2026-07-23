@@ -936,3 +936,64 @@ html.fullscreen .askbox { max-width: 1100px; margin-left: auto; margin-right: au
 .gen-card { border-color: var(--accent-line); background: var(--accent-soft); gap: 6px; }
 .gen-card .site-row { gap: 8px; }
 .bar-list { display: flex; flex-direction: column; gap: 6px; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   INSIGHTS — denser, app-style infographics (2026-07-23). Focus donut hero, stat
+   tiles, category breakdown bars, richer top-sites + week. Semantic tones:
+   .ok emerald, .mid amber, .bad coral. Rings/bars animate in on insert.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Today hero */
+.ins-today { gap: 12px; }
+.ins-hero { display: flex; align-items: center; gap: 14px; }
+.donut { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+.donut svg { transform: rotate(-90deg); }
+.donut-bg { fill: none; stroke: var(--line); stroke-width: 7; }
+.donut-fg { fill: none; stroke-width: 7; stroke-linecap: round; stroke-dashoffset: var(--off); animation: donutGrow 1s cubic-bezier(.2,.8,.2,1) both; }
+.donut.ok .donut-fg { stroke: var(--ok); } .donut.mid .donut-fg { stroke: var(--warning); } .donut.bad .donut-fg { stroke: var(--bad); }
+@keyframes donutGrow { from { stroke-dashoffset: calc(2 * 3.14159 * 26px); } }
+.donut-c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; }
+.donut-c .data-value { font-size: 19px; font-weight: 700; color: var(--ink); }
+.donut-c .data-value i { font-size: 10px; font-style: normal; color: var(--ink-3); }
+.donut-c label { font-size: 8.5px; color: var(--ink-3); margin-top: 2px; }
+.ins-tiles { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; min-width: 0; }
+.ins-tile { text-align: center; padding: 8px 4px; border-radius: 9px; background: var(--tint); min-width: 0; }
+.ins-tile .data-value { display: block; font-size: 15px; font-weight: 700; color: var(--ink); }
+.ins-tile .data-value.bad { color: var(--bad); }
+.ins-tile label { display: block; font-size: 8.5px; color: var(--ink-3); margin-top: 3px; line-height: 1.25; }
+
+/* focused/distracted split bar */
+.ins-split { display: flex; height: 9px; border-radius: 5px; overflow: hidden; background: var(--tint); }
+.ins-split-ok { background: var(--ok); }
+.ins-split-bad { background: var(--bad); }
+.ins-split-lbl { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-3); }
+.ins-split-lbl b { font-weight: 700; }
+.ins-split-lbl b.ok { color: var(--ok); } .ins-split-lbl b.bad { color: var(--bad); }
+
+/* category breakdown */
+.catbars { display: flex; flex-direction: column; gap: 10px; }
+.catbar-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.catbar-lbl { font-size: 12px; font-weight: 550; color: var(--ink); }
+.catbar-n { font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.catbar-track { height: 7px; border-radius: 4px; background: var(--tint); overflow: hidden; margin: 4px 0 3px; }
+.catbar-fill { display: block; height: 100%; width: 0; border-radius: 4px; animation: growW .8s cubic-bezier(.2,.8,.2,1) both; }
+.catbar-fill.ok { background: var(--ok); } .catbar-fill.mid { background: var(--warning); } .catbar-fill.bad { background: var(--bad); }
+.catbar-sub { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--ink-3); }
+.dotpct { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--ink-3); }
+.dotpct.ok { background: var(--ok); } .dotpct.mid { background: var(--warning); } .dotpct.bad { background: var(--bad); }
+
+/* richer top-sites list */
+.sitelist { display: flex; flex-direction: column; gap: 9px; }
+.site-row2 { display: flex; align-items: center; gap: 8px; }
+.site-row2 .site-dom { width: 30%; }
+.site-row2 .site-bar { flex: 1; }
+
+/* week focus-by-day with value labels */
+.week-val { font-size: 10px; font-weight: 700; color: var(--ink-2); }
+.week-fill.mid { background: var(--warning); }
+.week-fill.bad { background: var(--bad); }
+
+@media (prefers-reduced-motion: reduce) {
+  .donut-fg, .catbar-fill { animation: none !important; }
+  .donut-fg { stroke-dashoffset: var(--off); }
+}
