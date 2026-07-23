@@ -42,12 +42,12 @@
     <button class="tab"        data-tab="actions"  role="tab">Actions</button>
   </nav>
 
-  <!-- Prominent, always-visible AI entry (chat-first, like the desktop app). -->
-  <button class="askbar" id="askbar" aria-label="Ask the AI assistant">
-    <span class="askbar-icon" aria-hidden="true">✦</span>
-    <span class="askbar-text">Ask AI to block something, or about your focus…</span>
-    <span class="askbar-go" aria-hidden="true">→</span>
-  </button>
+  <!-- Inline AI composer (chat-first): type and talk to the AI instantly, no extra click. -->
+  <form class="askbox" id="askbox">
+    <span class="askbox-icon" aria-hidden="true">✦</span>
+    <textarea id="askbox-input" class="askbox-input" rows="1" placeholder="Ask AI to block something, or about your focus…" aria-label="Ask the AI assistant"></textarea>
+    <button type="submit" class="askbox-send" id="askbox-send" aria-label="Send message" title="Send">↑</button>
+  </form>
 
   <div class="scroll-body">
 

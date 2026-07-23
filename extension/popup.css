@@ -654,17 +654,29 @@ body {
 .tab:hover { color: var(--ink-2); }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-/* Prominent Ask-AI bar */
-.askbar {
-  display: flex; align-items: center; gap: 9px; cursor: pointer; width: calc(100% - 28px);
-  margin: 12px 14px 0; padding: 10px 12px; border-radius: 10px; text-align: left;
+/* Inline AI composer — a real text box on the main page, so the user talks to the
+   AI instantly instead of clicking through to a separate view. */
+.askbox {
+  display: flex; align-items: flex-end; gap: 8px; width: calc(100% - 28px);
+  margin: 12px 14px 0; padding: 8px 8px 8px 11px; border-radius: 12px;
   border: 1px solid var(--accent-line); background: var(--accent-soft);
-  color: var(--ink); font-family: var(--font); transition: filter .12s;
+  transition: border-color .15s, box-shadow .15s;
 }
-.askbar:hover { filter: brightness(1.12); }
-.askbar-icon { color: var(--accent); font-size: 14px; flex-shrink: 0; }
-.askbar-text { flex: 1; font-size: 12px; color: var(--ink-2); }
-.askbar-go { color: var(--accent); font-weight: 700; flex-shrink: 0; }
+.askbox:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.askbox-icon { color: var(--accent); font-size: 14px; flex-shrink: 0; align-self: center; }
+.askbox-input {
+  flex: 1; min-width: 0; resize: none; border: none; background: transparent;
+  color: var(--ink); font-family: var(--font); font-size: 12.5px; line-height: 1.4;
+  padding: 4px 0; max-height: 120px; outline: none;
+}
+.askbox-input::placeholder { color: var(--ink-3); }
+.askbox-send {
+  flex-shrink: 0; width: 30px; height: 30px; border: none; border-radius: 8px; cursor: pointer;
+  background: var(--accent); color: var(--on-accent); font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; transition: filter .12s;
+}
+.askbox-send:hover { filter: brightness(1.1); }
+.askbox-send:disabled { opacity: 0.4; cursor: default; }
 
 /* KPI row */
 .kpi-row { display: flex; gap: 8px; }
@@ -886,7 +898,7 @@ html.light {
 
 /* Full-screen tab: keep content readable rather than stretching edge to edge. */
 html.fullscreen .view { max-width: 1100px; margin: 0 auto; width: 100%; }
-html.fullscreen .askbar { max-width: 1100px; margin-left: auto; margin-right: auto; }
+html.fullscreen .askbox { max-width: 1100px; margin-left: auto; margin-right: auto; }
 
 /* Wide layout (full-screen tab): flow the reasoning + taxonomy into columns. */
 @media (min-width: 720px) {

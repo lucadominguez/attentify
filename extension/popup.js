@@ -641,7 +641,22 @@ document.getElementById('tabstrip').addEventListener('click', (e) => {
   const btn = e.target.closest('.tab');
   if (btn) showTab(btn.dataset.tab);
 });
-document.getElementById('askbar').addEventListener('click', () => showChat());
+// Inline AI composer: type on Home and go straight into a live conversation, no
+// intermediate click. Enter sends (Shift+Enter = newline); the field auto-grows.
+const askboxInput = document.getElementById('askbox-input');
+const askbox = document.getElementById('askbox');
+function askboxGrow() { askboxInput.style.height = 'auto'; askboxInput.style.height = Math.min(120, askboxInput.scrollHeight) + 'px'; }
+askboxInput.addEventListener('input', askboxGrow);
+askboxInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); askbox.requestSubmit(); }
+});
+askbox.addEventListener('submit', async e => {
+  e.preventDefault();
+  const text = askboxInput.value.trim();
+  if (!text) return;
+  askboxInput.value = ''; askboxGrow();
+  await startChatWith(text);
+});
 
 // ── Custom analytics builder (standalone, over the extension's own DB) ──────────
 // Mirrors the app's "build your own analytics": pick a metric/grouping/range and it
@@ -1006,6 +1021,18 @@ function showChat() {
   document.getElementById('main-view').style.display = 'none';
   document.getElementById('chat-view').style.display  = 'flex';
   initChat();
+}
+
+// Open the chat view and immediately send `text` (from the Home composer). Awaits
+// initChat so apiKey/connection/free-credit state is loaded before sendChat decides
+// whether AI can run — otherwise the first message could wrongly hit the paywall.
+async function startChatWith(text) {
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('chat-view').style.display  = 'flex';
+  try { await initChat(); } catch (_) {}
+  const input = document.getElementById('chat-input');
+  if (input) input.value = text;
+  sendChat();
 }
 
 function hideChat() {
