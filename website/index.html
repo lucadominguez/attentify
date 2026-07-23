@@ -90,7 +90,7 @@
       <div class="bchrome">
         <div class="btabs">
           <span class="dots"><i></i><i></i><i></i></span>
-          <div class="btab active"><span class="btab-fav"></span>reddit.com <span class="btab-x">×</span></div>
+          <div class="btab active"><span class="btab-fav" id="ext-fav"></span><span id="ext-tab-title">reddit.com</span> <span class="btab-x">×</span></div>
           <div class="btab"><span class="btab-fav"></span>Docs · the work</div>
           <span class="btab-add">+</span>
         </div>
@@ -98,66 +98,125 @@
           <span class="bnav">‹</span><span class="bnav">›</span><span class="bnav">⟳</span>
           <div class="bomni">
             <svg viewBox="0 0 24 24" class="lock"><path d="M6 10V7a6 6 0 1112 0v3h1a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1v-9a1 1 0 011-1h1zm2 0h8V7a4 4 0 10-8 0v3z"/></svg>
-            <span class="bomni-host">reddit.com</span><span class="bomni-path"></span>
+            <span class="bomni-host" id="ext-omni-host">reddit.com</span><span class="bomni-path" id="ext-omni-path"></span>
             <span class="bstar">☆</span>
           </div>
           <span class="bpinned" title="Attentify is guarding this browser">
             <svg viewBox="0 0 24 24" class="pdshield"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
-            <span class="bpin-badge">3</span>
+            <span class="bpin-badge" id="ext-badge">3</span>
           </span>
           <span class="bmenu">⋮</span>
         </div>
       </div>
 
       <div class="extwin-body">
-        <!-- LEFT: a realistic feed. Attentify scans it and removes the distracting
-             elements live (driven by app.js); the status pill narrates the reasoning. -->
+        <!-- LEFT: real pages across 4 scenarios. Attentify reads each, flags the
+             distractions and strips or blocks them live (driven by app.js); the status
+             pill narrates the reasoning. -->
         <div class="ext-page" id="ext-page">
           <div class="ext-scan" id="ext-scan"></div>
-          <div class="ext-status" id="ext-status"><span class="exs-dot"></span><span id="ext-status-tx">Attentify is reading this page…</span></div>
-
-          <div class="epost keep">
-            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">2.4k</span><span class="ev-dn">▼</span></div>
-            <div class="ec"><div class="ec-sub">r/programming · 3h</div><div class="ec-ti">What's your terminal setup this year?</div><div class="ec-meta">312 comments · share · save</div></div>
+          <div class="ext-topbar">
+            <div class="ext-status" id="ext-status"><span class="exs-dot"></span><span id="ext-status-tx">Attentify is reading this page…</span></div>
+            <div class="ext-scene-dots" id="ext-scene-dots">
+              <span class="esd" data-i="0" title="Social feed">Feed</span>
+              <span class="esd" data-i="1" title="Google search">Search</span>
+              <span class="esd" data-i="2" title="YouTube">YouTube</span>
+              <span class="esd" data-i="3" title="Gambling">Gambling</span>
+            </div>
           </div>
 
-          <div class="epost block" data-kind="feed" data-reason="Off-goal home feed">
-            <div class="eblk-h"><span class="eblk-tag">Popular right now</span><span class="eblk-x">promoted feed</span></div>
-            <div class="eblk-rail"><i></i><i></i><i></i><i></i></div>
-          </div>
+          <div class="ext-scenes" id="ext-scenes">
 
-          <div class="epost keep">
-            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">876</span><span class="ev-dn">▼</span></div>
-            <div class="ec"><div class="ec-sub">r/rust · 5h</div><div class="ec-ti">Comparing async runtimes: tokio vs async-std</div><div class="ec-meta">98 comments · share · save</div></div>
-          </div>
+            <!-- SCENE 1 · Reddit feed (strip distracting elements) -->
+            <div class="ext-scene on" data-scene="reddit">
+              <div class="epost keep">
+                <div class="ev"><span class="ev-up">▲</span><span class="ev-n">2.4k</span><span class="ev-dn">▼</span></div>
+                <div class="ec"><div class="ec-sub">r/programming · 3h</div><div class="ec-ti">What's your terminal setup this year?</div><div class="ec-meta">312 comments · share · save</div></div>
+              </div>
+              <div class="epost block blockable" data-reason="Off-goal home feed">
+                <div class="eblk-h"><span class="eblk-tag">Popular right now</span><span class="eblk-x">promoted feed</span></div>
+                <div class="eblk-rail"><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="epost keep">
+                <div class="ev"><span class="ev-up">▲</span><span class="ev-n">876</span><span class="ev-dn">▼</span></div>
+                <div class="ec"><div class="ec-sub">r/rust · 5h</div><div class="ec-ti">Comparing async runtimes: tokio vs async-std</div><div class="ec-meta">98 comments · share · save</div></div>
+              </div>
+              <div class="epost block blockable" data-reason="Short-form video shelf">
+                <div class="eblk-h"><span class="eblk-tag">▶ Watch — trending clips</span><span class="eblk-x">short-form</span></div>
+                <div class="eblk-vids"><span></span><span></span><span></span><span></span></div>
+              </div>
+              <div class="epost keep">
+                <div class="ev"><span class="ev-up">▲</span><span class="ev-n">1.1k</span><span class="ev-dn">▼</span></div>
+                <div class="ec"><div class="ec-sub">r/webdev · 6h</div><div class="ec-ti">CSS grid tricks I wish I knew sooner</div><div class="ec-meta">144 comments · share · save</div></div>
+              </div>
+              <div class="epost block blockable" data-reason="Sponsored ad">
+                <div class="eblk-h"><span class="eblk-tag">Promoted</span><span class="eblk-x">ad</span></div>
+                <div class="eblk-ad"><span class="eblk-ad-img"></span><div><b>You won't believe these 10 tricks</b><span>sponsored · getdistracted.co</span></div></div>
+              </div>
+            </div>
 
-          <div class="epost block" data-kind="short-form" data-reason="Short-form video shelf">
-            <div class="eblk-h"><span class="eblk-tag">▶ Watch — trending clips</span><span class="eblk-x">short-form</span></div>
-            <div class="eblk-vids"><span></span><span></span><span></span><span></span></div>
-          </div>
+            <!-- SCENE 2 · Google search (distinguish a good vs a bad search) -->
+            <div class="ext-scene" data-scene="google">
+              <div class="gs-bar">
+                <svg viewBox="0 0 24 24" class="gs-g" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="#cbd2de" stroke-width="2"/></svg>
+                <span class="gs-q" id="gs-q">react useEffect cleanup function</span>
+                <span class="gs-verdict" id="gs-verdict"></span>
+              </div>
+              <div class="gs-results" id="gs-results">
+                <div class="gs-res"><div class="gs-res-url">react.dev › reference › useEffect</div><div class="gs-res-title">Synchronizing with Effects – React</div><div class="gs-res-snip">Return a cleanup function so React can run it before the component re-renders or unmounts…</div></div>
+                <div class="gs-res"><div class="gs-res-url">stackoverflow.com › questions</div><div class="gs-res-title">How to properly clean up an interval in useEffect</div><div class="gs-res-snip">Store the id and clear it in the returned cleanup callback so it doesn't leak…</div></div>
+                <div class="gs-res"><div class="gs-res-url">developer.mozilla.org › Web › Effects</div><div class="gs-res-title">Effect cleanup and dependencies</div><div class="gs-res-snip">A cleanup function tears down subscriptions created by the effect…</div></div>
+              </div>
+              <div class="scene-block" id="gs-block">
+                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
+                <b>Search blocked</b>
+                <span id="gs-block-why">Off-goal for “deep work” — this is entertainment, not the task.</span>
+              </div>
+            </div>
 
-          <div class="epost keep">
-            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">1.1k</span><span class="ev-dn">▼</span></div>
-            <div class="ec"><div class="ec-sub">r/webdev · 6h</div><div class="ec-ti">CSS grid tricks I wish I knew sooner</div><div class="ec-meta">144 comments · share · save</div></div>
-          </div>
+            <!-- SCENE 3 · YouTube (strip Shorts + recommendations) -->
+            <div class="ext-scene" data-scene="youtube">
+              <div class="yt-row keep">
+                <span class="yt-thumb main"></span>
+                <div class="yt-meta"><div class="yt-ti">Building a Rust web server — full tutorial</div><div class="yt-sub">CodeWithTom · 48K views · watching now</div></div>
+              </div>
+              <div class="yt-shelf block blockable" data-reason="YouTube Shorts">
+                <div class="eblk-h"><span class="eblk-tag">▶ Shorts</span><span class="eblk-x">short-form</span></div>
+                <div class="yt-shorts"><span></span><span></span><span></span><span></span></div>
+              </div>
+              <div class="yt-row block blockable" data-reason="Recommended · off-goal">
+                <span class="yt-thumb"></span>
+                <div class="yt-meta"><div class="yt-ti">10 productivity hacks that changed my life</div><div class="yt-sub">Recommended for you · 2.1M views</div></div>
+              </div>
+              <div class="yt-row block blockable" data-reason="Autoplay next">
+                <span class="yt-thumb"></span>
+                <div class="yt-meta"><div class="yt-ti">Up next: Ultimate gaming setup tour 2026</div><div class="yt-sub">Autoplay · 890K views</div></div>
+              </div>
+            </div>
 
-          <div class="epost block" data-kind="promoted" data-reason="Sponsored ad">
-            <div class="eblk-h"><span class="eblk-tag">Promoted</span><span class="eblk-x">ad</span></div>
-            <div class="eblk-ad"><span class="eblk-ad-img"></span><div><b>You won't believe these 10 tricks</b><span>sponsored · getdistracted.co</span></div></div>
-          </div>
+            <!-- SCENE 4 · Gambling site (block the whole page) -->
+            <div class="ext-scene" data-scene="gambling">
+              <div class="gm-page">
+                <div class="gm-head"><span class="gm-logo">♠ RoyalBet</span><span class="gm-bonus">$500 WELCOME BONUS</span></div>
+                <div class="gm-tiles"><span class="gm-tile">🎰</span><span class="gm-tile">🃏</span><span class="gm-tile">🎲</span><span class="gm-tile">🎯</span><span class="gm-tile">💎</span><span class="gm-tile">🎰</span></div>
+                <div class="gm-cta">Deposit &amp; Play Now</div>
+              </div>
+              <div class="scene-block" id="gm-block">
+                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
+                <b>Site blocked</b>
+                <span>Gambling — not part of any goal you set. Blocked before the page could load.</span>
+              </div>
+            </div>
 
-          <div class="epost keep">
-            <div class="ev"><span class="ev-up">▲</span><span class="ev-n">540</span><span class="ev-dn">▼</span></div>
-            <div class="ec"><div class="ec-sub">r/golang · 8h</div><div class="ec-ti">Structuring a mid-size Go service</div><div class="ec-meta">61 comments · share · save</div></div>
           </div>
         </div>
         <!-- RIGHT: the REAL extension side panel, running live on sample data -->
         <iframe class="ext-panel" src="./ext/popup.html" title="Attentify browser extension, live" loading="eager"></iframe>
       </div>
     </div>
-    <p class="appdemo-foot">On the left is a real page. Watch Attentify <b>read it, flag the feeds, Shorts and ads, and strip
-       them out</b> while the keepers stay. On the right is the <b>actual extension</b>, running live: open its <b>Logic</b>
-       tab to see exactly why each thing was called a distraction. Nothing here is a mockup.</p>
+    <p class="appdemo-foot">On the left, Attentify works across real pages: it <b>strips feeds, Shorts and ads</b>, tells a
+       <b>focused search from a distracting one</b>, and <b>blocks gambling outright</b>, explaining each call as it goes.
+       On the right is the <b>actual extension</b>, running live. Nothing here is a mockup.</p>
   </div>
 
   <div class="hero-cta center" id="download-hero">
