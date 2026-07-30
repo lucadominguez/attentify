@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy · Attentify</title>
+<meta name="description" content="What Attentify collects, what stays on your device, what leaves it, and who processes it.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="legal.css">
+<link rel="icon" href="attentify-logo.png">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="/">
+    <img class="logomark" src="attentify-logo.png" alt="Attentify" width="30" height="30" style="border-radius:7px;">
+    <span class="brand-name">ATTENTIFY</span>
+  </a>
+  <nav class="nav-links"><a href="/">Home</a><a href="/terms">Terms</a></nav>
+</header>
+
+<main class="legal">
+  <h1>Privacy Policy</h1>
+  <p class="legal-meta">Last updated <b>30 July 2026</b></p>
+
+  <div class="legal-tldr">
+    <h2>The short version</h2>
+    <ul>
+      <li>Your detailed browsing history stays <b>on your device</b>, in a local database. We never receive it.</li>
+      <li>When an <b>AI feature runs</b>, the page's domain, path, title, your search query and your stated goals are sent to our server and on to our AI provider so it can judge whether the page is a distraction. This is the one place your browsing context leaves your machine.</li>
+      <li>We need an <b>account</b>, so we hold your email address.</li>
+      <li>We <b>do not sell your data</b>, and we run no advertising or third-party analytics trackers on this site or in the app.</li>
+    </ul>
+  </div>
+
+  <h2>Who we are</h2>
+  <p>Attentify is operated by Luca Dominguez ("we", "us"). For any privacy question or request,
+     email <a href="mailto:ludomi2502@gmail.com">ludomi2502@gmail.com</a>. If you are in the UK or EU,
+     we act as the data controller for the personal data described here.</p>
+
+  <h2>What stays on your device</h2>
+  <p>The desktop app records what you do on your computer so it can show you analytics and decide
+     when to step in. This includes the applications you use, window titles, page addresses,
+     how long you spend on each, and the decisions the app makes about them.</p>
+  <p><b>This detailed record is stored locally</b>, in a database on your own machine, and is not
+     uploaded to us. If you use the app's history import, the browser history it reads is likewise
+     processed locally and stays there. Uninstalling the app or clearing its data removes it.</p>
+
+  <h2>What leaves your device</h2>
+
+  <h3>1. AI processing</h3>
+  <p>Attentify's AI features are the core of the product, and they cannot run purely locally.
+     When an AI feature runs, we send the following to our server, which forwards it to our AI provider:</p>
+  <ul>
+    <li>the <b>domain and path</b> of the page being judged (for example <code>reddit.com/r/programming</code>)</li>
+    <li>the <b>page title</b>, truncated</li>
+    <li>your <b>search query</b>, when the page is a search results page</li>
+    <li>the <b>goals you have told Attentify about</b>, so it can judge relevance</li>
+    <li>anything you <b>type into the assistant</b>, including any screenshot you choose to attach</li>
+  </ul>
+  <p>We do not send your full browsing history, your files, your keystrokes, or the contents of pages
+     beyond the title. AI requests are made per page assessed or per message you send, not continuously.</p>
+  <p><b>Our AI provider is <a href="https://openrouter.ai" target="_blank" rel="noopener">OpenRouter</a>,
+     which currently routes these requests to DeepSeek models.</b> That means the data listed above is
+     processed on infrastructure operated by those companies, which may be outside your country,
+     including outside the UK, EU and Canada. If you would rather not use a managed provider, the app
+     and extension let you supply <b>your own API key</b>, in which case requests go directly from your
+     device to the provider you chose and never reach our servers.</p>
+  <p>If you turn AI features off, or run out of credit, this stops. Your static rules, keyword blocks
+     and built-in blocking keep working with no data leaving your device.</p>
+
+  <h3>2. Your account</h3>
+  <p>To sign in you give us an <b>email address</b> and a password. We store the email, and only a
+     salted hash of the password, never the password itself. We also store a <b>session token</b> and
+     the browser user agent that created it, so you can stay signed in.</p>
+
+  <h3>3. Anti-abuse</h3>
+  <p>Every account gets a small amount of free AI credit. To stop one person claiming it repeatedly we
+     record a <b>device fingerprint</b>, a value derived from your installation, and check it has not
+     claimed a trial before. On this website we also use <b>Cloudflare Turnstile</b> to tell humans from
+     bots at sign-up. Turnstile runs checks in your browser; Cloudflare processes the result.</p>
+
+  <h3>4. Payments</h3>
+  <p>Payments are handled entirely by <b>Stripe</b>. We never see or store your card number. We keep
+     your Stripe customer and subscription identifiers, your credit balance, and a ledger of credit
+     movements so your account page and billing work.</p>
+
+  <h3>5. Usage metering</h3>
+  <p>Because AI is charged by usage, we record <b>how much you used and what it cost</b>: token counts,
+     the model used, timestamps and the resulting credit debit. This is billing data, not content. We
+     do not store the text of your AI requests once they have been answered.</p>
+
+  <h3>6. Diagnostics, if you turn them on</h3>
+  <p>Diagnostics are <b>off unless you enable them</b>. When enabled, crash reports and error details
+     are sent, along with an installation identifier and, where relevant, <b>an excerpt of the chat
+     message involved</b>. Because an account is required to use Attentify, this data is linked to you
+     and we do not describe it as anonymous.</p>
+
+  <h2>Who processes your data</h2>
+  <table class="legal-table">
+    <thead><tr><th>Provider</th><th>What for</th><th>What they get</th></tr></thead>
+    <tbody>
+      <tr><td>Cloudflare</td><td>Hosting, database, file storage, bot protection</td><td>Account data, usage records, request metadata such as IP address</td></tr>
+      <tr><td>OpenRouter, and the model providers it routes to, currently DeepSeek</td><td>Running the AI</td><td>The page context and assistant messages described above</td></tr>
+      <tr><td>Stripe</td><td>Payments</td><td>Your payment details, which they collect directly, plus your email</td></tr>
+    </tbody>
+  </table>
+  <p>We do not sell your personal data, and we do not share it for advertising.</p>
+
+  <h2>How long we keep it</h2>
+  <ul>
+    <li><b>Account records</b>: while your account exists, and for up to 90 days after you delete it.</li>
+    <li><b>Billing and credit ledger</b>: up to 7 years, because tax rules require it.</li>
+    <li><b>Sessions</b>: 30 days, then they expire.</li>
+    <li><b>Local activity data</b>: until you delete it. It is on your machine, so you control it.</li>
+  </ul>
+
+  <h2>Your rights</h2>
+  <p>You can ask us to give you a copy of your data, correct it, or delete it. You can withdraw consent
+     for diagnostics at any time in Settings. Depending on where you live you may also have the right
+     to object to or restrict processing, to data portability, and to complain to your local data
+     protection regulator. Email <a href="mailto:ludomi2502@gmail.com">ludomi2502@gmail.com</a> and we
+     will respond within 30 days.</p>
+  <p>Most of what Attentify knows about you is on your own computer, so the fastest way to erase it is
+     to clear the app's data or uninstall it.</p>
+
+  <h2>Children</h2>
+  <p>Attentify is not intended for children under 16, and we do not knowingly collect their data.</p>
+
+  <h2>Security</h2>
+  <p>Passwords are hashed and salted. Traffic is encrypted in transit. API keys live only as
+     server-side secrets and are never shipped inside the app, the extension or the website.
+     No system is perfectly secure, and we cannot guarantee absolute security.</p>
+
+  <h2>Changes</h2>
+  <p>If we change this policy we will update the date at the top. For changes that materially affect
+     what we collect or who processes it, we will tell you in the app or by email before they take effect.</p>
+
+  <footer class="legal-foot">
+    <a href="/">Back to Attentify</a> · <a href="/terms">Terms of Service</a>
+  </footer>
+</main>
+</body>
+</html>

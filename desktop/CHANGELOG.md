@@ -4,7 +4,7 @@ All notable changes to Attentify (desktop app) are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project uses [semantic versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.2.0] - 2026-07-30
 
 ### Added
 - **Distraction detection now learns from what it MISSES, not just what it over-blocks.**

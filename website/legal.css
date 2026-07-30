@@ -1,0 +1,38 @@
+/* Legal pages (privacy, terms). Reuses the site tokens from styles.css:
+   var(--text) / --muted / --faint / --accent / --card / --line. Long-form
+   reading layout, so measure is capped and vertical rhythm is generous. */
+
+.legal{max-width:760px;margin:0 auto;padding:120px 24px 90px}
+.legal h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,5vw,42px);line-height:1.12;letter-spacing:-.02em;margin:0 0 8px}
+.legal-meta{color:var(--faint);font-size:13.5px;margin:0 0 34px}
+.legal h2{font-family:'Space Grotesk',sans-serif;font-size:22px;line-height:1.25;letter-spacing:-.01em;margin:44px 0 12px;padding-top:18px;border-top:1px solid var(--line)}
+.legal h3{font-size:16.5px;font-weight:600;margin:26px 0 8px;color:var(--text)}
+.legal p{color:var(--muted);font-size:16px;line-height:1.68;margin:0 0 14px}
+.legal ul{margin:0 0 16px;padding-left:22px}
+.legal li{color:var(--muted);font-size:16px;line-height:1.62;margin-bottom:8px}
+.legal b{color:var(--text);font-weight:600}
+.legal a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(99,102,241,.35)}
+.legal a:hover{border-bottom-color:var(--accent)}
+.legal code{font-family:var(--mono);font-size:.9em;background:rgba(99,102,241,.09);
+  border:1px solid rgba(99,102,241,.16);border-radius:5px;padding:1px 5px}
+
+/* the summary box at the top: the part most people will actually read */
+.legal-tldr{background:linear-gradient(180deg,rgba(99,102,241,.07),rgba(99,102,241,.025));
+  border:1px solid rgba(99,102,241,.2);border-radius:16px;padding:22px 24px 8px;margin:0 0 12px}
+.legal-tldr h2{border-top:none;padding-top:0;margin:0 0 12px;font-size:17px}
+.legal-tldr ul{padding-left:20px}
+.legal-tldr li{font-size:15.5px}
+
+.legal-table{width:100%;border-collapse:collapse;margin:6px 0 20px;font-size:15px;display:block;overflow-x:auto}
+.legal-table th,.legal-table td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+.legal-table th{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--faint);font-weight:600;white-space:nowrap}
+.legal-table td{color:var(--muted);line-height:1.55}
+
+.legal-foot{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);
+  color:var(--faint);font-size:14px}
+
+@media(max-width:640px){
+  .legal{padding:100px 20px 70px}
+  .legal h2{font-size:20px;margin-top:36px}
+  .legal p,.legal li{font-size:15.5px}
+}
