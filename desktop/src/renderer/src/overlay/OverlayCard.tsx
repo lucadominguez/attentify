@@ -179,7 +179,7 @@ export default function OverlayCard(): React.ReactElement | null {
           </div>
           <span style={{
             fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase',
-            color: cfg.color, fontFamily: '"Share Tech Mono", monospace', flex: 1,
+            color: cfg.color, fontFamily: 'var(--font-mono)', flex: 1,
           }}>
             {cfg.label}
             {notif.domain && <span style={{ color: 'rgba(255,255,255,0.35)', marginLeft: 6 }}>· {notif.domain}</span>}
@@ -227,7 +227,7 @@ export default function OverlayCard(): React.ReactElement | null {
                   fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase',
                   padding: '5px 10px', cursor: acting ? 'default' : 'pointer', opacity: acting ? 0.5 : 1,
                   background: s.bg, border: `1px solid ${s.border}`, color: s.color,
-                  fontFamily: '"Share Tech Mono", monospace', transition: 'opacity 0.15s',
+                  fontFamily: 'var(--font-mono)', transition: 'opacity 0.15s',
                 }}
               >
                 {action.label}

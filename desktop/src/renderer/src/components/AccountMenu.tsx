@@ -99,7 +99,7 @@ export default function AccountMenu({
               }}
             >
               <div className="px-4 pt-3 pb-1">
-                <p className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>Account</p>
+                <p className="text-[11px] font-semibold" style={{ color: colors.textMuted }}>Account</p>
               </div>
               <div className="p-3 pt-1">
                 <AuthPanel onChange={() => { load(); onChange?.() }} />

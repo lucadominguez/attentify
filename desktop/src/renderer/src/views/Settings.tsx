@@ -27,8 +27,8 @@ function SectionHeader({ icon, label }: { icon: React.ReactNode; label: string }
     <div className="flex items-center gap-2 mb-3">
       <span style={{ color: 'rgba(99,102,241,0.6)' }}>{icon}</span>
       <span
-        className="text-[9px] font-bold uppercase tracking-widest"
-        style={{ color: 'rgba(99,102,241,0.5)', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.2em' }}
+        className="text-[11px] font-semibold"
+        style={{ color: 'var(--text-secondary)' }}
       >
         {label}
       </span>
@@ -57,7 +57,7 @@ function ExtensionPanel({ colors }: { colors: ReturnType<typeof useTheme>['color
         <div className="pr-3">
           <p className="text-[12px] font-medium flex items-center gap-2" style={{ color: colors.textPrimary }}>
             Browser extension
-            <span className="text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded"
+            <span className="text-[9px] px-1.5 py-0.5 rounded"
               style={{ background: connected ? 'rgba(52,211,153,0.12)' : 'rgba(251,191,36,0.12)', color: connected ? colors.positive : colors.warning }}>
               {connected ? 'connected' : 'not installed'}
             </span>
@@ -209,14 +209,11 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
         className="flex-shrink-0 px-6 py-4"
         style={{ borderBottom: '1px solid rgba(99,102,241,0.08)' }}
       >
-        <h1
-          className="text-[13px] font-bold uppercase tracking-widest"
-          style={{ color: colors.textPrimary, fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.2em' }}
-        >
+        <h1 className="text-[14px] font-semibold" style={{ color: colors.textPrimary }}>
           Settings
         </h1>
-        <p className="text-[10px] mt-0.5" style={{ color: colors.textMuted }}>
-          Configure how Attentify responds to threats
+        <p className="text-[11px] mt-0.5" style={{ color: colors.textMuted }}>
+          How Attentify behaves, and what it is allowed to do
         </p>
       </div>
 
@@ -260,7 +257,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
               <p className="text-[12px] font-medium" style={{ color: colors.textPrimary }}>
                 Neural background
                 <span
-                  className="ml-2 text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded"
+                  className="ml-2 text-[9px] px-1.5 py-0.5 rounded"
                   style={{ background: colors.accentBg, color: colors.accent }}
                 >
                   Experiment
@@ -367,7 +364,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
 
         {/* ── Blocking Mode ─────────────────────────────────────────────────── */}
         <section>
-          <SectionHeader icon={<Shield size={11} />} label="Threat Response Mode" />
+          <SectionHeader icon={<Shield size={11} />} label="Blocking Mode" />
           <div className="grid grid-cols-2 gap-3">
 
             {/* Auto-Block */}
@@ -395,10 +392,10 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                   <Zap size={11} style={{ color: currentMode === 'auto' ? '#f87171' : colors.textMuted }} />
                 </div>
                 <span
-                  className="text-[11px] font-bold uppercase tracking-widest"
+                  className="text-[11px] font-semibold"
                   style={{
                     color: currentMode === 'auto' ? '#f87171' : colors.textSecondary,
-                    fontFamily: '"Share Tech Mono", monospace',
+                    fontFamily: 'var(--font-mono)',
                   }}
                 >
                   Auto-Block
@@ -411,24 +408,24 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 {['adult', 'gambling', 'social'].map((tag) => (
                   <span
                     key={tag}
-                    className="text-[8px] px-1.5 py-0.5 uppercase tracking-wide"
+                    className="text-[8px] px-1.5 py-0.5"
                     style={{
                       background: 'rgba(248,113,113,0.08)',
                       border: '1px solid rgba(248,113,113,0.2)',
                       color: 'rgba(255,100,100,0.7)',
-                      fontFamily: '"Share Tech Mono", monospace',
+                      fontFamily: 'var(--font-mono)',
                     }}
                   >
                     {tag}
                   </span>
                 ))}
                 <span
-                  className="text-[8px] px-1.5 py-0.5 uppercase tracking-wide"
+                  className="text-[8px] px-1.5 py-0.5"
                   style={{
                     background: 'rgba(255,255,255,0.03)',
                     border: '1px solid rgba(255,255,255,0.08)',
                     color: colors.textMuted,
-                    fontFamily: '"Share Tech Mono", monospace',
+                    fontFamily: 'var(--font-mono)',
                   }}
                 >
                   + more
@@ -461,10 +458,10 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                   <Bell size={11} style={{ color: currentMode === 'ask' ? '#6366f1' : colors.textMuted }} />
                 </div>
                 <span
-                  className="text-[11px] font-bold uppercase tracking-widest"
+                  className="text-[11px] font-semibold"
                   style={{
                     color: currentMode === 'ask' ? '#6366f1' : colors.textSecondary,
-                    fontFamily: '"Share Tech Mono", monospace',
+                    fontFamily: 'var(--font-mono)',
                   }}
                 >
                   Ask First
@@ -475,12 +472,12 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
               </p>
               <div className="mt-3">
                 <span
-                  className="text-[8px] px-1.5 py-0.5 uppercase tracking-wide"
+                  className="text-[8px] px-1.5 py-0.5"
                   style={{
                     background: 'rgba(99,102,241,0.06)',
                     border: '1px solid rgba(99,102,241,0.18)',
                     color: 'rgba(99,102,241,0.6)',
-                    fontFamily: '"Share Tech Mono", monospace',
+                    fontFamily: 'var(--font-mono)',
                   }}
                 >
                   Review in Actions →
@@ -519,8 +516,8 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 </div>
                 <button
                   onClick={() => void clearLicense()}
-                  className="px-3 py-2 text-[9px] font-bold uppercase tracking-widest"
-                  style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', color: 'rgba(248,113,113,0.7)', fontFamily: '"Share Tech Mono", monospace' }}
+                  className="px-3 py-2 text-[9px] font-semibold"
+                  style={{ background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)', color: 'rgba(248,113,113,0.7)', fontFamily: 'var(--font-mono)' }}
                 >
                   Unlink
                 </button>
@@ -553,7 +550,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                       onClick={() => void purchaseCredits(pack)}
                       disabled={checkingOut}
                       className="flex-1 py-2 text-[10px] font-bold tabular-nums transition-all disabled:opacity-50"
-                      style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', fontFamily: '"Share Tech Mono", monospace' }}
+                      style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', color: '#818cf8', fontFamily: 'var(--font-mono)' }}
                     >
                       +${pack}
                     </button>
@@ -562,8 +559,8 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 <button
                   onClick={() => void subscribe()}
                   disabled={checkingOut}
-                  className="w-full py-2 text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
-                  style={{ background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.3)', color: '#34d399', fontFamily: '"Share Tech Mono", monospace' }}
+                  className="w-full py-2 text-[9px] font-semibold transition-all disabled:opacity-50"
+                  style={{ background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.3)', color: '#34d399', fontFamily: 'var(--font-mono)' }}
                 >
                   {checkingOut ? 'Opening…' : 'Subscribe $9.99/mo, unlimited'}
                 </button>
@@ -599,12 +596,12 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 </div>
                 <button
                   onClick={() => void deleteApiKey()}
-                  className="px-3 py-2 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105"
+                  className="px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105"
                   style={{
                     background: 'rgba(248,113,113,0.08)',
                     border: '1px solid rgba(248,113,113,0.25)',
                     color: 'rgba(248,113,113,0.7)',
-                    fontFamily: '"Share Tech Mono", monospace',
+                    fontFamily: 'var(--font-mono)',
                   }}
                 >
                   Remove
@@ -624,12 +621,12 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 <button
                   onClick={() => void saveApiKey()}
                   disabled={!apiInput.trim()}
-                  className="px-3 py-2 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-40"
+                  className="px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105 disabled:opacity-40"
                   style={{
                     background: 'rgba(99,102,241,0.08)',
                     border: '1px solid rgba(99,102,241,0.25)',
                     color: '#6366f1',
-                    fontFamily: '"Share Tech Mono", monospace',
+                    fontFamily: 'var(--font-mono)',
                   }}
                 >
                   {apiSaved ? 'Saved ✓' : 'Save'}
@@ -659,12 +656,12 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 </p>
               </div>
               <div
-                className="flex-shrink-0 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest"
+                className="flex-shrink-0 px-3 py-1.5 text-[9px] font-semibold"
                 style={{
                   background: store.elevation === 'full' ? 'rgba(52,211,153,0.08)' : 'rgba(251,191,36,0.08)',
                   border: `1px solid ${store.elevation === 'full' ? 'rgba(52,211,153,0.25)' : 'rgba(251,191,36,0.25)'}`,
                   color: store.elevation === 'full' ? '#34d399' : '#fbbf24',
-                  fontFamily: '"Share Tech Mono", monospace',
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
                 {store.elevation === 'full' ? 'Full' : 'Limited'}
@@ -704,7 +701,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
             </div>
 
             {!compat ? (
-              <p className="text-[10px]" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+              <p className="text-[10px]" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                 {compatBusy ? 'Running checks…' : 'No results yet.'}
               </p>
             ) : (
@@ -723,7 +720,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                       <p className="text-[11px] font-medium" style={{ color: colors.textPrimary }}>{c.label}</p>
                       <p
                         className="text-[9px] mt-0.5 break-words"
-                        style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}
+                        style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}
                       >
                         {c.detail}
                       </p>
@@ -756,7 +753,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                   rules, browser DNS policies and the login startup entry, returning it to how it was
                   before. Every change is recorded, so nothing is guessed at.
                 </p>
-                <p className="text-[9px] mt-1.5" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                <p className="text-[9px] mt-1.5" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                   {changeCount === null ? '' : `${changeCount} change${changeCount === 1 ? '' : 's'} recorded`}
                 </p>
               </div>
@@ -841,15 +838,15 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                       style={{ borderBottom: i < changelog.length - 1 ? `1px solid ${colors.border}` : 'none' }}
                     >
                       <span
-                        className="text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded"
-                        style={{ background: 'rgba(99,102,241,0.08)', color: '#a5b4fc', fontFamily: '"Share Tech Mono", monospace', flexShrink: 0, minWidth: 54, textAlign: 'center' }}
+                        className="text-[8px] px-1.5 py-0.5 rounded"
+                        style={{ background: 'rgba(99,102,241,0.08)', color: '#a5b4fc', fontFamily: 'var(--font-mono)', flexShrink: 0, minWidth: 54, textAlign: 'center' }}
                       >
                         {c.category}
                       </span>
                       <span className="text-[10px] flex-1 min-w-0 truncate" style={{ color: colors.textPrimary }}>
                         {c.action}{c.target ? `: ${c.target}` : ''}{c.detail && !c.target ? `: ${c.detail}` : ''}
                       </span>
-                      <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                      <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                         {new Date(c.ts).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>

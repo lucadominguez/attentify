@@ -487,7 +487,7 @@ export default function DeepClean({ store, onChatWith }: DeepCleanProps): React.
           {results.issues.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-2 px-0.5">
-                <p className="text-[9px] font-semibold uppercase tracking-widest" style={{ color: colors.textSecondary }}>
+                <p className="text-[9px] font-semibold" style={{ color: colors.textSecondary }}>
                   Detected Issues
                 </p>
                 {onChatWith && !planVisible && (
@@ -530,7 +530,7 @@ export default function DeepClean({ store, onChatWith }: DeepCleanProps): React.
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span
-                              className="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider"
+                              className="text-[8px] px-1.5 py-0.5 rounded font-semibold"
                               style={{ background: sevColor + '18', color: sevColor }}
                             >
                               {issue.severity}

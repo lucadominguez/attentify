@@ -1,5 +1,5 @@
-import { b as reactExports, R as React, j as jsxRuntimeExports, c as client } from "./globals-D4b8_vDB.js";
-import { Z as Zap, E as Eye, B as Brain, A as AlertTriangle, S as Shield, X } from "./zap-CZhHtg7S.js";
+import { b as reactExports, R as React, j as jsxRuntimeExports, c as client } from "./globals-B7K8HMtO.js";
+import { Z as Zap, E as Eye, B as Brain, A as AlertTriangle, S as Shield, X } from "./zap-CZD8EJM7.js";
 const api = window.electronAPI;
 const DISMISS_AFTER = 12e3;
 const TYPE_CONFIG = {
@@ -147,7 +147,7 @@ function OverlayCard() {
                   letterSpacing: "0.22em",
                   textTransform: "uppercase",
                   color: cfg.color,
-                  fontFamily: '"Share Tech Mono", monospace',
+                  fontFamily: "var(--font-mono)",
                   flex: 1
                 }, children: [
                   cfg.label,
@@ -196,7 +196,7 @@ function OverlayCard() {
                       background: s.bg,
                       border: `1px solid ${s.border}`,
                       color: s.color,
-                      fontFamily: '"Share Tech Mono", monospace',
+                      fontFamily: "var(--font-mono)",
                       transition: "opacity 0.15s"
                     },
                     children: action.label

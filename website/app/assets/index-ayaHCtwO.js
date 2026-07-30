@@ -1,6 +1,6 @@
-import { b as reactExports, j as jsxRuntimeExports, a as createLucideIcon, r as reactDomExports, R as React, c as client } from "./globals-D4b8_vDB.js";
-import { A as AlertTriangle, X, S as Shield, B as Brain, Z as Zap, E as Eye } from "./zap-CZhHtg7S.js";
-import { C as Clock, a as Coffee } from "./coffee-CqRiLVdQ.js";
+import { b as reactExports, j as jsxRuntimeExports, a as createLucideIcon, r as reactDomExports, R as React, c as client } from "./globals-B7K8HMtO.js";
+import { A as AlertTriangle, X, S as Shield, B as Brain, Z as Zap, E as Eye } from "./zap-CZD8EJM7.js";
+import { C as Clock, a as Coffee } from "./coffee-CeIeI1e3.js";
 const DARK = {
   rootBg: "#020912",
   mainBg: "#030c1a",
@@ -1279,7 +1279,7 @@ function AuthPanel({ onChange }) {
       )) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 my-3", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px] uppercase tracking-wider", style: { color: colors.textDim }, children: "or use email" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9.5px]", style: { color: colors.textDim }, children: "or use email" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } })
       ] })
     ] }),
@@ -1409,7 +1409,7 @@ function AccountMenu({
                   boxShadow: `${colors.elevHigh}, ${colors.glassTopLight}`
                 },
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-4 pt-3 pb-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-semibold uppercase tracking-wider", style: { color: colors.textMuted }, children: "Account" }) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-4 pt-3 pb-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-semibold", style: { color: colors.textMuted }, children: "Account" }) }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 pt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthPanel, { onChange: () => {
                     load();
                     onChange?.();
@@ -2181,7 +2181,7 @@ function Overview({ store, onRefresh, onChatWith }) {
       ] }),
       loggedSessions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: colors.textSecondary }, children: "No activity recorded yet, tracking starts automatically in the background" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
         [...grouped.entries()].map(([dateLabel, sessions]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest mb-1.5", style: { color: colors.textSecondary }, children: dateLabel }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold mb-1.5", style: { color: colors.textSecondary }, children: dateLabel }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-px", children: sessions.map((s) => {
             const catColor = CAT_COLOR$2[s.category];
             const title = cleanTitle$1(s.title, s.app);
@@ -2703,7 +2703,7 @@ function DeepClean({ store, onChatWith }) {
       ] }),
       results.issues.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-2 px-0.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest", style: { color: colors.textSecondary }, children: "Detected Issues" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold", style: { color: colors.textSecondary }, children: "Detected Issues" }),
           onChatWith && !planVisible && /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
@@ -2745,7 +2745,7 @@ function DeepClean({ store, onChatWith }) {
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           "span",
                           {
-                            className: "text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider",
+                            className: "text-[8px] px-1.5 py-0.5 rounded font-semibold",
                             style: { background: sevColor + "18", color: sevColor },
                             children: issue.severity
                           }
@@ -3279,9 +3279,9 @@ function RankedViz({ rows, unit, hasBaseline }) {
   const { colors } = useTheme();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 pb-1 mb-1", style: { borderBottom: `1px solid ${colors.glassEdge}` }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold uppercase tracking-wider flex-1", style: { color: colors.textMuted }, children: "signal" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold uppercase tracking-wider", style: { color: colors.textMuted, width: 48, textAlign: "right" }, children: "now" }),
-      hasBaseline && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold uppercase tracking-wider", style: { color: colors.textMuted, width: 56, textAlign: "right" }, children: "change" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold flex-1", style: { color: colors.textMuted }, children: "signal" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold", style: { color: colors.textMuted, width: 48, textAlign: "right" }, children: "now" }),
+      hasBaseline && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-semibold", style: { color: colors.textMuted, width: 56, textAlign: "right" }, children: "change" })
     ] }),
     rows.slice(0, 8).map((r) => {
       const worse = r.delta > 0;
@@ -3609,7 +3609,7 @@ function CardDetail({
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-y-auto px-5 pb-5", style: { minHeight: 0 }, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl p-4 mb-3", style: { background: colors.glassMid, border: `1px solid ${colors.glassEdge}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(BigViz, { card, data }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] font-bold uppercase tracking-widest", style: { color: colors.labelDim }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] font-semibold", style: { color: colors.labelDim }, children: [
                 "Grouped by ",
                 card.spec.groupBy
               ] }),
@@ -3633,7 +3633,7 @@ function CardDetail({
             )) }),
             raw.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5 mt-4", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-bold uppercase tracking-widest", style: { color: colors.labelDim }, children: "Every session behind it" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold", style: { color: colors.labelDim }, children: "Every session behind it" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] data-value", style: { color: colors.textDim }, children: [
                   raw.length,
                   rawTotal > raw.length ? ` of ${rawTotal}` : "",
@@ -3642,10 +3642,10 @@ function CardDetail({
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg overflow-hidden", style: { border: `1px solid ${colors.glassEdge}` }, children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-3 py-1", style: { background: colors.glassMid, borderBottom: `1px solid ${colors.glassEdge}` }, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim, width: 96 }, children: "when" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim, width: 84 }, children: "app" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider flex-1", style: { color: colors.textDim }, children: "what" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim, width: 44, textAlign: "right" }, children: "time" })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim, width: 96 }, children: "when" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim, width: 84 }, children: "app" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] flex-1", style: { color: colors.textDim }, children: "what" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim, width: 44, textAlign: "right" }, children: "time" })
                 ] }),
                 raw.map((s, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "div",
@@ -4521,13 +4521,13 @@ function AlgoTrack({ store, onChatWith }) {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl overflow-hidden", style: { border: `1px solid ${colors.border}` }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-xs", style: { borderCollapse: "collapse" }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: colors.panelBg, borderBottom: `1px solid ${colors.border}` }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-3 py-2 text-left text-[9px] font-semibold uppercase tracking-wider w-8", style: { color: colors.textSecondary }, children: "#" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider", style: { color: colors.textSecondary }, children: "Platform" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider", style: { color: colors.textSecondary }, children: "Category" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider w-20", style: { color: colors.textSecondary }, children: "Risk Score" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider", style: { color: colors.textSecondary }, children: "Top Techniques" }),
-        refreshed && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider", style: { color: colors.textSecondary }, children: "Your Exposure" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider w-20", style: { color: colors.textSecondary }, children: "Status" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-3 py-2 text-left text-[9px] font-semibold w-8", style: { color: colors.textSecondary }, children: "#" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold", style: { color: colors.textSecondary }, children: "Platform" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold", style: { color: colors.textSecondary }, children: "Category" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold w-20", style: { color: colors.textSecondary }, children: "Risk Score" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold", style: { color: colors.textSecondary }, children: "Top Techniques" }),
+        refreshed && /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold", style: { color: colors.textSecondary }, children: "Your Exposure" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-2 py-2 text-left text-[9px] font-semibold w-20", style: { color: colors.textSecondary }, children: "Status" })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: PLATFORMS.map((platform, i) => {
         const isBlocked = blockedDomains.has(platform.domain);
@@ -4561,7 +4561,7 @@ function AlgoTrack({ store, onChatWith }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide",
+                      className: "text-[8px] px-1.5 py-0.5 rounded font-semibold",
                       style: { background: riskColor + "20", color: riskColor },
                       children: platform.risk
                     }
@@ -4938,9 +4938,9 @@ function FocusLineChart({ hourRows }) {
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("line", { x1: PL, y1: y70, x2: W - PR, y2: y70, stroke: "rgba(52,211,153,0.2)", strokeWidth: "0.6", strokeDasharray: "3,3" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("line", { x1: PL, y1: y40, x2: W - PR, y2: y40, stroke: "rgba(248,113,113,0.2)", strokeWidth: "0.6", strokeDasharray: "3,3" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: W - PR + 2, y: y70 + 3, fontSize: "5", fill: "rgba(52,211,153,0.55)", children: "70%" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: W - PR + 2, y: y40 + 3, fontSize: "5", fill: "rgba(248,113,113,0.55)", children: "40%" }),
-    [0, 6, 12, 18, 23].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: toX(h), y: H - 1, fontSize: "4.5", fill: "rgba(99,102,241,0.35)", textAnchor: "middle", fontFamily: "Share Tech Mono, monospace", children: fmtHour(h) }, h)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: W - PR + 2, y: y70 + 3, fontSize: "5", fill: "var(--text-dim)", children: "70%" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: W - PR + 2, y: y40 + 3, fontSize: "5", fill: "var(--text-dim)", children: "40%" }),
+    [0, 6, 12, 18, 23].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: toX(h), y: H - 1, fontSize: "4.5", fill: "var(--text-dim)", textAnchor: "middle", fontFamily: "var(--font-mono)", children: fmtHour(h) }, h)),
     /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: areaPath, fill: "url(#areaGrad)" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("polyline", { points: lineStr, fill: "none", stroke: "#6366f1", strokeWidth: "1.6", strokeLinejoin: "round", strokeLinecap: "round", filter: "url(#lineGlow)" }),
     pts.map((p) => /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -5042,7 +5042,7 @@ function HourOfWeekHeatmap({ matrix }) {
     !hasData ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-center py-6", style: { color: "rgba(99,102,241,0.3)" }, children: "No session data yet. The heatmap fills in after several sessions" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-0.5 flex-shrink-0", style: { paddingTop: 14 }, children: DOW_LABELS.map((d) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[8.5px] text-right leading-none", style: { height: 11, lineHeight: "11px", color: "rgba(99,102,241,0.45)" }, children: d }, d)) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex mb-0.5", children: Array.from({ length: 24 }, (_, h) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 text-center", style: { minWidth: 0 }, children: [0, 6, 12, 18].includes(h) && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[7.5px]", style: { color: "rgba(99,102,241,0.2)" }, children: fmtHour(h) }) }, h)) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex mb-0.5", children: Array.from({ length: 24 }, (_, h) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 text-center", style: { minWidth: 0 }, children: [0, 6, 12, 18].includes(h) && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[7.5px]", style: { color: "var(--text-dim)" }, children: fmtHour(h) }) }, h)) }),
         matrix.map((row, dow) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-px mb-px", children: row.map((cell, h) => {
           const total = cell.focused + cell.distracted;
           const ratioStr = total > 0 ? ` · ${Math.round(cell.focused / total * 100)}% focused` : "";
@@ -5096,7 +5096,7 @@ function HourlyHeatmapRow({ hourRows }) {
         h
       );
     }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between mt-1", children: [0, 3, 6, 9, 12, 15, 18, 21].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[7.5px]", style: { color: "rgba(99,102,241,0.2)" }, children: fmtHour(h) }, h)) })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex justify-between mt-1", children: [0, 3, 6, 9, 12, 15, 18, 21].map((h) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[7.5px]", style: { color: "var(--text-dim)" }, children: fmtHour(h) }, h)) })
   ] });
 }
 function DayScoreStrip({ dayRows }) {
@@ -5142,7 +5142,7 @@ function AppBarChart({ rows }) {
   const max = top[0]?.totalTime ?? 1;
   if (top.length === 0) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold uppercase tracking-widest mb-2", style: { color: "rgba(99,102,241,0.45)" }, children: "Top Apps by Time Distribution" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold mb-2", style: { color: "rgba(99,102,241,0.45)" }, children: "Top Apps by Time Distribution" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: top.map((row) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
@@ -5322,9 +5322,9 @@ function KpiStrip({ items, onAskAI }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label mb-1", style: { color: colors.textMuted }, children: k.label }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-baseline gap-1.5", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[15px] font-semibold data-value", style: { color: colors.textPrimary }, children: k.value }),
-      k.delta && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-medium flex-shrink-0", style: { color: k.delta.good ? colors.positive : colors.negative }, children: k.delta.text })
+      k.delta && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-medium flex-shrink-0 data-value", style: { color: k.delta.good ? colors.positive : colors.negative }, children: k.delta.text })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8.5px] mt-0.5 truncate", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: k.sub })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 truncate", style: { color: colors.textMuted }, children: k.sub })
   ] });
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "section-panel flex items-stretch overflow-x-auto", children: items.map((k, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex", style: { minWidth: 96, borderLeft: i === 0 ? "none" : `1px solid ${colors.border}` }, children: k.drill ? /* @__PURE__ */ jsxRuntimeExports.jsx(MetricDrill, { spec: k.drill, onAskAI, full: true, width: 320, render: cell(k) }) : cell(k) }, k.label)) });
 }
@@ -5420,7 +5420,7 @@ function RankedInsightTable({ rows, recommendation }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Th, { children: "Impact" })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: rows.map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: i % 2 === 0 ? colors.rowEven : colors.rowOdd }, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] px-1.5 py-0.5 rounded font-bold uppercase", style: { background: PRI[r.priority] + "22", color: PRI[r.priority] }, children: r.priority }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] px-1.5 py-0.5 rounded font-semibold", style: { background: PRI[r.priority] + "22", color: PRI[r.priority] }, children: r.priority }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap", style: { color: colors.textPrimary }, children: r.signal }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] data-value whitespace-nowrap", style: { color: colors.textSecondary }, children: r.current }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] data-value whitespace-nowrap", style: { color: colors.textMuted }, children: r.baseline }),
@@ -5492,7 +5492,7 @@ function Analytics({ onChatWith }) {
   if (loading || !data) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center h-full", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] uppercase tracking-widest", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: "Loading…" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: "Loading…" })
     ] }) });
   }
   const { today, weekly, heuristicAlerts, recentSessions } = data;
@@ -5716,8 +5716,8 @@ function Analytics({ onChatWith }) {
           spec: chip.drill ?? { title: chip.label, subtitle: `${chip.value} · ${chip.sub}`, note: chip.tooltip, askPrompt: `Tell me about my ${chip.label.toLowerCase()} (${chip.value}). What does it mean and how do I improve it?` },
           render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-1 p-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-bold leading-none data-value", style: { color: chip.color }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatedStat, { value: chip.value }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-tight", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: chip.label }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: chip.sub })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-tight", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: chip.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px]", style: { color: colors.textDim, fontFamily: "var(--font-mono)" }, children: chip.sub })
           ] })
         }
       )
@@ -5730,7 +5730,7 @@ function Analytics({ onChatWith }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart2, { size: 16, style: { color: colors.accent, flexShrink: 0 } }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-semibold text-[14px]", style: { color: colors.textPrimary }, children: "Analytics" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: [
             recentSessions.length,
             " sessions tracked"
           ] })
@@ -5857,7 +5857,7 @@ function Analytics({ onChatWith }) {
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel px-3 py-2.5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Focus vs Distraction" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 text-[9px]", style: { color: "rgba(99,102,241,0.4)", fontFamily: '"Share Tech Mono", monospace' }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 text-[9px]", style: { color: "rgba(99,102,241,0.4)", fontFamily: "var(--font-mono)" }, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block w-1.5 h-1.5", style: { background: "#34d399" } }),
                 fmt$1(weekly.focusedTime),
@@ -5907,10 +5907,10 @@ function Analytics({ onChatWith }) {
               width: 300,
               spec: { title: card.label, subtitle: `${card.value} · ${card.sub}`, note: card.detail ?? void 0, askPrompt: `Explain my "${card.label}" (${card.value}) this week and what I can do about it.` },
               render: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] uppercase tracking-wide mb-1.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: card.label }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] mb-1.5", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: card.label }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-bold leading-none data-value", style: { color: card.color }, children: card.value }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1 leading-snug", style: { color: colors.textSecondary }, children: card.sub }),
-                card.detail && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] mt-0.5 data-value", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: card.detail })
+                card.detail && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[8px] mt-0.5 data-value", style: { color: colors.textDim, fontFamily: "var(--font-mono)" }, children: card.detail })
               ] })
             }
           )
@@ -5956,23 +5956,23 @@ function Analytics({ onChatWith }) {
 }
 function AnalyticsSectionHeader({ label, sub }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 pt-1", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider flex-shrink-0", style: { color: "var(--label)", fontFamily: '"Share Tech Mono", monospace' }, children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold flex-shrink-0", style: { color: "var(--label)", fontFamily: "var(--font-mono)" }, children: label }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: "var(--border)" } }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] flex-shrink-0", style: { color: "var(--text-dim)", fontFamily: '"Share Tech Mono", monospace' }, children: sub })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] flex-shrink-0", style: { color: "var(--text-dim)", fontFamily: "var(--font-mono)" }, children: sub })
   ] });
 }
 function Th({ children, onClick }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "th",
     {
-      className: "px-2.5 py-2 text-left text-[8px] font-bold uppercase whitespace-nowrap",
+      className: "px-2.5 py-2 text-left text-[10px] font-semibold whitespace-nowrap",
       onClick,
       style: {
         cursor: onClick ? "pointer" : "default",
         color: "rgba(99,102,241,0.45)",
         background: "rgba(2,8,18,0.9)",
         borderBottom: "1px solid rgba(99,102,241,0.1)",
-        fontFamily: '"Share Tech Mono", monospace',
+        fontFamily: "var(--font-mono)",
         letterSpacing: "0.16em"
       },
       children
@@ -6009,7 +6009,7 @@ function AppTable({ rows, toggleSort, SortIcon }) {
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: rows.map((row, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { style: { background: i % 2 === 0 ? colors.rowEven : colors.rowOdd }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-medium truncate max-w-[140px]", style: { color: colors.textPrimary }, children: row.app }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] px-1.5 py-0.5 rounded font-semibold uppercase tracking-wide", style: { background: CAT_COLOR$1[row.category] + "22", color: CAT_COLOR$1[row.category] }, children: row.category.slice(0, 4) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] px-1.5 py-0.5 rounded font-semibold", style: { background: CAT_COLOR$1[row.category] + "22", color: CAT_COLOR$1[row.category] }, children: row.category.slice(0, 4) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: fmt$1(row.totalTime) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-10 h-1 overflow-hidden", style: { background: "rgba(99,102,241,0.06)" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full", style: { width: `${Math.min(100, row.pctOfTime)}%`, background: row.isDistraction ? "#f87171" : "#6366f1" } }) }),
@@ -6020,7 +6020,7 @@ function AppTable({ rows, toggleSort, SortIcon }) {
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: row.sessions }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: fmt$1(row.avgDuration) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: row.isDistraction ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] px-1.5 py-0.5 rounded font-bold uppercase", style: { background: "rgba(248,113,113,0.15)", color: "#f87171" }, children: "DIST" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] px-1.5 py-0.5 rounded font-bold uppercase", style: { background: "rgba(52,211,153,0.12)", color: "#34d399" }, children: "FOCUS" }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: row.isDistraction ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] px-1.5 py-0.5 rounded font-semibold", style: { background: "rgba(248,113,113,0.15)", color: "#f87171" }, children: "DIST" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] px-1.5 py-0.5 rounded font-semibold", style: { background: "rgba(52,211,153,0.12)", color: "#34d399" }, children: "FOCUS" }) })
     ] }, row.app)) })
   ] }) });
 }
@@ -6054,7 +6054,7 @@ function DailyTable({ rows }) {
         }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-2.5 py-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-white text-[11px] font-semibold", children: row.day }),
-            isToday && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1 text-[8px] px-1 py-0.5", style: { background: "rgba(99,102,241,0.12)", color: "#6366f1", fontFamily: '"Share Tech Mono", monospace' }, children: "today" })
+            isToday && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1 text-[8px] px-1 py-0.5", style: { background: "rgba(99,102,241,0.12)", color: "#6366f1", fontFamily: "var(--font-mono)" }, children: "today" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] font-mono tabular-nums", style: { color: "rgba(99,102,241,0.3)" }, children: row.date }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 font-mono tabular-nums text-[10px]", style: { color: "rgba(180,210,235,0.6)" }, children: row.tracked > 0 ? fmt$1(row.tracked) : "-" }),
@@ -6227,7 +6227,7 @@ function AlertsTable({ alerts, onDismiss }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] px-1.5 py-0.5 rounded font-bold", style: { background: sev.bg, color: sev.text }, children: sev.label }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[10px] max-w-[200px] leading-tight", style: { color: "rgba(180,210,235,0.6)" }, children: alert.description }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5 text-[9px] truncate max-w-[80px]", style: { color: "rgba(99,102,241,0.45)" }, children: alert.app ?? "-" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: alert.dismissed ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: "rgba(99,102,241,0.2)" }, children: "dismissed" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => onDismiss(alert.id), className: "flex items-center gap-1 text-[9px] px-2 py-1 hover:text-white transition-colors", style: { background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", color: "rgba(99,102,241,0.5)", fontFamily: '"Share Tech Mono", monospace' }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-2.5 py-1.5", children: alert.dismissed ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: "rgba(99,102,241,0.2)" }, children: "dismissed" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => onDismiss(alert.id), className: "flex items-center gap-1 text-[9px] px-2 py-1 hover:text-white transition-colors", style: { background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.15)", color: "rgba(99,102,241,0.5)", fontFamily: "var(--font-mono)" }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(X, { size: 8 }),
           " Dismiss"
         ] }) })
@@ -6244,7 +6244,7 @@ function RelapseTracker({ relapses, idlePeriods }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "hud-label", children: "Relapse Events Today" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto text-[10px] font-bold data-value", style: { color: relapses.length > 3 ? "#f87171" : relapses.length > 0 ? "#fbbf24" : "#34d399" }, children: relapses.length })
       ] }),
-      relapses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: "No relapses today. Discipline holding." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1 max-h-28 overflow-y-auto", children: [...relapses].reverse().slice(0, 6).map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-1 px-1.5", style: { background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.1)" }, children: [
+      relapses.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim, fontFamily: "var(--font-mono)" }, children: "No relapses today. Discipline holding." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1 max-h-28 overflow-y-auto", children: [...relapses].reverse().slice(0, 6).map((r, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-1 px-1.5", style: { background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.1)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-mono flex-shrink-0", style: { color: "rgba(99,102,241,0.35)" }, children: new Date(r.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] truncate max-w-[80px]", style: { color: colors.textPrimary }, children: r.app }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[8px] flex-shrink-0 ml-auto", style: { color: colors.textDim }, children: [
@@ -6263,7 +6263,7 @@ function RelapseTracker({ relapses, idlePeriods }) {
           idlePeriods.length !== 1 ? "s" : ""
         ] })
       ] }),
-      idlePeriods.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: "No idle gaps ≥3m detected today." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1 max-h-28 overflow-y-auto", children: [...idlePeriods].reverse().slice(0, 6).map((ip, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-1 px-1.5", style: { background: "rgba(99,102,241,0.03)", border: "1px solid rgba(99,102,241,0.08)" }, children: [
+      idlePeriods.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim, fontFamily: "var(--font-mono)" }, children: "No idle gaps ≥3m detected today." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1 max-h-28 overflow-y-auto", children: [...idlePeriods].reverse().slice(0, 6).map((ip, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 py-1 px-1.5", style: { background: "rgba(99,102,241,0.03)", border: "1px solid rgba(99,102,241,0.08)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-mono flex-shrink-0", style: { color: "rgba(99,102,241,0.35)" }, children: new Date(ip.start).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold data-value flex-shrink-0", style: { color: ip.duration > 18e5 ? "#fbbf24" : "rgba(99,102,241,0.7)" }, children: fmt$1(ip.duration) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[8px] truncate", style: { color: colors.textDim }, children: [
@@ -6277,7 +6277,7 @@ function RelapseTracker({ relapses, idlePeriods }) {
 function EmptyState({ text }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel py-8 text-center", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 18, style: { color: "rgba(99,102,241,0.25)" }, className: "mx-auto mb-2" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] max-w-sm mx-auto leading-relaxed", style: { color: "rgba(99,102,241,0.3)", fontFamily: '"Share Tech Mono", monospace' }, children: text })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] max-w-sm mx-auto leading-relaxed", style: { color: "rgba(99,102,241,0.3)", fontFamily: "var(--font-mono)" }, children: text })
   ] });
 }
 function CustomAnalyticsSection() {
@@ -6462,7 +6462,7 @@ function IssueCard({ issue, onFix, onAskAI, fixing, fixed }) {
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "span",
               {
-                className: "text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider flex-shrink-0",
+                className: "text-[8px] px-1.5 py-0.5 rounded font-semibold flex-shrink-0",
                 style: { background: sevColor + "18", color: sevColor },
                 children: issue.severity
               }
@@ -6874,6 +6874,7 @@ const SEVERITY_BG = {
   low: "rgba(100,181,246,0.1)"
 };
 function timeAgo$1(ts) {
+  if (!Number.isFinite(ts)) return "recently";
   const diff = Date.now() - ts;
   if (diff < 6e4) return "just now";
   if (diff < 36e5) return `${Math.floor(diff / 6e4)}m ago`;
@@ -7131,22 +7132,22 @@ function Patterns({ heuristicAlerts, onChatWith }) {
                 isExpanded && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 pb-4 flex flex-col gap-3", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs leading-relaxed", style: { color: colors.textSecondary }, children: pattern.definition }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider mb-1.5", style: { color: colors.textSecondary }, children: "Behavioral Signatures" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold mb-1.5", style: { color: colors.textSecondary }, children: "Behavioral Signatures" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "flex flex-col gap-1", children: pattern.signatures.map((sig, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "flex items-start gap-2 text-[11px]", style: { color: colors.textSecondary }, children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { size: 10, className: "mt-0.5 flex-shrink-0", style: { color: colors.textMuted } }),
                       sig
                     ] }, i)) })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider mb-1", style: { color: colors.textSecondary }, children: "Mechanism" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold mb-1", style: { color: colors.textSecondary }, children: "Mechanism" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] leading-relaxed", style: { color: colors.textSecondary }, children: pattern.mechanism })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider mb-1", style: { color: colors.textSecondary }, children: "Research" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold mb-1", style: { color: colors.textSecondary }, children: "Research" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] italic leading-relaxed", style: { color: colors.textSecondary }, children: pattern.citation })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider mb-1", style: { color: colors.textSecondary }, children: "Detection Criteria" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold mb-1", style: { color: colors.textSecondary }, children: "Detection Criteria" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] font-mono leading-relaxed", style: { color: colors.textSecondary }, children: pattern.detectionCriteria })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 pt-1", children: [
@@ -7182,6 +7183,7 @@ function Patterns({ heuristicAlerts, onChatWith }) {
 }
 const api$8 = window.electronAPI;
 function timeAgo(ts) {
+  if (!Number.isFinite(ts)) return "recently";
   const s = Math.floor((Date.now() - ts) / 1e3);
   if (s < 60) return `${s}s ago`;
   const m = Math.floor(s / 60);
@@ -7191,11 +7193,13 @@ function timeAgo(ts) {
   return `${Math.floor(h / 24)}d ago`;
 }
 function ConfidenceBar({ value }) {
+  const { colors } = useTheme();
   const pct = Math.round(value * 100);
-  const color = pct >= 85 ? "#f87171" : pct >= 65 ? "#fbbf24" : "#6366f1";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-1", style: { background: "rgba(255,255,255,0.06)", borderRadius: 1 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: `${pct}%`, height: "100%", background: color, borderRadius: 1, transition: "width 0.4s ease" } }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] font-bold", style: { color, fontFamily: '"Share Tech Mono", monospace', minWidth: 26 }, children: [
+  const color = pct >= 85 ? colors.negative : pct >= 65 ? colors.warning : colors.accent;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px]", style: { color: colors.textMuted }, children: "Confidence" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-1.5 w-[104px] flex-shrink-0", style: { background: "var(--row-odd)", borderRadius: 3 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: `${pct}%`, height: "100%", background: color, borderRadius: 3, transition: "width 0.4s ease" } }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px] font-medium", style: { color, fontFamily: "var(--font-mono)" }, children: [
       pct,
       "%"
     ] })
@@ -7215,12 +7219,12 @@ function SourceBadge({ source }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "span",
     {
-      className: "text-[8px] font-bold uppercase tracking-widest px-1 py-0.5",
+      className: "text-[8px] font-semibold px-1 py-0.5",
       style: {
         color: m[1].color,
         background: `${m[1].color}18`,
         border: `1px solid ${m[1].color}30`,
-        fontFamily: '"Share Tech Mono", monospace'
+        fontFamily: "var(--font-mono)"
       },
       children: m[1].label
     }
@@ -7266,16 +7270,9 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
         style: { borderBottom: "1px solid rgba(99,102,241,0.08)" },
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "h1",
-              {
-                className: "text-[13px] font-bold uppercase tracking-widest",
-                style: { color: colors.textPrimary, fontFamily: '"Share Tech Mono", monospace', letterSpacing: "0.2em" },
-                children: "Actions"
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: [
-              "AI inference decisions · ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Actions" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[11px] mt-0.5", style: { color: colors.textMuted }, children: [
+              "What Attentify decided, and what it wants your call on · ",
               pending.length,
               " pending review"
             ] })
@@ -7288,13 +7285,13 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
               style: {
                 background: "rgba(99,102,241,0.06)",
                 border: "1px solid rgba(99,102,241,0.18)",
-                color: "rgba(99,102,241,0.7)",
-                fontSize: 9,
-                fontFamily: '"Share Tech Mono", monospace',
-                letterSpacing: "0.15em"
+                color: colors.accent,
+                fontSize: 11,
+                fontWeight: 500,
+                borderRadius: 6
               },
               children: [
-                loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 9, className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 9 }),
+                loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 11, className: "animate-spin" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 11 }),
                 "Refresh"
               ]
             }
@@ -7315,7 +7312,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                 background: "rgba(251,191,36,0.15)",
                 border: "1px solid rgba(251,191,36,0.4)",
                 color: "#fbbf24",
-                fontFamily: '"Share Tech Mono", monospace'
+                fontFamily: "var(--font-mono)"
               },
               children: pending.length
             }
@@ -7343,19 +7340,18 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 flex-shrink-0",
+                      className: "text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0",
                       style: {
-                        background: "rgba(251,191,36,0.12)",
-                        border: "1px solid rgba(251,191,36,0.3)",
-                        color: "#fbbf24",
-                        fontFamily: '"Share Tech Mono", monospace'
+                        background: colors.warningBg,
+                        border: `1px solid ${colors.warning}4d`,
+                        color: colors.warning
                       },
-                      children: inf.type
+                      children: inf.type === "domain" ? "Site" : "App"
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] font-bold truncate", style: { color: colors.textPrimary }, children: inf.value })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: timeAgo(inf.created_at) })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: timeAgo(inf.created_at) })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(ConfidenceBar, { value: inf.confidence }),
               inf.reasoning && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-2 leading-relaxed", style: { color: colors.textSecondary }, children: inf.reasoning }),
@@ -7367,15 +7363,14 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                   {
                     onClick: () => void resolve(inf.id, "rejected"),
                     disabled: resolving === inf.id,
-                    className: "flex items-center gap-1 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-50",
+                    className: "flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-md transition-all hover:scale-105 disabled:opacity-50",
                     style: {
                       background: "rgba(255,255,255,0.03)",
                       border: "1px solid rgba(255,255,255,0.1)",
-                      color: colors.textMuted,
-                      fontFamily: '"Share Tech Mono", monospace'
+                      color: colors.textSecondary
                     },
                     children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(XCircle, { size: 9 }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(XCircle, { size: 11 }),
                       "Dismiss"
                     ]
                   }
@@ -7385,15 +7380,14 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                   {
                     onClick: () => void resolve(inf.id, "confirmed"),
                     disabled: resolving === inf.id,
-                    className: "flex items-center gap-1 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-50",
+                    className: "flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-md transition-all hover:scale-105 disabled:opacity-50",
                     style: {
-                      background: "rgba(248,113,113,0.1)",
-                      border: "1px solid rgba(248,113,113,0.3)",
-                      color: "#f87171",
-                      fontFamily: '"Share Tech Mono", monospace'
+                      background: colors.negativeBg,
+                      border: `1px solid ${colors.negative}55`,
+                      color: colors.negative
                     },
                     children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 9 }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }),
                       "Block Now"
                     ]
                   }
@@ -7416,7 +7410,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                 background: "rgba(248,113,113,0.15)",
                 border: "1px solid rgba(248,113,113,0.4)",
                 color: "#f87171",
-                fontFamily: '"Share Tech Mono", monospace'
+                fontFamily: "var(--font-mono)"
               },
               children: autoBlocked.length
             }
@@ -7446,11 +7440,11 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] font-bold px-1 py-0.5", style: { background: "rgba(248,113,113,0.15)", color: "#f87171", border: "1px solid rgba(248,113,113,0.3)", fontFamily: "monospace" }, children: "LIVE" })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] font-bold", style: { color: "#f87171", fontFamily: '"Share Tech Mono", monospace' }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] font-bold", style: { color: "#f87171", fontFamily: "var(--font-mono)" }, children: [
                     Math.round(evt.confidence * 100),
                     "%"
                   ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: timeAgo(evt.ts) })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px]", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: timeAgo(evt.ts) })
                 ] })
               ] })
             },
@@ -7474,13 +7468,13 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                           background: "rgba(248,113,113,0.1)",
                           border: "1px solid rgba(248,113,113,0.25)",
                           color: "#f87171",
-                          fontFamily: '"Share Tech Mono", monospace'
+                          fontFamily: "var(--font-mono)"
                         },
                         children: "BLOCKED"
                       }
                     )
                   ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: timeAgo(inf.created_at) })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: timeAgo(inf.created_at) })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(ConfidenceBar, { value: inf.confidence }),
                 inf.reasoning && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-2 leading-relaxed", style: { color: colors.textSecondary }, children: inf.reasoning }),
@@ -7488,8 +7482,8 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
                   "button",
                   {
                     onClick: () => onChatWith(`Why was ${inf.value} auto-blocked by the AI?`),
-                    className: "mt-2 text-[9px] uppercase tracking-widest transition-colors hover:text-white",
-                    style: { color: "rgba(99,102,241,0.5)", fontFamily: '"Share Tech Mono", monospace' },
+                    className: "mt-2 text-[9px] transition-colors hover:text-white",
+                    style: { color: "rgba(99,102,241,0.5)", fontFamily: "var(--font-mono)" },
                     children: "Ask AI why →"
                   }
                 )
@@ -7518,7 +7512,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
             ].map((item) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3", style: { borderRight: "1px solid rgba(99,102,241,0.06)", borderBottom: "1px solid rgba(99,102,241,0.06)" }, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 mb-1", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: item.color }, children: item.icon }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-bold uppercase tracking-widest", style: { color: item.color, fontFamily: '"Share Tech Mono", monospace' }, children: item.label })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] font-semibold", style: { color: item.color, fontFamily: "var(--font-mono)" }, children: item.label })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] leading-relaxed", style: { color: colors.textMuted }, children: item.desc })
             ] }, item.label))
@@ -7534,7 +7528,7 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 11, style: { color: colors.textMuted } }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hud-label group-hover:text-white transition-colors", children: "History" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px]", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px]", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: [
                 "(",
                 history.length,
                 ")"
@@ -7555,17 +7549,17 @@ function Actions({ onChatWith, liveAutoBlocks = [] }) {
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "span",
                 {
-                  className: "text-[8px] font-bold uppercase px-1.5 py-0.5 flex-shrink-0",
+                  className: "text-[10px] font-semibold px-1.5 py-0.5 flex-shrink-0",
                   style: {
                     background: inf.status === "confirmed" ? "rgba(52,211,153,0.1)" : "rgba(255,255,255,0.05)",
                     border: `1px solid ${inf.status === "confirmed" ? "rgba(52,211,153,0.25)" : "rgba(255,255,255,0.08)"}`,
                     color: inf.status === "confirmed" ? "#34d399" : colors.textMuted,
-                    fontFamily: '"Share Tech Mono", monospace'
+                    fontFamily: "var(--font-mono)"
                   },
                   children: inf.status
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: timeAgo(inf.resolved_at ?? inf.created_at) })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: timeAgo(inf.resolved_at ?? inf.created_at) })
             ]
           },
           inf.id
@@ -7655,7 +7649,7 @@ function SelfEvaluationPanel() {
       )
     ] }),
     enoughData && cal && cal.buckets.some((b) => b.n > 0) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] uppercase tracking-widest mb-1.5", style: { color: colors.textDim }, children: "Calibration (predicted vs. reversed)" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mb-1.5", style: { color: colors.textDim }, children: "Calibration (predicted vs. reversed)" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-1", children: cal.buckets.filter((b) => b.n > 0).map((b) => {
         const over = b.gap > 0.15;
         return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-[10px]", children: [
@@ -7671,7 +7665,7 @@ function SelfEvaluationPanel() {
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1", style: { color: colors.textDim }, children: "A well-calibrated band is reversed about as often as (1 − its confidence). Amber = over-confident." })
     ] }),
     adjustments.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] uppercase tracking-widest mb-1.5", style: { color: colors.textDim }, children: "Learned to stop blocking" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mb-1.5", style: { color: colors.textDim }, children: "Learned to stop blocking" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-1", children: adjustments.slice(0, 6).map((a) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-2 py-1.5 rounded-md", style: { background: "rgba(255,255,255,0.02)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { size: 11, style: { color: colors.positive, flexShrink: 0 } }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[11px] flex-1 truncate", style: { color: colors.textSecondary }, children: [
@@ -7685,14 +7679,14 @@ function SelfEvaluationPanel() {
       ] }, a.id)) })
     ] }),
     mistakes.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] uppercase tracking-widest mb-1.5", style: { color: colors.textDim }, children: "Recently caught" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mb-1.5", style: { color: colors.textDim }, children: "Recently caught" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-1", children: mistakes.map((m) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2 px-2 py-1.5 rounded-md", style: { background: "rgba(255,255,255,0.02)" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(AlertTriangle, { size: 11, style: { color: m.context?.recovered ? colors.positive : colors.warning, flexShrink: 0, marginTop: 1 } }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10.5px] truncate", style: { color: colors.textSecondary }, children: m.title ?? m.category ?? "issue" }),
           m.description && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] truncate", style: { color: colors.textDim }, children: m.description })
         ] }),
-        m.context?.recovered && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider px-1 py-0.5 rounded flex-shrink-0", style: { background: "rgba(52,211,153,0.12)", color: colors.positive }, children: "recovered" })
+        m.context?.recovered && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] px-1 py-0.5 rounded flex-shrink-0", style: { background: "rgba(52,211,153,0.12)", color: colors.positive }, children: "recovered" })
       ] }, m.id)) })
     ] }),
     !enoughData && adjustments.length === 0 && mistakes.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textDim }, children: "No decisions judged yet. As Attentify blocks and flags things and you react, this fills in." })
@@ -7700,7 +7694,7 @@ function SelfEvaluationPanel() {
 }
 function Stat({ label, value, sub, colors }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-md px-2.5 py-2", style: { background: "rgba(255,255,255,0.02)" }, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] uppercase tracking-wider", style: { color: colors.textDim }, children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textDim }, children: label }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[13px] font-semibold truncate", style: { color: colors.textPrimary }, children: value }),
     sub && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px]", style: { color: colors.textMuted }, children: sub })
   ] });
@@ -7719,8 +7713,8 @@ function SectionHeader$1({ icon, label }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "span",
       {
-        className: "text-[9px] font-bold uppercase tracking-widest",
-        style: { color: "rgba(99,102,241,0.5)", fontFamily: '"Share Tech Mono", monospace', letterSpacing: "0.2em" },
+        className: "text-[11px] font-semibold",
+        style: { color: "var(--text-secondary)" },
         children: label
       }
     ),
@@ -7752,7 +7746,7 @@ function ExtensionPanel({ colors }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "span",
             {
-              className: "text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded",
+              className: "text-[9px] px-1.5 py-0.5 rounded",
               style: { background: connected ? "rgba(52,211,153,0.12)" : "rgba(251,191,36,0.12)", color: connected ? colors.positive : colors.warning },
               children: connected ? "connected" : "not installed"
             }
@@ -7892,15 +7886,8 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         className: "flex-shrink-0 px-6 py-4",
         style: { borderBottom: "1px solid rgba(99,102,241,0.08)" },
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "h1",
-            {
-              className: "text-[13px] font-bold uppercase tracking-widest",
-              style: { color: colors.textPrimary, fontFamily: '"Share Tech Mono", monospace', letterSpacing: "0.2em" },
-              children: "Settings"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5", style: { color: colors.textMuted }, children: "Configure how Attentify responds to threats" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Settings" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] mt-0.5", style: { color: colors.textMuted }, children: "How Attentify behaves, and what it is allowed to do" })
         ]
       }
     ),
@@ -7947,7 +7934,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "ml-2 text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded",
+                      className: "ml-2 text-[9px] px-1.5 py-0.5 rounded",
                       style: { background: colors.accentBg, color: colors.accent },
                       children: "Experiment"
                     }
@@ -8053,7 +8040,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }), label: "Threat Response Mode" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { size: 11 }), label: "Blocking Mode" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
@@ -8081,10 +8068,10 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "text-[11px] font-bold uppercase tracking-widest",
+                      className: "text-[11px] font-semibold",
                       style: {
                         color: currentMode === "auto" ? "#f87171" : colors.textSecondary,
-                        fontFamily: '"Share Tech Mono", monospace'
+                        fontFamily: "var(--font-mono)"
                       },
                       children: "Auto-Block"
                     }
@@ -8095,12 +8082,12 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   ["adult", "gambling", "social"].map((tag) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "text-[8px] px-1.5 py-0.5 uppercase tracking-wide",
+                      className: "text-[8px] px-1.5 py-0.5",
                       style: {
                         background: "rgba(248,113,113,0.08)",
                         border: "1px solid rgba(248,113,113,0.2)",
                         color: "rgba(255,100,100,0.7)",
-                        fontFamily: '"Share Tech Mono", monospace'
+                        fontFamily: "var(--font-mono)"
                       },
                       children: tag
                     },
@@ -8109,12 +8096,12 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "text-[8px] px-1.5 py-0.5 uppercase tracking-wide",
+                      className: "text-[8px] px-1.5 py-0.5",
                       style: {
                         background: "rgba(255,255,255,0.03)",
                         border: "1px solid rgba(255,255,255,0.08)",
                         color: colors.textMuted,
-                        fontFamily: '"Share Tech Mono", monospace'
+                        fontFamily: "var(--font-mono)"
                       },
                       children: "+ more"
                     }
@@ -8149,10 +8136,10 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "span",
                     {
-                      className: "text-[11px] font-bold uppercase tracking-widest",
+                      className: "text-[11px] font-semibold",
                       style: {
                         color: currentMode === "ask" ? "#6366f1" : colors.textSecondary,
-                        fontFamily: '"Share Tech Mono", monospace'
+                        fontFamily: "var(--font-mono)"
                       },
                       children: "Ask First"
                     }
@@ -8162,12 +8149,12 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "span",
                   {
-                    className: "text-[8px] px-1.5 py-0.5 uppercase tracking-wide",
+                    className: "text-[8px] px-1.5 py-0.5",
                     style: {
                       background: "rgba(99,102,241,0.06)",
                       border: "1px solid rgba(99,102,241,0.18)",
                       color: "rgba(99,102,241,0.6)",
-                      fontFamily: '"Share Tech Mono", monospace'
+                      fontFamily: "var(--font-mono)"
                     },
                     children: "Review in Actions →"
                   }
@@ -8207,8 +8194,8 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 "button",
                 {
                   onClick: () => void clearLicense(),
-                  className: "px-3 py-2 text-[9px] font-bold uppercase tracking-widest",
-                  style: { background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.25)", color: "rgba(248,113,113,0.7)", fontFamily: '"Share Tech Mono", monospace' },
+                  className: "px-3 py-2 text-[9px] font-semibold",
+                  style: { background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.25)", color: "rgba(248,113,113,0.7)", fontFamily: "var(--font-mono)" },
                   children: "Unlink"
                 }
               )
@@ -8227,7 +8214,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   onClick: () => void purchaseCredits(pack),
                   disabled: checkingOut,
                   className: "flex-1 py-2 text-[10px] font-bold tabular-nums transition-all disabled:opacity-50",
-                  style: { background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)", color: "#818cf8", fontFamily: '"Share Tech Mono", monospace' },
+                  style: { background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.3)", color: "#818cf8", fontFamily: "var(--font-mono)" },
                   children: [
                     "+$",
                     pack
@@ -8240,8 +8227,8 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 {
                   onClick: () => void subscribe(),
                   disabled: checkingOut,
-                  className: "w-full py-2 text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50",
-                  style: { background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.3)", color: "#34d399", fontFamily: '"Share Tech Mono", monospace' },
+                  className: "w-full py-2 text-[9px] font-semibold transition-all disabled:opacity-50",
+                  style: { background: "rgba(52,211,153,0.12)", border: "1px solid rgba(52,211,153,0.3)", color: "#34d399", fontFamily: "var(--font-mono)" },
                   children: checkingOut ? "Opening…" : "Subscribe $9.99/mo, unlimited"
                 }
               )
@@ -8280,12 +8267,12 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   "button",
                   {
                     onClick: () => void deleteApiKey(),
-                    className: "px-3 py-2 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105",
+                    className: "px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105",
                     style: {
                       background: "rgba(248,113,113,0.08)",
                       border: "1px solid rgba(248,113,113,0.25)",
                       color: "rgba(248,113,113,0.7)",
-                      fontFamily: '"Share Tech Mono", monospace'
+                      fontFamily: "var(--font-mono)"
                     },
                     children: "Remove"
                   }
@@ -8308,12 +8295,12 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   {
                     onClick: () => void saveApiKey(),
                     disabled: !apiInput.trim(),
-                    className: "px-3 py-2 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-40",
+                    className: "px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105 disabled:opacity-40",
                     style: {
                       background: "rgba(99,102,241,0.08)",
                       border: "1px solid rgba(99,102,241,0.25)",
                       color: "#6366f1",
-                      fontFamily: '"Share Tech Mono", monospace'
+                      fontFamily: "var(--font-mono)"
                     },
                     children: apiSaved ? "Saved ✓" : "Save"
                   }
@@ -8340,12 +8327,12 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "div",
                   {
-                    className: "flex-shrink-0 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest",
+                    className: "flex-shrink-0 px-3 py-1.5 text-[9px] font-semibold",
                     style: {
                       background: store.elevation === "full" ? "rgba(52,211,153,0.08)" : "rgba(251,191,36,0.08)",
                       border: `1px solid ${store.elevation === "full" ? "rgba(52,211,153,0.25)" : "rgba(251,191,36,0.25)"}`,
                       color: store.elevation === "full" ? "#34d399" : "#fbbf24",
-                      fontFamily: '"Share Tech Mono", monospace'
+                      fontFamily: "var(--font-mono)"
                     },
                     children: store.elevation === "full" ? "Full" : "Limited"
                   }
@@ -8384,7 +8371,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   }
                 )
               ] }),
-              !compat ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: compatBusy ? "Running checks…" : "No results yet." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-2", children: compat.checks.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              !compat ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: compatBusy ? "Running checks…" : "No results yet." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-2", children: compat.checks.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 "div",
                 {
                   className: "flex items-start gap-2.5 p-2.5 rounded-md",
@@ -8400,7 +8387,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                         "p",
                         {
                           className: "text-[9px] mt-0.5 break-words",
-                          style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' },
+                          style: { color: colors.textMuted, fontFamily: "var(--font-mono)" },
                           children: c.detail
                         }
                       ),
@@ -8427,7 +8414,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[12px] font-medium", style: { color: colors.textPrimary }, children: "Restore my system" }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mt-0.5 leading-relaxed", style: { color: colors.textMuted }, children: "Undo everything Attentify has changed on this device, hosts-file blocks, firewall rules, browser DNS policies and the login startup entry, returning it to how it was before. Every change is recorded, so nothing is guessed at." }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: changeCount === null ? "" : `${changeCount} change${changeCount === 1 ? "" : "s"} recorded` })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-1.5", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: changeCount === null ? "" : `${changeCount} change${changeCount === 1 ? "" : "s"} recorded` })
                 ] })
               ] }),
               revertResult && /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -8523,8 +8510,8 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           "span",
                           {
-                            className: "text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded",
-                            style: { background: "rgba(99,102,241,0.08)", color: "#a5b4fc", fontFamily: '"Share Tech Mono", monospace', flexShrink: 0, minWidth: 54, textAlign: "center" },
+                            className: "text-[8px] px-1.5 py-0.5 rounded",
+                            style: { background: "rgba(99,102,241,0.08)", color: "#a5b4fc", fontFamily: "var(--font-mono)", flexShrink: 0, minWidth: 54, textAlign: "center" },
                             children: c.category
                           }
                         ),
@@ -8533,7 +8520,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                           c.target ? `: ${c.target}` : "",
                           c.detail && !c.target ? `: ${c.detail}` : ""
                         ] }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: new Date(c.ts).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] flex-shrink-0", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: new Date(c.ts).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) })
                       ]
                     },
                     i
@@ -8705,7 +8692,7 @@ function Onboarding({ onComplete }) {
       elevation === "soft" && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm leading-relaxed mb-4", style: { color: colors.textSecondary }, children: "Attentify needs administrator rights to edit your system's hosts file, this is how site blocking works at the network layer, before browsers even load the page." }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full p-4 rounded-xl mb-6 text-left", style: { background: colors.cardBg, border: `1px solid ${colors.border}` }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold mb-2 uppercase tracking-wider", style: { color: colors.textSecondary }, children: "What admin access enables" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]s font-semibold mb-2", style: { color: colors.textSecondary }, children: "What admin access enables" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: [
             ["Hosts file blocking", "Sinkhole blocked domains at the OS level, no browser workaround"],
             ["DoH bypass prevention", "Block DNS-over-HTTPS so browsers use system DNS"],
@@ -9059,10 +9046,10 @@ function Timesheets({ onChatWith }) {
           selected.entries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] py-6 text-center", style: { color: colors.textMuted }, children: "Nothing tracked on this day." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg overflow-hidden mb-4", style: { border: `1px solid ${colors.border}` }, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-3 py-1.5", style: { background: colors.rowEven, borderBottom: `1px solid ${colors.border}` }, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim, width: 92 }, children: "when" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim, width: 92 }, children: "app" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider flex-1", style: { color: colors.textDim }, children: "what" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim, width: 48, textAlign: "right" }, children: "time" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim, width: 92 }, children: "when" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim, width: 92 }, children: "app" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] flex-1", style: { color: colors.textDim }, children: "what" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim, width: 48, textAlign: "right" }, children: "time" })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { maxHeight: 320, overflowY: "auto" }, children: selected.entries.map((e, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 "div",
@@ -9090,7 +9077,7 @@ function Timesheets({ onChatWith }) {
                 e.id ?? i
               )) })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-bold uppercase tracking-widest mb-1.5", style: { color: colors.labelDim }, children: "That day, by app" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] font-semibold mb-1.5", style: { color: colors.labelDim }, children: "That day, by app" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TimeEntryTable, { rows: [...selected.byApp.entries()].map(([app, v]) => ({ app, ...v })).sort((a, b) => b.ms - a.ms), total: selected.total, colors })
           ] })
         ] })
@@ -9129,9 +9116,9 @@ const api$3 = window.electronAPI;
 function SectionHeader({ label, sub }) {
   const { colors } = useTheme();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 pt-1", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wider flex-shrink-0", style: { color: "var(--label)", fontFamily: '"Share Tech Mono", monospace' }, children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold flex-shrink-0", style: { color: "var(--label)", fontFamily: "var(--font-mono)" }, children: label }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 h-px", style: { background: colors.border } }),
-    sub && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] flex-shrink-0", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: sub })
+    sub && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] flex-shrink-0", style: { color: colors.textDim, fontFamily: "var(--font-mono)" }, children: sub })
   ] });
 }
 function FlowNode({ label, text, tone = "neutral", confidence }) {
@@ -9139,7 +9126,7 @@ function FlowNode({ label, text, tone = "neutral", confidence }) {
   const toneColor = tone === "accent" ? colors.accent : tone === "positive" ? colors.positive : tone === "warning" ? colors.warning : tone === "negative" ? colors.negative : colors.textMuted;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg px-3 py-2", style: { background: colors.inputBg, borderLeft: `2px solid ${toneColor}`, border: `1px solid ${colors.border}`, borderLeftWidth: 2, borderLeftColor: toneColor }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8.5px] font-bold uppercase tracking-widest", style: { color: toneColor, fontFamily: '"Share Tech Mono", monospace' }, children: label }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8.5px] font-semibold", style: { color: toneColor, fontFamily: "var(--font-mono)" }, children: label }),
       confidence !== void 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-1.5 rounded-full overflow-hidden", style: { width: 44, background: colors.border }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-full rounded-full", style: { width: `${Math.round(confidence * 100)}%`, background: toneColor } }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] data-value", style: { color: colors.textMuted }, children: [
@@ -9277,7 +9264,7 @@ function HowItDecides() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { label: "How Attentify decides", sub: "the logic, in the open" }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "section-panel p-3.5 space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mb-2", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: "What it treats as engineered distraction, and why" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] mb-2", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: "What it treats as engineered distraction, and why" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2", children: DECISION_TAXONOMY.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-lg px-3 py-2", style: { background: colors.inputBg, border: `1px solid ${colors.border}` }, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[12px] font-semibold", style: { color: colors.textPrimary }, children: t.key }),
@@ -9286,7 +9273,7 @@ function HowItDecides() {
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] data-value", style: { color: colors.textMuted }, children: Math.round(t.weight * 100) })
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }, children: t.examples }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textDim, fontFamily: "var(--font-mono)" }, children: t.examples }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11.5px] leading-snug mt-1", style: { color: colors.textSecondary }, children: t.why })
         ] }, t.key)) })
       ] }),
@@ -9484,7 +9471,7 @@ How am I doing against them, and what should I change? You can edit or clear any
           /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { size: 16, style: { color: colors.accent } }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Logic" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: "How Attentify reasons about your attention, and what it's working from." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: "How Attentify reasons about your attention, and what it's working from." })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: load, className: "p-1.5 rounded-lg", style: { border: `1px solid ${colors.border}`, color: colors.textMuted }, title: "Refresh", children: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 13 }) })
@@ -9866,7 +9853,7 @@ function Activity({ onChatWith }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Activity$1, { size: 16, style: { color: colors.accent } }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-[14px] font-semibold", style: { color: colors.textPrimary }, children: "Activity" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[9px] mt-0.5", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: [
               stats.events,
               " events · ",
               stats.apps,
@@ -9941,7 +9928,7 @@ function Activity({ onChatWith }) {
       )) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto px-5 pb-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-4xl mx-auto", children: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-5 h-5 rounded-full animate-spin", style: { border: `2px solid ${colors.border}`, borderTopColor: colors.accent } }) }) : rows.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-[12px] py-12", style: { color: colors.textMuted }, children: sessions.length === 0 && searches.length === 0 ? "No activity recorded yet. Keep Attentify running and it fills in here." : "Nothing matches those filters." }) : groups.map((g) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-wide mb-1 sticky top-0 py-1 z-10", style: { color: colors.textMuted, background: colors.mainBg, fontFamily: '"Share Tech Mono", monospace' }, children: g.day }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold mb-1 sticky top-0 py-1 z-10", style: { color: colors.textMuted, background: colors.mainBg, fontFamily: "var(--font-mono)" }, children: g.day }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl overflow-hidden", style: { border: `1px solid ${colors.border}` }, children: g.items.map((it, idx) => it.type === "search" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SearchRow, { q: it.q, first: idx === 0 }, `s${idx}`) : /* @__PURE__ */ jsxRuntimeExports.jsx(
         SessionRow,
         {
@@ -10110,7 +10097,7 @@ function CodeBlock({ code, lang }) {
   const [copied, setCopied] = React.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "my-1.5 rounded-lg overflow-hidden group/code", style: { border: `1px solid ${colors.glassEdge}` }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-2 py-1", style: { background: colors.glassMid }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px] uppercase tracking-wider", style: { color: colors.textDim }, children: lang || "code" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[8px]", style: { color: colors.textDim }, children: lang || "code" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {
@@ -10744,7 +10731,7 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { ref: bottomRef })
         ] }) }),
         showQuickCommands && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 pb-3 flex-shrink-0", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] uppercase tracking-widest mb-1.5", style: { color: colors.textDim }, children: "Try asking" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[9px] mb-1.5", style: { color: colors.textDim }, children: "Try asking" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col gap-1", children: QUICK_COMMANDS.map((cmd) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
@@ -10780,7 +10767,7 @@ function ChatPanel({ onClose, onRefresh, initialMessage = "", variant = "panel" 
             {
               onClick: () => void handleSubscribe(),
               disabled: checkingOut,
-              className: "w-full py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all disabled:opacity-50 rounded-xl",
+              className: "w-full py-2.5 text-[11px] font-semibold transition-all disabled:opacity-50 rounded-xl",
               style: { background: "rgba(52,211,153,0.15)", border: "1px solid rgba(52,211,153,0.35)", color: "#34d399" },
               children: checkingOut ? "Opening checkout…" : "Subscribe $9.99/mo, unlimited"
             }
@@ -11503,7 +11490,7 @@ function App() {
                           }
                         }
                       ),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontFamily: '"Share Tech Mono", monospace', fontSize: 9, letterSpacing: "0.15em", color: alwaysOn ? "#34d399" : "rgba(99,102,241,0.4)" }, children: "ALWAYS ON" })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.15em", color: alwaysOn ? "#34d399" : "rgba(99,102,241,0.4)" }, children: "ALWAYS ON" })
                     ]
                   }
                 )
@@ -11623,12 +11610,12 @@ function App() {
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           "span",
                           {
-                            className: "text-[10px] font-bold uppercase tracking-widest",
-                            style: { color: "#fbbf24", fontFamily: '"Share Tech Mono", monospace', letterSpacing: "0.2em" },
+                            className: "text-[10px] font-semibold",
+                            style: { color: "#fbbf24", fontFamily: "var(--font-mono)", letterSpacing: "0.2em" },
                             children: "Break Mode Active"
                           }
                         ),
-                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: [
                           "· resumes ",
                           new Date(breakMode.endsAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                         ] })
@@ -11636,8 +11623,8 @@ function App() {
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
                         "button",
                         {
-                          className: "text-[10px] uppercase tracking-widest transition-colors hover:text-white",
-                          style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' },
+                          className: "text-[10px] transition-colors hover:text-white",
+                          style: { color: colors.textMuted, fontFamily: "var(--font-mono)" },
                           onClick: async () => {
                             await api.endBreak();
                             setBreakMode(null);
@@ -11668,12 +11655,12 @@ function App() {
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
                           "span",
                           {
-                            className: "text-[10px] font-bold uppercase tracking-widest",
-                            style: { color: "#34d399", fontFamily: '"Share Tech Mono", monospace', letterSpacing: "0.2em" },
+                            className: "text-[10px] font-semibold",
+                            style: { color: "#34d399", fontFamily: "var(--font-mono)", letterSpacing: "0.2em" },
                             children: "Focus Session Active"
                           }
                         ),
-                        activeSession.endsAt && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }, children: [
+                        activeSession.endsAt && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px]", style: { color: colors.textMuted, fontFamily: "var(--font-mono)" }, children: [
                           "· ends ",
                           new Date(activeSession.endsAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                         ] })
@@ -11681,16 +11668,16 @@ function App() {
                       activeSession.mode === "deep" && activeSession.endsAt && Date.now() < activeSession.endsAt ? /* @__PURE__ */ jsxRuntimeExports.jsx(
                         "span",
                         {
-                          className: "text-[10px] uppercase tracking-widest",
-                          style: { color: "#fbbf24", fontFamily: '"Share Tech Mono", monospace' },
+                          className: "text-[10px]",
+                          style: { color: "#fbbf24", fontFamily: "var(--font-mono)" },
                           title: "Deep Focus is locked until its timer ends.",
                           children: "Locked"
                         }
                       ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
                         "button",
                         {
-                          className: "text-[10px] uppercase tracking-widest transition-colors hover:text-white",
-                          style: { color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' },
+                          className: "text-[10px] transition-colors hover:text-white",
+                          style: { color: colors.textMuted, fontFamily: "var(--font-mono)" },
                           onClick: async () => {
                             await api.stopSession(activeSession.id);
                             refreshStore();

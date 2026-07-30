@@ -52,7 +52,7 @@ export function YAxis({
             />
             <text
               x={labelWidth - 5} y={y + 3} textAnchor="end"
-              style={{ fontSize: 8, fill: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}
+              style={{ fontSize: 8, fill: colors.textDim, fontFamily: 'var(--font-mono)' }}
             >
               {fmtTick(t, unit)}
             </text>
@@ -79,7 +79,7 @@ export function XAxis({
         return (
           <text
             key={`${l}-${i}`} x={x} y="100%" textAnchor={i === 0 ? 'start' : i === labels.length - 1 ? 'end' : 'middle'}
-            style={{ fontSize: 8, fill: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}
+            style={{ fontSize: 8, fill: colors.textDim, fontFamily: 'var(--font-mono)' }}
           >
             {l}
           </text>

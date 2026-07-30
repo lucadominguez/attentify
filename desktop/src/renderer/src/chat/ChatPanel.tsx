@@ -132,7 +132,7 @@ function CodeBlock({ code, lang }: { code: string; lang?: string }): React.React
   return (
     <div className="my-1.5 rounded-lg overflow-hidden group/code" style={{ border: `1px solid ${colors.glassEdge}` }}>
       <div className="flex items-center justify-between px-2 py-1" style={{ background: colors.glassMid }}>
-        <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim }}>{lang || 'code'}</span>
+        <span className="text-[8px]" style={{ color: colors.textDim }}>{lang || 'code'}</span>
         <button
           onClick={() => { void navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1200) }}
           className="text-[9px] px-1.5 py-0.5 rounded transition-opacity opacity-0 group-hover/code:opacity-100"
@@ -873,7 +873,7 @@ export default function ChatPanel({ onClose, onRefresh, initialMessage = '', var
           message, so the first thing you see is the shape of what you can say. */}
       {showQuickCommands && (
         <div className="px-4 pb-3 flex-shrink-0">
-          <p className="text-[9px] uppercase tracking-widest mb-1.5" style={{ color: colors.textDim }}>
+          <p className="text-[9px] mb-1.5" style={{ color: colors.textDim }}>
             Try asking
           </p>
           <div className="flex flex-col gap-1">
@@ -914,7 +914,7 @@ export default function ChatPanel({ onClose, onRefresh, initialMessage = '', var
           <button
             onClick={() => void handleSubscribe()}
             disabled={checkingOut}
-            className="w-full py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all disabled:opacity-50 rounded-xl"
+            className="w-full py-2.5 text-[11px] font-semibold transition-all disabled:opacity-50 rounded-xl"
             style={{ background: 'rgba(52,211,153,0.15)', border: '1px solid rgba(52,211,153,0.35)', color: '#34d399' }}
           >
             {checkingOut ? 'Opening checkout…' : 'Subscribe $9.99/mo, unlimited'}

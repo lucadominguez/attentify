@@ -184,6 +184,8 @@ const SEVERITY_BG: Record<string, string> = {
 }
 
 function timeAgo(ts: number): string {
+  // See Actions.tsx: an absent timestamp falls through every band to "NaNd ago".
+  if (!Number.isFinite(ts)) return 'recently'
   const diff = Date.now() - ts
   if (diff < 60000) return 'just now'
   if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
@@ -436,7 +438,7 @@ export default function Patterns({ heuristicAlerts, onChatWith }: PatternsProps)
                       <p className="text-xs leading-relaxed" style={{ color: colors.textSecondary }}>{pattern.definition}</p>
 
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: colors.textSecondary }}>Behavioral Signatures</p>
+                        <p className="text-[10px] font-semibold mb-1.5" style={{ color: colors.textSecondary }}>Behavioral Signatures</p>
                         <ul className="flex flex-col gap-1">
                           {pattern.signatures.map((sig, i) => (
                             <li key={i} className="flex items-start gap-2 text-[11px]" style={{ color: colors.textSecondary }}>
@@ -448,17 +450,17 @@ export default function Patterns({ heuristicAlerts, onChatWith }: PatternsProps)
                       </div>
 
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: colors.textSecondary }}>Mechanism</p>
+                        <p className="text-[10px] font-semibold mb-1" style={{ color: colors.textSecondary }}>Mechanism</p>
                         <p className="text-[11px] leading-relaxed" style={{ color: colors.textSecondary }}>{pattern.mechanism}</p>
                       </div>
 
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: colors.textSecondary }}>Research</p>
+                        <p className="text-[10px] font-semibold mb-1" style={{ color: colors.textSecondary }}>Research</p>
                         <p className="text-[11px] italic leading-relaxed" style={{ color: colors.textSecondary }}>{pattern.citation}</p>
                       </div>
 
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: colors.textSecondary }}>Detection Criteria</p>
+                        <p className="text-[10px] font-semibold mb-1" style={{ color: colors.textSecondary }}>Detection Criteria</p>
                         <p className="text-[11px] font-mono leading-relaxed" style={{ color: colors.textSecondary }}>{pattern.detectionCriteria}</p>
                       </div>
 

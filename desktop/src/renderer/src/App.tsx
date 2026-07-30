@@ -270,7 +270,7 @@ export default function App(): React.ReactElement {
                 boxShadow: alwaysOn ? '0 0 6px #34d399' : 'none',
               }}
             />
-            <span style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 9, letterSpacing: '0.15em', color: alwaysOn ? '#34d399' : 'rgba(99,102,241,0.4)' }}>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.15em', color: alwaysOn ? '#34d399' : 'rgba(99,102,241,0.4)' }}>
               ALWAYS&nbsp;ON
             </span>
           </button>
@@ -375,18 +375,18 @@ export default function App(): React.ReactElement {
               <div className="flex items-center gap-2.5">
                 <Coffee size={12} style={{ color: '#fbbf24' }} />
                 <span
-                  className="text-[10px] font-bold uppercase tracking-widest"
-                  style={{ color: '#fbbf24', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.2em' }}
+                  className="text-[10px] font-semibold"
+                  style={{ color: '#fbbf24', fontFamily: 'var(--font-mono)', letterSpacing: '0.2em' }}
                 >
                   Break Mode Active
                 </span>
-                <span className="text-[10px]" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                <span className="text-[10px]" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                   · resumes {new Date(breakMode.endsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
               <button
-                className="text-[10px] uppercase tracking-widest transition-colors hover:text-white"
-                style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}
+                className="text-[10px] transition-colors hover:text-white"
+                style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}
                 onClick={async () => { await api.endBreak(); setBreakMode(null) }}
               >
                 End Break
@@ -408,29 +408,29 @@ export default function App(): React.ReactElement {
                   style={{ background: '#34d399', boxShadow: '0 0 6px #34d399' }}
                 />
                 <span
-                  className="text-[10px] font-bold uppercase tracking-widest"
-                  style={{ color: '#34d399', fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.2em' }}
+                  className="text-[10px] font-semibold"
+                  style={{ color: '#34d399', fontFamily: 'var(--font-mono)', letterSpacing: '0.2em' }}
                 >
                   Focus Session Active
                 </span>
                 {activeSession.endsAt && (
-                  <span className="text-[10px]" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                  <span className="text-[10px]" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                     · ends {new Date(activeSession.endsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 )}
               </div>
               {activeSession.mode === 'deep' && activeSession.endsAt && Date.now() < activeSession.endsAt ? (
                 <span
-                  className="text-[10px] uppercase tracking-widest"
-                  style={{ color: '#fbbf24', fontFamily: '"Share Tech Mono", monospace' }}
+                  className="text-[10px]"
+                  style={{ color: '#fbbf24', fontFamily: 'var(--font-mono)' }}
                   title="Deep Focus is locked until its timer ends."
                 >
                   Locked
                 </span>
               ) : (
                 <button
-                  className="text-[10px] uppercase tracking-widest transition-colors hover:text-white"
-                  style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}
+                  className="text-[10px] transition-colors hover:text-white"
+                  style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}
                   onClick={async () => { await api.stopSession(activeSession.id); refreshStore() }}
                 >
                   End

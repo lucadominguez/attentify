@@ -34,6 +34,9 @@ interface ActionsProps {
 }
 
 function timeAgo(ts: number): string {
+  // A row whose timestamp never made it through renders "NaNd ago" otherwise, which
+  // is what the web demo shipped publicly. Say nothing precise rather than nonsense.
+  if (!Number.isFinite(ts)) return 'recently'
   const s = Math.floor((Date.now() - ts) / 1000)
   if (s < 60) return `${s}s ago`
   const m = Math.floor(s / 60)
@@ -43,15 +46,21 @@ function timeAgo(ts: number): string {
   return `${Math.floor(h / 24)}d ago`
 }
 
+// A meter, not a divider. Stretched edge to edge at 1px tall this read as a
+// coloured hairline rule across the card, and the percentage ended up marooned at
+// the far right with nothing saying what it measured. Fixed width, named, and the
+// number sits against the track it belongs to.
 function ConfidenceBar({ value }: { value: number }): React.ReactElement {
+  const { colors } = useTheme()
   const pct = Math.round(value * 100)
-  const color = pct >= 85 ? '#f87171' : pct >= 65 ? '#fbbf24' : '#6366f1'
+  const color = pct >= 85 ? colors.negative : pct >= 65 ? colors.warning : colors.accent
   return (
-    <div className="flex items-center gap-1.5">
-      <div className="flex-1 h-1" style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 1 }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 1, transition: 'width 0.4s ease' }} />
+    <div className="flex items-center gap-2">
+      <span className="text-[11px]" style={{ color: colors.textMuted }}>Confidence</span>
+      <div className="h-1.5 w-[104px] flex-shrink-0" style={{ background: 'var(--row-odd)', borderRadius: 3 }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 3, transition: 'width 0.4s ease' }} />
       </div>
-      <span className="text-[9px] font-bold" style={{ color, fontFamily: '"Share Tech Mono", monospace', minWidth: 26 }}>
+      <span className="text-[11px] font-medium" style={{ color, fontFamily: 'var(--font-mono)' }}>
         {pct}%
       </span>
     </div>
@@ -71,12 +80,12 @@ function SourceBadge({ source }: { source?: string }): React.ReactElement | null
   if (!m) return null
   return (
     <span
-      className="text-[8px] font-bold uppercase tracking-widest px-1 py-0.5"
+      className="text-[8px] font-semibold px-1 py-0.5"
       style={{
         color: m[1].color,
         background: `${m[1].color}18`,
         border: `1px solid ${m[1].color}30`,
-        fontFamily: '"Share Tech Mono", monospace',
+        fontFamily: 'var(--font-mono)',
       }}
     >
       {m[1].label}
@@ -132,14 +141,11 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
         style={{ borderBottom: '1px solid rgba(99,102,241,0.08)' }}
       >
         <div>
-          <h1
-            className="text-[13px] font-bold uppercase tracking-widest"
-            style={{ color: colors.textPrimary, fontFamily: '"Share Tech Mono", monospace', letterSpacing: '0.2em' }}
-          >
+          <h1 className="text-[14px] font-semibold" style={{ color: colors.textPrimary }}>
             Actions
           </h1>
-          <p className="text-[10px] mt-0.5" style={{ color: colors.textMuted }}>
-            AI inference decisions · {pending.length} pending review
+          <p className="text-[11px] mt-0.5" style={{ color: colors.textMuted }}>
+            What Attentify decided, and what it wants your call on · {pending.length} pending review
           </p>
         </div>
         <button
@@ -148,13 +154,13 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
           style={{
             background: 'rgba(99,102,241,0.06)',
             border: '1px solid rgba(99,102,241,0.18)',
-            color: 'rgba(99,102,241,0.7)',
-            fontSize: 9,
-            fontFamily: '"Share Tech Mono", monospace',
-            letterSpacing: '0.15em',
+            color: colors.accent,
+            fontSize: 11,
+            fontWeight: 500,
+            borderRadius: 6,
           }}
         >
-          {loading ? <RefreshCw size={9} className="animate-spin" /> : <RefreshCw size={9} />}
+          {loading ? <RefreshCw size={11} className="animate-spin" /> : <RefreshCw size={11} />}
           Refresh
         </button>
       </div>
@@ -173,7 +179,7 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                   background: 'rgba(251,191,36,0.15)',
                   border: '1px solid rgba(251,191,36,0.4)',
                   color: '#fbbf24',
-                  fontFamily: '"Share Tech Mono", monospace',
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
                 {pending.length}
@@ -201,21 +207,20 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span
-                        className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 flex-shrink-0"
+                        className="text-[10px] font-medium px-1.5 py-0.5 rounded flex-shrink-0"
                         style={{
-                          background: 'rgba(251,191,36,0.12)',
-                          border: '1px solid rgba(251,191,36,0.3)',
-                          color: '#fbbf24',
-                          fontFamily: '"Share Tech Mono", monospace',
+                          background: colors.warningBg,
+                          border: `1px solid ${colors.warning}4d`,
+                          color: colors.warning,
                         }}
                       >
-                        {inf.type}
+                        {inf.type === 'domain' ? 'Site' : 'App'}
                       </span>
                       <span className="text-[12px] font-bold truncate" style={{ color: colors.textPrimary }}>
                         {inf.value}
                       </span>
                     </div>
-                    <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                    <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                       {timeAgo(inf.created_at)}
                     </span>
                   </div>
@@ -234,29 +239,27 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                     <button
                       onClick={() => void resolve(inf.id, 'rejected')}
                       disabled={resolving === inf.id}
-                      className="flex items-center gap-1 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-md transition-all hover:scale-105 disabled:opacity-50"
                       style={{
                         background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.1)',
-                        color: colors.textMuted,
-                        fontFamily: '"Share Tech Mono", monospace',
+                        color: colors.textSecondary,
                       }}
                     >
-                      <XCircle size={9} />
+                      <XCircle size={11} />
                       Dismiss
                     </button>
                     <button
                       onClick={() => void resolve(inf.id, 'confirmed')}
                       disabled={resolving === inf.id}
-                      className="flex items-center gap-1 px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all hover:scale-105 disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium rounded-md transition-all hover:scale-105 disabled:opacity-50"
                       style={{
-                        background: 'rgba(248,113,113,0.1)',
-                        border: '1px solid rgba(248,113,113,0.3)',
-                        color: '#f87171',
-                        fontFamily: '"Share Tech Mono", monospace',
+                        background: colors.negativeBg,
+                        border: `1px solid ${colors.negative}55`,
+                        color: colors.negative,
                       }}
                     >
-                      <Shield size={9} />
+                      <Shield size={11} />
                       Block Now
                     </button>
                   </div>
@@ -278,7 +281,7 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                   background: 'rgba(248,113,113,0.15)',
                   border: '1px solid rgba(248,113,113,0.4)',
                   color: '#f87171',
-                  fontFamily: '"Share Tech Mono", monospace',
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
                 {autoBlocked.length}
@@ -313,10 +316,10 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-bold" style={{ color: '#f87171', fontFamily: '"Share Tech Mono", monospace' }}>
+                      <span className="text-[9px] font-bold" style={{ color: '#f87171', fontFamily: 'var(--font-mono)' }}>
                         {Math.round(evt.confidence * 100)}%
                       </span>
-                      <span className="text-[9px]" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                      <span className="text-[9px]" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                         {timeAgo(evt.ts)}
                       </span>
                     </div>
@@ -340,13 +343,13 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                           background: 'rgba(248,113,113,0.1)',
                           border: '1px solid rgba(248,113,113,0.25)',
                           color: '#f87171',
-                          fontFamily: '"Share Tech Mono", monospace',
+                          fontFamily: 'var(--font-mono)',
                         }}
                       >
                         BLOCKED
                       </span>
                     </div>
-                    <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                    <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                       {timeAgo(inf.created_at)}
                     </span>
                   </div>
@@ -362,8 +365,8 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                   {onChatWith && (
                     <button
                       onClick={() => onChatWith(`Why was ${inf.value} auto-blocked by the AI?`)}
-                      className="mt-2 text-[9px] uppercase tracking-widest transition-colors hover:text-white"
-                      style={{ color: 'rgba(99,102,241,0.5)', fontFamily: '"Share Tech Mono", monospace' }}
+                      className="mt-2 text-[9px] transition-colors hover:text-white"
+                      style={{ color: 'rgba(99,102,241,0.5)', fontFamily: 'var(--font-mono)' }}
                     >
                       Ask AI why →
                     </button>
@@ -394,7 +397,7 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
               <div key={item.label} className="p-3" style={{ borderRight: '1px solid rgba(99,102,241,0.06)', borderBottom: '1px solid rgba(99,102,241,0.06)' }}>
                 <div className="flex items-center gap-1.5 mb-1">
                   <span style={{ color: item.color }}>{item.icon}</span>
-                  <span className="text-[9px] font-bold uppercase tracking-widest" style={{ color: item.color, fontFamily: '"Share Tech Mono", monospace' }}>{item.label}</span>
+                  <span className="text-[9px] font-semibold" style={{ color: item.color, fontFamily: 'var(--font-mono)' }}>{item.label}</span>
                 </div>
                 <p className="text-[9px] leading-relaxed" style={{ color: colors.textMuted }}>{item.desc}</p>
               </div>
@@ -411,7 +414,7 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
             >
               <Clock size={11} style={{ color: colors.textMuted }} />
               <span className="hud-label group-hover:text-white transition-colors">History</span>
-              <span className="text-[9px]" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+              <span className="text-[9px]" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                 ({history.length})
               </span>
               <div className="flex-1 h-px" style={{ background: 'rgba(99,102,241,0.08)' }} />
@@ -434,17 +437,17 @@ export default function Actions({ onChatWith, liveAutoBlocks = [] }: ActionsProp
                       {inf.value}
                     </span>
                     <span
-                      className="text-[8px] font-bold uppercase px-1.5 py-0.5 flex-shrink-0"
+                      className="text-[10px] font-semibold px-1.5 py-0.5 flex-shrink-0"
                       style={{
                         background: inf.status === 'confirmed' ? 'rgba(52,211,153,0.1)' : 'rgba(255,255,255,0.05)',
                         border: `1px solid ${inf.status === 'confirmed' ? 'rgba(52,211,153,0.25)' : 'rgba(255,255,255,0.08)'}`,
                         color: inf.status === 'confirmed' ? '#34d399' : colors.textMuted,
-                        fontFamily: '"Share Tech Mono", monospace',
+                        fontFamily: 'var(--font-mono)',
                       }}
                     >
                       {inf.status}
                     </span>
-                    <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+                    <span className="text-[9px] flex-shrink-0" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                       {timeAgo(inf.resolved_at ?? inf.created_at)}
                     </span>
                   </div>

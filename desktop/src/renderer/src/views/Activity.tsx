@@ -221,7 +221,7 @@ export default function Activity({ onChatWith }: { onChatWith?: (msg: string) =>
             <ActivityIcon size={16} style={{ color: colors.accent }} />
             <div>
               <h1 className="text-[14px] font-semibold" style={{ color: colors.textPrimary }}>Activity</h1>
-              <p className="text-[9px] mt-0.5" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+              <p className="text-[9px] mt-0.5" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
                 {stats.events} events · {stats.apps} application{stats.apps !== 1 ? 's' : ''} · {stats.sites} website{stats.sites !== 1 ? 's' : ''} · {stats.searches} search{stats.searches !== 1 ? 'es' : ''} · last 14 days
               </p>
             </div>
@@ -293,7 +293,7 @@ export default function Activity({ onChatWith }: { onChatWith?: (msg: string) =>
           ) : (
             groups.map((g) => (
               <div key={g.day} className="mb-4">
-                <p className="text-[10px] font-semibold uppercase tracking-wide mb-1 sticky top-0 py-1 z-10" style={{ color: colors.textMuted, background: colors.mainBg, fontFamily: '"Share Tech Mono", monospace' }}>{g.day}</p>
+                <p className="text-[10px] font-semibold mb-1 sticky top-0 py-1 z-10" style={{ color: colors.textMuted, background: colors.mainBg, fontFamily: 'var(--font-mono)' }}>{g.day}</p>
                 <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${colors.border}` }}>
                   {g.items.map((it, idx) => it.type === 'search' ? (
                     <SearchRow key={`s${idx}`} q={it.q} first={idx === 0} />

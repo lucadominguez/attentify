@@ -39,9 +39,14 @@ export default {
           line:         'rgba(99,102,241,0.22)',
         },
       },
+      // Point Tailwind's font utilities at the same CSS variables the rest of the app
+      // uses, so `font-mono` and `--font-mono` can never drift apart. They had: this
+      // list still led with Share Tech Mono after the CSS was migrated, so every
+      // `font-mono` utility kept resolving to a font that is not even loaded.
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"Share Tech Mono"', '"JetBrains Mono"', 'Consolas', 'monospace'],
+        sans: ['var(--font-sans)'],
+        display: ['var(--font-display)'],
+        mono: ['var(--font-mono)'],
       },
       animation: {
         'fade-in':       'fadeIn 0.25s ease-out',

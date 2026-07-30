@@ -508,7 +508,7 @@ export default function Overview({ store, onRefresh, onChatWith }: OverviewProps
           <div className="space-y-3">
             {[...grouped.entries()].map(([dateLabel, sessions]) => (
               <div key={dateLabel}>
-                <p className="text-[9px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: colors.textSecondary }}>{dateLabel}</p>
+                <p className="text-[9px] font-semibold mb-1.5" style={{ color: colors.textSecondary }}>{dateLabel}</p>
                 <div className="space-y-px">
                   {sessions.map((s) => {
                     const catColor = CAT_COLOR[s.category]

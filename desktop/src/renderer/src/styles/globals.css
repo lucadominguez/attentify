@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap');
+/* Font files are imported in main.tsx (self-hosted via @fontsource) so Vite emits
+   them locally. Do NOT put a remote @import back here: the CSP in index.html blocks
+   it, which is why the app rendered in system-ui + Consolas for months. */
 
 @tailwind base;
 @tailwind components;
@@ -32,6 +34,19 @@
   --warning-bg:    rgba(251,191,36,0.10);
   --negative:      #f87171;
   --negative-bg:   rgba(248,113,113,0.10);
+
+  /* ── Type ──────────────────────────────────────────────────────────────────
+     Three families, same as the website, so site and app read as one product.
+     The fallbacks are real Windows faces rather than the generic keywords: if a
+     woff2 ever fails to load, the app lands on Segoe UI Variable / Cascadia Mono
+     instead of whatever "sans-serif" happens to resolve to.
+
+     --font-mono is for NUMBERS AND STATUS ONLY. It is not a label font and not a
+     heading font; using it for section labels is what gave the app its terminal
+     look. Reach for --font-sans unless the glyphs need to line up in a column. */
+  --font-sans:    'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-sans);
+  --font-mono:    'JetBrains Mono', 'Cascadia Mono', Consolas, ui-monospace, monospace;
 }
 
 * {
@@ -48,7 +63,7 @@ body,
   overflow: hidden;
   background-color: var(--root-bg);
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   user-select: none;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -68,33 +83,19 @@ html.light .bg-grid {
   background-image: radial-gradient(rgba(0,100,180,0.08) 1px, transparent 1px);
 }
 
-/* ── HUD Panel, the cornerstone design element ────────────────────────────── */
-/*   Adds glowing corner brackets (TL + BR) to any element via pseudo-elements */
+/* ── Panel ─────────────────────────────────────────────────────────────────
+   This used to draw glowing sci-fi corner brackets on every card via ::before
+   and ::after. It read as a heads-up display, not as software you leave running
+   all day, and it fought the rounded card surface used everywhere else in the
+   app. Separation now comes from the surface itself: a real radius, a hairline
+   border, and a soft shadow doing the lifting instead of decoration. */
 .hud-panel {
   position: relative;
   background: var(--panel-bg);
   border: 1px solid var(--border);
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.hud-panel::before,
-.hud-panel::after {
-  content: '';
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  pointer-events: none;
-  z-index: 1;
-}
-.hud-panel::before {
-  top: -1px; left: -1px;
-  border-top:  2px solid var(--border-hi);
-  border-left: 2px solid var(--border-hi);
-}
-.hud-panel::after {
-  bottom: -1px; right: -1px;
-  border-bottom: 2px solid var(--border-mid);
-  border-right:  2px solid var(--border-mid);
+  border-radius: 10px;
+  box-shadow: var(--elev-low);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Glow variant — more prominent for key panels */
@@ -109,21 +110,41 @@ html.light .bg-grid {
   margin: 2px 0;
 }
 
-/* ── HUD Label — section label style ──────────────────────────────────────── */
-.hud-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--label);
-  font-family: 'Share Tech Mono', monospace;
+/* ── Headings ──────────────────────────────────────────────────────────────
+   Space Grotesk on headings only, matching the website's h1-h4 rule, so a page
+   title in the app and a section title on the site are recognisably the same
+   voice. Body and labels stay on Inter: Grotesk is a display face and gets
+   tiring below ~13px. Tighter tracking because display faces set loose at the
+   sizes we use for page titles. */
+h1, h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.012em;
 }
 
-/* ── Data value — monospace numerics ───────────────────────────────────────── */
+/* ── Section label ─────────────────────────────────────────────────────────
+   Was a 9px 0.18em-tracked uppercase MONO "HUD" style. That single rule is what
+   made the app read as a terminal readout rather than a product: it is used in
+   102 places, so every section heading in the app was shouting in Consolas.
+
+   The call sites already pass properly cased text ("Top Apps", "Today's Session
+   Timeline"), so dropping text-transform restores real sentence case everywhere
+   without touching a single view. 9px is also below a comfortable reading floor
+   for a window this size; 11px sans at 600 reads as a quiet label instead. */
+.hud-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+}
+
+/* ── Data value — monospace numerics ─────────────────────────────────────────
+   Mono earns its place HERE and essentially nowhere else: figures that stack in a
+   column have to align, which needs tabular numerals and a fixed advance width. */
 .data-value {
-  font-family: 'Share Tech Mono', 'Consolas', monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
 }
 
 /* ── Glass card ────────────────────────────────────────────────────────────── */
@@ -296,15 +317,17 @@ html.light .bg-grid {
   border-collapse: collapse;
   width: 100%;
 }
+/* 8px tracked-out uppercase mono was unreadable as well as loud. A column header
+   is a label, not data, so it takes the sans stack like every other label. */
 .hud-table thead th {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
   color: var(--text-muted);
   background: var(--panel-bg);
   border-bottom: 1px solid var(--border);
-  padding: 6px 10px;
+  padding: 8px 10px;
   text-align: left;
   white-space: nowrap;
 }

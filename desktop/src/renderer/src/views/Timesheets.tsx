@@ -265,10 +265,10 @@ export default function Timesheets({ onChatWith }: TimesheetsProps): React.React
                 <>
                   <div className="rounded-lg overflow-hidden mb-4" style={{ border: `1px solid ${colors.border}` }}>
                     <div className="flex items-center gap-3 px-3 py-1.5" style={{ background: colors.rowEven, borderBottom: `1px solid ${colors.border}` }}>
-                      <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim, width: 92 }}>when</span>
-                      <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim, width: 92 }}>app</span>
-                      <span className="text-[8px] uppercase tracking-wider flex-1" style={{ color: colors.textDim }}>what</span>
-                      <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim, width: 48, textAlign: 'right' }}>time</span>
+                      <span className="text-[8px]" style={{ color: colors.textDim, width: 92 }}>when</span>
+                      <span className="text-[8px]" style={{ color: colors.textDim, width: 92 }}>app</span>
+                      <span className="text-[8px] flex-1" style={{ color: colors.textDim }}>what</span>
+                      <span className="text-[8px]" style={{ color: colors.textDim, width: 48, textAlign: 'right' }}>time</span>
                     </div>
                     <div style={{ maxHeight: 320, overflowY: 'auto' }}>
                       {selected.entries.map((e, i) => (
@@ -292,7 +292,7 @@ export default function Timesheets({ onChatWith }: TimesheetsProps): React.React
                     </div>
                   </div>
 
-                  <p className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: colors.labelDim }}>
+                  <p className="text-[9px] font-semibold mb-1.5" style={{ color: colors.labelDim }}>
                     That day, by app
                   </p>
                   <TimeEntryTable rows={[...selected.byApp.entries()].map(([app, v]) => ({ app, ...v })).sort((a, b) => b.ms - a.ms)} total={selected.total} colors={colors} />

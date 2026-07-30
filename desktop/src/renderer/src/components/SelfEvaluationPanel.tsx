@@ -94,7 +94,7 @@ export default function SelfEvaluationPanel(): React.ReactElement {
       {/* Calibration bands */}
       {enoughData && cal && cal.buckets.some((b) => b.n > 0) && (
         <div className="mb-3">
-          <p className="text-[9px] uppercase tracking-widest mb-1.5" style={{ color: colors.textDim }}>Calibration (predicted vs. reversed)</p>
+          <p className="text-[9px] mb-1.5" style={{ color: colors.textDim }}>Calibration (predicted vs. reversed)</p>
           <div className="flex flex-col gap-1">
             {cal.buckets.filter((b) => b.n > 0).map((b) => {
               const over = b.gap > 0.15
@@ -120,7 +120,7 @@ export default function SelfEvaluationPanel(): React.ReactElement {
       {/* Learned corrections */}
       {adjustments.length > 0 && (
         <div className="mb-3">
-          <p className="text-[9px] uppercase tracking-widest mb-1.5" style={{ color: colors.textDim }}>Learned to stop blocking</p>
+          <p className="text-[9px] mb-1.5" style={{ color: colors.textDim }}>Learned to stop blocking</p>
           <div className="flex flex-col gap-1">
             {adjustments.slice(0, 6).map((a) => (
               <div key={a.id} className="flex items-center gap-2 px-2 py-1.5 rounded-md" style={{ background: 'rgba(255,255,255,0.02)' }}>
@@ -139,7 +139,7 @@ export default function SelfEvaluationPanel(): React.ReactElement {
       {/* Recent detected mistakes */}
       {mistakes.length > 0 && (
         <div>
-          <p className="text-[9px] uppercase tracking-widest mb-1.5" style={{ color: colors.textDim }}>Recently caught</p>
+          <p className="text-[9px] mb-1.5" style={{ color: colors.textDim }}>Recently caught</p>
           <div className="flex flex-col gap-1">
             {mistakes.map((m) => (
               <div key={m.id} className="flex items-start gap-2 px-2 py-1.5 rounded-md" style={{ background: 'rgba(255,255,255,0.02)' }}>
@@ -148,7 +148,7 @@ export default function SelfEvaluationPanel(): React.ReactElement {
                   <p className="text-[10.5px] truncate" style={{ color: colors.textSecondary }}>{m.title ?? m.category ?? 'issue'}</p>
                   {m.description && <p className="text-[9px] truncate" style={{ color: colors.textDim }}>{m.description}</p>}
                 </div>
-                {m.context?.recovered && <span className="text-[8px] uppercase tracking-wider px-1 py-0.5 rounded flex-shrink-0" style={{ background: 'rgba(52,211,153,0.12)', color: colors.positive }}>recovered</span>}
+                {m.context?.recovered && <span className="text-[8px] px-1 py-0.5 rounded flex-shrink-0" style={{ background: 'rgba(52,211,153,0.12)', color: colors.positive }}>recovered</span>}
               </div>
             ))}
           </div>
@@ -167,7 +167,7 @@ export default function SelfEvaluationPanel(): React.ReactElement {
 function Stat({ label, value, sub, colors }: { label: string; value: string; sub?: string; colors: ReturnType<typeof useTheme>['colors'] }): React.ReactElement {
   return (
     <div className="rounded-md px-2.5 py-2" style={{ background: 'rgba(255,255,255,0.02)' }}>
-      <p className="text-[9px] uppercase tracking-wider" style={{ color: colors.textDim }}>{label}</p>
+      <p className="text-[9px]" style={{ color: colors.textDim }}>{label}</p>
       <p className="text-[13px] font-semibold truncate" style={{ color: colors.textPrimary }}>{value}</p>
       {sub && <p className="text-[9px]" style={{ color: colors.textMuted }}>{sub}</p>}
     </div>

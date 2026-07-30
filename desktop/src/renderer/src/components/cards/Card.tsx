@@ -163,9 +163,9 @@ function RankedViz({ rows, unit, hasBaseline }: {
   return (
     <div>
       <div className="flex items-center gap-2 pb-1 mb-1" style={{ borderBottom: `1px solid ${colors.glassEdge}` }}>
-        <span className="text-[8px] font-semibold uppercase tracking-wider flex-1" style={{ color: colors.textMuted }}>signal</span>
-        <span className="text-[8px] font-semibold uppercase tracking-wider" style={{ color: colors.textMuted, width: 48, textAlign: 'right' }}>now</span>
-        {hasBaseline && <span className="text-[8px] font-semibold uppercase tracking-wider" style={{ color: colors.textMuted, width: 56, textAlign: 'right' }}>change</span>}
+        <span className="text-[8px] font-semibold flex-1" style={{ color: colors.textMuted }}>signal</span>
+        <span className="text-[8px] font-semibold" style={{ color: colors.textMuted, width: 48, textAlign: 'right' }}>now</span>
+        {hasBaseline && <span className="text-[8px] font-semibold" style={{ color: colors.textMuted, width: 56, textAlign: 'right' }}>change</span>}
       </div>
       {rows.slice(0, 8).map((r) => {
         const worse = r.delta > 0

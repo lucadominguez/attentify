@@ -4,6 +4,30 @@ All notable changes to Attentify (desktop app) are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project uses [semantic versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- **The app now ships with its intended typefaces.** Inter, Space Grotesk and JetBrains
+  Mono are bundled with the app instead of being requested from a font CDN, which the
+  app's own security policy had always blocked. Text was silently falling back to system
+  defaults, so the interface now looks the way it was designed to and matches the website.
+- **Section headings, labels and buttons no longer shout.** Around 180 places set text in
+  tracked-out uppercase monospace, which made the app read like a diagnostic readout.
+  These are now normal sentence case in the regular typeface. Monospace is reserved for
+  figures and status values, where fixed-width digits actually help columns line up.
+- **Cards lost their decorative corner brackets** in favour of a rounded surface with a
+  soft shadow, which suits an app you leave running all day.
+- Small type across the app was lifted off an unreadable 8-9px floor.
+- Suggestion cards on Actions now show a labelled confidence meter instead of a coloured
+  hairline stretched across the card, and say "Site" or "App" rather than a raw value.
+- Chart axis labels are neutral again, so colour on a chart means something.
+- Settings is no longer described in terms of "threats"; Attentify is a focus tool.
+
+### Fixed
+- Suggestions with a missing timestamp showed "NaNd ago". They now say "recently".
+- Removed em dashes from Attentify's own wording in the demo data, per the product's
+  copy rules.
+
 ## [1.2.0] - 2026-07-30
 
 ### Added

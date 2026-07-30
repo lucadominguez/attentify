@@ -248,13 +248,13 @@ export default function AlgoTrack({ store, onChatWith }: AlgoTrackProps): React.
         <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: colors.panelBg, borderBottom: `1px solid ${colors.border}` }}>
-              <th className="px-3 py-2 text-left text-[9px] font-semibold uppercase tracking-wider w-8" style={{ color: colors.textSecondary }}>#</th>
-              <th className="px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider" style={{ color: colors.textSecondary }}>Platform</th>
-              <th className="px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider" style={{ color: colors.textSecondary }}>Category</th>
-              <th className="px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider w-20" style={{ color: colors.textSecondary }}>Risk Score</th>
-              <th className="px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider" style={{ color: colors.textSecondary }}>Top Techniques</th>
-              {refreshed && <th className="px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider" style={{ color: colors.textSecondary }}>Your Exposure</th>}
-              <th className="px-2 py-2 text-left text-[9px] font-semibold uppercase tracking-wider w-20" style={{ color: colors.textSecondary }}>Status</th>
+              <th className="px-3 py-2 text-left text-[9px] font-semibold w-8" style={{ color: colors.textSecondary }}>#</th>
+              <th className="px-2 py-2 text-left text-[9px] font-semibold" style={{ color: colors.textSecondary }}>Platform</th>
+              <th className="px-2 py-2 text-left text-[9px] font-semibold" style={{ color: colors.textSecondary }}>Category</th>
+              <th className="px-2 py-2 text-left text-[9px] font-semibold w-20" style={{ color: colors.textSecondary }}>Risk Score</th>
+              <th className="px-2 py-2 text-left text-[9px] font-semibold" style={{ color: colors.textSecondary }}>Top Techniques</th>
+              {refreshed && <th className="px-2 py-2 text-left text-[9px] font-semibold" style={{ color: colors.textSecondary }}>Your Exposure</th>}
+              <th className="px-2 py-2 text-left text-[9px] font-semibold w-20" style={{ color: colors.textSecondary }}>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -296,7 +296,7 @@ export default function AlgoTrack({ store, onChatWith }: AlgoTrackProps): React.
                       <div className="flex items-center gap-1.5">
                         <p className="text-[11px] font-semibold whitespace-nowrap" style={{ color: colors.textPrimary }}>{platform.name}</p>
                         <span
-                          className="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide"
+                          className="text-[8px] px-1.5 py-0.5 rounded font-semibold"
                           style={{ background: riskColor + '20', color: riskColor }}
                         >
                           {platform.risk}

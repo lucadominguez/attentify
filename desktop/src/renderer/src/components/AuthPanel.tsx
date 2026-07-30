@@ -141,7 +141,7 @@ export default function AuthPanel({ onChange }: { onChange?: () => void }): Reac
           </div>
           <div className="flex items-center gap-2 my-3">
             <div className="flex-1 h-px" style={{ background: colors.border }} />
-            <span className="text-[9.5px] uppercase tracking-wider" style={{ color: colors.textDim }}>or use email</span>
+            <span className="text-[9.5px]" style={{ color: colors.textDim }}>or use email</span>
             <div className="flex-1 h-px" style={{ background: colors.border }} />
           </div>
         </div>

@@ -22,9 +22,9 @@ function SectionHeader({ label, sub }: { label: string; sub?: string }): React.R
   const { colors } = useTheme()
   return (
     <div className="flex items-center gap-3 pt-1">
-      <p className="text-[10px] font-semibold uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--label)', fontFamily: '"Share Tech Mono", monospace' }}>{label}</p>
+      <p className="text-[10px] font-semibold flex-shrink-0" style={{ color: 'var(--label)', fontFamily: 'var(--font-mono)' }}>{label}</p>
       <div className="flex-1 h-px" style={{ background: colors.border }} />
-      {sub && <p className="text-[9px] flex-shrink-0" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>{sub}</p>}
+      {sub && <p className="text-[9px] flex-shrink-0" style={{ color: colors.textDim, fontFamily: 'var(--font-mono)' }}>{sub}</p>}
     </div>
   )
 }
@@ -59,7 +59,7 @@ function FlowNode({ label, text, tone = 'neutral', confidence }: {
   return (
     <div className="rounded-lg px-3 py-2" style={{ background: colors.inputBg, borderLeft: `2px solid ${toneColor}`, border: `1px solid ${colors.border}`, borderLeftWidth: 2, borderLeftColor: toneColor }}>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[8.5px] font-bold uppercase tracking-widest" style={{ color: toneColor, fontFamily: '"Share Tech Mono", monospace' }}>{label}</span>
+        <span className="text-[8.5px] font-semibold" style={{ color: toneColor, fontFamily: 'var(--font-mono)' }}>{label}</span>
         {confidence !== undefined && (
           <div className="flex items-center gap-1.5">
             <div className="h-1.5 rounded-full overflow-hidden" style={{ width: 44, background: colors.border }}>
@@ -194,7 +194,7 @@ function HowItDecides(): React.ReactElement {
       <SectionHeader label="How Attentify decides" sub="the logic, in the open" />
       <div className="section-panel p-3.5 space-y-3">
         <div>
-          <p className="text-[10px] mb-2" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>What it treats as engineered distraction, and why</p>
+          <p className="text-[10px] mb-2" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>What it treats as engineered distraction, and why</p>
           <div className="space-y-2">
             {DECISION_TAXONOMY.map((t) => (
               <div key={t.key} className="rounded-lg px-3 py-2" style={{ background: colors.inputBg, border: `1px solid ${colors.border}` }}>
@@ -207,7 +207,7 @@ function HowItDecides(): React.ReactElement {
                     <span className="text-[9px] data-value" style={{ color: colors.textMuted }}>{Math.round(t.weight * 100)}</span>
                   </div>
                 </div>
-                <p className="text-[9px] mt-0.5" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>{t.examples}</p>
+                <p className="text-[9px] mt-0.5" style={{ color: colors.textDim, fontFamily: 'var(--font-mono)' }}>{t.examples}</p>
                 <p className="text-[11.5px] leading-snug mt-1" style={{ color: colors.textSecondary }}>{t.why}</p>
               </div>
             ))}
@@ -390,7 +390,7 @@ export default function Logic({ onChatWith }: { onChatWith?: (msg: string) => vo
               <Brain size={16} style={{ color: colors.accent }} />
               <div>
                 <h1 className="text-[14px] font-semibold" style={{ color: colors.textPrimary }}>Logic</h1>
-                <p className="text-[9px] mt-0.5" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>How Attentify reasons about your attention, and what it's working from.</p>
+                <p className="text-[9px] mt-0.5" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>How Attentify reasons about your attention, and what it's working from.</p>
               </div>
             </div>
             <button onClick={load} className="p-1.5 rounded-lg" style={{ border: `1px solid ${colors.border}`, color: colors.textMuted }} title="Refresh">

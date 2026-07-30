@@ -303,10 +303,14 @@ function FocusLineChart({ hourRows }: { hourRows: HourRow[] }): React.ReactEleme
       </defs>
       <line x1={PL} y1={y70} x2={W - PR} y2={y70} stroke="rgba(52,211,153,0.2)" strokeWidth="0.6" strokeDasharray="3,3" />
       <line x1={PL} y1={y40} x2={W - PR} y2={y40} stroke="rgba(248,113,113,0.2)" strokeWidth="0.6" strokeDasharray="3,3" />
-      <text x={W - PR + 2} y={y70 + 3} fontSize="5" fill="rgba(52,211,153,0.55)">70%</text>
-      <text x={W - PR + 2} y={y40 + 3} fontSize="5" fill="rgba(248,113,113,0.55)">40%</text>
+      {/* The dashed rules stay tinted: they mark the good and bad thresholds, which is
+          real meaning. Their LABELS do not need to repeat it, and axis text competing
+          with the series for attention is the fastest way to make a chart look busy.
+          Chrome is neutral and recessive; colour is reserved for the data. */}
+      <text x={W - PR + 2} y={y70 + 3} fontSize="5" fill="var(--text-dim)">70%</text>
+      <text x={W - PR + 2} y={y40 + 3} fontSize="5" fill="var(--text-dim)">40%</text>
       {[0, 6, 12, 18, 23].map((h) => (
-        <text key={h} x={toX(h)} y={H - 1} fontSize="4.5" fill="rgba(99,102,241,0.35)" textAnchor="middle" fontFamily="Share Tech Mono, monospace">{fmtHour(h)}</text>
+        <text key={h} x={toX(h)} y={H - 1} fontSize="4.5" fill="var(--text-dim)" textAnchor="middle" fontFamily="var(--font-mono)">{fmtHour(h)}</text>
       ))}
       <path d={areaPath} fill="url(#areaGrad)" />
       <polyline points={lineStr} fill="none" stroke="#6366f1" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" filter="url(#lineGlow)" />
@@ -417,7 +421,7 @@ function HourOfWeekHeatmap({ matrix }: { matrix: HeatCell[][] }): React.ReactEle
               {Array.from({ length: 24 }, (_, h) => (
                 <div key={h} className="flex-1 text-center" style={{ minWidth: 0 }}>
                   {[0, 6, 12, 18].includes(h) && (
-                    <span className="text-[7.5px]" style={{ color: 'rgba(99,102,241,0.2)' }}>{fmtHour(h)}</span>
+                    <span className="text-[7.5px]" style={{ color: 'var(--text-dim)' }}>{fmtHour(h)}</span>
                   )}
                 </div>
               ))}
@@ -482,7 +486,7 @@ function HourlyHeatmapRow({ hourRows }: { hourRows: HourRow[] }): React.ReactEle
       </div>
       <div className="flex justify-between mt-1">
         {[0, 3, 6, 9, 12, 15, 18, 21].map((h) => (
-          <span key={h} className="text-[7.5px]" style={{ color: 'rgba(99,102,241,0.2)' }}>{fmtHour(h)}</span>
+          <span key={h} className="text-[7.5px]" style={{ color: 'var(--text-dim)' }}>{fmtHour(h)}</span>
         ))}
       </div>
     </div>
@@ -538,7 +542,7 @@ function AppBarChart({ rows }: { rows: AppRow[] }): React.ReactElement | null {
   if (top.length === 0) return null
   return (
     <div className="mb-3">
-      <p className="text-[9px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(99,102,241,0.45)' }}>Top Apps by Time Distribution</p>
+      <p className="text-[9px] font-semibold mb-2" style={{ color: 'rgba(99,102,241,0.45)' }}>Top Apps by Time Distribution</p>
       <div className="space-y-1.5">
         {top.map((row) => (
           <div
@@ -718,10 +722,12 @@ function KpiStrip({ items, onAskAI }: { items: Kpi[]; onAskAI?: (p: string) => v
       <div className="flex items-baseline gap-1.5">
         <span className="text-[15px] font-semibold data-value" style={{ color: colors.textPrimary }}>{k.value}</span>
         {k.delta && (
-          <span className="text-[9px] font-medium flex-shrink-0" style={{ color: k.delta.good ? colors.positive : colors.negative }}>{k.delta.text}</span>
+          <span className="text-[11px] font-medium flex-shrink-0 data-value" style={{ color: k.delta.good ? colors.positive : colors.negative }}>{k.delta.text}</span>
         )}
       </div>
-      <p className="text-[8.5px] mt-0.5 truncate" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>{k.sub}</p>
+      {/* A caption, not a figure: "Target 85%" and "8 gaps ≥3m" are prose that happens
+          to contain a number, so they take the sans stack. 8.5px was under the floor. */}
+      <p className="text-[10px] mt-0.5 truncate" style={{ color: colors.textMuted }}>{k.sub}</p>
     </div>
   )
   return (
@@ -865,7 +871,7 @@ function RankedInsightTable({ rows, recommendation }: {
           {rows.map((r, i) => (
             <tr key={r.signal} style={{ background: i % 2 === 0 ? colors.rowEven : colors.rowOdd }}>
               <td className="px-2.5 py-1.5">
-                <span className="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase" style={{ background: PRI[r.priority] + '22', color: PRI[r.priority] }}>{r.priority}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded font-semibold" style={{ background: PRI[r.priority] + '22', color: PRI[r.priority] }}>{r.priority}</span>
               </td>
               <td className="px-2.5 py-1.5 text-[11px] font-medium whitespace-nowrap" style={{ color: colors.textPrimary }}>{r.signal}</td>
               <td className="px-2.5 py-1.5 text-[10px] data-value whitespace-nowrap" style={{ color: colors.textSecondary }}>{r.current}</td>
@@ -955,7 +961,7 @@ export default function Analytics({ onChatWith }: AnalyticsProps): React.ReactEl
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-3">
           <div className="w-5 h-5 rounded-full animate-spin" style={{ border: `2px solid ${colors.border}`, borderTopColor: colors.accent }} />
-          <p className="text-[10px] uppercase tracking-widest" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>Loading…</p>
+          <p className="text-[10px]" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>Loading…</p>
         </div>
       </div>
     )
@@ -1194,10 +1200,10 @@ export default function Analytics({ onChatWith }: AnalyticsProps): React.ReactEl
             <p className="text-base font-bold leading-none data-value" style={{ color: chip.color }}>
               <AnimatedStat value={chip.value} />
             </p>
-            <p className="text-[9px] leading-tight" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+            <p className="text-[9px] leading-tight" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
               {chip.label}
             </p>
-            <p className="text-[8px]" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>
+            <p className="text-[8px]" style={{ color: colors.textDim, fontFamily: 'var(--font-mono)' }}>
               {chip.sub}
             </p>
           </div>
@@ -1218,7 +1224,7 @@ export default function Analytics({ onChatWith }: AnalyticsProps): React.ReactEl
             <h1 className="font-semibold text-[14px]" style={{ color: colors.textPrimary }}>
               Analytics
             </h1>
-            <p className="text-[9px] mt-0.5" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>
+            <p className="text-[9px] mt-0.5" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>
               {recentSessions.length} sessions tracked
             </p>
           </div>
@@ -1351,7 +1357,7 @@ export default function Analytics({ onChatWith }: AnalyticsProps): React.ReactEl
             <div className="section-panel px-3 py-2.5">
               <div className="flex items-center justify-between mb-1.5">
                 <p className="hud-label">Focus vs Distraction</p>
-                <div className="flex items-center gap-3 text-[9px]" style={{ color: 'rgba(99,102,241,0.4)', fontFamily: '"Share Tech Mono", monospace' }}>
+                <div className="flex items-center gap-3 text-[9px]" style={{ color: 'rgba(99,102,241,0.4)', fontFamily: 'var(--font-mono)' }}>
                   <span className="flex items-center gap-1"><span className="inline-block w-1.5 h-1.5" style={{ background: '#34d399' }} />{fmt(weekly.focusedTime)} focused</span>
                   <span className="flex items-center gap-1"><span className="inline-block w-1.5 h-1.5" style={{ background: '#ff6b35' }} />{fmt(weekly.distractedTime)} distracted</span>
                   <TableQuery title="Focus vs Distraction (this week)" summary={`${fmt(weekly.focusedTime)} focused vs ${fmt(weekly.distractedTime)} distracted, ${Math.round(focusPct)}% focus ratio`} />
@@ -1397,10 +1403,10 @@ export default function Analytics({ onChatWith }: AnalyticsProps): React.ReactEl
                   spec={{ title: card.label, subtitle: `${card.value} · ${card.sub}`, note: card.detail ?? undefined, askPrompt: `Explain my "${card.label}" (${card.value}) this week and what I can do about it.` }}
                   render={
                     <div className="p-3">
-                      <p className="text-[8px] uppercase tracking-wide mb-1.5" style={{ color: colors.textMuted, fontFamily: '"Share Tech Mono", monospace' }}>{card.label}</p>
+                      <p className="text-[8px] mb-1.5" style={{ color: colors.textMuted, fontFamily: 'var(--font-mono)' }}>{card.label}</p>
                       <p className="text-xl font-bold leading-none data-value" style={{ color: card.color }}>{card.value}</p>
                       <p className="text-[9px] mt-1 leading-snug" style={{ color: colors.textSecondary }}>{card.sub}</p>
-                      {card.detail && <p className="text-[8px] mt-0.5 data-value" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>{card.detail}</p>}
+                      {card.detail && <p className="text-[8px] mt-0.5 data-value" style={{ color: colors.textDim, fontFamily: 'var(--font-mono)' }}>{card.detail}</p>}
                     </div>
                   }
                 />
@@ -1458,11 +1464,11 @@ export default function Analytics({ onChatWith }: AnalyticsProps): React.ReactEl
 function AnalyticsSectionHeader({ label, sub }: { label: string; sub: string }): React.ReactElement {
   return (
     <div className="flex items-center gap-3 pt-1">
-      <p className="text-[10px] font-semibold uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--label)', fontFamily: '"Share Tech Mono", monospace' }}>
+      <p className="text-[10px] font-semibold flex-shrink-0" style={{ color: 'var(--label)', fontFamily: 'var(--font-mono)' }}>
         {label}
       </p>
       <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-      <p className="text-[9px] flex-shrink-0" style={{ color: 'var(--text-dim)', fontFamily: '"Share Tech Mono", monospace' }}>
+      <p className="text-[9px] flex-shrink-0" style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
         {sub}
       </p>
     </div>
@@ -1474,14 +1480,14 @@ function AnalyticsSectionHeader({ label, sub }: { label: string; sub: string }):
 function Th({ children, onClick }: { children: React.ReactNode; onClick?: () => void }): React.ReactElement {
   return (
     <th
-      className="px-2.5 py-2 text-left text-[8px] font-bold uppercase whitespace-nowrap"
+      className="px-2.5 py-2 text-left text-[10px] font-semibold whitespace-nowrap"
       onClick={onClick}
       style={{
         cursor: onClick ? 'pointer' : 'default',
         color: 'rgba(99,102,241,0.45)',
         background: 'rgba(2,8,18,0.9)',
         borderBottom: '1px solid rgba(99,102,241,0.1)',
-        fontFamily: '"Share Tech Mono", monospace',
+        fontFamily: 'var(--font-mono)',
         letterSpacing: '0.16em',
       }}
     >
@@ -1518,7 +1524,7 @@ function AppTable({ rows, toggleSort, SortIcon }: { // eslint-disable-line
                 <p className="text-[11px] font-medium truncate max-w-[140px]" style={{ color: colors.textPrimary }}>{row.app}</p>
               </td>
               <td className="px-2.5 py-1.5">
-                <span className="text-[9px] px-1.5 py-0.5 rounded font-semibold uppercase tracking-wide" style={{ background: CAT_COLOR[row.category] + '22', color: CAT_COLOR[row.category] }}>
+                <span className="text-[9px] px-1.5 py-0.5 rounded font-semibold" style={{ background: CAT_COLOR[row.category] + '22', color: CAT_COLOR[row.category] }}>
                   {row.category.slice(0, 4)}
                 </span>
               </td>
@@ -1535,8 +1541,8 @@ function AppTable({ rows, toggleSort, SortIcon }: { // eslint-disable-line
               <td className="px-2.5 py-1.5 font-mono tabular-nums text-[10px]" style={{ color: 'rgba(180,210,235,0.6)' }}>{fmt(row.avgDuration)}</td>
               <td className="px-2.5 py-1.5">
                 {row.isDistraction
-                  ? <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase" style={{ background: 'rgba(248,113,113,0.15)', color: '#f87171' }}>DIST</span>
-                  : <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase" style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399' }}>FOCUS</span>}
+                  ? <span className="text-[11px] px-1.5 py-0.5 rounded font-semibold" style={{ background: 'rgba(248,113,113,0.15)', color: '#f87171' }}>DIST</span>
+                  : <span className="text-[11px] px-1.5 py-0.5 rounded font-semibold" style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399' }}>FOCUS</span>}
               </td>
             </tr>
           ))}
@@ -1572,7 +1578,7 @@ function DailyTable({ rows }: { rows: DayRow[] }): React.ReactElement {
               }}>
                 <td className="px-2.5 py-1.5">
                   <span className="text-white text-[11px] font-semibold">{row.day}</span>
-                  {isToday && <span className="ml-1 text-[8px] px-1 py-0.5" style={{ background: 'rgba(99,102,241,0.12)', color: '#6366f1', fontFamily: '"Share Tech Mono", monospace' }}>today</span>}
+                  {isToday && <span className="ml-1 text-[8px] px-1 py-0.5" style={{ background: 'rgba(99,102,241,0.12)', color: '#6366f1', fontFamily: 'var(--font-mono)' }}>today</span>}
                 </td>
                 <td className="px-2.5 py-1.5 text-[10px] font-mono tabular-nums" style={{ color: 'rgba(99,102,241,0.3)' }}>{row.date}</td>
                 <td className="px-2.5 py-1.5 font-mono tabular-nums text-[10px]" style={{ color: 'rgba(180,210,235,0.6)' }}>{row.tracked > 0 ? fmt(row.tracked) : '-'}</td>
@@ -1786,7 +1792,7 @@ function AlertsTable({ alerts, onDismiss }: { alerts: HeuristicAlert[]; onDismis
                 <td className="px-2.5 py-1.5">
                   {alert.dismissed
                     ? <span className="text-[9px]" style={{ color: 'rgba(99,102,241,0.2)' }}>dismissed</span>
-                    : <button onClick={() => onDismiss(alert.id)} className="flex items-center gap-1 text-[9px] px-2 py-1 hover:text-white transition-colors" style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', color: 'rgba(99,102,241,0.5)', fontFamily: '"Share Tech Mono", monospace' }}>
+                    : <button onClick={() => onDismiss(alert.id)} className="flex items-center gap-1 text-[9px] px-2 py-1 hover:text-white transition-colors" style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', color: 'rgba(99,102,241,0.5)', fontFamily: 'var(--font-mono)' }}>
                         <X size={8} /> Dismiss
                       </button>}
                 </td>
@@ -1909,7 +1915,7 @@ function WebsitesTab({ domains, sessions }: { domains: DomainRow[]; sessions: Ac
                   </span>
                 </td>
                 <td className="px-2.5 py-1.5">
-                  <span className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase" style={{ background: clsColor + '22', color: clsColor }}>
+                  <span className="text-[11px] px-1.5 py-0.5 rounded font-semibold" style={{ background: clsColor + '22', color: clsColor }}>
                     {row.classification}
                   </span>
                 </td>
@@ -1947,7 +1953,7 @@ function RelapseTracker({ relapses, idlePeriods }: { relapses: Relapse[]; idlePe
           </span>
         </div>
         {relapses.length === 0 ? (
-          <p className="text-[9px]" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>No relapses today. Discipline holding.</p>
+          <p className="text-[9px]" style={{ color: colors.textDim, fontFamily: 'var(--font-mono)' }}>No relapses today. Discipline holding.</p>
         ) : (
           <div className="space-y-1 max-h-28 overflow-y-auto">
             {[...relapses].reverse().slice(0, 6).map((r, i) => (
@@ -1970,7 +1976,7 @@ function RelapseTracker({ relapses, idlePeriods }: { relapses: Relapse[]; idlePe
           </span>
         </div>
         {idlePeriods.length === 0 ? (
-          <p className="text-[9px]" style={{ color: colors.textDim, fontFamily: '"Share Tech Mono", monospace' }}>No idle gaps ≥3m detected today.</p>
+          <p className="text-[9px]" style={{ color: colors.textDim, fontFamily: 'var(--font-mono)' }}>No idle gaps ≥3m detected today.</p>
         ) : (
           <div className="space-y-1 max-h-28 overflow-y-auto">
             {[...idlePeriods].reverse().slice(0, 6).map((ip, i) => (
@@ -1991,7 +1997,7 @@ function EmptyState({ text }: { text: string }): React.ReactElement {
   return (
     <div className="section-panel py-8 text-center">
       <Activity size={18} style={{ color: 'rgba(99,102,241,0.25)' }} className="mx-auto mb-2" />
-      <p className="text-[10px] max-w-sm mx-auto leading-relaxed" style={{ color: 'rgba(99,102,241,0.3)', fontFamily: '"Share Tech Mono", monospace' }}>{text}</p>
+      <p className="text-[10px] max-w-sm mx-auto leading-relaxed" style={{ color: 'rgba(99,102,241,0.3)', fontFamily: 'var(--font-mono)' }}>{text}</p>
     </div>
   )
 }
@@ -2167,9 +2173,9 @@ function CustomCard(
           <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                <th className="text-[9px] font-semibold uppercase tracking-wide py-1 pr-2" style={{ color: colors.textMuted, borderBottom: `1px solid ${colors.border}` }}>{card.spec.groupBy}</th>
-                <th className="text-[9px] font-semibold uppercase tracking-wide py-1 px-2 text-right" style={{ color: colors.textMuted, borderBottom: `1px solid ${colors.border}` }}>{res.unit === 'ms' ? 'time' : res.unit === 'percent' ? 'focus' : 'count'}</th>
-                <th className="text-[9px] font-semibold uppercase tracking-wide py-1 pl-2 text-right" style={{ color: colors.textMuted, borderBottom: `1px solid ${colors.border}` }}>detail</th>
+                <th className="text-[9px] font-semibold py-1 pr-2" style={{ color: colors.textMuted, borderBottom: `1px solid ${colors.border}` }}>{card.spec.groupBy}</th>
+                <th className="text-[9px] font-semibold py-1 px-2 text-right" style={{ color: colors.textMuted, borderBottom: `1px solid ${colors.border}` }}>{res.unit === 'ms' ? 'time' : res.unit === 'percent' ? 'focus' : 'count'}</th>
+                <th className="text-[9px] font-semibold py-1 pl-2 text-right" style={{ color: colors.textMuted, borderBottom: `1px solid ${colors.border}` }}>detail</th>
               </tr>
             </thead>
             <tbody>

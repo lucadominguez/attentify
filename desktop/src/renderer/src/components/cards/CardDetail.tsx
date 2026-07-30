@@ -141,7 +141,7 @@ export default function CardDetail({
 
             {/* The aggregate the chart is drawn from. */}
             <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: colors.labelDim }}>Grouped by {card.spec.groupBy}</p>
+              <p className="text-[9px] font-semibold" style={{ color: colors.labelDim }}>Grouped by {card.spec.groupBy}</p>
               <p className="text-[9px] data-value" style={{ color: colors.textDim }}>{rows.length} rows</p>
             </div>
             {rows.length === 0 ? (
@@ -165,17 +165,17 @@ export default function CardDetail({
             {raw.length > 0 && (
               <>
                 <div className="flex items-center justify-between mb-1.5 mt-4">
-                  <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: colors.labelDim }}>Every session behind it</p>
+                  <p className="text-[9px] font-semibold" style={{ color: colors.labelDim }}>Every session behind it</p>
                   <p className="text-[9px] data-value" style={{ color: colors.textDim }}>
                     {raw.length}{rawTotal > raw.length ? ` of ${rawTotal}` : ''} sessions
                   </p>
                 </div>
                 <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${colors.glassEdge}` }}>
                   <div className="flex items-center gap-3 px-3 py-1" style={{ background: colors.glassMid, borderBottom: `1px solid ${colors.glassEdge}` }}>
-                    <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim, width: 96 }}>when</span>
-                    <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim, width: 84 }}>app</span>
-                    <span className="text-[8px] uppercase tracking-wider flex-1" style={{ color: colors.textDim }}>what</span>
-                    <span className="text-[8px] uppercase tracking-wider" style={{ color: colors.textDim, width: 44, textAlign: 'right' }}>time</span>
+                    <span className="text-[8px]" style={{ color: colors.textDim, width: 96 }}>when</span>
+                    <span className="text-[8px]" style={{ color: colors.textDim, width: 84 }}>app</span>
+                    <span className="text-[8px] flex-1" style={{ color: colors.textDim }}>what</span>
+                    <span className="text-[8px]" style={{ color: colors.textDim, width: 44, textAlign: 'right' }}>time</span>
                   </div>
                   {raw.map((s, i) => (
                     <div key={s.id ?? i} className="flex items-center gap-3 px-3 py-1"

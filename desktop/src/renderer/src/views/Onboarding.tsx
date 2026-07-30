@@ -231,7 +231,7 @@ export default function Onboarding({ onComplete }: OnboardingProps): React.React
               Attentify needs administrator rights to edit your system's hosts file, this is how site blocking works at the network layer, before browsers even load the page.
             </p>
             <div className="w-full p-4 rounded-xl mb-6 text-left" style={{ background: colors.cardBg, border: `1px solid ${colors.border}` }}>
-              <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: colors.textSecondary }}>What admin access enables</p>
+              <p className="text-[10px]s font-semibold mb-2" style={{ color: colors.textSecondary }}>What admin access enables</p>
               <div className="space-y-1.5">
                 {[
                   ['Hosts file blocking', 'Sinkhole blocked domains at the OS level, no browser workaround'],

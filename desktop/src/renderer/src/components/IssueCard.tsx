@@ -60,7 +60,7 @@ export default function IssueCard({ issue, onFix, onAskAI, fixing, fixed }: Issu
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
           <span
-            className="text-[8px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider flex-shrink-0"
+            className="text-[8px] px-1.5 py-0.5 rounded font-semibold flex-shrink-0"
             style={{ background: sevColor + '18', color: sevColor }}
           >
             {issue.severity}
