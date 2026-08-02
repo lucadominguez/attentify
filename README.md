@@ -22,7 +22,7 @@
 
 The feed, the Shorts shelf, the recommendation rail and the ad come out. The three posts you actually came for stay. On the right, it shows you exactly why it made each call.
 
-![The extension removing distractions from a live page](.github/media/extension.gif)
+![The extension removing distractions from a live page](.github/media/extension.webp)
 
 ## Why "just block reddit.com" does not work
 
@@ -42,7 +42,7 @@ Attentify scores the page, not the domain.
 
 No rule builder, no regex, no per-site config screens. The home screen is a chat, and it has real tools behind it: blocking, focus sessions, schedules, goals and analytics.
 
-![Moving through the app](.github/media/app-tour.gif)
+![Moving through the app](.github/media/app-tour.webp)
 
 ## It shows its work, and it takes correction
 

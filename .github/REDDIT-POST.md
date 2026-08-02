@@ -41,7 +41,7 @@ So I built Attentify. You tell it what you are working on in plain English, and 
 
 It also strips the engineered parts out of pages you are allowed to be on. The home feed, the Shorts shelf, the recommendation rail and the ad come out. The posts you actually came for stay:
 
-[GIF: extension.gif]
+[CLIP: extension.webp]
 
 The part I care about most is that it shows its work. Every decision has a visible score with the signals that produced it, and every one is correctable. If I unblock something, it backs off in that context. If I unblock it again, that correction becomes permanent. It also runs in the other direction and asks about sites it let through that quietly ate 20 minutes.
 
@@ -100,30 +100,31 @@ Even if you never touch it, I would genuinely like to hear whether the framing h
 
 ## Attaching the media
 
-Reddit converts an uploaded GIF into a video player, which looks better and loads
-faster than a linked GIF. Upload the file, do not paste the raw URL.
+**On Reddit, post the mp4, not the webp.** The `.webp` clips are sized for the
+README, where GitHub renders them inline; Reddit's uploader does not handle animated
+WebP and will treat it as a still. Upload `extension-demo.mp4` for anything that
+should move, and always upload the file rather than pasting a raw URL.
 
-For a text post, drag the file into the editor at the `[GIF: ...]` and `[IMAGE: ...]`
-markers. For an image or video post, `extension.gif` is the strongest single asset and
-should be the one that carries the post.
+For a text post, drag the file into the editor at the `[CLIP: ...]` and `[IMAGE: ...]`
+markers. For an image or video post, the extension clip is the strongest single asset
+and should be the one that carries the post.
 
 | Marker | File in this repo | Use it for |
 |---|---|---|
-| `extension.gif` | `.github/media/extension.gif` | The hook. A page being cleaned in real time. |
-| `app-tour.gif` | `.github/media/app-tour.gif` | Second image, showing the app has real depth. |
+| `extension.webp` | `.github/media/extension-demo.mp4` | The hook. A page being cleaned in real time. |
+| `app-tour.webp` | `.github/media/app-tour-demo.mp4` | Second clip, showing the app has real depth. |
 | `how-it-works.png` | `.github/media/how-it-works.png` | The argument, in one graphic. |
 | `hero.png` | `.github/media/hero.png` | Banner, better on X or Product Hunt than Reddit. |
 | `logic-dark.png` | `.github/media/logic-dark.png` | Good reply to "how does it actually decide?" |
 | `analytics-dark.png` | `.github/media/analytics-dark.png` | Good reply to "what do you get out of it?" |
 
-Higher quality video, if you want a real video post rather than a GIF:
-`.github/media/extension-demo.webm` and `.github/media/app-tour-demo.webm`.
-Reddit prefers mp4, so those may need converting first.
+Both clips are 1920-wide H.264, captured at 2x from the live build, so they upload
+to Reddit as-is with no conversion step.
 
 Raw links, if you need to point at one directly:
 
 ```
-https://raw.githubusercontent.com/lucadominguez/attentify-open/master/.github/media/extension.gif
+https://raw.githubusercontent.com/lucadominguez/attentify-open/master/.github/media/extension.webp
 https://raw.githubusercontent.com/lucadominguez/attentify-open/master/.github/media/how-it-works.png
 ```
 
