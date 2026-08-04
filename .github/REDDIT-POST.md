@@ -111,6 +111,7 @@ and should be the one that carries the post.
 
 | Marker | File in this repo | Use it for |
 |---|---|---|
+| the ad | `.github/media/attentify-ad-16x9.mp4` | The whole product in 26s. Best single asset for a video post. `attentify-ad-9x16.mp4` for Shorts, Reels or TikTok; `attentify-ad-1x1.mp4` for a square feed. |
 | `extension.webp` | `.github/media/extension-demo.mp4` | The hook. A page being cleaned in real time. |
 | `app-tour.webp` | `.github/media/app-tour-demo.mp4` | Second clip, showing the app has real depth. |
 | `how-it-works.png` | `.github/media/how-it-works.png` | The argument, in one graphic. |

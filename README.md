@@ -18,6 +18,17 @@
 
 ---
 
+## The short version
+
+Twenty six seconds, cut from the real app and the real extension. Nothing here is a mockup.
+
+![Attentify in twenty six seconds](.github/media/ad.webp)
+
+Full quality, no compression for the page:
+[16:9](.github/media/attentify-ad-16x9.mp4) &nbsp;·&nbsp;
+[9:16](.github/media/attentify-ad-9x16.mp4) &nbsp;·&nbsp;
+[1:1](.github/media/attentify-ad-1x1.mp4)
+
 ## It cleans the page while you read it
 
 The feed, the Shorts shelf, the recommendation rail and the ad come out. The three posts you actually came for stay. On the right, it shows you exactly why it made each call.
