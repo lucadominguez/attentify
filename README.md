@@ -55,47 +55,104 @@ No rule builder, no regex, no per-site config screens. The home screen is a chat
 
 ![Moving through the app](.github/media/app-tour.webp)
 
-## It shows its work, and it takes correction
+## Everything it does
 
-Most "AI" products ask you to trust a number. This one opens the box.
+Nine surfaces, each doing one job. Every screenshot below is the real compiled app
+running on generated sample activity.
 
-The Logic page lists every signal behind a decision with its weight, so a block is never a black box. When you undo one, that is treated as data: it backs off in that context, and if you undo it again the correction becomes permanent. It also runs the loop in the other direction and asks about sites it let through that ate 20 minutes of your day.
+### Assistant. Say it once, it handles the rest.
 
-<table>
-<tr>
-<td width="50%"><img src=".github/media/logic-dark.png" alt="Logic page showing the reasoning behind decisions"></td>
-<td width="50%"><img src=".github/media/actions-dark.png" alt="Pending decisions awaiting review"></td>
-</tr>
-<tr>
-<td align="center"><b>Logic</b><br><sub>What it knows and why it decided</sub></td>
-<td align="center"><b>Actions</b><br><sub>Everything it wants your call on</sub></td>
-</tr>
-<tr>
-<td width="50%"><img src=".github/media/analytics-dark.png" alt="Analytics with charts built from natural language"></td>
-<td width="50%"><img src=".github/media/chat-dark.png" alt="Chat-first home screen"></td>
-</tr>
-<tr>
-<td align="center"><b>Analytics</b><br><sub>Describe a metric, it builds the chart</sub></td>
-<td align="center"><b>Assistant</b><br><sub>The home screen is a conversation</sub></td>
-</tr>
-</table>
+The home screen is a conversation, not a dashboard of toggles. Ask in plain English and
+it has real tools behind it: blocking, focus sessions, schedules, goals and analytics.
+Conversations are saved, you can attach a screenshot, and you can revert to any earlier
+checkpoint in one click if it goes too far.
+
+![Assistant](.github/media/chat-light.png)
+
+### Logic. It shows its work.
+
+Most "AI" products ask you to trust a number. This one opens the box. Every signal
+behind a decision is listed with its weight, alongside your goals and everything it has
+learned about you, and you can edit any of it. Undo a block and that is treated as data:
+it backs off in that context, and a second undo makes the correction permanent. It runs
+the loop the other way too, asking about sites it let through that ate twenty minutes of
+your day.
+
+![Logic](.github/media/logic-light.png)
+
+### Actions. It catches you before you spiral.
+
+Everything it wants your call on, in one queue, each with a confidence score and the
+reason in plain language. Dismiss it or block it. Nothing is enforced behind your back
+without appearing here first.
+
+![Actions](.github/media/actions-light.png)
+
+### Analytics. Just describe the metric.
+
+Ask for "time on social media per weekday" or "my top 5 domains in the evening" and it
+builds the chart, live, from your own activity. Cards keep their spec and recompute
+locally, so looking at a chart never costs a model call.
+
+![Analytics](.github/media/analytics-light.png)
+
+### Timesheets. Where the hours actually went.
+
+Day by day, split into productive and distracting, with the top apps for the week. The
+RescueTime view, without the subscription to a second product.
+
+![Timesheets](.github/media/timesheets-light.png)
+
+### Activity. The timeline of your day.
+
+Every app and page in order, so "where did the afternoon go" has an answer rather than a
+guess.
+
+![Activity](.github/media/activity-light.png)
+
+### Deep Focus. Set it and actually forget it.
+
+A hard lockdown with an allowlist: Pomodoro, deep work, flow state or a half day.
+A locked session refuses to end early, which is the point.
+
+![Deep Focus](.github/media/deepfocus-light.png)
+
+### Protection. Ban the stuff that hooks you, by name.
+
+The rules layer: what is blocked, how it is enforced, and the keyword and title blocks
+you set yourself. This part is free and needs no account.
+
+![Protection](.github/media/protection-light.png)
+
+### And the rest
+
+- **Deep Clean** finds attention leaks and can stop apps launching at startup.
+- **Scheduler** builds recurring focus blocks, and the AI can create them for you.
+- **History import** reads your existing browser history so analytics work on day one.
+- **Works with your browser, whatever it is.** Time tracking covers 30 browser
+  processes natively. Full address reading covers Chrome, Edge, Firefox, Brave and
+  Vivaldi. The extension is Chromium only.
+- **Light and dark themes**, both designed rather than inverted.
 
 <details>
-<summary><b>More screens, and the light theme</b></summary>
+<summary><b>The same screens in dark theme</b></summary>
 <br>
 
 | | |
 |---|---|
-| ![Activity](.github/media/activity-dark.png) | ![Deep Focus](.github/media/deepfocus-dark.png) |
-| **Activity**, the timeline of your day | **Deep Focus**, locked sessions |
-| ![Protection](.github/media/protection-dark.png) | ![Timesheets](.github/media/timesheets-dark.png) |
-| **Protection**, rules and enforcement | **Timesheets**, where the hours went |
-| ![Analytics, light](.github/media/analytics-light.png) | ![Logic, light](.github/media/logic-light.png) |
-| Light theme is a real target, not an afterthought | Both themes are designed, not inverted |
+| ![Assistant, dark](.github/media/chat-dark.png) | ![Logic, dark](.github/media/logic-dark.png) |
+| **Assistant** | **Logic** |
+| ![Analytics, dark](.github/media/analytics-dark.png) | ![Actions, dark](.github/media/actions-dark.png) |
+| **Analytics** | **Actions** |
+| ![Activity, dark](.github/media/activity-dark.png) | ![Deep Focus, dark](.github/media/deepfocus-dark.png) |
+| **Activity** | **Deep Focus** |
+| ![Protection, dark](.github/media/protection-dark.png) | ![Timesheets, dark](.github/media/timesheets-dark.png) |
+| **Protection** | **Timesheets** |
 
 </details>
 
-> The screenshots and clips above run on generated sample activity so the charts have something to show. The interface is the real compiled app, not a mockup.
+> The screenshots and clips above run on generated sample activity so the charts have
+> something to show. The interface is the real compiled app, not a mockup.
 
 ## Getting it
 
