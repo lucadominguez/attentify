@@ -578,9 +578,6 @@ declare global {
       clearGoal: (id: string) => Promise<{ ok: boolean }>
       getAlwaysOn: () => Promise<{ enabled: boolean; startupRegistered: boolean }>
       setAlwaysOn: (enabled: boolean) => Promise<{ ok: boolean; enabled: boolean; startupRegistered: boolean }>
-      getApiKeyStatus: () => Promise<{ hasKey: boolean }>
-      setApiKey: (key: string) => Promise<{ ok: boolean }>
-      deleteApiKey: () => Promise<{ ok: boolean }>
       getUsage: () => Promise<import('@shared/types').UsageState>
       onUsageChanged: (cb: (usage: import('@shared/types').UsageState) => void) => (() => void)
       getCloud: () => Promise<import('@shared/types').CloudState>

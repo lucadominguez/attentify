@@ -142,22 +142,10 @@
   <div class="chat-header">
     <button id="chat-back-btn" class="icon-btn">← Back</button>
     <span class="chat-title">AI ASSISTANT <span id="chat-mode-label" class="chat-mode"></span></span>
-    <button id="api-key-change-btn" class="icon-btn" style="display:none" title="Change OpenRouter key">🔑</button>
     <div id="chat-status-dot" class="status-dot" style="width:6px;height:6px"></div>
   </div>
 
   <div class="progress-track"><div id="chat-progress-fill" class="progress-fill"></div></div>
-
-  <!-- API key setup (shown when no key) -->
-  <div id="api-key-panel" style="display:none" class="api-key-panel">
-    <p id="api-key-hint" class="api-key-hint">AI already works on your included free credit. To use your own key instead, paste an OpenRouter key.<br>Get one free at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>.</p>
-    <div id="api-key-row" class="api-key-row">
-      <input id="api-key-input" type="password" placeholder="sk-or-..." class="api-key-input">
-      <button id="api-key-save-btn" class="pill-btn accent">Save</button>
-    </div>
-    <p id="api-key-err" class="api-key-err" style="display:none"></p>
-    <p id="api-key-saved" class="api-key-saved" style="display:none">✓ OpenRouter key saved and remembered across restarts. <a href="#" id="api-key-remove">remove</a></p>
-  </div>
 
   <!-- Messages -->
   <div id="chat-messages" class="chat-messages"></div>

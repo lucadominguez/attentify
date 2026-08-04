@@ -1063,7 +1063,6 @@ renderers.actions = async function () {
 
 let chatHistory = [];  // {role, content}
 let chatPort = null;
-let apiKey = null;
 let chatConnected = false;  // daemon connected
 let freeAI = false;         // bundled free-AI credit available (no own key needed)
 
@@ -1074,7 +1073,7 @@ function showChat() {
 }
 
 // Open the chat view and immediately send `text` (from the Home composer). Awaits
-// initChat so apiKey/connection/free-credit state is loaded before sendChat decides
+// initChat so connection and free-credit state are loaded before sendChat decides
 // whether AI can run — otherwise the first message could wrongly hit the paywall.
 async function startChatWith(text) {
   document.getElementById('main-view').style.display = 'none';
@@ -1095,94 +1094,29 @@ document.getElementById('chat-back-btn').addEventListener('click', hideChat);
 document.getElementById('chat-btn').addEventListener('click', showChat);
 
 async function initChat() {
-  // Load API key from storage (the user's own, if they added one)
-  const res = await ask({ type: 'get:api-key' });
-  apiKey = res?.key || null;
-
   // Check daemon status
   const status = await ask({ type: 'get:status' });
   chatConnected = status?.connected || false;
 
-  // The extension ships with a bundled key and free AI credit, so chat works out of
-  // the box with no key from the user. Reflect that instead of asking for a key.
+  // Every install gets free AI credit, so chat works out of the box without the user
+  // configuring anything. There is no bring-your-own-key path any more.
   const cloud = await ask({ type: 'get:cloud' });
   const u = cloud?.usage;
   const subscribed = !!u?.subscribed;
-  freeAI = !apiKey && !subscribed && !!u && !u.exhausted;
+  freeAI = !subscribed && !!u && !u.exhausted;
 
   const modeLabel = document.getElementById('chat-mode-label');
   const chatDot   = document.getElementById('chat-status-dot');
 
   if (chatConnected)      { modeLabel.textContent = '· via daemon';          chatDot.className = 'status-dot on'; }
-  else if (apiKey)        { modeLabel.textContent = '· your OpenRouter key'; chatDot.className = 'status-dot standalone'; }
   else if (subscribed)    { modeLabel.textContent = '· Cloud';               chatDot.className = 'status-dot on'; }
   else if (freeAI)        { modeLabel.textContent = '· free AI included';    chatDot.className = 'status-dot standalone'; }
   else                    { modeLabel.textContent = '· free credit used up'; chatDot.className = 'status-dot off'; }
-
-  renderKeyUI();
 
   if (chatHistory.length === 0) {
     addSysMsg('Hi! I can block specific things on a page. Try: "Block YouTube Shorts", "Hide rage-bait comments" or "No music videos".');
   }
 }
-
-// ── API key UI ──────────────────────────────────────────────────────────────────
-// Reflects the saved-key state. When a key is stored, the panel collapses and a
-// 🔑 button appears so the user can confirm/replace it; the key persists in the
-// background via storage.sync + local mirror, so it survives restarts/reinstalls.
-function renderKeyUI(editing = false) {
-  const panel     = document.getElementById('api-key-panel');
-  const hint      = document.getElementById('api-key-hint');
-  const row       = document.getElementById('api-key-row');
-  const savedMsg  = document.getElementById('api-key-saved');
-  const err       = document.getElementById('api-key-err');
-  const input     = document.getElementById('api-key-input');
-  const changeBtn = document.getElementById('api-key-change-btn');
-
-  if (chatConnected) {                       // daemon proxies chat — no user key needed
-    panel.style.display = 'none';
-    changeBtn.style.display = 'none';
-  } else if ((apiKey || freeAI) && !editing) { // usable already (own key or included free AI) — offer to add/change a key
-    panel.style.display = 'none';
-    changeBtn.style.display = '';
-  } else {                             // entering a new key or editing the saved one
-    panel.style.display = 'block';
-    hint.style.display = 'block';
-    row.style.display = 'flex';
-    err.style.display = 'none';
-    savedMsg.style.display = apiKey ? 'block' : 'none';
-    input.value = apiKey || '';
-    changeBtn.style.display = apiKey ? '' : 'none';
-  }
-}
-
-document.getElementById('api-key-save-btn').addEventListener('click', async () => {
-  const key = document.getElementById('api-key-input').value.trim();
-  if (!key.startsWith('sk-or-')) {
-    document.getElementById('api-key-err').textContent = 'OpenRouter keys start with sk-or-. Get one at openrouter.ai/keys';
-    document.getElementById('api-key-err').style.display = 'block';
-    return;
-  }
-  await ask({ type: 'set:api-key', key });
-  apiKey = key;
-  document.getElementById('api-key-err').style.display = 'none';
-  initChat();
-});
-
-// Reveal the input (pre-filled) to replace an already-saved key.
-document.getElementById('api-key-change-btn').addEventListener('click', () => {
-  renderKeyUI(true);
-  document.getElementById('api-key-input').focus();
-});
-
-// Forget the saved key on request.
-document.getElementById('api-key-remove').addEventListener('click', async (e) => {
-  e.preventDefault();
-  await ask({ type: 'clear:api-key' });
-  apiKey = null;
-  document.getElementById('api-key-input').value = '';
-  initChat();
-});
 
 // ── Message rendering ─────────────────────────────────────────────────────────
 
@@ -1329,11 +1263,11 @@ async function sendChat() {
 
   const typing = addTypingIndicator();
 
-  // Only block when there's genuinely no way to run AI: no daemon, no own key, no
-  // Cloud subscription and the free credit is spent. Otherwise the bundled free AI runs.
-  if (!chatConnected && !apiKey && !freeAI) {
+  // Only block when there is genuinely no way to run AI: no daemon, no subscription
+  // and the free credit is spent.
+  if (!chatConnected && !freeAI) {
     removeTypingIndicator();
-    addSysMsg("Your free AI credit is used up. Add your own OpenRouter key above, or subscribe to Cloud below to keep going.");
+    addSysMsg("Your free AI credit is used up. Subscribe below to keep going.");
     progDone('chat-progress-fill', false);
     sendBtn.disabled = false;
     return;
@@ -1373,16 +1307,15 @@ async function sendChat() {
         const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'signin_required') {
-        addSysMsg('Sign in to use AI. Create a free account to get free credit to start, or add your own OpenRouter key.');
+        addSysMsg('Sign in to use AI. Create a free account and you start with free credit.');
         renderCloud().catch(() => {});
         const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'no_key') {
-        addSysMsg('No OpenRouter key set. Enter one above; get it free at openrouter.ai/keys');
-        renderKeyUI(true);
+        addSysMsg('AI is not available right now. Sign in, or top up your credit, to keep going.');
       } else if (msg.message === 'daemon_fail') {
         // Retry with direct API
-        chatPort.postMessage({ type: 'chat:start', text, history: chatHistory.slice(-10), apiKey, useOrProxy: true });
+        chatPort.postMessage({ type: 'chat:start', text, history: chatHistory.slice(-10), useOrProxy: true });
         return;
       } else {
         addSysMsg(`Error: ${msg.message}`);
@@ -1393,7 +1326,7 @@ async function sendChat() {
     }
   });
 
-  chatPort.postMessage({ type: 'chat:start', text, history: chatHistory.slice(-10), apiKey });
+  chatPort.postMessage({ type: 'chat:start', text, history: chatHistory.slice(-10) });
 }
 
 // ═══════════════════════════════ CONTEXT FLOW VIEW ════════════════════════════

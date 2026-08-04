@@ -11,7 +11,7 @@
 
 ![Windows](https://img.shields.io/badge/Windows%2010%2B-desktop%20app-6366f1?style=flat-square)
 ![Chromium](https://img.shields.io/badge/Chrome%20·%20Edge%20·%20Brave-extension-22d3ee?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-8b96ad?style=flat-square)
+![License](https://img.shields.io/badge/license-AGPL--3.0-8b96ad?style=flat-square)
 ![Open core](https://img.shields.io/badge/open%20core-UI%20%2B%20engine-34d399?style=flat-square)
 
 </div>
@@ -105,7 +105,7 @@ The Logic page lists every signal behind a decision with its weight, so a block 
 
 There is no macOS build, and the extension does not run on Firefox or Safari.
 
-**What leaves your machine.** The detailed activity database stays local. When an AI feature runs, the page domain, path, title, any search query and your stated goals are sent to the backend and on to the model provider. The [privacy policy](https://productivity-daemon.pages.dev/privacy) spells this out. Bring your own API key and it bypasses those servers entirely.
+**What leaves your machine.** The detailed activity database stays local. When an AI feature runs, the page domain, path, title, any search query and your stated goals are sent to the backend and on to the model provider. The [privacy policy](https://productivity-daemon.pages.dev/privacy) spells this out. AI runs only through the managed service, so there is no configuration in which it bypasses those servers.
 
 ## This repository
 
@@ -126,6 +126,27 @@ Some files here import those private modules by name. That is deliberate, so the
 
 **This tree is a reference and audit source, not a standalone build.** The desktop app will not compile on its own without the private modules. The website and the extension UI are static, and can be read or served directly.
 
+## Why this is a subscription and not a one-time purchase
+
+The hard part of this product is not the build, it is the upkeep. Sites rewrite their
+layouts and their dark patterns constantly, and a selector or a rule that worked last
+month quietly stops matching. So the work that matters is continuous:
+
+- **Detection is maintained.** New feeds, shelves and rails are handled as they appear,
+  and broken selectors are fixed rather than left to rot.
+- **The classifier is improved from real mistakes.** Every correction you make feeds a
+  calibration loop, and the thresholds are retuned as evidence accumulates.
+- **The app updates itself.** You stay on the current build without going looking for it.
+- **The AI is operated for you.** Model routing, provider changes and cost are handled
+  server side, so nothing to configure and nothing to keep working.
+
+A fork is a snapshot of one afternoon. It stops being accurate the moment a site ships a
+redesign, and nobody is on the other end of it.
+
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[GNU AGPL-3.0](LICENSE).
+
+This is copyleft with the network clause: you are free to read, modify and self-host
+this code, and if you run a modified version as a network service you have to publish
+your changes under the same licence. It was MIT until August 2026.

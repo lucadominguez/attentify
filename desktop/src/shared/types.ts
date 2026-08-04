@@ -364,7 +364,6 @@ export interface UsageState {
   credits: number          // remaining AI credits (1 credit = $0.001)
   balanceMicros: number    // balance in micro-USD (source of truth for `credits`)
   subscribed: boolean      // $9.99/mo plan active
-  hasOwnKey: boolean       // user pasted their own key → unmetered
   signedIn: boolean
   outOfCredit: boolean     // signed-in, metered, balance <= 0 → AI + adaptive features pause
   canUseAi: boolean

@@ -73,9 +73,6 @@ const api = {
     ipcRenderer.invoke('chat:message', text),
 
   // ── API Key ──────────────────────────────────────────────────────────────
-  getApiKeyStatus: (): Promise<{ hasKey: boolean }> => ipcRenderer.invoke('apikey:get-status'),
-  setApiKey: (key: string): Promise<{ ok: boolean }> => ipcRenderer.invoke('apikey:set', key),
-  deleteApiKey: (): Promise<{ ok: boolean }> => ipcRenderer.invoke('apikey:delete'),
 
   // ── Free-usage metering + Cloud subscription ───────────────────────────────
   getUsage: (): Promise<UsageState> => ipcRenderer.invoke('usage:get'),

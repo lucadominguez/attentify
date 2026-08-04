@@ -541,17 +541,6 @@ const Info = createLucideIcon("Info", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Key = createLucideIcon("Key", [
-  ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }],
-  ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
-  ["path", { d: "m15.5 7.5 3 3L22 7l-3-3", key: "1rn1fs" }]
-]);
-/**
- * @license lucide-react v0.312.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
 const LayoutGrid = createLucideIcon("LayoutGrid", [
   ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
   ["rect", { width: "7", height: "7", x: "14", y: "3", rx: "1", key: "6d4xhi" }],
@@ -7762,9 +7751,6 @@ function ExtensionPanel({ colors }) {
 function SettingsView({ store, onRefresh, onNavigate }) {
   const { colors, theme, toggle, pulse, togglePulse } = useTheme();
   const currentMode = store.settings.blockingMode ?? "auto";
-  const [apiInput, setApiInput] = reactExports.useState("");
-  const [apiSaved, setApiSaved] = reactExports.useState(false);
-  const [hasKey, setHasKey] = reactExports.useState(null);
   const [usage, setUsage] = reactExports.useState(null);
   const [cloud, setCloud] = reactExports.useState(null);
   const [licenseInput, setLicenseInput] = reactExports.useState("");
@@ -7827,7 +7813,6 @@ function SettingsView({ store, onRefresh, onNavigate }) {
     }
   };
   React.useEffect(() => {
-    api$6.getApiKeyStatus().then((s) => setHasKey(s.hasKey));
     api$6.getUsage().then(setUsage).catch(() => {
     });
     api$6.getCloud().then(setCloud).catch(() => {
@@ -7864,19 +7849,6 @@ function SettingsView({ store, onRefresh, onNavigate }) {
   };
   const setMode = async (mode) => {
     await api$6.setStore({ settings: { ...store.settings, blockingMode: mode } });
-    onRefresh();
-  };
-  const saveApiKey = async () => {
-    if (!apiInput.trim()) return;
-    await api$6.setApiKey(apiInput.trim());
-    setApiInput("");
-    setApiSaved(true);
-    setHasKey(true);
-    setTimeout(() => setApiSaved(false), 2500);
-  };
-  const deleteApiKey = async () => {
-    await api$6.deleteApiKey();
-    setHasKey(false);
     onRefresh();
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full overflow-hidden", style: { background: colors.mainBg }, children: [
@@ -8199,7 +8171,7 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                   children: "Unlink"
                 }
               )
-            ] }) : usage?.hasOwnKey ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textSecondary }, children: "Using your own API key, usage is billed directly to you and is never metered here." }) : !usage?.signedIn ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textSecondary }, children: "Sign in to start with free AI credit. Your account holds your credits and subscription." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            ] }) : !usage?.signedIn ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px]", style: { color: colors.textSecondary }, children: "Sign in to start with free AI credit. Your account holds your credits and subscription." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-semibold", style: { color: colors.textPrimary }, children: "AI credits" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[13px] font-bold tabular-nums", style: { color: usage?.outOfCredit ? "#f87171" : "#34d399" }, children: [
@@ -8233,81 +8205,6 @@ function SettingsView({ store, onRefresh, onNavigate }) {
                 }
               )
             ] })
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { size: 11 }), label: "AI API Key" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "div",
-          {
-            className: "p-4",
-            style: { background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "div",
-                  {
-                    className: "w-2 h-2 rounded-full flex-shrink-0",
-                    style: { background: hasKey ? "#34d399" : "#fbbf24", boxShadow: hasKey ? "0 0 6px #34d399" : "0 0 6px #fbbf24" }
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px]", style: { color: hasKey ? "#34d399" : "#6366f1" }, children: hasKey === null ? "Checking..." : hasKey ? "Your own API key configured" : "Optional. AI already works via included free credit" })
-              ] }),
-              hasKey ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "div",
-                  {
-                    className: "flex-1 px-3 py-2 text-[10px]",
-                    style: { background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", color: colors.textMuted },
-                    children: "••••••••••••••••••••••••"
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "button",
-                  {
-                    onClick: () => void deleteApiKey(),
-                    className: "px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105",
-                    style: {
-                      background: "rgba(248,113,113,0.08)",
-                      border: "1px solid rgba(248,113,113,0.25)",
-                      color: "rgba(248,113,113,0.7)",
-                      fontFamily: "var(--font-mono)"
-                    },
-                    children: "Remove"
-                  }
-                )
-              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "input",
-                  {
-                    type: "password",
-                    value: apiInput,
-                    onChange: (e) => setApiInput(e.target.value),
-                    onKeyDown: (e) => e.key === "Enter" && void saveApiKey(),
-                    placeholder: "sk-ant-... or sk-or-...",
-                    className: "flex-1 px-3 py-2 text-[10px] outline-none",
-                    style: { background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)", color: colors.textPrimary }
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "button",
-                  {
-                    onClick: () => void saveApiKey(),
-                    disabled: !apiInput.trim(),
-                    className: "px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105 disabled:opacity-40",
-                    style: {
-                      background: "rgba(99,102,241,0.08)",
-                      border: "1px solid rgba(99,102,241,0.25)",
-                      color: "#6366f1",
-                      fontFamily: "var(--font-mono)"
-                    },
-                    children: apiSaved ? "Saved ✓" : "Save"
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-[9px]", style: { color: colors.textMuted }, children: "Anthropic API key (sk-ant-...) or OpenRouter key (sk-or-...). Used for AI inference, guard alerts, and the Attentify assistant." })
-            ]
           }
         )
       ] }),

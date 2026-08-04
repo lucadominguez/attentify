@@ -1,49 +1,26 @@
-import { safeStorage, app } from 'electron'
+// Bring-your-own-key is removed; this module only cleans up after it.
+//
+// Older builds let the user paste a provider key and stored it at
+// `<userData>/.apikey`, encrypted with Electron safeStorage where available and in
+// plain text where it was not. Nothing reads that file any more, so all that is left
+// on those machines is a stale provider secret.
+//
+// This deletes the file outright. The old delete path truncated it to zero bytes,
+// which leaves the path behind and, in the plain-text fallback case, is not obviously
+// a wipe to anyone auditing the directory.
+
+import { app } from 'electron'
 import { join } from 'path'
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { existsSync, rmSync } from 'fs'
 
 const KEY_FILE = (): string => join(app.getPath('userData'), '.apikey')
 
-export function saveApiKey(key: string): void {
-  try {
-    if (safeStorage.isEncryptionAvailable()) {
-      const encrypted = safeStorage.encryptString(key)
-      writeFileSync(KEY_FILE(), encrypted)
-    } else {
-      // Fallback: plain text (testing only)
-      writeFileSync(KEY_FILE(), `plain:${key}`)
-    }
-  } catch (e) {
-    console.error('[keystore] save failed:', e)
-  }
-}
-
-export function loadApiKey(): string | null {
+/** Remove any provider key left behind by a build that supported pasting one. */
+export function purgeLegacyApiKey(): void {
   try {
     const path = KEY_FILE()
-    if (!existsSync(path)) return null
-    const buf = readFileSync(path)
-    if (buf.slice(0, 6).toString() === 'plain:') {
-      return buf.slice(6).toString('utf-8')
-    }
-    if (safeStorage.isEncryptionAvailable()) {
-      return safeStorage.decryptString(buf)
-    }
-    return null
+    if (existsSync(path)) rmSync(path, { force: true })
   } catch {
-    return null
+    // Best effort. A stale file is harmless; throwing on launch is not.
   }
-}
-
-export function deleteApiKey(): void {
-  try {
-    const path = KEY_FILE()
-    if (existsSync(path)) {
-      writeFileSync(path, Buffer.alloc(0))
-    }
-  } catch { /* noop */ }
-}
-
-export function hasApiKey(): boolean {
-  return !!loadApiKey()
 }

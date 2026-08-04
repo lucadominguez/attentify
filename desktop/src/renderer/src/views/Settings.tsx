@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Shield, Zap, Bell, Key, CheckCircle, Sparkles, Sun, Moon, TrendingUp, ChevronRight, RotateCcw, History, AlertTriangle, RefreshCw, Cpu, XCircle } from 'lucide-react'
+import { Shield, Zap, Bell, CheckCircle, Sparkles, Sun, Moon, TrendingUp, ChevronRight, RotateCcw, History, AlertTriangle, RefreshCw, Cpu, XCircle } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import SelfEvaluationPanel from '../components/SelfEvaluationPanel'
 import type { AppStore, UsageState, CloudState, ViewName, ChangeEntry, UpdateStatus, CompatReport, CompatStatus } from '@shared/types'
@@ -86,9 +86,6 @@ function ExtensionPanel({ colors }: { colors: ReturnType<typeof useTheme>['color
 export default function SettingsView({ store, onRefresh, onNavigate }: SettingsProps): React.ReactElement {
   const { colors, theme, toggle, pulse, togglePulse } = useTheme()
   const currentMode = store.settings.blockingMode ?? 'auto'
-  const [apiInput, setApiInput] = useState('')
-  const [apiSaved, setApiSaved] = useState(false)
-  const [hasKey, setHasKey] = useState<boolean | null>(null)
   const [usage, setUsage] = useState<UsageState | null>(null)
   const [cloud, setCloud] = useState<CloudState | null>(null)
   const [licenseInput, setLicenseInput] = useState('')
@@ -139,7 +136,6 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
   }
 
   React.useEffect(() => {
-    api.getApiKeyStatus().then((s) => setHasKey(s.hasKey))
     api.getUsage().then(setUsage).catch(() => {})
     api.getCloud().then(setCloud).catch(() => {})
     const off = api.onUsageChanged((u) => setUsage(u))
@@ -187,20 +183,7 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
     onRefresh()
   }
 
-  const saveApiKey = async (): Promise<void> => {
-    if (!apiInput.trim()) return
-    await api.setApiKey(apiInput.trim())
-    setApiInput('')
-    setApiSaved(true)
-    setHasKey(true)
-    setTimeout(() => setApiSaved(false), 2500)
-  }
 
-  const deleteApiKey = async (): Promise<void> => {
-    await api.deleteApiKey()
-    setHasKey(false)
-    onRefresh()
-  }
 
   return (
     <div className="flex flex-col h-full overflow-hidden" style={{ background: colors.mainBg }}>
@@ -522,10 +505,6 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                   Unlink
                 </button>
               </div>
-            ) : usage?.hasOwnKey ? (
-              <p className="text-[10px]" style={{ color: colors.textSecondary }}>
-                Using your own API key, usage is billed directly to you and is never metered here.
-              </p>
             ) : !usage?.signedIn ? (
               <p className="text-[10px]" style={{ color: colors.textSecondary }}>
                 Sign in to start with free AI credit. Your account holds your credits and subscription.
@@ -566,76 +545,6 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
                 </button>
               </>
             )}
-          </div>
-        </section>
-
-        {/* ── API Key ────────────────────────────────────────────────────────── */}
-        <section>
-          <SectionHeader icon={<Key size={11} />} label="AI API Key" />
-          <div
-            className="p-4"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ background: hasKey ? '#34d399' : '#fbbf24', boxShadow: hasKey ? '0 0 6px #34d399' : '0 0 6px #fbbf24' }}
-              />
-              <span className="text-[10px]" style={{ color: hasKey ? '#34d399' : '#6366f1' }}>
-                {hasKey === null ? 'Checking...' : hasKey ? 'Your own API key configured' : 'Optional. AI already works via included free credit'}
-              </span>
-            </div>
-
-            {hasKey ? (
-              <div className="flex items-center gap-2">
-                <div
-                  className="flex-1 px-3 py-2 text-[10px]"
-                  style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.06)', color: colors.textMuted }}
-                >
-                  ••••••••••••••••••••••••
-                </div>
-                <button
-                  onClick={() => void deleteApiKey()}
-                  className="px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105"
-                  style={{
-                    background: 'rgba(248,113,113,0.08)',
-                    border: '1px solid rgba(248,113,113,0.25)',
-                    color: 'rgba(248,113,113,0.7)',
-                    fontFamily: 'var(--font-mono)',
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <input
-                  type="password"
-                  value={apiInput}
-                  onChange={(e) => setApiInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && void saveApiKey()}
-                  placeholder="sk-ant-... or sk-or-..."
-                  className="flex-1 px-3 py-2 text-[10px] outline-none"
-                  style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)', color: colors.textPrimary }}
-                />
-                <button
-                  onClick={() => void saveApiKey()}
-                  disabled={!apiInput.trim()}
-                  className="px-3 py-2 text-[9px] font-semibold transition-all hover:scale-105 disabled:opacity-40"
-                  style={{
-                    background: 'rgba(99,102,241,0.08)',
-                    border: '1px solid rgba(99,102,241,0.25)',
-                    color: '#6366f1',
-                    fontFamily: 'var(--font-mono)',
-                  }}
-                >
-                  {apiSaved ? 'Saved ✓' : 'Save'}
-                </button>
-              </div>
-            )}
-            <p className="mt-2 text-[9px]" style={{ color: colors.textMuted }}>
-              Anthropic API key (sk-ant-...) or OpenRouter key (sk-or-...). Used for AI inference, guard alerts, and the Attentify assistant.
-            </p>
           </div>
         </section>
 

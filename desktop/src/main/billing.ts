@@ -4,11 +4,10 @@
 // account: subscribers draw on a monthly fair-use allowance; everyone else spends a
 // credit balance (every new account gets a free trial credit). This module holds the
 // cached balance/subscription the backend reports and exposes it to the renderer + the
-// gating checks. A user who pastes their OWN key is unmetered and never gated here.
+// gating checks. Managed AI is the only route, so every AI call is metered here.
 
 import { getStore, patchStore } from './store'
 import { recordModelUsage } from './data/repository'
-import { loadApiKey } from './keystore'
 import { CLOUD_API_BASE, estimateCostUsd } from './config'
 import { debugLog } from './debug/logger'
 import type { UsageState, CloudState } from '../shared/types'
@@ -19,11 +18,6 @@ const base = (): string => CLOUD_API_BASE.replace(/\/$/, '')
 let onChange: ((usage: UsageState) => void) | null = null
 export function setUsageChangeCallback(cb: (usage: UsageState) => void): void {
   onChange = cb
-}
-
-/** True when the user has pasted their own API key — their usage is never metered. */
-export function hasOwnKey(): boolean {
-  return !!loadApiKey()
 }
 
 /** The account token (session or license) used to authenticate the metered proxy. */
@@ -42,25 +36,23 @@ export function isSubscribed(): boolean {
 
 export function getUsageState(): UsageState {
   const s = getStore()
-  const own = hasOwnKey()
   const subscribed = isSubscribed()
   const signedIn = isSignedIn()
   const balanceMicros = s.creditMicros ?? 0
   const credits = Math.max(0, Math.round(balanceMicros / CREDIT_UNIT_MICROS))
-  const metered = !own && !subscribed
+  const metered = !subscribed
   return {
     credits,
     balanceMicros,
     subscribed,
-    hasOwnKey: own,
     signedIn,
     // Out of credit only applies to a signed-in, metered account with an empty balance.
     outOfCredit: metered && signedIn && balanceMicros <= 0,
-    canUseAi: own || subscribed || (signedIn && balanceMicros > 0),
+    canUseAi: subscribed || (signedIn && balanceMicros > 0),
   }
 }
 
-/** Whether an AI call is allowed right now (own key / subscription / positive balance). */
+/** Whether an AI call is allowed right now (subscription / positive balance). */
 export function canUseAi(): boolean {
   return getUsageState().canUseAi
 }
@@ -74,7 +66,7 @@ export function recordUsage(model: string, inputTokens: number, outputTokens: nu
   if (!inputTokens && !outputTokens) return
   const cost = estimateCostUsd(model, inputTokens, outputTokens)
   try { recordModelUsage(model, inputTokens, outputTokens, cost) } catch { /* ignore */ }
-  if (!hasOwnKey() && isSignedIn() && !isSubscribed()) scheduleBalanceRefresh()
+  if (isSignedIn() && !isSubscribed()) scheduleBalanceRefresh()
 }
 
 // ── Server-truth balance ────────────────────────────────────────────────────────
