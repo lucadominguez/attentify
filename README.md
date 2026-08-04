@@ -20,9 +20,9 @@
 
 ## The short version
 
-Twenty six seconds, cut from the real app and the real extension. Nothing here is a mockup.
+Thirty three seconds, cut from the real app and the real extension. Nothing here is a mockup.
 
-![Attentify in twenty six seconds](.github/media/ad.webp)
+![Attentify in thirty three seconds](.github/media/ad.webp)
 
 Full quality, no compression for the page:
 [16:9](.github/media/attentify-ad-16x9.mp4) &nbsp;·&nbsp;
