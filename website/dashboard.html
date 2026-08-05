@@ -51,7 +51,7 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:8px">
         <button id="primaryCta" class="btn btn-primary btn-sm"></button>
-        <a href="https://attentify-cloud.ludomi2502.workers.dev/download/win" class="btn btn-glass btn-sm">Download app</a>
+        <a href="https://api.attentify.ca/download/win" class="btn btn-glass btn-sm">Download app</a>
       </div>
     </div>
   </section>
@@ -110,7 +110,7 @@
 </style>
 
 <script>
-const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+const API = 'https://api.attentify.ca';
 const $ = id => document.getElementById(id);
 const token = localStorage.getItem('attentify_session');
 if (!token) location.replace('auth.html');

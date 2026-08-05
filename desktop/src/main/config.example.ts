@@ -5,7 +5,7 @@
 // the user's own pasted key (unmetered). See aiClient.ts + billing.ts.
 
 // Cloud backend base: accounts, the metered AI proxy, billing/checkout, analytics sync.
-export const CLOUD_API_BASE = 'https://attentify-cloud.ludomi2502.workers.dev'
+export const CLOUD_API_BASE = 'https://api.attentify.ca'
 
 // Model pricing per 1M tokens, [input, output] in USD. Used to estimate the cost of
 // each AI call so the free allowance can be metered without the provider's billing API.

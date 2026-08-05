@@ -4,10 +4,10 @@
 
 **Blockers ask "is this site on a list?" Attentify asks "does this page fit what you said you were doing?"**
 
-[Download for Windows](https://attentify-cloud.ludomi2502.workers.dev/download/win) &nbsp;·&nbsp;
-[Try the live demo](https://productivity-daemon.pages.dev) &nbsp;·&nbsp;
-[Browser extension](https://productivity-daemon.pages.dev/ext/attentify-extension.zip) &nbsp;·&nbsp;
-[Privacy](https://productivity-daemon.pages.dev/privacy)
+[Download for Windows](https://api.attentify.ca/download/win) &nbsp;·&nbsp;
+[Try the live demo](https://attentify.ca) &nbsp;·&nbsp;
+[Browser extension](https://attentify.ca/ext/attentify-extension.zip) &nbsp;·&nbsp;
+[Privacy](https://attentify.ca/privacy)
 
 ![Windows](https://img.shields.io/badge/Windows%2010%2B-desktop%20app-6366f1?style=flat-square)
 ![Chromium](https://img.shields.io/badge/Chrome%20·%20Edge%20·%20Brave-extension-22d3ee?style=flat-square)
@@ -156,13 +156,13 @@ you set yourself. This part is free and needs no account.
 
 ## Getting it
 
-**Desktop app (Windows 10 or later).** [Download the installer](https://attentify-cloud.ludomi2502.workers.dev/download/win). It is not code signed yet, so Windows SmartScreen will warn you on first run: choose "More info" then "Run anyway", or wait for a signed build. The app needs administrator rights because it edits the hosts file, firewall rules and browser policy, which is how blocking survives a determined 2pm you.
+**Desktop app (Windows 10 or later).** [Download the installer](https://api.attentify.ca/download/win). It is not code signed yet, so Windows SmartScreen will warn you on first run: choose "More info" then "Run anyway", or wait for a signed build. The app needs administrator rights because it edits the hosts file, firewall rules and browser policy, which is how blocking survives a determined 2pm you.
 
-**Browser extension (Chrome, Edge, Brave, Arc, Opera, Vivaldi).** [Download the zip](https://productivity-daemon.pages.dev/ext/attentify-extension.zip), unzip it, then load it at `chrome://extensions` with Developer mode on. It is not on the Web Store yet. It works standalone, so no desktop app is required, though the two make each other better.
+**Browser extension (Chrome, Edge, Brave, Arc, Opera, Vivaldi).** [Download the zip](https://attentify.ca/ext/attentify-extension.zip), unzip it, then load it at `chrome://extensions` with Developer mode on. It is not on the Web Store yet. It works standalone, so no desktop app is required, though the two make each other better.
 
 There is no macOS build, and the extension does not run on Firefox or Safari.
 
-**What leaves your machine.** The detailed activity database stays local. When an AI feature runs, the page domain, path, title, any search query and your stated goals are sent to the backend and on to the model provider. The [privacy policy](https://productivity-daemon.pages.dev/privacy) spells this out. AI runs only through the managed service, so there is no configuration in which it bypasses those servers.
+**What leaves your machine.** The detailed activity database stays local. When an AI feature runs, the page domain, path, title, any search query and your stated goals are sent to the backend and on to the model provider. The [privacy policy](https://attentify.ca/privacy) spells this out. AI runs only through the managed service, so there is no configuration in which it bypasses those servers.
 
 ## This repository
 

@@ -1,31 +1,41 @@
 {
   "manifest_version": 3,
   "name": "Attentify Element Blocker",
-  "version": "0.19.0",
-  "description": "Surgically remove addictive UI elements, with AI that reads your browsing context. Works standalone or enhanced by the Attentify desktop app.",
+  "version": "0.19.2",
+  "description": "Keep the useful web, lose the bait. Removes feeds, Shorts and rage bait, reads each page in context, explains every call.",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
     "48": "icons/icon-48.png",
     "128": "icons/icon-128.png"
   },
-  "permissions": ["storage", "tabs", "webNavigation", "scripting", "alarms", "sidePanel"],
+  "permissions": [
+    "storage",
+    "tabs",
+    "webNavigation",
+    "scripting",
+    "alarms",
+    "sidePanel"
+  ],
   "host_permissions": [
     "<all_urls>",
-    "http://127.0.0.1:*/*",
-    "https://api.anthropic.com/*",
-    "https://openrouter.ai/*",
-    "https://api.github.com/*"
+    "http://127.0.0.1/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["content.js"],
-    "run_at": "document_start",
-    "all_frames": true
-  }],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
   "action": {
     "default_title": "Attentify (click to open panel)",
     "default_icon": {
@@ -36,5 +46,8 @@
   "side_panel": {
     "default_path": "popup.html"
   },
-  "incognito": "split"
+  "incognito": "split",
+  "optional_host_permissions": [
+    "https://api.github.com/*"
+  ]
 }

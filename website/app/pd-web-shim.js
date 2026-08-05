@@ -741,7 +741,7 @@
       return Promise.resolve(cloud());
     },
     clearCloudLicense: function () { store.cloudLicense = undefined; store.cloudActive = false; store.cloudTier = undefined; store.cloudEmail = undefined; emit('usage:changed', usage()); return Promise.resolve(cloud()); },
-    cloudCheckout: function () { return Promise.resolve({ url: 'https://attentify.ai/#pricing' }); },
+    cloudCheckout: function () { return Promise.resolve({ url: 'https://attentify.ca/#pricing' }); },
 
     // Account auth (demo): in-memory sign in / create account.
     getAuth: function () { return Promise.resolve({ signedIn: !!store.authEmail, email: store.authEmail || null, tier: store.authEmail ? (store.cloudActive ? 'cloud' : 'free') : null, subscribed: !!store.cloudActive }); },

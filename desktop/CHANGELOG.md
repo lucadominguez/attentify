@@ -4,7 +4,13 @@ All notable changes to Attentify (desktop app) are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project uses [semantic versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.3.0] - 2026-08-04
+
+### Removed
+- **Pasting your own AI provider key.** Attentify's AI now runs only through the managed
+  service, so there is nothing to configure and no key to look after. If you had saved a
+  key, the app deletes it from your machine the first time you run this build. Your
+  credits, subscription and everything that blocks without AI are unaffected.
 
 ### Changed
 - **The app now ships with its intended typefaces.** Inter, Space Grotesk and JetBrains

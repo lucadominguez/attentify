@@ -57,7 +57,7 @@ A few things that are true and worth saying up front:
 
 There is a live demo of the real app in the browser, no install and no account: https://productivity-daemon.pages.dev
 
-Code: https://github.com/lucadominguez/attentify-open
+Code: https://github.com/lucadominguez/attentify
 
 Happy to go into the classifier design in the comments. The part that took longest was not the model, it was getting it to shut up: an early version blocked a Google search for an error message, which is the single fastest way to make someone uninstall.
 
@@ -125,8 +125,8 @@ to Reddit as-is with no conversion step.
 Raw links, if you need to point at one directly:
 
 ```
-https://raw.githubusercontent.com/lucadominguez/attentify-open/master/.github/media/extension.webp
-https://raw.githubusercontent.com/lucadominguez/attentify-open/master/.github/media/how-it-works.png
+https://raw.githubusercontent.com/lucadominguez/attentify/master/.github/media/extension.webp
+https://raw.githubusercontent.com/lucadominguez/attentify/master/.github/media/how-it-works.png
 ```
 
 ## Before you post

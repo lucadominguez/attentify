@@ -63,7 +63,7 @@
 </style>
 
 <script>
-const API = 'https://attentify-cloud.ludomi2502.workers.dev';
+const API = 'https://api.attentify.ca';
 const sid = new URLSearchParams(location.search).get('session_id');
 const show = id => { for (const s of ['loading','ready','error']) document.getElementById('state-'+s).style.display = (s===id?'block':'none'); };
 

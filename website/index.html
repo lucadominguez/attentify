@@ -35,10 +35,10 @@
     <a href="#how">How it works</a>
     <a href="#compare">Compare</a>
     <a href="#pricing">Pricing</a>
-    <a href="https://github.com/lucadominguez/attentify-open" target="_blank" rel="noopener" class="nav-gh" title="GitHub">★ GitHub</a>
+    <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener" class="nav-gh" title="GitHub">★ GitHub</a>
   </nav>
   <a href="auth.html" class="btn btn-sm btn-glass nav-cta" id="navSignIn">Sign in</a>
-  <a href="#download" class="btn btn-sm btn-primary nav-cta">Download</a>
+  <a href="#download" class="btn btn-sm btn-primary nav-cta">Download <span class="beta-chip">Beta</span></a>
   <button class="nav-burger" id="burger" aria-label="Menu">≡</button>
 </header>
 
@@ -210,16 +210,18 @@
        On the right is the <b>actual extension</b>, running live. Nothing here is a mockup.</p>
   </div>
 
-  <p class="hero-trustline">No setup hassle · your history stays on your device · open source, minus the AI · macOS soon</p>
+  <p class="hero-trustline">No setup hassle · your history stays on your device · open source, minus the AI · macOS and mobile soon</p>
 </section>
 
 <!-- ══════════════ THE APP RUNS THE WHOLE SHOW (sits right under the live demo) ══════════════ -->
 <section class="section daemon-sec" id="daemon">
   <div class="daemon-grid">
     <div class="reveal">
-      <h2>The extension cleans your browser. <span class="grad">The app runs the whole show.</span></h2>
+      <h2>The extension cleans your browser. <span class="grad">The app runs the whole show.</span>
+         <span class="beta-tag">Beta</span></h2>
       <p class="lead">Add the Windows app and everything levels up. It's a chat-first focus engine for your
-         whole computer, and the browser just plugs right into it.</p>
+         whole computer, and the browser just plugs right into it. The desktop app is in <b>beta</b>:
+         it works, and it is still rough in places. The extension is the stable one.</p>
       <ul class="check-list">
         <li><b>A real assistant, not just toggles.</b> Chat with it in plain English across saved conversations, attach a screenshot, and <b>revert to any earlier point</b> with one click if it goes too far.</li>
         <li><b>It shows its work.</b> A <b>Logic</b> page lays out, as collapsible flow-charts, exactly why it thinks you're distracted, and you can feed it your own context to sharpen it.</li>
@@ -228,8 +230,8 @@
         <li><b>Works with your browser, whatever it is.</b> Tracks the top 15 browsers natively (Chrome, Edge, Firefox, Brave, Arc, Opera, Vivaldi and more), with no extension required. Light &amp; dark themes.</li>
       </ul>
       <div class="daemon-cta">
-        <a class="btn btn-primary dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">Download for Windows</a>
-        <a class="btn btn-glass" href="https://github.com/lucadominguez/attentify-open" target="_blank" rel="noopener">Get the extension</a>
+        <a class="btn btn-primary dl" data-os="win" href="https://api.attentify.ca/download/win">Download for Windows <span class="beta-chip">Beta</span></a>
+        <a class="btn btn-glass" href="/ext/attentify-extension.zip" download>Get the browser extension</a>
       </div>
     </div>
     <div class="daemon-card reveal">
@@ -407,7 +409,7 @@
         <li>✓ SSO &amp; deployment tooling</li>
         <li>✓ Dedicated support</li>
       </ul>
-      <a href="https://github.com/lucadominguez/attentify-open" target="_blank" rel="noopener" class="btn btn-glass btn-block">Contact us</a>
+      <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener" class="btn btn-glass btn-block">Contact us</a>
     </article>
   </div>
 </section>
@@ -418,13 +420,32 @@
     <h2>Reclaim your attention. <span class="grad">Today.</span></h2>
     <p>Free, private, and running in about a minute.</p>
     <div class="dl-main">
-      <a class="btn btn-primary btn-lg dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">
+      <a class="btn btn-primary btn-lg" href="/ext/attentify-extension.zip" download>
+        <svg viewBox="0 0 24 24" class="ico"><path d="M10.5 2a2.5 2.5 0 0 1 2.5 2.5V6h3.1a1.4 1.4 0 0 1 1.4 1.4v3.1h1.5a2.5 2.5 0 0 1 0 5H17.5v3.1a1.4 1.4 0 0 1-1.4 1.4H13v-1.6a2.4 2.4 0 0 0-4.8 0V20H5.1a1.4 1.4 0 0 1-1.4-1.4V15h1.6a2.4 2.4 0 0 0 0-4.8H3.7V7.4A1.4 1.4 0 0 1 5.1 6H8V4.5A2.5 2.5 0 0 1 10.5 2z"/></svg>
+        <span><b>Get the browser extension</b><small>Chrome, Edge, Brave, Arc, Opera, Vivaldi · free</small></span>
+      </a>
+      <a class="btn btn-glass btn-lg dl" data-os="win" href="https://api.attentify.ca/download/win">
         <svg viewBox="0 0 24 24" class="ico"><path d="M3 5.1 10.5 4v7.5H3V5.1zM3 12.5h7.5V20L3 18.9v-6.4zM11.5 3.85 21 2.5v9H11.5V3.85zM11.5 12.5H21V21.5l-9.5-1.35V12.5z"/></svg>
-        <span><b>Download for Windows</b><small>Windows 10/11 · 64-bit · free</small></span>
+        <span><b>Download the Windows app <span class="beta-chip">Beta</span></b><small>Windows 10/11 · 64-bit · free</small></span>
       </a>
     </div>
-    <p class="dl-ext">Prefer browser-only? <a href="https://github.com/lucadominguez/attentify-open" target="_blank" rel="noopener">Add the extension for Chrome &amp; Edge →</a></p>
-    <p class="dl-soon">macOS app coming soon.</p>
+    <p class="dl-beta">The Windows app is in <b>beta</b>. It works, and it is still rough in places. The extension is the stable one, so start there.</p>
+    <p class="dl-soon">Extension installs manually for now, while our Chrome Web Store listing is in review. macOS and mobile apps coming soon.</p>
+
+    <!-- Email capture. No account, no sign-in, and nothing on this site is gated
+         behind it: the live demo above runs for everyone. -->
+    <form class="notify" id="notify-form" novalidate>
+      <p class="notify-lead">Not on Windows, or waiting for the signed build?</p>
+      <div class="notify-row">
+        <label class="sr-only" for="notify-email">Email address</label>
+        <input id="notify-email" name="email" type="email" inputmode="email" autocomplete="email"
+               placeholder="you@example.com" required>
+        <!-- Honeypot: hidden from people, irresistible to bots. -->
+        <input class="notify-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" class="btn btn-primary" id="notify-btn">Notify me</button>
+      </div>
+      <p class="notify-note" id="notify-note">One email when there is something worth telling you. No account needed, and every one has an unsubscribe link.</p>
+    </form>
   </div>
 </section>
 
@@ -453,12 +474,12 @@
     <div class="foot-col"><h4>Product</h4>
       <a href="#app-demo">Live demo</a><a href="#features">Features</a><a href="#compare">Compare</a><a href="#pricing">Pricing</a></div>
     <div class="foot-col"><h4>Download</h4>
-      <a class="dl" data-os="win" href="https://attentify-cloud.ludomi2502.workers.dev/download/win">Windows app</a>
-      <a href="https://github.com/lucadominguez/attentify-open" target="_blank" rel="noopener">Browser extension</a>
+      <a class="dl" data-os="win" href="https://api.attentify.ca/download/win">Windows app</a>
+      <a href="/ext/attentify-extension.zip" download>Browser extension</a>
       <a href="#app-demo">App demo</a></div>
     <div class="foot-col"><h4>Open source</h4>
-      <a href="https://github.com/lucadominguez/attentify-open" target="_blank" rel="noopener">Source on GitHub</a>
-      <a href="https://github.com/lucadominguez/attentify-open#what-is-not-in-here" target="_blank" rel="noopener">What's open, what isn't</a>
+      <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener">Source on GitHub</a>
+      <a href="https://github.com/lucadominguez/attentify#what-is-not-in-here" target="_blank" rel="noopener">What's open, what isn't</a>
       <a href="#faq">FAQ</a></div>
     <div class="foot-col"><h4>Legal</h4>
       <a href="/privacy">Privacy Policy</a>

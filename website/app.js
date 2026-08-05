@@ -5,7 +5,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
   // Cloud backend (Cloudflare Worker). Replace with your deployed URL.
-  const CLOUD_API = 'https://attentify-cloud.ludomi2502.workers.dev';
+  const CLOUD_API = 'https://api.attentify.ca';
   window.PD_CLOUD_API = CLOUD_API;
 
   // ---- year ----
@@ -172,10 +172,10 @@
       setChrome(cfg.chrome); q.textContent = cfg.goodQ; verdict.className = 'gs-verdict';
       say('Reading your search: “' + cfg.goodQ + '”');
       after(500, scan);
-      after(2100, () => { verdict.textContent = '✓ on task'; verdict.className = 'gs-verdict good show'; say('On your goal — search allowed', false); });
+      after(2100, () => { verdict.textContent = '✓ on task'; verdict.className = 'gs-verdict good show'; say('On your goal, search allowed', false); });
       after(4300, () => { q.textContent = cfg.badQ; verdict.className = 'gs-verdict'; say('New search: “' + cfg.badQ + '”'); });
       after(4800, scan);
-      after(6400, () => { verdict.textContent = '✕ off-goal'; verdict.className = 'gs-verdict bad show'; blockWhy.textContent = cfg.badWhy; block.classList.add('on'); say('Off-goal search — blocked', false); if (badge) badge.textContent = '1'; });
+      after(6400, () => { verdict.textContent = '✕ off-goal'; verdict.className = 'gs-verdict bad show'; blockWhy.textContent = cfg.badWhy; block.classList.add('on'); say('Off-goal search, blocked', false); if (badge) badge.textContent = '1'; });
       after(9200, next);
     }
 
@@ -194,12 +194,12 @@
       { name: 'google', mode: 'search',
         goodQ: 'react useEffect cleanup', badQ: 'premier league live stream free',
         chrome: { host: 'google.com', path: '/search', badge: 0, fav: '#4285f4' },
-        badWhy: 'Off-goal for “deep work” — entertainment, not the task.' },
+        badWhy: 'Off-goal for “deep work”. This is entertainment, not the task.' },
       { name: 'youtube', mode: 'clean', intro: 'Reading youtube.com…',
         chrome: { host: 'youtube.com', path: '/watch', badge: 0, fav: '#ff0033' } },
       { name: 'gambling', mode: 'block',
         chrome: { host: 'royalbet.bet', path: '/casino', badge: 0, fav: '#ffd24d' },
-        detect: 'Recognised a gambling site', blocked: 'Blocked — gambling, off every goal' },
+        detect: 'Recognised a gambling site', blocked: 'Blocked. Gambling is off every goal' },
     ];
 
     function playScene(i) {
@@ -241,5 +241,62 @@
       buy.style.pointerEvents = '';
       setTimeout(() => { buy.textContent = orig; }, 2600);
     }
+  });
+})();
+
+/* ── Email capture ────────────────────────────────────────────────────────────
+   Deliberately not gated: no account, no sign-in, and nothing on this page is
+   hidden behind it. It exists for the majority of launch traffic who will not
+   install an unsigned 79 MB Windows binary today but would come back for the
+   signed build or the Mac one.
+   Submits to /v1/subscribe, which is idempotent per address, so a double click or
+   an impatient second submit cannot create duplicates. */
+(function () {
+  var form = document.getElementById('notify-form');
+  if (!form) return;
+  var note = document.getElementById('notify-note');
+  var btn = document.getElementById('notify-btn');
+  var input = document.getElementById('notify-email');
+  var base = window.PD_CLOUD_API || 'https://api.attentify.ca';
+  var busy = false;
+
+  function say(msg, kind) {
+    note.textContent = msg;
+    note.className = 'notify-note' + (kind ? ' is-' + kind : '');
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (busy) return;
+    var email = (input.value || '').trim();
+    // Let the browser's own validator speak first; it is clearer than anything here.
+    if (!email || !input.checkValidity()) { say('Please enter a valid email address.', 'err'); input.focus(); return; }
+
+    busy = true;
+    btn.disabled = true;
+    var was = btn.textContent;
+    btn.textContent = 'Sending...';
+
+    fetch(base + '/v1/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        company: form.company ? form.company.value : '',   // honeypot, empty for humans
+        source: 'site-download',
+        interest: 'launch'
+      })
+    })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (d) {
+        if (d && d.ok) {
+          form.classList.add('is-done');
+          say('Thanks. We will email you when there is news worth reading.', 'ok');
+        } else {
+          say((d && d.error) || 'That did not go through. Please try again.', 'err');
+        }
+      })
+      .catch(function () { say('That did not go through. Please try again.', 'err'); })
+      .finally(function () { busy = false; btn.disabled = false; btn.textContent = was; });
   });
 })();
