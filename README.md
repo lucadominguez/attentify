@@ -164,6 +164,20 @@ There is no macOS build, and the extension does not run on Firefox or Safari.
 
 **What leaves your machine.** The detailed activity database stays local. When an AI feature runs, the page domain, path, title, any search query and your stated goals are sent to the backend and on to the model provider. The [privacy policy](https://attentify.ca/privacy) spells this out. AI runs only through the managed service, so there is no configuration in which it bypasses those servers.
 
+## Give it to your AI agent
+
+Your agent can read your code and your files, but not the forty minutes you lost before you opened them. The MCP server in [`mcp/`](mcp/) closes that gap.
+
+```
+claude mcp add attentify -- npx -y @attentify/mcp
+```
+
+Then: *"what have I actually been working on for the last three hours?"*, *"am I drifting off what I said I'd do today?"*, *"block whatever has been eating my afternoon."*
+
+Seven tools. Six read what you did and what you said you were aiming at; one blocks a site. It talks to the desktop app over `127.0.0.1`, gated by a per-install token, and makes no network calls of its own. Zero dependencies and one file of about 250 lines, because asking you to let an agent read your browsing history and then handing you a dependency tree would be rude.
+
+There is a [skill](mcp/skill/SKILL.md) that goes with it, teaching an agent to read your goals before it judges anything as a distraction. The same site is focus for one person and avoidance for another, and an agent that does not know the difference is just a worse version of a blocklist.
+
 ## This repository
 
 This is the open source part of Attentify: the parts that run on your machine and touch your browsing, published so they can be read and audited.
@@ -176,6 +190,7 @@ This is the open source part of Attentify: the parts that run on your machine an
 | `desktop/src/preload/` | The preload bridge, meaning the exact surface the UI is allowed to reach. |
 | `desktop/src/shared/` | Shared types and the deterministic analytics query engine. Cards store a spec and recompute locally, so a chart never costs a model call. |
 | `desktop/src/main/` | The non-AI engine: blocking and enforcement, activity tracking, the local database and migrations, scheduling, diagnostics, updates, safety and restore. |
+| `mcp/` | The MCP server, so an AI agent can use all of the above. Unlike the rest of this tree it **is** a standalone build: `npm test` runs here as-is. |
 
 **The AI is closed source.** Every prompt and every model-call harness stays private, along with the logic that decides what counts as a distraction: the agent loop and its tools, model routing, the inference engine and site rules, the heuristics and confidence scoring, the self-evaluation loop, and the cloud backend that handles accounts, billing and the metered AI proxy.
 

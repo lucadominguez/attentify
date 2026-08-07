@@ -1,0 +1,35 @@
+{
+  "name": "@attentify/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Attentify: lets an AI agent see what you have actually been working on, and block a site.",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "bin": {
+    "attentify-mcp": "./attentify-mcp.mjs"
+  },
+  "main": "./attentify-mcp.mjs",
+  "files": [
+    "attentify-mcp.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "pretest": "node scripts/build-access.mjs",
+    "test": "node --test"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "attentify",
+    "focus",
+    "productivity",
+    "agent"
+  ],
+  "homepage": "https://attentify.ca",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucadominguez/attentify"
+  }
+}

@@ -4,6 +4,38 @@ All notable changes to Attentify (desktop app) are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project uses [semantic versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Attentify can now be used by an AI agent.** A new MCP server lets Claude Code, Cursor or
+  any other MCP client see what you have actually been working on, read the goals you set,
+  and block a site when you ask. One line to add it: `claude mcp add attentify -- npx -y
+  @attentify/mcp`. It runs on your machine and makes no network calls of its own.
+
+### Security
+- **The app's local API now requires a token.** It listens only on your own machine, but it
+  was also telling every web page it was allowed to reply to them, which meant a site you
+  had open in a tab could read your activity history and switch blocking on and off. It now
+  requires a key that only software on your machine can read, and only the Attentify browser
+  extension is allowed to talk to it from a browser.
+
+### Changed
+- **The app icon is properly centred and sized.** The artwork sat high in its frame and
+  filled about two thirds of it, so it looked small and slightly off next to other icons in
+  the taskbar.
+
+### Fixed
+- **Account is back in Settings.** Signing out, and seeing which account you are on, had
+  moved to the small avatar at the bottom of the sidebar and nowhere else. People
+  reasonably looked in Settings, found nothing, and concluded there was no way to sign
+  out. Settings now has an Account section again. It is the same panel the avatar opens,
+  so the two always agree.
+- **Signing in no longer leaves the app saying you are signed out.** After signing in from
+  Settings or from the sidebar avatar, the amber bar across the top still read "You're
+  signed out" until the window lost and regained focus. Signing out in one place likewise
+  left the other showing an account. Every account panel now tells the rest of the app
+  immediately, so what you see matches what you did.
+
 ## [1.3.0] - 2026-08-04
 
 ### Removed

@@ -220,6 +220,29 @@
   </div>
 </div>
 
+<!-- Sign-in modal. Auth used to live only at the bottom of the main page, inside a
+     collapsed section, so a user prompted to sign in could not find the form. This
+     surfaces over whatever they were doing and is opened by any signin_required. -->
+<div id="auth-modal" class="auth-modal" hidden>
+  <div class="auth-backdrop" id="auth-backdrop"></div>
+  <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <button class="auth-close" id="auth-close" aria-label="Close">&times;</button>
+    <div class="auth-head">
+      <img src="icons/icon-48.png" alt="" class="auth-logo" width="34" height="34">
+      <div>
+        <div class="auth-title" id="auth-title">Sign in to Attentify</div>
+        <div class="auth-sub" id="auth-reason">Free credit to start. No card needed.</div>
+      </div>
+    </div>
+    <input id="auth-email" class="auth-input" placeholder="you@email.com" type="email" autocomplete="email">
+    <input id="auth-pass" class="auth-input" placeholder="Password (8+ characters)" type="password" autocomplete="current-password">
+    <p id="auth-err" class="auth-err" hidden></p>
+    <button class="auth-primary" id="auth-signup">Create free account</button>
+    <button class="auth-secondary" id="auth-login">I already have an account</button>
+    <p class="auth-fine">Blocking and your keyword rules work without an account. Signing in is only needed for the AI.</p>
+  </div>
+</div>
+
 <script src="popup.js"></script>
 </body>
 </html>

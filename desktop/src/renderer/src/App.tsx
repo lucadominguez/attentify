@@ -19,7 +19,7 @@ import ChatPanel from './chat/ChatPanel'
 import AmbientWash from './components/AmbientWash'
 import PulseField from './components/PulseField'
 import { PresenceProvider } from './context/PresenceContext'
-import AuthPanel from './components/AuthPanel'
+import AuthPanel, { AUTH_CHANGED } from './components/AuthPanel'
 import type { ViewName, AppStore, ScanResult, HeuristicAlert } from '@shared/types'
 import { Minus, Square, X, Coffee, Download, Lock } from 'lucide-react'
 
@@ -133,7 +133,14 @@ export default function App(): React.ReactElement {
   useEffect(() => {
     refreshAuth()
     window.addEventListener('focus', refreshAuth)
-    return () => window.removeEventListener('focus', refreshAuth)
+    // Focus alone only covered OAuth, which leaves the window and comes back. An email
+    // sign-in from Settings or the sidebar avatar never blurs, so the banner below stayed
+    // up saying "signed out" to a user who had just signed in. AuthPanel broadcasts.
+    window.addEventListener(AUTH_CHANGED, refreshAuth)
+    return () => {
+      window.removeEventListener('focus', refreshAuth)
+      window.removeEventListener(AUTH_CHANGED, refreshAuth)
+    }
   }, [refreshAuth])
   // null = still loading; don't flash the banner before we know.
   const signedOut = auth !== null && !auth.signedIn

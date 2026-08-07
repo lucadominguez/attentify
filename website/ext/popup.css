@@ -74,7 +74,7 @@ body {
 
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: all 0.3s; }
 .status-dot.on         { background: #34d399; box-shadow: 0 0 7px rgba(52,211,153,0.5); }
-.status-dot.standalone { background: #6366f1; box-shadow: 0 0 6px rgba(99,102,241,0.35); }
+.status-dot.ready { background: #6366f1; box-shadow: 0 0 6px rgba(99,102,241,0.35); }
 .status-dot.off        { background: #f87171; }
 .status-dot.checking   { background: #fbbf24; animation: blink 0.9s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
@@ -513,7 +513,7 @@ html.light .brand-mark { background-image: url(icons/logo-light.png); box-shadow
 }
 .conn-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); flex-shrink: 0; }
 .conn-dot.on         { background: var(--ok); box-shadow: 0 0 6px rgba(52,211,154,0.5); }
-.conn-dot.standalone { background: var(--accent); box-shadow: 0 0 5px rgba(99,102,241,0.4); }
+.conn-dot.ready { background: var(--accent); box-shadow: 0 0 5px rgba(99,102,241,0.4); }
 .conn-label { font-size: 11px; color: var(--ink-2); font-weight: 550; }
 
 /* ── Scroll body: consistent 16px between sections ── */
@@ -997,3 +997,41 @@ html.fullscreen .askbox { max-width: 1100px; margin-left: auto; margin-right: au
   .donut-fg, .catbar-fill { animation: none !important; }
   .donut-fg { stroke-dashoffset: var(--off); }
 }
+
+/* ── Sign-in modal ─────────────────────────────────────────────────────────────
+   Auth previously lived only in a collapsed section at the bottom of the main
+   page, so a user told to "sign in" had no way to find the form. This overlays
+   whatever they were doing and is opened by any signin_required.
+   NOTE: never write the comment-terminator sequence inside a CSS comment here;
+   it truncates the block and has silently corrupted :root before. */
+.auth-modal { position: fixed; inset: 0; z-index: 9000; display: flex;
+  align-items: center; justify-content: center; padding: 16px; }
+.auth-modal[hidden] { display: none; }
+.auth-backdrop { position: absolute; inset: 0; background: var(--scrim);
+  backdrop-filter: blur(3px); }
+.auth-card { position: relative; width: 100%; max-width: 320px; background: var(--panel-solid);
+  border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 16px 14px;
+  box-shadow: 0 18px 48px -12px rgba(8, 11, 22, 0.55); }
+.auth-close { position: absolute; top: 8px; right: 10px; background: none; border: 0;
+  color: var(--ink-3); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 6px; }
+.auth-close:hover { color: var(--ink); }
+.auth-head { display: flex; gap: 11px; align-items: center; margin-bottom: 14px; }
+.auth-logo { border-radius: 8px; flex-shrink: 0; }
+.auth-title { font-size: 15px; font-weight: 650; color: var(--ink); }
+.auth-sub { font-size: 12px; color: var(--ink-3); margin-top: 2px; line-height: 1.35; }
+.auth-input { width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 10px 11px;
+  border-radius: 9px; border: 1px solid var(--line-2); background: var(--input-bg);
+  color: var(--ink); font-size: 13px; font-family: inherit; }
+.auth-input:focus { outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.16); }
+.auth-err { color: var(--bad); font-size: 12px; margin: 2px 0 8px; }
+.auth-err[hidden] { display: none; }
+.auth-primary { width: 100%; padding: 10px; border: 0; border-radius: 9px; cursor: pointer;
+  background: var(--accent); color: #fff; font-size: 13px; font-weight: 620; font-family: inherit; }
+.auth-primary:hover { filter: brightness(1.07); }
+.auth-primary:disabled { opacity: .6; cursor: default; }
+.auth-secondary { width: 100%; margin-top: 7px; padding: 9px; cursor: pointer;
+  border: 1px solid var(--line-2); border-radius: 9px; background: transparent;
+  color: var(--ink-2); font-size: 12.5px; font-family: inherit; }
+.auth-secondary:hover { border-color: var(--accent); color: var(--ink); }
+.auth-fine { font-size: 11px; color: var(--ink-3); line-height: 1.4; margin: 11px 0 0; text-align: center; }

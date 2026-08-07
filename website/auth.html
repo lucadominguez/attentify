@@ -15,12 +15,27 @@
 <main style="max-width:440px;margin:0 auto;padding:80px 24px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
   <div class="dl-card">
     <a href="/" style="display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:18px;text-decoration:none">
-      <svg width="26" height="26" viewBox="0 0 28 28"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#27d3ff" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#27d3ff"/></svg>
+      <img src="attentify-logo.png" alt="" width="26" height="26" style="border-radius:6px;flex:0 0 auto">
       <span style="font-family:var(--display);font-weight:700;color:var(--text);font-size:18px">Attentify</span>
     </a>
 
     <h2 id="title" style="font-size:26px;text-align:center">Welcome back</h2>
     <p id="subtitle" style="color:var(--muted);text-align:center;margin:10px 0 22px;font-size:14px">Sign in to see your focus dashboard.</p>
+
+    <!-- Social sign-in. Hidden until /v1/auth/providers confirms the backend actually
+         has credentials for the provider, so this can never render a dead button. -->
+    <div id="social" style="display:none">
+      <button id="googleBtn" class="btn btn-block btn-oauth" type="button">
+        <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.7-2 5-4.4 6.6v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.1z"/>
+          <path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.4l-7.1-5.5c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.7-3.9-12.4-9.750H4.2v5.7C7.8 40.9 15.3 46 24 46z"/>
+          <path fill="#FBBC05" d="M11.6 27.45c-.45-1.3-.7-2.7-.7-4.15s.25-2.85.7-4.15V13.4H4.2A22 22 0 0 0 2 23.3c0 3.55.85 6.9 2.2 9.9l7.4-5.75z"/>
+          <path fill="#EA4335" d="M24 10.75c3.25 0 6.2 1.1 8.5 3.3l6.35-6.35C34.95 4.15 30 2 24 2 15.3 2 7.8 7.1 4.2 13.4l7.4 5.75c1.7-5.85 6.6-9.75 12.4-9.75z"/>
+        </svg>
+        Continue with Google
+      </button>
+      <div class="or-div"><span>or</span></div>
+    </div>
 
     <form id="form" style="display:flex;flex-direction:column;gap:11px">
       <label class="fld"><span>Email</span>
@@ -56,6 +71,12 @@
   .fld span{font-size:12px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
   .fld input{background:var(--bg2);border:1px solid var(--line);border-radius:var(--rs);padding:11px 13px;color:var(--text);font-family:var(--font);font-size:14.5px;outline:none;transition:border-color .15s}
   .fld input:focus{border-color:var(--cyan)}
+  .btn-oauth{background:var(--panel);border:1px solid var(--line2);color:var(--text);font-weight:600;
+    display:flex;align-items:center;justify-content:center;gap:10px}
+  .btn-oauth:hover{background:var(--bg2)}
+  .or-div{display:flex;align-items:center;gap:12px;margin:16px 0;
+    color:var(--faint);font-size:11px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
+  .or-div::before,.or-div::after{content:'';flex:1;height:1px;background:var(--line)}
 </style>
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -66,6 +87,25 @@ const TURNSTILE_SITE_KEY = '0x4AAAAAAEA3G29tqb8QJcAo';
 const $ = id => document.getElementById(id);
 let mode = 'login'; // 'login' | 'signup'
 let tsWidgetId = null;
+
+// ── Returning from a social sign-in ──────────────────────────────────────────
+// The worker sends the result in the FRAGMENT, which never leaves the browser, so
+// the token stays out of access logs and out of the Referer of anything loaded next.
+// Strip it from the URL immediately either way, so it is not left in history.
+(function handleOAuthReturn() {
+  if (!location.hash || location.hash.length < 2) return;
+  const p = new URLSearchParams(location.hash.slice(1));
+  const token = p.get('token'), oauthError = p.get('error');
+  if (!token && !oauthError) return;
+  history.replaceState(null, '', location.pathname);
+  if (token) { localStorage.setItem('attentify_session', token); location.replace('dashboard.html'); return; }
+  const reasons = {
+    no_email: 'That account has no verified email address, so we could not sign you in.',
+    exchange_failed: 'Google did not complete the sign-in. Please try again.',
+    access_denied: 'Sign-in was cancelled.',
+  };
+  window.__oauthError = reasons[oauthError] || 'Sign-in did not complete. Please try again.';
+})();
 
 // If already signed in, skip straight to the dashboard.
 if (localStorage.getItem('attentify_session')) location.replace('dashboard.html');
@@ -100,6 +140,24 @@ function setMode(m) {
   if (signup) renderTurnstile();
 }
 $('switchLink').addEventListener('click', (e) => { e.preventDefault(); setMode(mode === 'login' ? 'signup' : 'login'); });
+
+// Surface a failed social sign-in in the same place every other error appears.
+if (window.__oauthError) { $('msg').style.color = '#ff9d7a'; $('msg').textContent = window.__oauthError; }
+
+// Only offer providers the backend can actually complete. A provider needs BOTH its
+// id and secret set as worker secrets before it appears here.
+fetch(API + '/v1/auth/providers')
+  .then(r => r.json())
+  .then(d => { if (d && Array.isArray(d.providers) && d.providers.includes('google')) $('social').style.display = 'block'; })
+  .catch(() => { /* leave it hidden; email and password still work */ });
+
+$('googleBtn').addEventListener('click', () => {
+  $('googleBtn').disabled = true;
+  $('msg').style.color = 'var(--muted)'; $('msg').textContent = 'Opening Google…';
+  // No callback is sent: the worker redirects to its own configured site, so there is
+  // nothing here for anyone to point somewhere else.
+  location.href = API + '/v1/auth/oauth/google/start?flow=web';
+});
 
 $('form').addEventListener('submit', async (e) => {
   e.preventDefault();

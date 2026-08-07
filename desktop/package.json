@@ -37,7 +37,10 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "artifactName": "Attentify-Setup.${ext}",
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "installerIcon": "resources/icon.ico",
+      "uninstallerIcon": "resources/icon.ico",
+      "installerHeaderIcon": "resources/icon.ico"
     },
     "mac": {
       "target": "dmg",

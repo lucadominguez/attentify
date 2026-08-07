@@ -17,7 +17,9 @@ const MODEL_PRICING: Record<string, [number, number]> = {
   'anthropic/claude-sonnet-4-6': [3, 15],
   'anthropic/claude-sonnet-4.5': [3, 15],
   'anthropic/claude-sonnet-4-5': [3, 15],
-  'deepseek/deepseek-v4-pro': [0.35, 1.4],
+  'deepseek/deepseek-v4-flash-0731': [0.09, 0.18],
+  'deepseek/deepseek-v4-flash': [0.09, 0.18],
+  'deepseek/deepseek-v4-pro': [0.435, 0.87],
   'deepseek/deepseek-chat': [0.28, 1.1],
   'deepseek/deepseek-reasoner': [0.55, 2.2],
 }

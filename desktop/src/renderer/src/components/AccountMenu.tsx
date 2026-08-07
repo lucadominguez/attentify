@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { User } from 'lucide-react'
 import type { AuthState } from '@shared/types'
 import { useTheme } from '../context/ThemeContext'
-import AuthPanel from './AuthPanel'
+import AuthPanel, { AUTH_CHANGED } from './AuthPanel'
 
 const api = (window as unknown as { electronAPI: Window['electronAPI'] }).electronAPI
 
@@ -29,6 +29,12 @@ export default function AccountMenu({
 
   const load = useCallback(() => { api.getAuth?.().then(setAuth).catch(() => setAuth(null)) }, [])
   useEffect(() => { load() }, [load])
+  // The avatar is on screen at all times, so it must follow a sign-in that happened in
+  // Settings rather than in this popover.
+  useEffect(() => {
+    window.addEventListener(AUTH_CHANGED, load)
+    return () => window.removeEventListener(AUTH_CHANGED, load)
+  }, [load])
 
   const toggle = (): void => {
     if (!open && btnRef.current) {

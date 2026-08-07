@@ -5,6 +5,9 @@ import { useTheme } from '../context/ThemeContext'
 
 const api = (window as unknown as { electronAPI: Window['electronAPI'] }).electronAPI
 
+// Broadcast on any sign-in, sign-up or sign-out from any AuthPanel mount point.
+export const AUTH_CHANGED = 'attentify:auth-changed'
+
 // Brand marks for the social sign-in buttons (inline so nothing loads from the network).
 const GoogleIcon = ({ size = 14 }: { size?: number }): React.ReactElement => (
   <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
@@ -48,12 +51,29 @@ export default function AuthPanel({ onChange }: { onChange?: () => void }): Reac
   useEffect(() => { load() }, [load])
   useEffect(() => { api.getAuthProviders?.().then(setProviders).catch(() => setProviders([])) }, [])
 
+  // Announce every auth change on the window, not just to the caller's onChange.
+  // AuthPanel is mounted in three places (Settings, the sidebar avatar popover, the
+  // sign-in modal) and each passed a different callback, so the app-level banner went
+  // stale whenever sign-in happened anywhere but the modal. One broadcast means a new
+  // mount point cannot forget to wire it. See App.tsx's listener.
+  const announce = useCallback((): void => {
+    onChange?.()
+    window.dispatchEvent(new Event(AUTH_CHANGED))
+  }, [onChange])
+
+  // And listen, so the other copies of this panel do not sit on stale state after a
+  // sign-out somewhere else in the app.
+  useEffect(() => {
+    window.addEventListener(AUTH_CHANGED, load)
+    return () => window.removeEventListener(AUTH_CHANGED, load)
+  }, [load])
+
   const providerLogin = async (provider: AuthProvider): Promise<void> => {
     if (busy) return
     setBusy(true); setError('')
     try {
       const res = await api.signInWithProvider(provider)
-      if (res.ok && res.auth) { setAuth(res.auth); onChange?.() }
+      if (res.ok && res.auth) { setAuth(res.auth); announce() }
       else setError(res.error || 'Sign-in could not be completed.')
     } catch { setError('Sign-in could not be completed. Try again.') }
     setBusy(false)
@@ -67,7 +87,7 @@ export default function AuthPanel({ onChange }: { onChange?: () => void }): Reac
         ? await api.signUp(email.trim(), password)
         : await api.signIn(email.trim(), password)
       if (res.ok && res.auth) {
-        setAuth(res.auth); setEmail(''); setPassword(''); onChange?.()
+        setAuth(res.auth); setEmail(''); setPassword(''); announce()
       } else {
         setError(res.error || 'Something went wrong.')
       }
@@ -77,7 +97,7 @@ export default function AuthPanel({ onChange }: { onChange?: () => void }): Reac
 
   const signOut = async (): Promise<void> => {
     setBusy(true)
-    try { const res = await api.signOut(); setAuth(res.auth); onChange?.() } catch { /* ignore */ }
+    try { const res = await api.signOut(); setAuth(res.auth); announce() } catch { /* ignore */ }
     setBusy(false)
   }
 

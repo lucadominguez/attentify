@@ -485,11 +485,11 @@ async function refresh() {
 
   // Connection pill: one dot + label, technical detail (and version) in the tooltip.
   const dot = document.getElementById('status-dot');
-  dot.className = 'conn-dot ' + (connected ? 'on' : 'standalone');
-  document.getElementById('conn-label').textContent = connected ? 'Connected' : 'Standalone';
+  dot.className = 'conn-dot ' + (connected ? 'on' : 'ready');
+  document.getElementById('conn-label').textContent = connected ? 'Connected' : 'Active';
   document.getElementById('conn-pill').title = connected
-    ? `Standalone + daemon :${status.daemonPort} · v${ver}`
-    : `Standalone · daemon optional · v${ver}`;
+    ? `Active, with the desktop app on :${status.daemonPort} · v${ver}`
+    : `Active · the desktop app is optional · v${ver}`;
 
   // Advanced stats, plain language.
   const bypassTotal = Object.values(status?.bypassScores||{}).reduce((a,b)=>a+b,0);
@@ -1110,7 +1110,7 @@ async function initChat() {
 
   if (chatConnected)      { modeLabel.textContent = '· via daemon';          chatDot.className = 'status-dot on'; }
   else if (subscribed)    { modeLabel.textContent = '· Cloud';               chatDot.className = 'status-dot on'; }
-  else if (freeAI)        { modeLabel.textContent = '· free AI included';    chatDot.className = 'status-dot standalone'; }
+  else if (freeAI)        { modeLabel.textContent = '· free AI included';    chatDot.className = 'status-dot ready'; }
   else                    { modeLabel.textContent = '· free credit used up'; chatDot.className = 'status-dot off'; }
 
   if (chatHistory.length === 0) {
@@ -1308,6 +1308,7 @@ async function sendChat() {
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'signin_required') {
         addSysMsg('Sign in to use AI. Create a free account and you start with free credit.');
+        openAuthModal('Sign in to use the AI assistant. New accounts start with free credit.');
         renderCloud().catch(() => {});
         const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -1513,14 +1514,60 @@ function wireCloudExpand() {
   summary.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } };
 }
 
+// ── Sign-in modal ────────────────────────────────────────────────────────────
+// One implementation of the auth form, shown over whatever the user was doing.
+// Everything that needs an account calls openAuthModal(); nothing renders a
+// second copy of the form, so the two can no longer drift apart.
+let authModalWired = false;
+function openAuthModal(reason) {
+  const el = document.getElementById('auth-modal');
+  if (!el) return;
+  const why = document.getElementById('auth-reason');
+  if (why) why.textContent = reason || 'Free credit to start. No card needed.';
+  const err = document.getElementById('auth-err');
+  if (err) { err.hidden = true; err.textContent = ''; }
+  el.hidden = false;
+  setTimeout(() => { const f = document.getElementById('auth-email'); if (f) f.focus(); }, 40);
+  if (authModalWired) return;
+  authModalWired = true;
+
+  const close = () => { el.hidden = true; };
+  document.getElementById('auth-close').onclick = close;
+  document.getElementById('auth-backdrop').onclick = close;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !el.hidden) close(); });
+
+  const doAuth = async (type, btn) => {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-pass').value;
+    const errEl = document.getElementById('auth-err');
+    errEl.hidden = true;
+    if (!email || password.length < 8) {
+      errEl.textContent = 'Enter your email and a password of at least 8 characters.';
+      errEl.hidden = false;
+      return;
+    }
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Working…';
+    const r = await ask({ type, email, password }, 15000);
+    btn.disabled = false; btn.textContent = label;
+    if (r?.ok) { close(); renderCloud().catch(() => {}); refresh().catch(() => {}); }
+    else { errEl.textContent = r?.error || 'Could not sign in.'; errEl.hidden = false; }
+  };
+  const signupBtn = document.getElementById('auth-signup');
+  const loginBtn = document.getElementById('auth-login');
+  signupBtn.onclick = () => doAuth('cloud:signup', signupBtn);
+  loginBtn.onclick = () => doAuth('cloud:login', loginBtn);
+  document.getElementById('auth-pass').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doAuth('cloud:login', loginBtn);
+  });
+}
+
 async function renderCloud() {
   const summary = document.getElementById('cloud-summary');
   const box = document.getElementById('cloud-box');
   if (!summary) return;
   const res = await ask({ type: 'get:cloud' });
   const st = res?.cloudStatus;
-  const u = res?.usage;
-  const ownKey = u?.hasOwnKey;
   wireCloudExpand();
 
   const signedIn = !!(st && st.email);
@@ -1532,9 +1579,6 @@ async function renderCloud() {
   if (subscribed) {
     summary.innerHTML = `<span class="plan-dot on"></span><span class="plan-name">Subscribed</span>
       <span class="plan-meta">Unlimited AI</span><span class="plan-cta">Manage</span>`;
-  } else if (ownKey) {
-    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Your own key</span>
-      <span class="plan-meta">AI billed to you</span>`;
   } else if (signedIn) {
     summary.innerHTML = `<span class="plan-dot${st.outOfCredit ? ' out' : ''}"></span><span class="plan-name">Credits</span>
       <span class="plan-meta">${credits.toLocaleString()} left</span><span class="plan-cta">${st.outOfCredit ? 'Top up' : 'Add'}</span>`;
@@ -1557,11 +1601,6 @@ async function renderCloud() {
     return;
   }
 
-  if (ownKey) {
-    box.innerHTML = `<p class="cloud-pitch">Using your own API key. AI is billed directly to you and is never metered here.</p>`;
-    return;
-  }
-
   if (signedIn) {
     box.innerHTML = `
       <div class="cloud-row"><span class="cloud-sub">${esc(st.email || '')}</span>
@@ -1580,29 +1619,15 @@ async function renderCloud() {
     return;
   }
 
-  // Not signed in → email/password account form (a new account gets free trial credit).
+  // Not signed in. The form itself lives in the modal so there is exactly one copy of
+  // it and it can be raised from anywhere, rather than being buried down here.
   box.innerHTML = `
     <p class="cloud-pitch">Create a free account to get <b>free AI credit</b> to start. Top up or subscribe for unlimited any time.</p>
-    <div class="cloud-key-row"><input id="auth-email" class="cloud-key-input" placeholder="you@email.com" type="email" autocomplete="email"></div>
-    <div class="cloud-key-row"><input id="auth-pass" class="cloud-key-input" placeholder="Password (8+ characters)" type="password" autocomplete="current-password"></div>
-    <p id="auth-err" class="cloud-err" style="display:none"></p>
-    <div class="cloud-btns">
-      <button class="btn-primary" id="auth-signup">Create account</button>
-      <button class="btn-secondary" id="auth-login">Sign in</button>
-    </div>`;
-  const doAuth = async (type) => {
-    const email = document.getElementById('auth-email').value.trim();
-    const password = document.getElementById('auth-pass').value;
-    const errEl = document.getElementById('auth-err');
-    errEl.style.display = 'none';
-    if (!email || password.length < 8) { errEl.textContent = 'Enter your email and a password of at least 8 characters.'; errEl.style.display = 'block'; return; }
-    const r = await ask({ type, email, password }, 15000);
-    if (r?.ok) renderCloud();
-    else { errEl.textContent = r?.error || 'Could not sign in.'; errEl.style.display = 'block'; }
-  };
-  document.getElementById('auth-signup').onclick = () => doAuth('cloud:signup');
-  document.getElementById('auth-login').onclick = () => doAuth('cloud:login');
-  document.getElementById('auth-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAuth('cloud:login'); });
+    <button class="btn-primary" id="cloud-open-auth" style="width:100%">Sign in or create an account</button>`;
+  document.getElementById('cloud-open-auth').onclick = () => openAuthModal();
+  // Clicking the collapsed summary row should also raise it, since that row is the
+  // thing that actually says "Sign in".
+  if (summary) summary.onclick = (e) => { e.stopPropagation(); openAuthModal(); };
 }
 
 async function saveCloudKey() {

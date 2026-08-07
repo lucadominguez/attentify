@@ -485,11 +485,11 @@ async function refresh() {
 
   // Connection pill: one dot + label, technical detail (and version) in the tooltip.
   const dot = document.getElementById('status-dot');
-  dot.className = 'conn-dot ' + (connected ? 'on' : 'standalone');
-  document.getElementById('conn-label').textContent = connected ? 'Connected' : 'Standalone';
+  dot.className = 'conn-dot ' + (connected ? 'on' : 'ready');
+  document.getElementById('conn-label').textContent = connected ? 'Connected' : 'Active';
   document.getElementById('conn-pill').title = connected
-    ? `Standalone + daemon :${status.daemonPort} · v${ver}`
-    : `Standalone · daemon optional · v${ver}`;
+    ? `Active, with the desktop app on :${status.daemonPort} · v${ver}`
+    : `Active · the desktop app is optional · v${ver}`;
 
   // Advanced stats, plain language.
   const bypassTotal = Object.values(status?.bypassScores||{}).reduce((a,b)=>a+b,0);
@@ -1092,6 +1092,7 @@ function hideChat() {
 
 document.getElementById('chat-back-btn').addEventListener('click', hideChat);
 document.getElementById('chat-btn').addEventListener('click', showChat);
+document.getElementById('acct-btn').addEventListener('click', () => openAccountModal());
 
 async function initChat() {
   // Check daemon status
@@ -1110,7 +1111,7 @@ async function initChat() {
 
   if (chatConnected)      { modeLabel.textContent = '· via daemon';          chatDot.className = 'status-dot on'; }
   else if (subscribed)    { modeLabel.textContent = '· Cloud';               chatDot.className = 'status-dot on'; }
-  else if (freeAI)        { modeLabel.textContent = '· free AI included';    chatDot.className = 'status-dot standalone'; }
+  else if (freeAI)        { modeLabel.textContent = '· free AI included';    chatDot.className = 'status-dot ready'; }
   else                    { modeLabel.textContent = '· free credit used up'; chatDot.className = 'status-dot off'; }
 
   if (chatHistory.length === 0) {
@@ -1302,12 +1303,14 @@ async function sendChat() {
     if (msg.type === 'error') {
       removeTypingIndicator();
       if (msg.message === 'paywall' || msg.message === 'out_of_credit') {
-        addSysMsg("You're out of AI credits. Top up ($5 / $10 / $20) or subscribe for $9.99/mo, no key needed. Open the plan row at the bottom.");
+        // Do NOT point at the plan row: it lives in the main view, which is hidden
+        // while this chat view is open. Raise the buttons over the chat instead.
+        addSysMsg("You're out of AI credits. Top up or subscribe to keep going.");
+        openPayModal();
         renderCloud().catch(() => {});
-        const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
-        document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
       } else if (msg.message === 'signin_required') {
         addSysMsg('Sign in to use AI. Create a free account and you start with free credit.');
+        openAuthModal('Sign in to use the AI assistant. New accounts start with free credit.');
         renderCloud().catch(() => {});
         const cb = document.getElementById('cloud-box'); if (cb) cb.style.display = 'block';
         document.getElementById('cloud-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -1513,14 +1516,106 @@ function wireCloudExpand() {
   summary.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } };
 }
 
+// ── Sign-in modal ────────────────────────────────────────────────────────────
+// One implementation of the auth form, shown over whatever the user was doing.
+// Everything that needs an account calls openAuthModal(); nothing renders a
+// second copy of the form, so the two can no longer drift apart.
+let authModalWired = false;
+function openAuthModal(reason) {
+  const el = document.getElementById('auth-modal');
+  if (!el) return;
+  const why = document.getElementById('auth-reason');
+  if (why) why.textContent = reason || 'Free credit to start. No card needed.';
+  const err = document.getElementById('auth-err');
+  if (err) { err.hidden = true; err.textContent = ''; }
+  el.hidden = false;
+  setTimeout(() => { const f = document.getElementById('auth-email'); if (f) f.focus(); }, 40);
+  if (authModalWired) return;
+  authModalWired = true;
+
+  const close = () => { el.hidden = true; };
+  document.getElementById('auth-close').onclick = close;
+  document.getElementById('auth-backdrop').onclick = close;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !el.hidden) close(); });
+
+  const doAuth = async (type, btn) => {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-pass').value;
+    const errEl = document.getElementById('auth-err');
+    errEl.hidden = true;
+    if (!email || password.length < 8) {
+      errEl.textContent = 'Enter your email and a password of at least 8 characters.';
+      errEl.hidden = false;
+      return;
+    }
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Working…';
+    const r = await ask({ type, email, password }, 15000);
+    btn.disabled = false; btn.textContent = label;
+    if (r?.ok) { close(); renderCloud().catch(() => {}); refresh().catch(() => {}); }
+    else { errEl.textContent = r?.error || 'Could not sign in.'; errEl.hidden = false; }
+  };
+  // Social sign-in. Only revealed once the backend says it can complete the provider.
+  const gBtn = document.getElementById('auth-google');
+  const gLabel = document.getElementById('auth-google-label');
+  const gOr = document.getElementById('auth-or');
+  ask({ type: 'cloud:providers' }, 9000)
+    .then((r) => { if (r?.providers?.includes('google')) { gBtn.hidden = false; gOr.hidden = false; } })
+    .catch(() => { /* leave hidden; email and password still work */ });
+  gBtn.onclick = async () => {
+    const errEl = document.getElementById('auth-err');
+    errEl.hidden = true;
+    gBtn.disabled = true;
+    // Chrome tears this popup down the instant the Google tab takes focus, so the
+    // background worker owns the rest. This copy is what the user reads on the way out.
+    gLabel.textContent = 'Continue in the new tab…';
+    await ask({ type: 'cloud:oauth', provider: 'google' }, 9000);
+  };
+
+  const signupBtn = document.getElementById('auth-signup');
+  const loginBtn = document.getElementById('auth-login');
+  signupBtn.onclick = () => doAuth('cloud:signup', signupBtn);
+  loginBtn.onclick = () => doAuth('cloud:login', loginBtn);
+  document.getElementById('auth-pass').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doAuth('cloud:login', loginBtn);
+  });
+}
+
+// ── Out-of-credit paywall ────────────────────────────────────────────────────
+// One implementation, raised over whatever the user was doing, for the same reason
+// the sign-in form became a modal: the plan row is unreachable from the chat view.
+let payModalWired = false;
+function openPayModal(reason) {
+  const el = document.getElementById('pay-modal');
+  if (!el) return;
+  const why = document.getElementById('pay-reason');
+  if (why) why.textContent = reason || 'Top up or subscribe to keep using the AI.';
+  el.hidden = false;
+  if (payModalWired) return;
+  payModalWired = true;
+
+  const close = () => { el.hidden = true; };
+  document.getElementById('pay-close').onclick = close;
+  document.getElementById('pay-backdrop').onclick = close;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !el.hidden) close(); });
+
+  // Same calls the plan row makes, so the two cannot drift apart on price or packs.
+  const openUrl = async (type, extra) => {
+    const r = await ask({ type, ...(extra || {}) }, 15000);
+    if (r?.url) chrome.tabs.create({ url: r.url });
+  };
+  el.querySelectorAll('.pay-buy').forEach((b) => {
+    b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack });
+  });
+  document.getElementById('pay-sub').onclick = () => openUrl('cloud:checkout');
+}
+
 async function renderCloud() {
   const summary = document.getElementById('cloud-summary');
   const box = document.getElementById('cloud-box');
   if (!summary) return;
   const res = await ask({ type: 'get:cloud' });
   const st = res?.cloudStatus;
-  const u = res?.usage;
-  const ownKey = u?.hasOwnKey;
   wireCloudExpand();
 
   const signedIn = !!(st && st.email);
@@ -1532,9 +1627,6 @@ async function renderCloud() {
   if (subscribed) {
     summary.innerHTML = `<span class="plan-dot on"></span><span class="plan-name">Subscribed</span>
       <span class="plan-meta">Unlimited AI</span><span class="plan-cta">Manage</span>`;
-  } else if (ownKey) {
-    summary.innerHTML = `<span class="plan-dot"></span><span class="plan-name">Your own key</span>
-      <span class="plan-meta">AI billed to you</span>`;
   } else if (signedIn) {
     summary.innerHTML = `<span class="plan-dot${st.outOfCredit ? ' out' : ''}"></span><span class="plan-name">Credits</span>
       <span class="plan-meta">${credits.toLocaleString()} left</span><span class="plan-cta">${st.outOfCredit ? 'Top up' : 'Add'}</span>`;
@@ -1544,26 +1636,34 @@ async function renderCloud() {
   }
 
   // ── Expanded box ──
+  // Rendered into EVERY target: the inline plan row and the account modal, so signing
+  // out is reachable from the chat view too (the plan row lives in the main view, which
+  // is hidden while chat is open). Wiring is scoped per target with querySelector, not
+  // getElementById: the same markup now exists twice and getElementById would only ever
+  // find the first copy, silently leaving the modal's buttons dead.
+  const boxes = [document.getElementById('cloud-box'), document.getElementById('acct-box')].filter(Boolean);
+  const fill = (html, wire) => boxes.forEach((t) => { t.innerHTML = html; wire(t); });
+  const wireSignOut = (t) => {
+    const b = t.querySelector('.cloud-signout');
+    if (b) b.onclick = async () => { await ask({ type: 'cloud:logout' }); closeAccountModal(); renderCloud(); refresh().catch(() => {}); };
+  };
+
   if (subscribed) {
-    box.innerHTML = `
+    fill(`
       <div class="cloud-row"><span class="cloud-ok">✓ Subscribed</span><span class="cloud-sub">${esc(st.email || '')}</span></div>
       <p class="cloud-pitch">Unlimited managed AI plus more custom analytics.</p>
       <div class="cloud-btns">
-        <button class="btn-secondary" id="cloud-manage">Manage billing</button>
-        <button class="btn-secondary" id="cloud-signout">Sign out</button>
-      </div>`;
-    document.getElementById('cloud-manage').onclick = () => openUrl('cloud:portal');
-    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'cloud:logout' }); renderCloud(); };
-    return;
-  }
-
-  if (ownKey) {
-    box.innerHTML = `<p class="cloud-pitch">Using your own API key. AI is billed directly to you and is never metered here.</p>`;
+        <button class="btn-secondary cloud-manage">Manage billing</button>
+        <button class="btn-secondary cloud-signout">Sign out</button>
+      </div>`, (t) => {
+      t.querySelector('.cloud-manage').onclick = () => openUrl('cloud:portal');
+      wireSignOut(t);
+    });
     return;
   }
 
   if (signedIn) {
-    box.innerHTML = `
+    fill(`
       <div class="cloud-row"><span class="cloud-sub">${esc(st.email || '')}</span>
         <b class="${st.outOfCredit ? 'cloud-err' : ''}">${credits.toLocaleString()} credits</b></div>
       ${st.outOfCredit ? `<p class="cloud-err">You are out of credits. AI features and adaptive blocking pause until you top up or subscribe. Your rules and keyword blocks keep working.</p>` : `<p class="cloud-pitch">Credits power the AI. Top up any time, or subscribe for unlimited.</p>`}
@@ -1572,37 +1672,45 @@ async function renderCloud() {
         <button class="btn-secondary buy-credit" data-pack="10">+$10</button>
         <button class="btn-secondary buy-credit" data-pack="20">+$20</button>
       </div>
-      <button class="btn-primary" id="cloud-sub" style="width:100%;margin-top:6px">Subscribe $9.99/mo, unlimited</button>
-      <button class="btn-secondary" id="cloud-signout" style="width:100%;margin-top:6px">Sign out</button>`;
-    box.querySelectorAll('.buy-credit').forEach((b) => { b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack }); });
-    document.getElementById('cloud-sub').onclick = () => openUrl('cloud:checkout');
-    document.getElementById('cloud-signout').onclick = async () => { await ask({ type: 'cloud:logout' }); renderCloud(); };
+      <button class="btn-primary cloud-subscribe" style="width:100%;margin-top:6px">Subscribe $9.99/mo, unlimited</button>
+      <button class="btn-secondary cloud-signout" style="width:100%;margin-top:6px">Sign out</button>`, (t) => {
+      t.querySelectorAll('.buy-credit').forEach((b) => { b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack }); });
+      t.querySelector('.cloud-subscribe').onclick = () => openUrl('cloud:checkout');
+      wireSignOut(t);
+    });
     return;
   }
 
-  // Not signed in → email/password account form (a new account gets free trial credit).
-  box.innerHTML = `
+  // Not signed in. The form itself lives in the modal so there is exactly one copy of
+  // it and it can be raised from anywhere, rather than being buried down here.
+  fill(`
     <p class="cloud-pitch">Create a free account to get <b>free AI credit</b> to start. Top up or subscribe for unlimited any time.</p>
-    <div class="cloud-key-row"><input id="auth-email" class="cloud-key-input" placeholder="you@email.com" type="email" autocomplete="email"></div>
-    <div class="cloud-key-row"><input id="auth-pass" class="cloud-key-input" placeholder="Password (8+ characters)" type="password" autocomplete="current-password"></div>
-    <p id="auth-err" class="cloud-err" style="display:none"></p>
-    <div class="cloud-btns">
-      <button class="btn-primary" id="auth-signup">Create account</button>
-      <button class="btn-secondary" id="auth-login">Sign in</button>
-    </div>`;
-  const doAuth = async (type) => {
-    const email = document.getElementById('auth-email').value.trim();
-    const password = document.getElementById('auth-pass').value;
-    const errEl = document.getElementById('auth-err');
-    errEl.style.display = 'none';
-    if (!email || password.length < 8) { errEl.textContent = 'Enter your email and a password of at least 8 characters.'; errEl.style.display = 'block'; return; }
-    const r = await ask({ type, email, password }, 15000);
-    if (r?.ok) renderCloud();
-    else { errEl.textContent = r?.error || 'Could not sign in.'; errEl.style.display = 'block'; }
-  };
-  document.getElementById('auth-signup').onclick = () => doAuth('cloud:signup');
-  document.getElementById('auth-login').onclick = () => doAuth('cloud:login');
-  document.getElementById('auth-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') doAuth('cloud:login'); });
+    <button class="btn-primary cloud-open-auth" style="width:100%">Sign in or create an account</button>`,
+  (t) => { t.querySelector('.cloud-open-auth').onclick = () => { closeAccountModal(); openAuthModal(); }; });
+  // Clicking the collapsed summary row should also raise it, since that row is the
+  // thing that actually says "Sign in".
+  if (summary) summary.onclick = (e) => { e.stopPropagation(); openAuthModal(); };
+}
+
+// ── Account modal ────────────────────────────────────────────────────────────
+// Reachable from the header on every view, including the chat, where the inline
+// plan row is not on screen at all. Its body is filled by renderCloud() above, so
+// there is one account surface rather than two that can disagree.
+function closeAccountModal() {
+  const el = document.getElementById('acct-modal');
+  if (el) el.hidden = true;
+}
+let acctModalWired = false;
+function openAccountModal() {
+  const el = document.getElementById('acct-modal');
+  if (!el) return;
+  el.hidden = false;
+  renderCloud().catch(() => {});
+  if (acctModalWired) return;
+  acctModalWired = true;
+  document.getElementById('acct-close').onclick = closeAccountModal;
+  document.getElementById('acct-backdrop').onclick = closeAccountModal;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !el.hidden) closeAccountModal(); });
 }
 
 async function saveCloudKey() {

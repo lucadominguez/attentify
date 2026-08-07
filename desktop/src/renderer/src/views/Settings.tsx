@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Shield, Zap, Bell, CheckCircle, Sparkles, Sun, Moon, TrendingUp, ChevronRight, RotateCcw, History, AlertTriangle, RefreshCw, Cpu, XCircle } from 'lucide-react'
+import { Shield, Zap, Bell, CheckCircle, Sparkles, Sun, Moon, TrendingUp, ChevronRight, RotateCcw, History, AlertTriangle, RefreshCw, Cpu, XCircle, User } from 'lucide-react'
 import { useTheme } from '../context/ThemeContext'
 import SelfEvaluationPanel from '../components/SelfEvaluationPanel'
+import AuthPanel from '../components/AuthPanel'
 import type { AppStore, UsageState, CloudState, ViewName, ChangeEntry, UpdateStatus, CompatReport, CompatStatus } from '@shared/types'
 
 const api = (window as unknown as { electronAPI: Window['electronAPI'] }).electronAPI
@@ -202,7 +203,16 @@ export default function SettingsView({ store, onRefresh, onNavigate }: SettingsP
 
       <div className="flex-1 overflow-y-auto px-6 py-5 space-y-8">
 
-        {/* Account moved to the title-bar avatar (AccountMenu), always on screen. */}
+        {/* Account. This used to live ONLY on the sidebar avatar, on the theory that an
+            always-on-screen control beats a settings row. In practice people look for
+            "sign out" in Settings, find nothing, and conclude there is no way to do it.
+            AuthPanel is a single component, so showing it here as well cannot drift from
+            the avatar popover. */}
+        <section>
+          <SectionHeader icon={<User size={11} />} label="Account" />
+          <AuthPanel onChange={onRefresh} />
+        </section>
+
 
         {/* ── Appearance ────────────────────────────────────────────────────── */}
         <section>

@@ -1,0 +1,4 @@
+# Cloudflare Pages strips ".html" and 308s to the extensionless path. Google Search
+# Console fetches its verification file at the LITERAL filename, so serve it in place
+# (200 = rewrite, not redirect) instead of bouncing the verifier.
+/googlec8aad4cc3f7d15aa.html  /googlec8aad4cc3f7d15aa  200

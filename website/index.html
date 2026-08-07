@@ -34,11 +34,18 @@
     <a href="#features">What you get</a>
     <a href="#how">How it works</a>
     <a href="#compare">Compare</a>
+    <a href="#agents">Agents</a>
     <a href="#pricing">Pricing</a>
     <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener" class="nav-gh" title="GitHub">★ GitHub</a>
+    <!-- The header CTAs are hidden on phones, so mirror them into the burger menu
+         or a mobile visitor gets no way to install from the header at all. -->
+    <a class="nav-mobile-only" href="/ext/attentify-extension.zip" download>Get the extension</a>
+    <a class="nav-mobile-only" href="#download">Windows app (beta)</a>
+    <a class="nav-mobile-only" href="auth.html">Sign in</a>
   </nav>
   <a href="auth.html" class="btn btn-sm btn-glass nav-cta" id="navSignIn">Sign in</a>
-  <a href="#download" class="btn btn-sm btn-primary nav-cta">Download <span class="beta-chip">Beta</span></a>
+  <a href="/ext/attentify-extension.zip" download class="btn btn-sm btn-primary nav-cta">Get the extension</a>
+  <a href="#download" class="btn btn-sm btn-glass nav-cta">Windows app <span class="beta-chip">Beta</span></a>
   <button class="nav-burger" id="burger" aria-label="Menu">≡</button>
 </header>
 
@@ -63,7 +70,7 @@
            renders its own native (Windows) title bar, so duplicating controls
            would show two sets at once. -->
       <div class="aw-bar">
-        <svg class="aw-logo" viewBox="0 0 28 28" aria-hidden="true"><polygon points="14,3 25,14 14,25 3,14" fill="none" stroke="#6366f1" stroke-width="1.6"/><circle cx="14" cy="14" r="2.4" fill="#6366f1"/></svg>
+        <img class="aw-logo" src="attentify-logo.png" alt="" aria-hidden="true" style="border-radius:4px">
         <span class="aw-title">Attentify</span>
         <span class="aw-badge"><span class="ctx-dot"></span> Live demo · sample data</span>
         <button class="aw-pop" onclick="window.open('./app/index.html','_blank','noopener')" title="Open full screen">⛶ Full screen</button>
@@ -409,7 +416,7 @@
         <li>✓ SSO &amp; deployment tooling</li>
         <li>✓ Dedicated support</li>
       </ul>
-      <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener" class="btn btn-glass btn-block">Contact us</a>
+      <a href="mailto:support@attentify.ca?subject=Attentify%20for%20teams" class="btn btn-glass btn-block">Contact us</a>
     </article>
   </div>
 </section>
@@ -449,6 +456,62 @@
   </div>
 </section>
 
+<!-- ══════════════ MCP / AGENTS ══════════════ -->
+<section class="section mcp-sec" id="agents">
+  <div class="sec-head reveal">
+    <span class="kicker">For people who work with AI agents</span>
+    <h2>Your agent has no idea <span class="grad">what you actually did today.</span></h2>
+    <p>It can read your code and your files, but not the forty minutes you lost before you opened
+       them. Attentify gives it that missing half, and the means to do something about it.</p>
+  </div>
+
+  <div class="mcp-wrap reveal">
+    <div class="mcp-install">
+      <span class="mcp-install-label">Add it in one line</span>
+      <code class="mcp-cmd">claude mcp add attentify -- npx -y @attentify/mcp</code>
+      <p class="mcp-note">Works with any MCP client. Needs the Windows app running. Free, and no
+         account required to use the connector.</p>
+    </div>
+
+    <div class="mcp-asks">
+      <span class="mcp-asks-label">Then ask it things like</span>
+      <ul>
+        <li>"What have I actually been working on for the last three hours?"</li>
+        <li>"Am I drifting off what I said I'd do today?"</li>
+        <li>"Block whatever has been eating my afternoon."</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid mcp-grid reveal">
+    <article class="card">
+      <div class="ico-box brain">◷</div>
+      <h3>Real behaviour, not self-report</h3>
+      <p>People are unreliable narrators about their own attention. Your agent reads what actually
+         happened, alongside the goals you set, so its advice is about your day rather than about
+         websites in general.</p>
+    </article>
+    <article class="card">
+      <div class="ico-box">⛨</div>
+      <h3>It stays on your machine</h3>
+      <p>The connector talks to the app over <code>127.0.0.1</code>, gated by a per-install token.
+         It makes no network calls of its own. Zero dependencies, one file, about 250 lines you can
+         read in a sitting.</p>
+    </article>
+    <article class="card">
+      <div class="ico-box">✦</div>
+      <h3>It can act, not just observe</h3>
+      <p>Reading is the easy half. Your agent can also block a site outright, across every browser,
+         when you ask it to.</p>
+    </article>
+  </div>
+
+  <p class="mcp-foot">
+    Open source, AGPL, same as the rest of Attentify.
+    <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener">Read the source</a>
+  </p>
+</section>
+
 <!-- ══════════════ FAQ ══════════════ -->
 <section class="section faq" id="faq">
   <div class="sec-head reveal"><h2>FAQ</h2></div>
@@ -474,13 +537,14 @@
     <div class="foot-col"><h4>Product</h4>
       <a href="#app-demo">Live demo</a><a href="#features">Features</a><a href="#compare">Compare</a><a href="#pricing">Pricing</a></div>
     <div class="foot-col"><h4>Download</h4>
-      <a class="dl" data-os="win" href="https://api.attentify.ca/download/win">Windows app</a>
       <a href="/ext/attentify-extension.zip" download>Browser extension</a>
-      <a href="#app-demo">App demo</a></div>
+      <a class="dl" data-os="win" href="https://api.attentify.ca/download/win">Windows app (beta)</a></div>
+    <div class="foot-col"><h4>Support</h4>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:support@attentify.ca">Email support</a></div>
     <div class="foot-col"><h4>Open source</h4>
       <a href="https://github.com/lucadominguez/attentify" target="_blank" rel="noopener">Source on GitHub</a>
-      <a href="https://github.com/lucadominguez/attentify#what-is-not-in-here" target="_blank" rel="noopener">What's open, what isn't</a>
-      <a href="#faq">FAQ</a></div>
+      <a href="https://github.com/lucadominguez/attentify#what-is-not-in-here" target="_blank" rel="noopener">What's open, what isn't</a></div>
     <div class="foot-col"><h4>Legal</h4>
       <a href="/privacy">Privacy Policy</a>
       <a href="/terms">Terms of Service</a></div>
