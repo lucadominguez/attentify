@@ -741,7 +741,7 @@
       return Promise.resolve(cloud());
     },
     clearCloudLicense: function () { store.cloudLicense = undefined; store.cloudActive = false; store.cloudTier = undefined; store.cloudEmail = undefined; emit('usage:changed', usage()); return Promise.resolve(cloud()); },
-    cloudCheckout: function () { return Promise.resolve({ url: 'https://attentify.ca/#pricing' }); },
+    cloudCheckout: function () { return Promise.resolve({ url: 'https://attentify.ai/#pricing' }); },
 
     // Account auth (demo): in-memory sign in / create account.
     getAuth: function () { return Promise.resolve({ signedIn: !!store.authEmail, email: store.authEmail || null, tier: store.authEmail ? (store.cloudActive ? 'cloud' : 'free') : null, subscribed: !!store.cloudActive }); },
@@ -757,7 +757,10 @@
       return Promise.resolve({ ok: true, auth: { signedIn: true, email: store.authEmail, tier: store.cloudActive ? 'cloud' : 'free', subscribed: !!store.cloudActive } });
     },
     signOut: function () { store.authEmail = undefined; return Promise.resolve({ ok: true, auth: { signedIn: false, email: null, tier: null, subscribed: false } }); },
-    getAuthProviders: function () { return Promise.resolve(['google', 'microsoft', 'facebook', 'github']); },
+    // Only what the backend actually serves. The real app reads /v1/auth/providers,
+    // which returns ["google"]; advertising Microsoft/Facebook/GitHub in the public
+    // demo promised three sign-in routes that do not exist.
+    getAuthProviders: function () { return Promise.resolve(['google']); },
     signInWithProvider: function (provider) {
       store.authEmail = 'you@' + String(provider || 'demo') + '.com'; store.cloudEmail = store.authEmail;
       return Promise.resolve({ ok: true, auth: { signedIn: true, email: store.authEmail, tier: store.cloudActive ? 'cloud' : 'free', subscribed: !!store.cloudActive } });

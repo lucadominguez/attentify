@@ -4,7 +4,7 @@ All notable changes to Attentify (desktop app) are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and the
 project uses [semantic versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.4.0] - 2026-08-07
 
 ### Added
 - **Attentify can now be used by an AI agent.** A new MCP server lets Claude Code, Cursor or

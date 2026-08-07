@@ -1119,6 +1119,7 @@ function BugReporter({
   ] });
 }
 const api$k = window.electronAPI;
+const AUTH_CHANGED = "attentify:auth-changed";
 const GoogleIcon = ({ size = 14 }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: size, height: size, viewBox: "0 0 48 48", "aria-hidden": "true", children: [
   /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#4285F4", d: "M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z" }),
   /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#34A853", d: "M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z" }),
@@ -1156,6 +1157,14 @@ function AuthPanel({ onChange }) {
   reactExports.useEffect(() => {
     api$k.getAuthProviders?.().then(setProviders).catch(() => setProviders([]));
   }, []);
+  const announce = reactExports.useCallback(() => {
+    onChange?.();
+    window.dispatchEvent(new Event(AUTH_CHANGED));
+  }, [onChange]);
+  reactExports.useEffect(() => {
+    window.addEventListener(AUTH_CHANGED, load);
+    return () => window.removeEventListener(AUTH_CHANGED, load);
+  }, [load]);
   const providerLogin = async (provider) => {
     if (busy) return;
     setBusy(true);
@@ -1164,7 +1173,7 @@ function AuthPanel({ onChange }) {
       const res = await api$k.signInWithProvider(provider);
       if (res.ok && res.auth) {
         setAuth(res.auth);
-        onChange?.();
+        announce();
       } else setError(res.error || "Sign-in could not be completed.");
     } catch {
       setError("Sign-in could not be completed. Try again.");
@@ -1181,7 +1190,7 @@ function AuthPanel({ onChange }) {
         setAuth(res.auth);
         setEmail("");
         setPassword("");
-        onChange?.();
+        announce();
       } else {
         setError(res.error || "Something went wrong.");
       }
@@ -1195,7 +1204,7 @@ function AuthPanel({ onChange }) {
     try {
       const res = await api$k.signOut();
       setAuth(res.auth);
-      onChange?.();
+      announce();
     } catch {
     }
     setBusy(false);
@@ -1332,6 +1341,10 @@ function AccountMenu({
   }, []);
   reactExports.useEffect(() => {
     load();
+  }, [load]);
+  reactExports.useEffect(() => {
+    window.addEventListener(AUTH_CHANGED, load);
+    return () => window.removeEventListener(AUTH_CHANGED, load);
   }, [load]);
   const toggle = () => {
     if (!open && btnRef.current) {
@@ -7865,6 +7878,10 @@ function SettingsView({ store, onRefresh, onNavigate }) {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 overflow-y-auto px-6 py-5 space-y-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(User, { size: 11 }), label: "Account" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(AuthPanel, { onChange: onRefresh })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader$1, { icon: theme === "dark" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { size: 11 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { size: 11 }), label: "Appearance" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
@@ -11208,7 +11225,11 @@ function App() {
   reactExports.useEffect(() => {
     refreshAuth();
     window.addEventListener("focus", refreshAuth);
-    return () => window.removeEventListener("focus", refreshAuth);
+    window.addEventListener(AUTH_CHANGED, refreshAuth);
+    return () => {
+      window.removeEventListener("focus", refreshAuth);
+      window.removeEventListener(AUTH_CHANGED, refreshAuth);
+    };
   }, [refreshAuth]);
   const signedOut = auth !== null && !auth.signedIn;
   const [authPrompt, setAuthPrompt] = reactExports.useState(false);
