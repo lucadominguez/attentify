@@ -20,11 +20,11 @@
 
 ## The short version
 
-Thirty three seconds, cut from the real app and the real extension. Nothing here is a mockup.
+Seventy five seconds on why a blocklist cannot do this, cut from the real app and the real extension. Nothing here is a mockup.
 
-![Attentify in thirty three seconds](.github/media/ad.webp)
+![Why a blocklist cannot do this](.github/media/ad.webp)
 
-Full quality, no compression for the page:
+Full quality, with narration:
 [16:9](.github/media/attentify-ad-16x9.mp4) &nbsp;·&nbsp;
 [9:16](.github/media/attentify-ad-9x16.mp4) &nbsp;·&nbsp;
 [1:1](.github/media/attentify-ad-1x1.mp4)
