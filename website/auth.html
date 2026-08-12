@@ -22,6 +22,18 @@
     <h2 id="title" style="font-size:26px;text-align:center">Welcome back</h2>
     <p id="subtitle" style="color:var(--muted);text-align:center;margin:10px 0 22px;font-size:14px">Sign in to see your focus dashboard.</p>
 
+    <!-- Shown once a desktop app waiting on a nonce has been handed the session.
+         The app has no sign-in of its own, so this page is the only way it can be
+         signed in, and this panel is the end of that journey. -->
+    <div id="paired" style="display:none;text-align:center">
+      <div style="width:46px;height:46px;border-radius:50%;margin:6px auto 16px;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#34d399" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <p style="font-size:15px;color:var(--text);margin:0 0 8px">You are signed in.</p>
+      <p style="font-size:13.5px;color:var(--muted);margin:0 0 20px;line-height:1.55">Attentify has picked up your account. You can close this tab and go back to the app.</p>
+      <a href="dashboard.html" class="btn btn-block" style="border:1px solid var(--line);color:var(--muted)">Open the dashboard instead</a>
+    </div>
+
     <!-- Social sign-in. Hidden until /v1/auth/providers confirms the backend actually
          has credentials for the provider, so this can never render a dead button. -->
     <div id="social" style="display:none">
@@ -56,11 +68,11 @@
       <a href="/privacy" style="color:var(--muted)">Privacy Policy</a>.
     </p>
 
-    <p style="text-align:center;margin-top:18px;font-size:14px;color:var(--muted)">
+    <p id="switchRow" style="text-align:center;margin-top:18px;font-size:14px;color:var(--muted)">
       <span id="switchText">New here?</span>
       <a id="switchLink" href="#" style="color:var(--cyan);font-weight:600">Create an account</a>
     </p>
-    <p style="text-align:center;margin-top:16px">
+    <p id="licenseRow" style="text-align:center;margin-top:16px">
       <a href="account.html" style="color:var(--faint);font-size:13px">Have a license key instead? →</a>
     </p>
   </div>
@@ -88,6 +100,57 @@ const $ = id => document.getElementById(id);
 let mode = 'login'; // 'login' | 'signup'
 let tsWidgetId = null;
 
+// ── Signing the desktop app in ────────────────────────────────────────────────
+// The app has no sign-in of its own. It opens this page with ?nonce=… and waits,
+// and whatever the user does here ends by parking the session against that nonce
+// for the app to collect. The nonce is kept in sessionStorage because the social
+// route leaves this page entirely and comes back on a bare URL, which would
+// otherwise drop it, and because it must not survive into a later tab.
+const NONCE_KEY = 'attentify_pair_nonce';
+(function captureNonce() {
+  const n = new URLSearchParams(location.search).get('nonce');
+  // Same shape the backend enforces (isHandoffNonce), so a nonce this page accepts
+  // is never one the handoff endpoint would then reject.
+  if (!n || !/^[A-Za-z0-9_-]{32,128}$/.test(n)) return;
+  sessionStorage.setItem(NONCE_KEY, n);
+  // Keep it out of history: this URL identifies a waiting app.
+  history.replaceState(null, '', location.pathname);
+})();
+const pairingNonce = () => sessionStorage.getItem(NONCE_KEY);
+
+function showPaired() {
+  sessionStorage.removeItem(NONCE_KEY);
+  for (const id of ['social', 'form', 'msg', 'legalNote', 'switchRow', 'licenseRow']) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+  $('title').textContent = 'Attentify is signed in';
+  $('subtitle').style.display = 'none';
+  $('paired').style.display = 'block';
+}
+
+// Hand the session to the waiting app. Returns true if it was consumed here, so
+// callers know not to continue on to the dashboard.
+async function pairApp(token) {
+  const nonce = pairingNonce();
+  if (!nonce || !token) return false;
+  try {
+    const r = await fetch(API + '/v1/auth/handoff', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ nonce }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.paired) throw new Error(d.error || 'Could not reach Attentify.');
+    showPaired();
+    return true;
+  } catch (e) {
+    $('msg').style.color = '#ff9d7a';
+    $('msg').textContent = 'Signed in, but handing the session to Attentify failed. Reopen the sign-in link from the app.';
+    return false;
+  }
+}
+
 // ── Returning from a social sign-in ──────────────────────────────────────────
 // The worker sends the result in the FRAGMENT, which never leaves the browser, so
 // the token stays out of access logs and out of the Referer of anything loaded next.
@@ -98,7 +161,13 @@ let tsWidgetId = null;
   const token = p.get('token'), oauthError = p.get('error');
   if (!token && !oauthError) return;
   history.replaceState(null, '', location.pathname);
-  if (token) { localStorage.setItem('attentify_session', token); location.replace('dashboard.html'); return; }
+  if (token) {
+    localStorage.setItem('attentify_session', token);
+    // An app is waiting on this sign-in, so finish there rather than navigating away.
+    if (pairingNonce()) { void pairApp(token); return; }
+    location.replace('dashboard.html');
+    return;
+  }
   const reasons = {
     no_email: 'That account has no verified email address, so we could not sign you in.',
     exchange_failed: 'Google did not complete the sign-in. Please try again.',
@@ -107,8 +176,13 @@ let tsWidgetId = null;
   window.__oauthError = reasons[oauthError] || 'Sign-in did not complete. Please try again.';
 })();
 
-// If already signed in, skip straight to the dashboard.
-if (localStorage.getItem('attentify_session')) location.replace('dashboard.html');
+// If already signed in, skip straight to the dashboard. Unless an app is waiting,
+// in which case this browser session is exactly what it needs and there is nothing
+// to ask the user for.
+if (localStorage.getItem('attentify_session')) {
+  if (pairingNonce()) void pairApp(localStorage.getItem('attentify_session'));
+  else location.replace('dashboard.html');
+}
 
 // A stable-ish browser fingerprint so the backend grants the free trial once per device.
 async function browserFingerprint() {
@@ -180,6 +254,7 @@ $('form').addEventListener('submit', async (e) => {
     const d = await r.json();
     if (!r.ok || !d.token) throw new Error(d.error || 'Something went wrong');
     localStorage.setItem('attentify_session', d.token);
+    if (pairingNonce()) { await pairApp(d.token); return; }
     location.href = 'dashboard.html';
   } catch (err) {
     $('msg').style.color = '#ff9d7a'; $('msg').textContent = err.message;
