@@ -715,7 +715,10 @@ section[id],[id]{scroll-margin-top:84px}
 .bs-row .bs-rsn{color:#8593a8}
 
 /* ── Extension preview: a realistic feed Attentify cleans live + the REAL popup iframe ── */
-.ext-page{flex:1;min-width:0;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:10px;
+/* The section wrapper (.hero-lead) is centred, and the simulated page was
+   silently inheriting it: every post title, byline and snippet sat centred,
+   which no real feed does and which is half of why this read as a mockup. */
+.ext-page{text-align:left;flex:1;min-width:0;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:10px;
   background:#f2f4f8;position:relative}
 /* status pill that narrates the reasoning as it works */
 .ext-status{position:sticky;top:0;z-index:3;align-self:flex-start;display:flex;align-items:center;gap:8px;
@@ -727,11 +730,17 @@ section[id],[id]{scroll-margin-top:84px}
 .ext-status.done .exs-dot{background:#0e9f6e;animation:none}
 @keyframes exsPulse{0%{box-shadow:0 0 0 0 rgba(99,102,241,.5)}70%{box-shadow:0 0 0 7px rgba(99,102,241,0)}100%{box-shadow:0 0 0 0 rgba(99,102,241,0)}}
 /* scan line that sweeps the feed */
-.ext-scan{position:absolute;left:0;right:0;height:64px;z-index:2;pointer-events:none;opacity:0;
-  background:linear-gradient(180deg,transparent,rgba(99,102,241,.16),transparent);
-  box-shadow:0 0 36px rgba(99,102,241,.5)}
-.ext-page.scanning .ext-scan{opacity:1;animation:extScan 1.5s cubic-bezier(.4,0,.4,1)}
-@keyframes extScan{0%{top:-64px}100%{top:100%}}
+/* The read pass. A flat band travelling at constant speed looks like a screen
+   saver; a real scan has a bright leading edge, a soft trail behind it, and it
+   eases out as it finishes rather than falling off the bottom. */
+.ext-scan{position:absolute;left:0;right:0;height:96px;z-index:2;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,transparent 0%,rgba(99,102,241,.05) 55%,rgba(99,102,241,.20) 88%,
+    rgba(129,140,248,.85) 97%,rgba(255,255,255,.9) 100%);
+  box-shadow:0 2px 30px rgba(99,102,241,.55)}
+.ext-scan::after{content:"";position:absolute;left:0;right:0;top:100%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(99,102,241,.9) 18%,rgba(167,139,250,.95) 50%,rgba(99,102,241,.9) 82%,transparent)}
+.ext-page.scanning .ext-scan{animation:extScan 1.5s cubic-bezier(.33,.02,.24,1) both}
+@keyframes extScan{0%{top:-96px;opacity:0}8%{opacity:1}88%{opacity:1}100%{top:100%;opacity:0}}
 
 /* a normal (kept) post */
 .epost{display:flex;gap:11px;padding:12px 13px;border-radius:11px;background:#fff;border:1px solid rgba(15,23,42,.08);
@@ -741,7 +750,8 @@ section[id],[id]{scroll-margin-top:84px}
 .epost.keep .ev{display:flex;flex-direction:column;align-items:center;gap:1px;flex:0 0 auto;color:#8593a8;font-size:10px}
 .ev-up,.ev-dn{font-size:11px;line-height:1}.ev-n{font-size:11px;font-weight:700;color:#4a5568}
 .ec{min-width:0}
-.ec-sub{font-size:11px;color:#8593a8;font-weight:600}
+.ec-sub{font-size:11px;color:#8593a8;font-weight:600;display:flex;align-items:center}
+.ec-sub .av{width:16px;height:16px;margin-right:5px}
 .ec-ti{font-size:13.5px;color:#1a1f28;font-weight:600;margin:2px 0 5px;line-height:1.3}
 .ec-meta{font-size:11px;color:#8593a8}
 
@@ -750,27 +760,123 @@ section[id],[id]{scroll-margin-top:84px}
 .epost.block .eblk-h{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .eblk-tag{font-size:12.5px;font-weight:700;color:#334155}
 .eblk-x{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8}
+/* ── Simulated page media ──────────────────────────────────────────────────
+   These scenes stand in for real sites, so their imagery has to read as
+   photography and video rather than as wireframe placeholders. Every
+   thumbnail below is built from layered gradients: no network images, no
+   build step, nothing to 404, and it still looks like a picture at 2x on a
+   retina capture. Variety comes from :nth-child so the markup stays clean. */
+.shot{position:relative;overflow:hidden;border-radius:8px;flex:0 0 auto;background:#0e1424;
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,.16),0 2px 7px -3px rgba(15,23,42,.5)}
+.shot::before,.shot::after{content:"";position:absolute}
+
+/* a dark code editor, the thing an actual tutorial thumbnail shows */
+.shot.code{background:linear-gradient(165deg,#1b2440,#0a0f1e)}
+.shot.code::before{inset:15% 11% 13% 9%;border-radius:1px;opacity:.95;background-repeat:no-repeat;
+  background-image:linear-gradient(90deg,#7dd3fc,#7dd3fc),linear-gradient(90deg,#c4b5fd,#c4b5fd),
+    linear-gradient(90deg,#fca5a5,#fca5a5),linear-gradient(90deg,#86efac,#86efac),
+    linear-gradient(90deg,#fcd34d,#fcd34d),linear-gradient(90deg,#8ea3c0,#8ea3c0);
+  background-size:58% 9%,80% 9%,42% 9%,68% 9%,32% 9%,52% 9%;
+  background-position:0 2%,0 21%,11% 40%,11% 59%,0 78%,0 97%}
+
+/* a person on camera: shoulders, head, warm key light */
+.shot.face{background:radial-gradient(120% 95% at 50% 12%,#53648f,#26304c 58%,#161c2e)}
+.shot.face::before{left:50%;bottom:-16%;width:70%;height:54%;transform:translateX(-50%);
+  border-radius:50% 50% 0 0/72% 72% 0 0;background:linear-gradient(180deg,#46527d,#2c3454)}
+.shot.face::after{left:50%;top:19%;width:31%;height:40%;transform:translateX(-50%);border-radius:47%;
+  background:linear-gradient(180deg,#f3cda8,#d9a87c)}
+
+/* saturated gaming/neon key art */
+.shot.neon{background:radial-gradient(55% 70% at 22% 24%,rgba(236,72,153,.9),transparent 62%),
+  radial-gradient(65% 85% at 82% 74%,rgba(56,189,248,.85),transparent 62%),linear-gradient(160deg,#1e1039,#09091b)}
+.shot.neon::after{inset:0;background:repeating-linear-gradient(114deg,rgba(255,255,255,.08) 0 2px,transparent 2px 10px)}
+
+/* the garish outrage-bait ad creative */
+.shot.bait{background:radial-gradient(95% 95% at 28% 18%,#ffd76a,#ff8f3d 52%,#ef4d2e)}
+.shot.bait::before{left:50%;top:50%;width:46%;height:46%;transform:translate(-50%,-50%) rotate(45deg);
+  background:rgba(255,255,255,.34);border-radius:5px}
+.shot.bait::after{left:50%;top:50%;width:16%;height:44%;transform:translate(-50%,-50%);
+  background:rgba(120,30,10,.55);border-radius:2px}
+
+/* outdoor footage */
+.shot.scenic{background:linear-gradient(180deg,#8ed2f2 0%,#cfeaf7 44%,#7cbb69 44%,#3f7f3c 100%)}
+.shot.scenic::before{left:14%;top:12%;width:20%;height:24%;border-radius:50%;background:#ffeaa7;
+  box-shadow:0 0 14px 4px rgba(255,234,167,.6)}
+.shot.scenic::after{left:-6%;bottom:34%;width:64%;height:26%;background:#5fa356;
+  border-radius:50% 50% 0 0/100% 100% 0 0}
+
+/* play button and the metadata a real thumbnail carries */
+.shot .pb{position:absolute;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);z-index:2;
+  border-radius:50%;background:rgba(10,14,24,.62);backdrop-filter:blur(2px);
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.72)}
+.shot .pb::after{content:"";position:absolute;left:53%;top:50%;transform:translate(-50%,-50%);
+  border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent #fff}
+.shot .dur{position:absolute;right:4px;bottom:4px;z-index:2;font-size:9px;font-weight:700;color:#fff;
+  background:rgba(8,12,22,.85);padding:1px 4px;border-radius:3px;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.shot .prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:2;background:rgba(255,255,255,.28)}
+.shot .prog::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,40%);background:#ff0033}
+
+/* channel / poster avatars */
+.av{width:20px;height:20px;border-radius:50%;flex:0 0 auto;display:inline-block;vertical-align:-5px;margin-right:6px;
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,.10)}
+.av-a{background:linear-gradient(145deg,#6366f1,#22d3ee)}
+.av-b{background:linear-gradient(145deg,#f59e0b,#ef4444)}
+.av-c{background:linear-gradient(145deg,#10b981,#3b82f6)}
+.av-d{background:linear-gradient(145deg,#8b5cf6,#ec4899)}
+
 .eblk-rail{display:flex;gap:8px}
-.eblk-rail i{flex:1;height:52px;border-radius:8px;background:linear-gradient(135deg,#dfe4ec,#eef1f6)}
+.eblk-rail i{flex:1;height:52px;border-radius:8px;position:relative;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,.14)}
+.eblk-rail i:nth-child(1){background:linear-gradient(160deg,#3b2a5e,#170f2c)}
+.eblk-rail i:nth-child(2){background:radial-gradient(80% 90% at 40% 30%,#ff9a6b,#c2410c)}
+.eblk-rail i:nth-child(3){background:linear-gradient(150deg,#0ea5e9,#075985)}
+.eblk-rail i:nth-child(4){background:linear-gradient(150deg,#f43f5e,#7f1d3a)}
+/* a scrim plus two caption bars, so a rail tile reads as a content card
+   rather than a colour swatch */
+.eblk-rail i::before{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;
+  background:linear-gradient(180deg,transparent,rgba(6,10,20,.72))}
+.eblk-rail i::after{content:"";position:absolute;left:7px;right:9px;bottom:8px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 8px 0 -1px rgba(255,255,255,.4),0 8px 0 -1px rgba(255,255,255,.4)}
+.eblk-rail i:nth-child(2)::after{right:34%}
+.eblk-rail i:nth-child(4)::after{right:22%}
+/* depth on the vertical tiles */
+.eblk-vids span::after,.yt-shorts span::after{box-shadow:0 0 0 1.2px rgba(255,255,255,.8),0 2px 10px rgba(0,0,0,.45)}
 .eblk-vids{display:flex;gap:8px}
-.eblk-vids span{width:54px;height:78px;border-radius:8px;flex:0 0 auto;background:linear-gradient(160deg,#e2ddf3,#eef1f6);position:relative}
-.eblk-vids span::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(99,102,241,.55);font-size:14px}
+.eblk-vids span{width:54px;height:78px}
 .eblk-ad{display:flex;align-items:center;gap:10px}
-.eblk-ad-img{width:46px;height:46px;border-radius:8px;flex:0 0 auto;background:linear-gradient(135deg,#e7c9f0,#f0e2e2)}
+.eblk-ad-img{width:46px;height:46px}
 .eblk-ad b{display:block;font-size:12.5px;color:#334155}
 .eblk-ad span{font-size:11px;color:#94a3b8}
 /* flagged: a pulse + a reason chip appears before removal (generic across scenes) */
-.blockable{position:relative;overflow:hidden;
-  transition:max-height .55s ease,opacity .4s,transform .5s,padding .55s,margin .55s,filter .35s,border-color .3s;max-height:200px}
-.blockable.flagged{border-color:rgba(99,102,241,.55)!important;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+/* Removal is deliberately TWO-PHASE, because that is what a real DOM removal
+   looks like and a single combined transition never does: the element first
+   vanishes in place (fast, ~260ms), and only then does the gap close under it
+   (~420ms, delayed). Collapsing the height at the same time as the fade reads
+   as "the row slid away", which is the tell that it is an animation. */
+.blockable{position:relative;overflow:hidden;max-height:200px;transform-origin:50% 20%;
+  transition:opacity .26s cubic-bezier(.4,0,1,1),transform .3s cubic-bezier(.4,0,1,1),filter .26s ease,
+    border-color .3s ease,box-shadow .3s ease,
+    max-height .42s cubic-bezier(.22,1,.36,1) .18s,padding .42s cubic-bezier(.22,1,.36,1) .18s,
+    margin .42s cubic-bezier(.22,1,.36,1) .18s}
+/* flagged: a targeting pass. The ring sweeps in, the content desaturates a
+   little, and the reason chip springs rather than fading. */
+.blockable.flagged{border-color:rgba(99,102,241,.6)!important;
+  box-shadow:0 0 0 3px rgba(99,102,241,.14),0 10px 26px -18px rgba(99,102,241,.9);
+  filter:saturate(.82)}
 .epost.block.flagged{background:rgba(99,102,241,.05)}
-.blockable.flagged::before{content:attr(data-reason);position:absolute;top:9px;right:11px;z-index:2;
+.blockable.flagged::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(100deg,transparent 32%,rgba(99,102,241,.16) 50%,transparent 68%);
+  transform:translateX(-110%);animation:extSweep .62s cubic-bezier(.3,0,.2,1) both}
+@keyframes extSweep{to{transform:translateX(110%)}}
+.blockable.flagged::before{content:attr(data-reason);position:absolute;top:9px;right:11px;z-index:3;
   font-size:10px;font-weight:700;color:#fff;background:#6366f1;padding:3px 8px;border-radius:999px;
-  box-shadow:0 4px 12px -4px rgba(99,102,241,.7);animation:extChip .25s ease both}
-@keyframes extChip{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-/* removed: collapse away */
-.removed{max-height:0!important;opacity:0;transform:translateX(-24px) scale(.97);padding-top:0!important;padding-bottom:0!important;
-  margin-top:-10px!important;border-width:0;filter:blur(2px)}
+  box-shadow:0 4px 12px -4px rgba(99,102,241,.7);animation:extChip .34s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes extChip{from{opacity:0;transform:translateY(-6px) scale(.86)}to{opacity:1;transform:none}}
+/* removed: lifts and dissolves in place, then the space closes */
+.removed{opacity:0;transform:scale(.96) translateY(-7px);filter:blur(3px) saturate(.25);
+  max-height:0!important;padding-top:0!important;padding-bottom:0!important;
+  margin-top:-10px!important;border-width:0}
 
 /* ── scenario carousel: topbar (status + scene tabs) and scene container ── */
 .ext-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
@@ -810,18 +916,38 @@ section[id],[id]{scroll-margin-top:84px}
 /* youtube scene */
 .yt-row{display:flex;gap:11px;padding:9px;border-radius:11px;background:#fff;border:1px solid rgba(15,23,42,.08);
   box-shadow:0 4px 14px -12px rgba(15,23,42,.4);flex:0 0 auto;align-items:center}
-.yt-thumb{width:104px;height:60px;border-radius:8px;flex:0 0 auto;background:linear-gradient(135deg,#c9d0dc,#e6eaf1);position:relative}
-.yt-thumb.main{background:linear-gradient(135deg,#8b93f5,#a0e6d8)}
-.yt-thumb::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:16px}
+.yt-thumb{width:104px;height:60px}
 .yt-meta{min-width:0}
+.yt-chan{font-size:11px;color:#8593a8;display:flex;align-items:center}
+.yt-chan .av{width:17px;height:17px;margin-right:6px}
 .yt-ti{font-size:13px;color:#1a1f28;font-weight:600;line-height:1.3;margin-bottom:3px}
 .yt-sub{font-size:11px;color:#8593a8}
+/* description + chapters: kept content, so the cleaned page still has a page */
+.yt-desc{padding:11px 13px;border-radius:11px;background:#fff;border:1px solid rgba(15,23,42,.08);flex:0 0 auto;
+  box-shadow:0 4px 14px -12px rgba(15,23,42,.4)}
+.yt-desc p{font-size:12px;color:#4a5568;line-height:1.5;margin:0 0 9px}
+.yt-chapters{display:flex;flex-wrap:wrap;gap:6px}
+.yt-chapters span{font-family:var(--mono);font-size:10px;color:#4a5568;background:#f1f4f9;
+  border:1px solid rgba(15,23,42,.07);padding:3px 7px;border-radius:6px}
 .yt-shelf{padding:11px 13px;border-radius:11px;background:#fff;border:1px dashed rgba(15,23,42,.14);flex:0 0 auto;position:relative}
 .yt-shelf .eblk-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
 .yt-shorts{display:flex;gap:8px}
-.yt-shorts span{width:52px;height:78px;border-radius:8px;flex:0 0 auto;background:linear-gradient(160deg,#e2ddf3,#eef1f6);position:relative}
-.yt-shorts span::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(99,102,241,.55);font-size:13px}
+.yt-shorts span{width:52px;height:78px}
 .yt-row.block{border-style:dashed}
+/* vertical short-form tiles: portrait framing, hard saturation, a face or a
+   neon set. Deliberately louder than the kept rows, which is the whole point. */
+.eblk-vids span,.yt-shorts span{position:relative;overflow:hidden;border-radius:8px;flex:0 0 auto;background:#0e1424;
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,.16)}
+.eblk-vids span:nth-child(1),.yt-shorts span:nth-child(1){background:radial-gradient(90% 60% at 50% 26%,#ffd9b0,#c2714a 55%,#3a2036)}
+.eblk-vids span:nth-child(2),.yt-shorts span:nth-child(2){background:radial-gradient(70% 60% at 40% 30%,rgba(236,72,153,.95),transparent 65%),linear-gradient(170deg,#2a1147,#0b0a1d)}
+.eblk-vids span:nth-child(3),.yt-shorts span:nth-child(3){background:linear-gradient(180deg,#9be7ff 0%,#d7f2fb 46%,#63b45c 46%,#2f6b34 100%)}
+.eblk-vids span:nth-child(4),.yt-shorts span:nth-child(4){background:radial-gradient(80% 70% at 55% 35%,#fde68a,#f97316 60%,#7c2d12)}
+.eblk-vids span::after,.yt-shorts span::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;
+  transform:translate(-50%,-50%);border-radius:50%;background:rgba(10,14,24,.5);
+  box-shadow:0 0 0 1.2px rgba(255,255,255,.8)}
+.eblk-vids span::before,.yt-shorts span::before{content:"";position:absolute;z-index:2;left:calc(50% + 1px);top:50%;
+  transform:translate(-50%,-50%);border-style:solid;border-width:3.5px 0 3.5px 6px;
+  border-color:transparent transparent transparent #fff}
 
 /* gambling scene */
 .gm-page{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:12px;
@@ -831,7 +957,20 @@ section[id],[id]{scroll-margin-top:84px}
 .gm-bonus{font-size:10px;font-weight:800;color:#0f172a;background:#ffd24d;padding:4px 9px;border-radius:6px;letter-spacing:.03em}
 .gm-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .gm-tile{height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;
-  background:linear-gradient(160deg,#3a1f6e,#59277f);box-shadow:inset 0 0 0 1px rgba(255,210,77,.25)}
+  position:relative;overflow:hidden;background:linear-gradient(160deg,#3a1f6e,#59277f);
+  box-shadow:inset 0 0 0 1px rgba(255,210,77,.3),0 6px 16px -10px rgba(0,0,0,.9);
+  text-shadow:0 2px 6px rgba(0,0,0,.55)}
+/* the specular sheen every casino tile has, and a slow chase so the page
+   feels like it is trying to hook you even while it is being blocked */
+.gm-tile::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.22) 46%,transparent 62%);
+  transform:translateX(-120%);animation:gmSheen 3.4s ease-in-out infinite}
+.gm-tile:nth-child(2)::after{animation-delay:.35s}
+.gm-tile:nth-child(3)::after{animation-delay:.7s}
+.gm-tile:nth-child(4)::after{animation-delay:1.05s}
+.gm-tile:nth-child(5)::after{animation-delay:1.4s}
+.gm-tile:nth-child(6)::after{animation-delay:1.75s}
+@keyframes gmSheen{0%,55%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
 .gm-cta{align-self:center;font-size:13px;font-weight:800;color:#1a1030;background:linear-gradient(90deg,#ffd24d,#ff8f3f);
   padding:11px 22px;border-radius:999px}
 
@@ -847,6 +986,9 @@ section[id],[id]{scroll-margin-top:84px}
   .ext-page.scanning .ext-scan{animation:none;opacity:0}
   .epost,.blockable{transition:none}
   .ext-scene.on,.scene-block.on{animation:none}
+  .blockable.flagged::after,.blockable.flagged::before,.gm-tile::after{animation:none}
+  .blockable.flagged::after{opacity:0}
+  .removed{filter:none;transform:none}
 }
 
 /* ── Email capture ─────────────────────────────────────────────────────────── */
