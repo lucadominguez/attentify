@@ -108,119 +108,106 @@
 
   // The app demo is the real renderer embedded via <iframe src="./app/">, so no JS is needed here.
 
-  // ============ EXTENSION DEMO: live page-cleaning across 4 real scenarios ============
-  // A looping carousel of real pages. For each, Attentify reads it (scan line), then:
-  //  • Feed / YouTube — flags each distracting element and strips it out.
-  //  • Google search — tells a focused search (allowed) from a distracting one (blocked).
-  //  • Gambling — blocks the whole site outright.
-  // The status pill narrates the reasoning throughout, and the real extension popup runs
-  // live in the iframe beside it (see pd-ext-shim.js). Not a mockup.
-  (function () {
-    const page = $('#ext-page'), scenesWrap = $('#ext-scenes');
-    if (!page || !scenesWrap) return;
-    const status = $('#ext-status'), statusTx = $('#ext-status-tx');
-    const tabTitle = $('#ext-tab-title'), omniHost = $('#ext-omni-host'), omniPath = $('#ext-omni-path'),
-          badge = $('#ext-badge'), fav = $('#ext-fav');
-    const dots = $$('#ext-scene-dots .esd');
+  // ============ EXTENSION DEMO: live page-cleaning on REAL captures ============
+    // A looping carousel of REAL page pairs (each captured twice from the same load:
+    // once with the extension's stylesheet off, once with it on). For each scene the
+    // cluttered "without" plate sits on top of the "with" plate and is progressively
+    // wiped away top-down while the status pill narrates each removal -- the same
+    // before/after evidence as the compare section, just animated over a scan line.
+    // The real extension popup runs live in the iframe beside it (see pd-ext-shim.js).
+    (function () {
+      const page = $('#ext-page'), scenesWrap = $('#ext-scenes');
+      if (!page || !scenesWrap) return;
+      const status = $('#ext-status'), statusTx = $('#ext-status-tx');
+      const tabTitle = $('#ext-tab-title'), omniHost = $('#ext-omni-host'), omniPath = $('#ext-omni-path'),
+            badge = $('#ext-badge'), fav = $('#ext-fav');
+      const dots = $$('#ext-scene-dots .esd');
 
-    let timers = [];
-    const after = (ms, fn) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
-    const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
-    const say = (tx, done) => { if (statusTx) statusTx.textContent = tx; if (status) status.classList.toggle('done', !!done); };
-    const scan = () => { page.classList.remove('scanning'); void page.offsetWidth; page.classList.add('scanning'); after(1500, () => page.classList.remove('scanning')); };
+      let timers = [];
+      const after = (ms, fn) => { const t = setTimeout(fn, ms); timers.push(t); return t; };
+      const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+      const say = (tx, done) => { if (statusTx) statusTx.textContent = tx; if (status) status.classList.toggle('done', !!done); };
+      const scan = () => { page.classList.remove('scanning'); void page.offsetWidth; page.classList.add('scanning'); after(1500, () => page.classList.remove('scanning')); };
 
-    function setChrome(c) {
-      if (!c) return;
-      if (tabTitle) tabTitle.textContent = c.host;
-      if (omniHost) omniHost.textContent = c.host;
-      if (omniPath) omniPath.textContent = c.path || '';
-      if (badge && c.badge != null) badge.textContent = String(c.badge);
-      if (fav && c.fav) fav.style.background = c.fav;
-    }
-    function showScene(name) {
-      const all = scenesWrap.querySelectorAll('.ext-scene');
-      all.forEach(s => s.classList.toggle('on', s.dataset.scene === name));
-      const sc = scenesWrap.querySelector('.ext-scene[data-scene="' + name + '"]');
-      if (sc) {
-        sc.querySelectorAll('.blockable').forEach(b => b.classList.remove('flagged', 'removed'));
-        sc.querySelectorAll('.scene-block').forEach(b => b.classList.remove('on'));
+      function setChrome(c) {
+        if (!c) return;
+        if (tabTitle) tabTitle.textContent = c.host;
+        if (omniHost) omniHost.textContent = c.host;
+        if (omniPath) omniPath.textContent = c.path || '';
+        if (badge && c.badge != null) badge.textContent = String(c.badge);
+        if (fav && c.fav) fav.style.background = c.fav;
       }
-      return sc;
-    }
-    const setDots = i => dots.forEach((d, k) => d.classList.toggle('on', k === i));
+      function showScene(name) {
+        const all = scenesWrap.querySelectorAll('.ext-scene');
+        all.forEach(s => s.classList.toggle('on', s.dataset.scene === name));
+        const sc = scenesWrap.querySelector('.ext-scene[data-scene="' + name + '"]');
+        if (sc) {
+          sc.querySelectorAll('.real-dirty').forEach(d => { d.style.clipPath = ''; });
+          sc.querySelectorAll('.scene-block').forEach(b => b.classList.remove('on'));
+        }
+        return sc;
+      }
+      const setDots = i => dots.forEach((d, k) => d.classList.toggle('on', k === i));
 
-    // ── scene runners (each calls `next` when done) ──
-    function runClean(sc, cfg, next) {
-      setChrome(cfg.chrome); say(cfg.intro || 'Reading page context…');
-      after(500, scan);
-      const bl = Array.prototype.slice.call(sc.querySelectorAll('.blockable'));
-      after(2100, () => say('Found ' + bl.length + ' distractions off your goal'));
-      after(2600, () => bl.forEach((b, i) => after(i * 160, () => b.classList.add('flagged'))));
-      const rs = 3900, step = 1300;
-      bl.forEach((b, i) => {
-        after(rs + i * step, () => { say('Removing: ' + (b.dataset.reason || 'distraction')); if (badge) badge.textContent = String(i + 1); });
-        after(rs + i * step + 500, () => { b.classList.remove('flagged'); b.classList.add('removed'); });
-      });
-      const done = rs + bl.length * step + 300;
-      after(done, () => say(bl.length + ' distractions removed · page cleaned', true));
-      after(done + 2600, next);
-    }
+      // ── scene runner: real before/after plate wipe ──
+      function runReal(sc, cfg, next) {
+        setChrome(cfg.chrome);
+        const dirty = sc.querySelector('.real-dirty');
+        say(cfg.intro || 'Reading page context…');
+        after(500, scan);
+        const reasons = cfg.reasons || [];
+        after(2100, () => say('Found ' + reasons.length + ' distractions off your goal'));
+        const rs = 2600, step = 2000;
+        let lastP = 0;
+        reasons.forEach((r, i) => {
+          after(rs + i * step, () => {
+            say('Removing: ' + r);
+            if (badge) badge.textContent = String(i + 1);
+          });
+          after(rs + i * step + 900, () => {
+            // wipe the cluttered plate down to just above the next removal
+            const p = Math.round(((i + 1) / reasons.length) * 94);
+            if (dirty) dirty.style.clipPath = 'inset(' + p + '% 0 0 0)';
+            lastP = p;
+          });
+        });
+        const done = rs + reasons.length * step + 900;
+        after(done, () => {
+          if (dirty) dirty.style.clipPath = 'inset(100% 0 0 0)';
+          say(reasons.length + ' distractions removed · page cleaned', true);
+        });
+        after(done + 2600, next);
+      }
 
-    function runSearch(sc, cfg, next) {
-      const q = sc.querySelector('#gs-q'), verdict = sc.querySelector('#gs-verdict'),
-            block = sc.querySelector('#gs-block'), blockWhy = sc.querySelector('#gs-block-why');
-      setChrome(cfg.chrome); q.textContent = cfg.goodQ; verdict.className = 'gs-verdict';
-      say('Reading your search: “' + cfg.goodQ + '”');
-      after(500, scan);
-      after(2100, () => { verdict.textContent = '✓ on task'; verdict.className = 'gs-verdict good show'; say('On your goal, search allowed', false); });
-      after(4300, () => { q.textContent = cfg.badQ; verdict.className = 'gs-verdict'; say('New search: “' + cfg.badQ + '”'); });
-      after(4800, scan);
-      after(6400, () => { verdict.textContent = '✕ off-goal'; verdict.className = 'gs-verdict bad show'; blockWhy.textContent = cfg.badWhy; block.classList.add('on'); say('Off-goal search, blocked', false); if (badge) badge.textContent = '1'; });
-      after(9200, next);
-    }
+      const SCENES = [
+        { name: 'reddit', mode: 'real', intro: 'Reading reddit.com…',
+          chrome: { host: 'reddit.com', path: '/r/technology', badge: 0, fav: '#ff4500' },
+          reasons: ['Off-goal home feed', 'Short-form video rail', 'Promoted posts'] },
+        { name: 'youtube', mode: 'real', intro: 'Reading youtube.com…',
+          chrome: { host: 'youtube.com', path: '/results?q=funny+cats', badge: 0, fav: '#ff0033' },
+          reasons: ['Shorts shelf', 'Recommended · off-goal', 'Fallback suggestions'] },
+        { name: 'ytwatch', mode: 'real', intro: 'Reading the watch page…',
+          chrome: { host: 'youtube.com', path: '/watch?v=…', badge: 0, fav: '#ff0033' },
+          reasons: ['Up next queue', 'Recommendation rail', 'Autoplay driver'] },
+      ];
 
-    function runBlock(sc, cfg, next) {
-      const block = sc.querySelector('.scene-block');
-      setChrome(cfg.chrome); say(cfg.intro || 'Reading page context…');
-      after(500, scan);
-      after(2200, () => say(cfg.detect));
-      after(3500, () => { block.classList.add('on'); say(cfg.blocked, false); if (badge) badge.textContent = '1'; });
-      after(6400, next);
-    }
+      function playScene(i) {
+        clearTimers();
+        setDots(i);
+        const cfg = SCENES[i], sc = showScene(cfg.name);
+        const next = () => playScene((i + 1) % SCENES.length);
+        if (!sc) return next();
+        runReal(sc, cfg, next);
+      }
 
-    const SCENES = [
-      { name: 'reddit', mode: 'clean', intro: 'Reading reddit.com…',
-        chrome: { host: 'reddit.com', path: '/', badge: 0, fav: '#ff4500' } },
-      { name: 'google', mode: 'search',
-        goodQ: 'react useEffect cleanup', badQ: 'premier league live stream free',
-        chrome: { host: 'google.com', path: '/search', badge: 0, fav: '#4285f4' },
-        badWhy: 'Off-goal for “deep work”. This is entertainment, not the task.' },
-      { name: 'youtube', mode: 'clean', intro: 'Reading youtube.com…',
-        chrome: { host: 'youtube.com', path: '/watch', badge: 0, fav: '#ff0033' } },
-      { name: 'gambling', mode: 'block',
-        chrome: { host: 'royalbet.bet', path: '/casino', badge: 0, fav: '#ffd24d' },
-        detect: 'Recognised a gambling site', blocked: 'Blocked. Gambling is off every goal' },
-    ];
-
-    function playScene(i) {
-      clearTimers();
-      setDots(i);
-      const cfg = SCENES[i], sc = showScene(cfg.name);
-      const next = () => playScene((i + 1) % SCENES.length);
-      if (!sc) return next();
-      if (cfg.mode === 'clean') runClean(sc, cfg, next);
-      else if (cfg.mode === 'search') runSearch(sc, cfg, next);
-      else runBlock(sc, cfg, next);
-    }
-
-    // Autoplay when the extension pane is visible; (re)start when it's switched to.
-    let started = false;
-    const start = () => { if (started) return; started = true; playScene(0); };
-    const extBtn = $('.ps-btn[data-prev="ext"]');
-    if (extBtn) extBtn.addEventListener('click', start);
-    const pane = $('.preview-pane[data-pane="ext"]');
-    if (pane && !pane.classList.contains('hidden')) start();
-  })();
+      // Autoplay when the extension pane is visible; (re)start when it's switched to.
+      let started = false;
+      const start = () => { if (started) return; started = true; playScene(0); };
+      const extBtn = $('.ps-btn[data-prev="ext"]');
+      if (extBtn) extBtn.addEventListener('click', start);
+      const pane = $('.preview-pane[data-pane="ext"]');
+      if (pane && !pane.classList.contains('hidden')) start();
+    })();
 
   // ---- Cloud checkout (pricing) ----
   const buy = $('#cloud-buy-btn');

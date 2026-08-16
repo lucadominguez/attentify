@@ -108,112 +108,43 @@
       </div>
 
       <div class="extwin-body">
-        <!-- LEFT: real pages across 4 scenarios. Attentify reads each, flags the
-             distractions and strips or blocks them live (driven by app.js); the status
-             pill narrates the reasoning. -->
+        <!-- LEFT: REAL pages (Reddit / YouTube), each captured twice from the same
+             load - once with the extension's stylesheet off, once on. The demo wipes
+             the cluttered capture away as it narrates each removal (driven by app.js). -->
         <div class="ext-page" id="ext-page">
           <div class="ext-scan" id="ext-scan"></div>
           <div class="ext-topbar">
             <div class="ext-status" id="ext-status"><span class="exs-dot"></span><span id="ext-status-tx">Attentify is reading this page…</span></div>
             <div class="ext-scene-dots" id="ext-scene-dots">
-              <span class="esd" data-i="0" title="Social feed">Feed</span>
-              <span class="esd" data-i="1" title="Google search">Search</span>
-              <span class="esd" data-i="2" title="YouTube">YouTube</span>
-              <span class="esd" data-i="3" title="Gambling">Gambling</span>
+              <span class="esd" data-i="0" title="Reddit feed">Feed</span>
+              <span class="esd" data-i="1" title="YouTube search">Search</span>
+              <span class="esd" data-i="2" title="YouTube watch page">Watch</span>
             </div>
           </div>
 
           <div class="ext-scenes" id="ext-scenes">
 
-            <!-- SCENE 1 · Reddit feed (strip distracting elements) -->
+            <!-- SCENE 1 · Real Reddit feed (same page, before / after) -->
             <div class="ext-scene on" data-scene="reddit">
-              <div class="epost keep">
-                <div class="ev"><span class="ev-up">▲</span><span class="ev-n">2.4k</span><span class="ev-dn">▼</span></div>
-                <div class="ec"><div class="ec-sub"><span class="av av-a"></span>r/programming · 3h</div><div class="ec-ti">What's your terminal setup this year?</div><div class="ec-meta">312 comments · share · save</div></div>
-              </div>
-              <div class="epost block blockable" data-reason="Off-goal home feed">
-                <div class="eblk-h"><span class="eblk-tag">Popular right now</span><span class="eblk-x">promoted feed</span></div>
-                <div class="eblk-rail"><i></i><i></i><i></i><i></i></div>
-              </div>
-              <div class="epost keep">
-                <div class="ev"><span class="ev-up">▲</span><span class="ev-n">876</span><span class="ev-dn">▼</span></div>
-                <div class="ec"><div class="ec-sub"><span class="av av-c"></span>r/rust · 5h</div><div class="ec-ti">Comparing async runtimes: tokio vs async-std</div><div class="ec-meta">98 comments · share · save</div></div>
-              </div>
-              <div class="epost block blockable" data-reason="Short-form video shelf">
-                <div class="eblk-h"><span class="eblk-tag">▶ Watch — trending clips</span><span class="eblk-x">short-form</span></div>
-                <div class="eblk-vids"><span></span><span></span><span></span><span></span></div>
-              </div>
-              <div class="epost keep">
-                <div class="ev"><span class="ev-up">▲</span><span class="ev-n">1.1k</span><span class="ev-dn">▼</span></div>
-                <div class="ec"><div class="ec-sub"><span class="av av-d"></span>r/webdev · 6h</div><div class="ec-ti">CSS grid tricks I wish I knew sooner</div><div class="ec-meta">144 comments · share · save</div></div>
-              </div>
-              <div class="epost block blockable" data-reason="Sponsored ad">
-                <div class="eblk-h"><span class="eblk-tag">Promoted</span><span class="eblk-x">ad</span></div>
-                <div class="eblk-ad"><span class="eblk-ad-img shot bait"></span><div><b>You won't believe these 10 tricks</b><span>sponsored · getdistracted.co</span></div></div>
+              <div class="real-stage" id="real-stage-reddit">
+                <img class="real-clean" src="real/demo-reddit-with.jpg" alt="Reddit with Attentify" loading="eager">
+                <img class="real-dirty" src="real/demo-reddit-without.jpg" alt="Reddit without Attentify" loading="eager">
               </div>
             </div>
 
-            <!-- SCENE 2 · Google search (distinguish a good vs a bad search) -->
-            <div class="ext-scene" data-scene="google">
-              <div class="gs-bar">
-                <svg viewBox="0 0 48 48" class="gs-g" aria-hidden="true">
-                  <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.7-.4-3.9H24v7.1h12.1c-.2 1.8-1.6 4.6-4.5 6.5l6.9 5.3c4.1-3.8 6.6-9.4 6.6-15z"/>
-                  <path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-6.9-5.3c-1.8 1.3-4.3 2.2-7.6 2.2-5.8 0-10.7-3.8-12.5-9.1l-7.1 5.5C8.1 41.1 15.4 46 24 46z"/>
-                  <path fill="#FBBC05" d="M11.5 28.5c-.5-1.4-.7-2.9-.7-4.5s.3-3.1.7-4.5l-7.1-5.5C2.9 17 2 20.4 2 24s.9 7 2.4 10l7.1-5.5z"/>
-                  <path fill="#EA4335" d="M24 10.6c4.1 0 6.9 1.8 8.5 3.3l6.2-6C34.9 4.5 29.9 2 24 2 15.4 2 8.1 6.9 4.4 14l7.1 5.5c1.8-5.3 6.7-8.9 12.5-8.9z"/>
-                </svg>
-                <span class="gs-q" id="gs-q">react useEffect cleanup function</span>
-                <span class="gs-verdict" id="gs-verdict"></span>
-              </div>
-              <div class="gs-results" id="gs-results">
-                <div class="gs-res"><div class="gs-res-url">react.dev › reference › useEffect</div><div class="gs-res-title">Synchronizing with Effects – React</div><div class="gs-res-snip">Return a cleanup function so React can run it before the component re-renders or unmounts…</div></div>
-                <div class="gs-res"><div class="gs-res-url">stackoverflow.com › questions</div><div class="gs-res-title">How to properly clean up an interval in useEffect</div><div class="gs-res-snip">Store the id and clear it in the returned cleanup callback so it doesn't leak…</div></div>
-                <div class="gs-res"><div class="gs-res-url">developer.mozilla.org › Web › Effects</div><div class="gs-res-title">Effect cleanup and dependencies</div><div class="gs-res-snip">A cleanup function tears down subscriptions created by the effect…</div></div>
-              </div>
-              <div class="scene-block" id="gs-block">
-                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
-                <b>Search blocked</b>
-                <span id="gs-block-why">Off-goal for “deep work”. This is entertainment, not the task.</span>
-              </div>
-            </div>
-
-            <!-- SCENE 3 · YouTube (strip Shorts + recommendations) -->
+            <!-- SCENE 2 · Real YouTube search (same page, before / after) -->
             <div class="ext-scene" data-scene="youtube">
-              <div class="yt-row keep">
-                <span class="yt-thumb shot code"><i class="pb"></i><em class="dur">18:24</em><b class="prog" style="--p:36%"></b></span>
-                <div class="yt-meta"><div class="yt-ti">Building a Rust web server, full tutorial</div><div class="yt-chan"><span class="av av-a"></span>CodeWithTom · 48K views · watching now</div></div>
-              </div>
-              <!-- The description and chapters are part of the task, so they stay.
-                   Without them the cleaned page reads as broken rather than focused. -->
-              <div class="yt-desc keep">
-                <p>Full walkthrough of a production Rust web server: routing, state, graceful shutdown and tests.</p>
-                <div class="yt-chapters"><span>0:00 Intro</span><span>2:14 Routing</span><span>7:40 State</span><span>13:02 Tests</span></div>
-              </div>
-              <div class="yt-shelf block blockable" data-reason="YouTube Shorts">
-                <div class="eblk-h"><span class="eblk-tag">▶ Shorts</span><span class="eblk-x">short-form</span></div>
-                <div class="yt-shorts"><span></span><span></span><span></span><span></span></div>
-              </div>
-              <div class="yt-row block blockable" data-reason="Recommended · off-goal">
-                <span class="yt-thumb shot face"><i class="pb"></i><em class="dur">12:07</em></span>
-                <div class="yt-meta"><div class="yt-ti">10 productivity hacks that changed my life</div><div class="yt-chan"><span class="av av-b"></span>Recommended for you · 2.1M views</div></div>
-              </div>
-              <div class="yt-row block blockable" data-reason="Autoplay next">
-                <span class="yt-thumb shot neon"><i class="pb"></i><em class="dur">24:51</em></span>
-                <div class="yt-meta"><div class="yt-ti">Up next: Ultimate gaming setup tour 2026</div><div class="yt-chan"><span class="av av-d"></span>Autoplay · 890K views</div></div>
+              <div class="real-stage">
+                <img class="real-clean" src="real/demo-youtube-with.jpg" alt="YouTube search with Attentify" loading="eager">
+                <img class="real-dirty" src="real/demo-youtube-without.jpg" alt="YouTube search without Attentify" loading="eager">
               </div>
             </div>
 
-            <!-- SCENE 4 · Gambling site (block the whole page) -->
-            <div class="ext-scene" data-scene="gambling">
-              <div class="gm-page">
-                <div class="gm-head"><span class="gm-logo">♠ RoyalBet</span><span class="gm-bonus">$500 WELCOME BONUS</span></div>
-                <div class="gm-tiles"><span class="gm-tile">🎰</span><span class="gm-tile">🃏</span><span class="gm-tile">🎲</span><span class="gm-tile">🎯</span><span class="gm-tile">💎</span><span class="gm-tile">🎰</span></div>
-                <div class="gm-cta">Deposit &amp; Play Now</div>
-              </div>
-              <div class="scene-block" id="gm-block">
-                <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V5l-8-3z"/></svg>
-                <b>Site blocked</b>
-                <span>Gambling is not part of any goal you set. Blocked before the page could load.</span>
+            <!-- SCENE 3 · Real YouTube watch page (same page, before / after) -->
+            <div class="ext-scene" data-scene="ytwatch">
+              <div class="real-stage">
+                <img class="real-clean" src="real/demo-ytwatch-with.jpg" alt="YouTube watch page with Attentify" loading="eager">
+                <img class="real-dirty" src="real/demo-ytwatch-without.jpg" alt="YouTube watch page without Attentify" loading="eager">
               </div>
             </div>
 
@@ -223,9 +154,9 @@
         <iframe class="ext-panel" src="./ext/popup.html" title="Attentify browser extension, live" loading="eager"></iframe>
       </div>
     </div>
-    <p class="appdemo-foot">On the left, Attentify works across real pages: it <b>strips feeds, Shorts and ads</b>, tells a
-       <b>focused search from a distracting one</b>, and <b>blocks gambling outright</b>, explaining each call as it goes.
-       On the right is the <b>actual extension</b>, running live. Nothing here is a mockup.</p>
+    <p class="appdemo-foot">On the left, Attentify works across <b>real pages, each captured twice</b>: the cluttered page as it loads,
+          then the same page the moment the extension strips the feed, the Shorts shelf and the recommendation rail -
+          explaining every call as it goes. On the right is the <b>actual extension</b>, running live. Nothing here is a mockup.</p>
   </div>
 
   <p class="hero-trustline">No setup hassle · your history stays on your device · open source, minus the AI · macOS and mobile soon</p>
