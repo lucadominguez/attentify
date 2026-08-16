@@ -1061,3 +1061,23 @@ section[id],[id]{scroll-margin-top:84px}
   /* A long npx line must never widen the page; it scrolls inside its own box. */
   .mcp-cmd{font-size:12.5px}
 }
+
+/* ---- real before/after plates (compare section) ----
+   Reuses .section tokens. Three side-by-side pairs of the SAME page, before and
+   after Attentify, tagged so the claim is explicit. Light theme cards. */
+.real-plates{margin-top:28px}
+.real-plates .rp-intro{max-width:640px;margin:0 0 26px}
+.real-plates .rp-intro h3{font-size:clamp(22px,3vw,30px);margin-bottom:8px;letter-spacing:-.02em}
+.real-plates .rp-intro p{color:var(--muted);font-size:15.5px}
+.rp-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.rp-item{background:var(--panel);border:1px solid var(--line2);border-radius:var(--r);
+  overflow:hidden;box-shadow:0 12px 34px -24px rgba(15,23,42,.30);padding:12px}
+.rp-item img{display:block;width:100%;height:auto;border-radius:9px;border:1px solid var(--line)}
+.rp-tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;
+  letter-spacing:.02em;padding:5px 11px;border-radius:999px;margin-bottom:12px}
+.rp-tag::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.rp-tag.bad{color:var(--pink);background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.28)}
+.rp-tag.good{color:var(--green);background:rgba(14,159,110,.08);border:1px solid rgba(14,159,110,.30)}
+@media(max-width:680px){
+  .rp-row{grid-template-columns:1fr}
+}
