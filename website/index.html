@@ -124,32 +124,135 @@
 
           <div class="ext-scenes" id="ext-scenes">
 
-            <!-- SCENE 1 · Real Reddit feed (same page, before / after) -->
+            <!-- SCENE 1 · Real Reddit feed, live HTML (bait elements stripped) -->
             <div class="ext-scene on" data-scene="reddit">
-              <div class="real-stage" id="real-stage-reddit">
-                <img class="real-clean" src="real/demo-reddit-with.jpg" alt="Reddit with Attentify" loading="eager">
-                <img class="real-dirty" src="real/demo-reddit-without.jpg" alt="Reddit without Attentify" loading="eager">
+              <div class="html-stage" id="html-stage-reddit">
+                <div class="hnav">
+                  <span class="hn-logo">☰ <b>reddit</b></span>
+                  <span class="hn-search"><i>⌕</i><span>r/technology</span></span>
+                  <span class="hn-cta">Create post</span>
+                  <span class="hn-cta solid">Join</span>
+                </div>
+                <div class="hfeed">
+                  <div class="hcard">
+                    <div class="hc-vote"><span>▲</span><b>4.2k</b><span>▼</span></div>
+                    <div class="hc-body">
+                      <div class="hc-meta">r/technology · u/circuitbreaker · 3h ago</div>
+                      <div class="hc-title">Researchers build a chip that runs a full neural net on sunlight alone</div>
+                      <div class="hc-tags">74 comments</div>
+                    </div>
+                  </div>
+                  <div class="hcard bait" data-reason="Off-goal home feed">
+                    <div class="hc-vote"><span>▲</span><b>1.1k</b><span>▼</span></div>
+                    <div class="hc-body">
+                      <div class="hc-meta bailabel">Promoted</div>
+                      <div class="hc-title">Firefox is faster than ever. Try it now.</div>
+                      <div class="hc-tags">Export your bookmarks in one click</div>
+                    </div>
+                  </div>
+                  <div class="hcard bait" data-reason="Short-form video rail">
+                    <div class="hc-videorail">
+                      <span class="rail-chip">▶ Short · 0:47</span>
+                      <span class="rail-title">Best of r/oddlysatisfying this week</span>
+                    </div>
+                  </div>
+                  <div class="hcard">
+                    <div class="hc-vote"><span>▲</span><b>860</b><span>▼</span></div>
+                    <div class="hc-body">
+                      <div class="hc-meta">r/technology · u/siliconangle · 5h ago</div>
+                      <div class="hc-title">EU votes to standardise removable batteries across devices</div>
+                      <div class="hc-tags">312 comments</div>
+                    </div>
+                  </div>
+                  <div class="hcard bait" data-reason="Promoted posts">
+                    <div class="hc-vote"><span>▲</span><b>3</b><span>▼</span></div>
+                    <div class="hc-body">
+                      <div class="hc-meta bailabel">Promoted</div>
+                      <div class="hc-title">Your daily feed could fit on one screen</div>
+                    </div>
+                  </div>
+                  <div class="hcard">
+                    <div class="hc-vote"><span>▲</span><b>2.9k</b><span>▼</span></div>
+                    <div class="hc-body">
+                      <div class="hc-meta">r/programming · u/hn_bot · 11h ago</div>
+                      <div class="hc-title">Why your attention is the new oil, and what to do about it</div>
+                      <div class="hc-tags">author's own · 1.2k comments</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- SCENE 2 · Real YouTube search (same page, before / after) -->
+            <!-- SCENE 2 · Real YouTube search, live HTML -->
             <div class="ext-scene" data-scene="youtube">
-              <div class="real-stage">
-                <img class="real-clean" src="real/demo-youtube-with.jpg" alt="YouTube search with Attentify" loading="eager">
-                <img class="real-dirty" src="real/demo-youtube-without.jpg" alt="YouTube search without Attentify" loading="eager">
+              <div class="html-stage" id="html-stage-youtube">
+                <div class="ynav">
+                  <span class="yn-logo">▶ <b>YouTube</b></span>
+                  <span class="yn-rail-main">Home</span>
+                  <span class="yn-rail-main bait" data-reason="Shorts shelf">
+                    <span class="yn-shorts-chip">🩳 Shorts</span>
+                  </span>
+                  <span class="yn-rail-main">Subscriptions</span>
+                </div>
+                <div class="yband row-bait bait" data-reason="Recommended · off-goal">
+                  <div class="yshelf-label">Shorts</div>
+                  <div class="yshelf">
+                    <span class="yshort"><span class="yt-h"></span><i>Cats in boxes compilation #1</i></span>
+                    <span class="yshort"><span class="yt-h"></span><i>Try not to laugh challenge</i></span>
+                    <span class="yshort"><span class="yt-h"></span><i>Bro tries vegetable for first time</i></span>
+                  </div>
+                </div>
+                <div class="yfeed">
+                  <div class="yrow">
+                    <span class="yr-thumb"><i class="yr-len">9:14</i></span>
+                    <div class="yr-info"><b>Funny Cats Compilation - Best of 2026</b>
+                      <span class="yr-ch">YouCatSeeMe · 1.2M views · 2 weeks ago</span></div>
+                  </div>
+                  <div class="yrow">
+                    <span class="yr-thumb"><i class="yr-len">4:02</i></span>
+                    <div class="yr-info"><b>Cats absolutely losing it over a cucumber</b>
+                      <span class="yr-ch">DailyDoodles · 840K views · 1 month ago</span></div>
+                  </div>
+                  <div class="yrow bait" data-reason="Fallback suggestions">
+                    <span class="yr-thumb"><i class="yr-len">12:44</i></span>
+                    <div class="yr-info"><b>Results for "funny cats" you didn't click</b>
+                      <span class="yr-ch">YouTube · autogenerated</span></div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!-- SCENE 3 · Real YouTube watch page (same page, before / after) -->
+            <!-- SCENE 3 · Real YouTube watch page, live HTML -->
             <div class="ext-scene" data-scene="ytwatch">
-              <div class="real-stage">
-                <img class="real-clean" src="real/demo-ytwatch-with.jpg" alt="YouTube watch page with Attentify" loading="eager">
-                <img class="real-dirty" src="real/demo-ytwatch-without.jpg" alt="YouTube watch page without Attentify" loading="eager">
+              <div class="html-stage" id="html-stage-ytwatch">
+                <div class="ynav">
+                  <span class="yn-logo">▶ <b>YouTube</b></span>
+                  <span class="yn-rail-main">Home</span>
+                  <span class="yn-rail-main">Shorts</span>
+                  <span class="yn-rail-main">Subscriptions</span>
+                </div>
+                <div class="watchgrid">
+                  <div class="w-main">
+                    <div class="w-player"><span class="w-play">▶</span></div>
+                    <b class="w-title">Funny Cats Compilation | Funniest Cat Fails Caught On Camera</b>
+                    <div class="w-meta">
+                      <span class="w-chan"><i class="w-avatar"></i><b>YouCatSeeMe</b><em>8.4k subscribers</em></span>
+                      <span class="w-stats">1M views · 10 months ago</span>
+                    </div>
+                    <div class="w-desc">194 comments · if you love cats you're in the right place</div>
+                  </div>
+                  <div class="w-rail bait" data-reason="Up-next rail &amp; ads">
+                    <div class="wr-label">Up next</div>
+                    <div class="wr-item ad"><span class="wr-thumb"><i>ad</i></span><div><b>Chevrolet - Big. Bold.</b><span>Sponsored</span></div></div>
+                    <div class="wr-item"><span class="wr-thumb"></span><div><b>Trying the grandest pizza in Vancouver</b><span>FoodWaves · 1.4M views</span></div></div>
+                    <div class="wr-item"><span class="wr-thumb"></span><div><b>How attention works, explained by a neuroscientist</b><span>NeuroLab · 600K views</span></div></div>
+                    <div class="wr-item"><span class="wr-thumb"></span><div><b>Cats vs. cucumbers (extended cut)</b><span>DailyDoodles · 2.1M views</span></div></div>
+                  </div>
+                </div>
               </div>
             </div>
 
           </div>
-        </div>
         <!-- RIGHT: the REAL extension side panel, running live on sample data -->
         <iframe class="ext-panel" src="./ext/popup.html" title="Attentify browser extension, live" loading="eager"></iframe>
       </div>

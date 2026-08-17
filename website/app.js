@@ -142,38 +142,33 @@
         all.forEach(s => s.classList.toggle('on', s.dataset.scene === name));
         const sc = scenesWrap.querySelector('.ext-scene[data-scene="' + name + '"]');
         if (sc) {
-          sc.querySelectorAll('.real-dirty').forEach(d => { d.style.clipPath = ''; });
+          sc.querySelectorAll('.bait').forEach(b => b.classList.remove('gone'));
           sc.querySelectorAll('.scene-block').forEach(b => b.classList.remove('on'));
         }
         return sc;
       }
       const setDots = i => dots.forEach((d, k) => d.classList.toggle('on', k === i));
 
-      // ── scene runner: real before/after plate wipe ──
+      // ── scene runner: strip real bait elements from the live HTML page ──
       function runReal(sc, cfg, next) {
         setChrome(cfg.chrome);
-        const dirty = sc.querySelector('.real-dirty');
         say(cfg.intro || 'Reading page context…');
         after(500, scan);
-        const reasons = cfg.reasons || [];
+        const baits = Array.prototype.slice.call(sc.querySelectorAll('.bait'));
+        const reasons = baits.map(b => b.getAttribute('data-reason') || 'distraction');
         after(2100, () => say('Found ' + reasons.length + ' distractions off your goal'));
-        const rs = 2600, step = 2000;
-        let lastP = 0;
-        reasons.forEach((r, i) => {
+        const rs = 2600, step = 1600;
+        baits.forEach((b, i) => {
           after(rs + i * step, () => {
-            say('Removing: ' + r);
+            say('Removing: ' + reasons[i]);
             if (badge) badge.textContent = String(i + 1);
           });
-          after(rs + i * step + 900, () => {
-            // wipe the cluttered plate down to just above the next removal
-            const p = Math.round(((i + 1) / reasons.length) * 94);
-            if (dirty) dirty.style.clipPath = 'inset(' + p + '% 0 0 0)';
-            lastP = p;
+          after(rs + i * step + 850, () => {
+            b.classList.add('gone');  // fade out; container reflows rows up
           });
         });
-        const done = rs + reasons.length * step + 900;
+        const done = rs + baits.length * step + 950;
         after(done, () => {
-          if (dirty) dirty.style.clipPath = 'inset(100% 0 0 0)';
           say(reasons.length + ' distractions removed · page cleaned', true);
         });
         after(done + 2600, next);
