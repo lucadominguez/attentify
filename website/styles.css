@@ -742,6 +742,34 @@ section[id],[id]{scroll-margin-top:84px}
 .ext-page.scanning .ext-scan{animation:extScan 1.5s cubic-bezier(.33,.02,.24,1) both}
 @keyframes extScan{0%{top:-96px;opacity:0}8%{opacity:1}88%{opacity:1}100%{top:100%;opacity:0}}
 
+/* ── scenario carousel: topbar (status + scene tabs) and scene container ── */
+.ext-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+.ext-scene-dots{display:flex;gap:4px;flex:0 0 auto}
+.esd{font-size:9.5px;font-weight:600;color:#8593a8;padding:3px 8px;border-radius:999px;background:#fff;
+  border:1px solid rgba(15,23,42,.08);transition:.2s;white-space:nowrap}
+.esd.on{color:#fff;background:#6366f1;border-color:#6366f1}
+.ext-scenes{position:relative;flex:1;min-height:0;overflow:hidden}
+.ext-scene{position:absolute;inset:0;display:none;flex-direction:column;gap:10px;overflow:hidden;padding-right:2px}
+.ext-scene.on{display:flex;animation:extSceneIn .4s ease both}
+@keyframes extSceneIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── real before/after scene: the actual captured site, wiped clean ── */
+/* The "with" plate sits under the "without" plate; the dirty layer is clipped
+   top-down as the demo narrates each removal, mimicking the page reflowing
+   when elements are stripped. Both are real captures of the same page. */
+.real-stage{position:relative;flex:1;min-height:260px;overflow:hidden;border-radius:12px;
+  border:1px solid rgba(15,23,42,.12);box-shadow:0 18px 44px -26px rgba(15,23,42,.55);
+  background:#fff}
+.real-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;
+  user-select:none;-webkit-user-drag:none}
+.real-clean{z-index:1}
+.real-dirty{z-index:2;clip-path:inset(0 0 0 0);
+  transition:clip-path 1s cubic-bezier(.45,.02,.25,1)}
+@media(max-width:760px){
+  .real-stage{min-height:200px}
+}
+
+/* full-scene block card (google-bad, gambling) */
 .scene-block{position:absolute;inset:0;z-index:4;display:none;flex-direction:column;align-items:center;justify-content:center;
   gap:8px;text-align:center;padding:24px;border-radius:12px;
   background:rgba(244,246,250,.86);backdrop-filter:blur(4px)}
