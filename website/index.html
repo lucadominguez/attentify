@@ -305,23 +305,44 @@
     </table>
   </div>
 
-  <!-- Real before / after plates -->
+  <!-- Real before / after comparison sliders -->
   <div class="real-plates">
     <div class="rp-intro reveal">
       <h3>Real pages, same browser, <span class="grad">one reload.</span></h3>
-      <p>Each pair is the same site captured twice - once as it loads, once the moment Attentify strips the bait. Nothing here is a mockup.</p>
+      <p>Each pair is the same site captured a moment apart - the frame on the left as it loads, the frame on the right the instant Attentify strips the bait. Drag the handle to scrub between them. Nothing here is a mockup.</p>
     </div>
-    <div class="rp-row reveal">
-      <div class="rp-item"><span class="rp-tag bad">Without Attentify</span><img src="real/reddit-without.jpg" alt="Reddit feed, unblocked" loading="lazy"></div>
-      <div class="rp-item"><span class="rp-tag good">With Attentify</span><img src="real/reddit-with.jpg" alt="Reddit feed, the bait removed" loading="lazy"></div>
+
+    <div class="rp-slider reveal" data-label="Reddit feed" data-dirty="real-hi/reddit-without.jpg" data-clean="real-hi/reddit-with.jpg">
+      <div class="ba-stage">
+        <img class="ba-clean" src="real-hi/reddit-with.jpg" alt="Reddit feed after Attentify" loading="lazy">
+        <div class="ba-dirty-wrap"><img class="ba-dirty" src="real-hi/reddit-without.jpg" alt="Reddit feed before Attentify" loading="lazy"></div>
+        <span class="ba-tag before">Before</span>
+        <span class="ba-tag after">After</span>
+        <div class="ba-handle" role="slider" aria-label="Drag to compare before and after" tabindex="0"><span class="ba-grip">⇔</span></div>
+        <span class="ba-callout" data-x="0.68" data-y="0.38"><i></i>Promoted posts &amp; feed bait removed</span>
+      </div>
     </div>
-    <div class="rp-row reveal">
-      <div class="rp-item"><span class="rp-tag bad">Without Attentify</span><img src="real/youtube-without.jpg" alt="YouTube search, unblocked" loading="lazy"></div>
-      <div class="rp-item"><span class="rp-tag good">With Attentify</span><img src="real/youtube-with.jpg" alt="YouTube search, the bait removed" loading="lazy"></div>
+
+    <div class="rp-slider reveal" data-label="YouTube search" data-dirty="real-hi/youtube-without.jpg" data-clean="real-hi/youtube-with.jpg">
+      <div class="ba-stage">
+        <img class="ba-clean" src="real-hi/youtube-with.jpg" alt="YouTube search after Attentify" loading="lazy">
+        <div class="ba-dirty-wrap"><img class="ba-dirty" src="real-hi/youtube-without.jpg" alt="YouTube search before Attentify" loading="lazy"></div>
+        <span class="ba-tag before">Before</span>
+        <span class="ba-tag after">After</span>
+        <div class="ba-handle" role="slider" aria-label="Drag to compare before and after" tabindex="0"><span class="ba-grip">⇔</span></div>
+        <span class="ba-callout" data-x="0.30" data-y="0.80"><i></i>Shorts shelf &amp; sidebar removed</span>
+      </div>
     </div>
-    <div class="rp-row reveal">
-      <div class="rp-item"><span class="rp-tag bad">Without Attentify</span><img src="real/ytwatch-without.jpg" alt="YouTube watch page, unblocked" loading="lazy"></div>
-      <div class="rp-item"><span class="rp-tag good">With Attentify</span><img src="real/ytwatch-with.jpg" alt="YouTube watch page, the bait removed" loading="lazy"></div>
+
+    <div class="rp-slider reveal" data-label="YouTube watch" data-dirty="real-hi/ytwatch-without.jpg" data-clean="real-hi/ytwatch-with.jpg">
+      <div class="ba-stage">
+        <img class="ba-clean" src="real-hi/ytwatch-with.jpg" alt="YouTube watch page after Attentify" loading="lazy">
+        <div class="ba-dirty-wrap"><img class="ba-dirty" src="real-hi/ytwatch-without.jpg" alt="YouTube watch page before Attentify" loading="lazy"></div>
+        <span class="ba-tag before">Before</span>
+        <span class="ba-tag after">After</span>
+        <div class="ba-handle" role="slider" aria-label="Drag to compare before and after" tabindex="0"><span class="ba-grip">⇔</span></div>
+        <span class="ba-callout" data-x="0.78" data-y="0.35"><i></i>Up-next rail &amp; ads removed</span>
+      </div>
     </div>
   </div>
 </section>

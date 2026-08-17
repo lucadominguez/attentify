@@ -287,3 +287,73 @@
       .finally(function () { busy = false; btn.disabled = false; btn.textContent = was; });
   });
 })();
+/* ---- before/after comparison sliders ---- */
+(function () {
+  var stages = document.querySelectorAll('.ba-stage');
+  if (!stages.length) return;
+
+  function posFromEvent(e, stage) {
+    var x;
+    if (e.touches && e.touches[0]) x = e.touches[0].clientX;
+    else if (e.changedTouches && e.changedTouches[0]) x = e.changedTouches[0].clientX;
+    else x = e.clientX;
+    var r = stage.getBoundingClientRect();
+    var p = (x - r.left) / r.width;
+    return Math.max(0.02, Math.min(0.98, p));
+  }
+
+  function setSplit(stage, p) {
+    var wrap = stage.querySelector('.ba-dirty-wrap');
+    var handle = stage.querySelector('.ba-handle');
+    wrap.style.clipPath = 'inset(0 ' + ((1 - p) * 100) + '% 0 0)';
+    handle.style.left = (p * 100) + '%';
+  }
+
+  stages.forEach(function (stage) {
+    var dirty = stage.querySelector('.ba-dirty');
+    dirty.style.clipPath = 'none';
+
+    var call = stage.querySelector('.ba-callout');
+    if (call) {
+      var x = parseFloat(call.getAttribute('data-x')) || 0.5;
+      var y = parseFloat(call.getAttribute('data-y')) || 0.3;
+      call.style.left = (x * 100) + '%';
+      call.style.top = (y * 100) + '%';
+      setTimeout(function () { call.classList.add('pulse'); }, 900);
+      setTimeout(function () { call.classList.remove('pulse'); }, 3400);
+      call.addEventListener('animationend', function () { call.classList.remove('pulse'); });
+    }
+
+    setSplit(stage, 0.55);
+
+    var dragging = false;
+
+    function down(e) {
+      dragging = true;
+      if (stage.setPointerCapture) stage.setPointerCapture(e.pointerId);
+      setSplit(stage, posFromEvent(e, stage));
+      if (e.preventDefault) e.preventDefault();
+    }
+    function move(e) {
+      if (!dragging) return;
+      setSplit(stage, posFromEvent(e, stage));
+      if (e.preventDefault) e.preventDefault();
+    }
+    function up() { dragging = false; }
+
+    stage.addEventListener('mousedown', down);
+    stage.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    stage.addEventListener('touchstart', down, { passive: false });
+    stage.addEventListener('touchmove', move, { passive: false });
+    stage.addEventListener('touchend', up);
+
+    stage.addEventListener('keydown', function (e) {
+      var p = parseFloat(stage.querySelector('.ba-handle').style.left) / 100 || 0.55;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { p -= 0.04; e.preventDefault(); }
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { p += 0.04; e.preventDefault(); }
+      else return;
+      setSplit(stage, Math.max(0.02, Math.min(0.98, p)));
+    });
+  });
+})();
