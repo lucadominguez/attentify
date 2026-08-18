@@ -515,8 +515,14 @@
     const seen = new Set();
     const cands = [];
     // Top-down: the page's semantic regions are the candidate set (bounded & cheap).
+    // Feed CARDS, not just feed containers. Reddit's post is a <shreddit-post>
+    // wrapped in an <article>, neither of which was here and neither of which
+    // carries an aria-label — so the only part of a Reddit post the scanner could
+    // ever reach was the post's own 629px permalink anchor. Hiding that changed
+    // nothing on screen, which is why Reddit looked like it was working and was not.
     const regions = document.querySelectorAll(
       '[role="feed"], [aria-label], section, aside, [data-e2e], [data-testid], [data-pagelet], ' +
+      'shreddit-post, article, ' +
       'ytd-rich-grid-renderer, ytd-reel-shelf-renderer, ytd-rich-shelf-renderer, ytd-rich-section-renderer, grid-shelf-view-model'
     );
     let scanned = 0;

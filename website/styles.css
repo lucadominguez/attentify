@@ -724,7 +724,10 @@ section[id],[id]{scroll-margin-top:84px}
 .ext-status{position:sticky;top:0;z-index:3;align-self:flex-start;display:flex;align-items:center;gap:8px;
   padding:7px 13px;border-radius:999px;background:#fff;border:1px solid rgba(99,102,241,.28);
   box-shadow:0 6px 18px -10px rgba(99,102,241,.5);font-size:12px;font-weight:600;color:#4338ca;
-  max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  max-width:100%;min-width:0;white-space:nowrap;overflow:hidden}
+/* the pill is a flex row, so the ellipsis has to live on the text node itself;
+   putting it on the pill clipped the sentence mid-word with no ellipsis at all */
+#ext-status-tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .exs-dot{width:8px;height:8px;border-radius:50%;background:#6366f1;flex:0 0 auto;box-shadow:0 0 0 0 rgba(99,102,241,.5);animation:exsPulse 1.6s infinite}
 .ext-status.done{color:#0e7a52;border-color:rgba(14,159,110,.35)}
 .ext-status.done .exs-dot{background:#0e9f6e;animation:none}
@@ -761,87 +764,337 @@ section[id],[id]{scroll-margin-top:84px}
   border:1px solid rgba(15,23,42,.12);box-shadow:0 18px 44px -26px rgba(15,23,42,.55);
   background:#fff}
 
-/* ── live-HTML scene: the real site rendered as HTML, bait stripped in place ── */
-.html-stage{position:relative;flex:1;min-height:420px;max-height:100%;overflow:hidden;border-radius:12px;
+/* ── live-HTML scene: the real site rendered as HTML, bait stripped in place ──
+   Geometry, type sizes and colours are taken from the 2880x1800 captures kept
+   in Desktop/AI/attentify-promo/plates-real/ (the downscaled pair that ships is
+   website/real/). The stage is only ~640px wide next to the panel, so the
+   sites are rebuilt at their real proportions rather than scaled down: a real
+   Reddit post is a meta line, a title, a flair chip and a row of action pills,
+   and it stops looking real the moment any one of those is missing. */
+.html-stage{position:relative;flex:1;min-height:420px;max-height:100%;border-radius:12px;
   border:1px solid rgba(15,23,42,.12);box-shadow:0 18px 44px -26px rgba(15,23,42,.55);
-  background:#fff;color:#111;font-size:12.5px;line-height:1.35;overflow-y:auto}
+  background:#fff;color:#111;font-size:12.5px;line-height:1.35;overflow:hidden;overflow-y:auto;
+  scrollbar-width:thin;scroll-behavior:smooth;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 .html-stage *{box-sizing:border-box}
-.html-stage{scrollbar-width:thin}
-.html-stage .bait{transition:opacity .55s ease,transform .4s ease;position:relative}
-.html-stage .bait.gone{opacity:0;transform:scale(.985) translateY(-6px);pointer-events:none}
-/* vertical redraw: container lets removed bait collapse and rows reflow up */
-.html-stage{transition:transform .4s ease}
+.ext-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.html-stage .ri{width:1em;height:1em;fill:currentColor;flex:0 0 auto;display:inline-block;vertical-align:-.13em}
 
-/* reddit */
-.html-stage .hnav{display:flex;align-items:center;gap:10px;padding:9px 13px;background:#ff4500;color:#fff}
-.html-stage .hn-logo{font-weight:800;font-size:13px;letter-spacing:-.01em}
-.html-stage .hn-search{flex:1;display:flex;align-items:center;gap:6px;background:#fff;color:#555;
-  border-radius:20px;padding:6px 12px;font-size:12px;max-width:300px}
-.html-stage .hn-cta{font-size:11.5px;font-weight:700;background:transparent;border:1px solid rgba(255,255,255,.6);
-  color:#fff;padding:5px 13px;border-radius:20px}
-.html-stage .hn-cta.solid{background:#fff;color:#ff4500;border-color:#fff}
-.html-stage .hfeed{display:flex;flex-direction:column;gap:2px;padding:8px 0}
-.html-stage .hcard{display:flex;gap:10px;padding:9px 14px;border-bottom:1px solid #efeef3}
-.html-stage .hc-vote{display:flex;flex-direction:column;align-items:center;gap:2px;color:#878a8c;
-  font-size:13px;width:32px;flex:0 0 auto;padding-top:2px}
-.html-stage .hc-vote b{font-size:11px;color:#1a1a1b}
-.html-stage .hc-body{min-width:0}
-.html-stage .hc-meta{font-size:11px;color:#787c7e;margin-bottom:3px}
-.html-stage .hc-title{font-size:13.5px;font-weight:600;color:#1a1a1b;line-height:1.3}
-.html-stage .hc-tags{font-size:11px;color:#787c7e;margin-top:5px}
-.html-stage .hc-meta.bailabel{color:#999;font-size:10px;font-weight:800;letter-spacing:.08em}
-.html-stage .hc-videorail{display:flex;align-items:center;gap:10px;font-size:12px;color:#4e5456;
-  background:linear-gradient(90deg,#f7f7f9,#eef0f4)}
-.html-stage .rail-chip{background:#0f0f0f;color:#fff;border-radius:6px;padding:2px 6px;font-size:10px}
-.html-stage .rail-title{font-weight:600;color:#333}
+/* ── the strip itself ──────────────────────────────────────────────────────
+   A real blocker does not dissolve an element in place and leave the hole: the
+   node is removed and everything below jumps up. Fading alone left gaps that
+   read as a broken page, so bait collapses its own height, margins, padding and
+   borders together while it fades, and the rows below travel up into the space.
+   The engine pins an explicit start height first so the height transition has
+   something to animate from (auto is not interpolatable). */
+.html-stage .bait{position:relative;
+  transition:opacity .34s ease, transform .34s ease, height .46s cubic-bezier(.4,0,.2,1),
+             margin .46s cubic-bezier(.4,0,.2,1), padding .46s cubic-bezier(.4,0,.2,1),
+             border-width .46s cubic-bezier(.4,0,.2,1)}
+/* the beat before removal: the extension shows what it is about to take */
+.html-stage .bait.targeting{outline:2px solid rgba(99,102,241,.85);outline-offset:-2px;
+  border-radius:8px;background:rgba(99,102,241,.07);animation:baitTarget .5s ease}
+@keyframes baitTarget{0%{outline-color:rgba(99,102,241,0)}55%{outline-color:rgba(99,102,241,.95)}}
+.html-stage .bait.gone{opacity:0;transform:translateX(-14px);pointer-events:none;
+  height:0!important;min-height:0!important;margin-top:0!important;margin-bottom:0!important;
+  padding-top:0!important;padding-bottom:0!important;border-top-width:0!important;
+  border-bottom-width:0!important;overflow:hidden}
 
-/* youtube shared */
-.html-stage .ynav{display:flex;align-items:center;gap:14px;padding:9px 14px;border-bottom:1px solid #e5e5e5}
-.html-stage .yn-logo{font-weight:800;font-size:14px;letter-spacing:-.02em}
-.html-stage .yn-rail-main{font-size:12px;color:#333;font-weight:500}
-.html-stage .yn-shorts-chip{font-size:10.5px;font-weight:700;background:#0f0f0f;color:#fff;
-  border-radius:999px;padding:2px 9px}
-.html-stage .yband{background:#f9f9f9;border-bottom:1px solid #e5e5e5;padding:10px 14px}
-.html-stage .yshelf-label{font-size:14px;font-weight:700;margin-bottom:8px}
-.html-stage .yshelf{display:flex;gap:10px}
-.html-stage .yshort{width:88px;flex:0 0 auto;font-size:10.5px;color:#333}
-.html-stage .yt-h{display:block;aspect-ratio:9/16;background:linear-gradient(135deg,#9aa2ad,#c7cdd6);
-  border-radius:8px;margin-bottom:5px}
-.html-stage .yfeed{display:flex;flex-direction:column;gap:4px;padding:6px 0}
-.html-stage .yrow{display:flex;gap:12px;padding:8px 14px;align-items:flex-start}
-.html-stage .yr-thumb{flex:0 0 auto;width:120px;height:68px;border-radius:10px;position:relative;
-  background:linear-gradient(135deg,#aab2be,#8b94a2);overflow:hidden}
-.html-stage .yr-len{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.8);color:#fff;
-  font-size:10px;padding:1px 4px;border-radius:3px}
-.html-stage .yr-info b{display:block;font-size:13px;color:#0f0f0f;font-weight:600;line-height:1.25}
-.html-stage .yr-ch{font-size:11px;color:#606060}
+/* ══ REDDIT ═══════════════════════════════════════════════════════════════ */
+/* Modern Reddit is a white bar with an orange wordmark; the full-orange band
+   and the left-hand vote rail are both pre-2020 and were the loudest tell. */
+.rstage{background:#fff}
+.html-stage .rnav{display:flex;align-items:center;gap:9px;padding:8px 12px;background:#fff;
+  border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:3}
+.html-stage .rn-burger{color:#1a1a1b;font-size:14px;line-height:1}
+.html-stage .rn-logo{display:flex;align-items:center;gap:5px;color:#ff4500;font-weight:800;font-size:15px;letter-spacing:-.03em}
+.html-stage .rn-snoo{width:19px;height:19px;border-radius:50%;background:#ff4500;position:relative;flex:0 0 auto}
+.html-stage .rn-snoo::before{content:"";position:absolute;left:4px;top:6px;width:11px;height:8px;
+  background:#fff;border-radius:9px 9px 7px 7px}
+.html-stage .rn-search{flex:1;min-width:0;display:flex;align-items:center;gap:6px;background:#f6f7f8;
+  border:1px solid #e2e4e7;border-radius:999px;padding:5px 11px;color:#7c7f81;font-size:11.5px;overflow:hidden}
+.html-stage .rn-mag{font-size:13px;color:#7c7f81}
+.html-stage .rn-chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #d7dade;
+  border-radius:999px;padding:1px 7px;font-size:10.5px;color:#1a1a1b;font-weight:600;flex:0 0 auto}
+.html-stage .rn-chip em{font-style:normal;color:#9aa0a6}
+.html-stage .rn-ph{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.html-stage .rn-login{background:#ff4500;color:#fff;font-weight:700;font-size:11.5px;
+  padding:5px 14px;border-radius:999px;flex:0 0 auto}
+.html-stage .rn-more{color:#1a1a1b;flex:0 0 auto;letter-spacing:1px}
 
-/* watch page */
-.html-stage .watchgrid{display:grid;grid-template-columns:1fr 200px;gap:14px;padding:12px 14px;align-items:start}
-.html-stage .w-player{aspect-ratio:16/9;border-radius:10px;background:#111;display:flex;align-items:center;
-  justify-content:center;margin-bottom:10px}
-.html-stage .w-play{color:#fff;font-size:28px}
-.html-stage .w-title{display:block;font-size:14px;font-weight:700;color:#0f0f0f;line-height:1.3}
-.html-stage .w-meta{display:flex;align-items:center;gap:12px;margin:9px 0}
-.html-stage .w-chan{display:flex;align-items:center;gap:8px;color:#0f0f0f}
-.html-stage .w-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#f56565,#ed8936)}
-.html-stage .w-chan b{font-size:12.5px}
-.html-stage .w-chan em{font-style:normal;font-size:11px;color:#606060}
-.html-stage .w-stats{font-size:11.5px;color:#606060}
-.html-stage .w-desc{font-size:12px;color:#333;background:#f2f2f2;border-radius:10px;padding:9px 12px}
-.html-stage .wr-label{font-size:12px;font-weight:700;margin-bottom:8px}
-.html-stage .wr-item{display:flex;gap:8px;margin-bottom:10px;cursor:pointer}
-.html-stage .wr-item.ad .wr-thumb{background:linear-gradient(135deg,#a3e635,#84cc16)}
-.html-stage .wr-item.ad .wr-thumb i{position:absolute;left:4px;top:4px;background:rgba(0,0,0,.75);color:#fff;
-  font-style:normal;font-size:9px;padding:1px 4px;border-radius:3px}
-.html-stage .wr-thumb{flex:0 0 auto;width:80px;height:45px;border-radius:6px;position:relative;
+.html-stage .rbanner{height:34px;background:#e9eef2;margin:9px 12px 0;border-radius:8px}
+.html-stage .rsub{display:flex;align-items:center;gap:10px;padding:8px 12px 4px}
+.html-stage .rsub-av{width:34px;height:34px;border-radius:50%;flex:0 0 auto;
+  background:linear-gradient(135deg,#7dd3fc,#38bdf8);border:2px solid #fff;box-shadow:0 0 0 1px #e5e7eb}
+.html-stage .rsub-name{font-size:17px;font-weight:800;color:#1a1a1b;letter-spacing:-.02em;flex:1;min-width:0}
+.html-stage .rsub-btns{display:flex;gap:6px;flex:0 0 auto}
+.html-stage .rbtn{border:1px solid #d7dade;border-radius:999px;padding:4px 11px;font-size:11px;
+  font-weight:700;color:#1a1a1b;background:#fff;white-space:nowrap}
+.html-stage .rbtn.solid{background:#1a1a1b;color:#fff;border-color:#1a1a1b}
+.html-stage .rsort{display:flex;align-items:center;gap:12px;padding:5px 13px 7px;
+  font-size:11.5px;font-weight:700;color:#576f76;border-bottom:1px solid #edeff1}
+.html-stage .rsort-v{color:#878a8c;font-weight:500}
+
+.html-stage .rfeed{display:flex;flex-direction:column}
+.html-stage .rpost{padding:11px 13px;border-bottom:1px solid #edeff1}
+.html-stage .rp-head{display:flex;align-items:center;gap:6px;font-size:11px;color:#576f76;margin-bottom:6px}
+.html-stage .rp-head b{color:#1a1a1b;font-weight:700}
+.html-stage .rp-more{margin-left:auto;color:#878a8c;letter-spacing:1px}
+.html-stage .rp-av{width:17px;height:17px;border-radius:50%;flex:0 0 auto}
+.html-stage .rp-av.a1{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.html-stage .rp-av.a2{background:linear-gradient(135deg,#f97316,#7c3aed)}
+.html-stage .rp-av.a3{background:linear-gradient(135deg,#34d399,#059669)}
+.html-stage .rp-av.a4{background:linear-gradient(135deg,#60a5fa,#2563eb)}
+.html-stage .rp-av.a5{background:linear-gradient(135deg,#f472b6,#db2777)}
+.html-stage .rp-body{display:flex;gap:11px;align-items:flex-start}
+.html-stage .rp-text{min-width:0;flex:1}
+.html-stage .rp-title{margin:0;font-size:14.5px;font-weight:600;color:#1a1a1b;line-height:1.28;letter-spacing:-.01em}
+.html-stage .rp-flair{display:inline-block;margin-top:6px;background:#edeff1;color:#1a1a1b;
+  border-radius:999px;padding:2px 8px;font-size:10px;font-weight:500}
+.html-stage .rp-link{display:block;margin-top:5px;font-size:11px;color:#0079d3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.html-stage .rp-thumb{width:74px;height:56px;border-radius:8px;flex:0 0 auto}
+.html-stage .rp-thumb.t1{background:linear-gradient(135deg,#a855f7,#6d28d9)}
+.html-stage .rp-thumb.t2{background:linear-gradient(135deg,#38bdf8,#0369a1)}
+.html-stage .rp-thumb.t3{background:linear-gradient(135deg,#fbbf24,#b45309)}
+.html-stage .rp-thumb.t4{background:linear-gradient(135deg,#94a3b8,#475569)}
+.html-stage .rp-adimg{display:flex;align-items:center;justify-content:center;margin-top:8px;height:74px;
+  border-radius:8px;background:linear-gradient(120deg,#fde68a,#fbcfe8 60%,#ddd6fe);
+  color:#1a1a1b;font-weight:800;font-size:15px;letter-spacing:-.02em;text-align:center;padding:0 10px}
+.html-stage .rp-acts{display:flex;gap:6px;margin-top:9px}
+.html-stage .rp-pill{display:inline-flex;align-items:center;gap:5px;background:#f6f7f8;border-radius:999px;
+  padding:4px 10px;font-size:11px;font-weight:600;color:#576f76}
+.html-stage .rp-pill b{font-weight:700;color:#1a1a1b}
+.html-stage .rp-pill.wide{background:#0079d3;color:#fff;padding:4px 14px}
+
+.html-stage .rrail{padding:10px 13px;border-bottom:1px solid #edeff1}
+.html-stage .rrail-h{font-size:12px;font-weight:700;color:#1a1a1b;margin-bottom:8px}
+.html-stage .rrail-row{display:flex;gap:8px}
+.html-stage .rrail-card{width:33.3%;min-width:0;font-size:10px;color:#576f76;position:relative}
+.html-stage .rrail-th{display:block;aspect-ratio:9/13;border-radius:8px;margin-bottom:4px}
+.html-stage .rrail-th.v1{background:linear-gradient(135deg,#67e8f9,#0e7490)}
+.html-stage .rrail-th.v2{background:linear-gradient(135deg,#fca5a5,#b91c1c)}
+.html-stage .rrail-th.v3{background:linear-gradient(135deg,#c4b5fd,#5b21b6)}
+.html-stage .rrail-card em{font-style:normal;display:block;color:#1a1a1b;font-weight:600;font-size:10.5px;
+  line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.html-stage .rrail-card u{position:absolute;right:4px;top:4px;background:rgba(0,0,0,.75);color:#fff;
+  border-radius:4px;padding:0 4px;font-size:9px;text-decoration:none}
+
+/* ══ YOUTUBE (shared chrome) ══════════════════════════════════════════════ */
+.html-stage .ytnav{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#fff;
+  border-bottom:1px solid #e5e5e5;position:sticky;top:0;z-index:3}
+.html-stage .ytn-burger{font-size:14px;color:#0f0f0f;flex:0 0 auto}
+.html-stage .ytn-logo{display:flex;align-items:center;gap:4px;font-weight:800;font-size:14px;
+  letter-spacing:-.05em;color:#0f0f0f;flex:0 0 auto}
+.html-stage .ytn-play{width:24px;height:17px;border-radius:5px;background:#f00;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:9px}
+.html-stage .ytn-logo sup{font-size:7px;color:#606060;font-weight:600}
+.html-stage .ytn-search{flex:1;min-width:0;display:flex;align-items:center;background:#fff;
+  border:1px solid #ccc;border-radius:999px;padding:0 0 0 13px;overflow:hidden}
+.html-stage .ytn-q{flex:1;min-width:0;font-size:12px;color:#0f0f0f;padding:5px 0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.html-stage .ytn-ph{flex:1;min-width:0;font-size:12px;color:#909090;padding:5px 0}
+.html-stage .ytn-x{color:#606060;font-size:11px;padding:0 8px;flex:0 0 auto}
+.html-stage .ytn-go{background:#f8f8f8;border-left:1px solid #ccc;padding:5px 15px;color:#0f0f0f;
+  font-size:13px;flex:0 0 auto;display:flex;align-items:center}
+.html-stage .ytn-mic{width:26px;height:26px;border-radius:50%;background:#f2f2f2;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#0f0f0f}
+.html-stage .ytn-more{color:#0f0f0f;flex:0 0 auto}
+.html-stage .ytn-signin{display:flex;align-items:center;gap:5px;border:1px solid #d3d3d3;border-radius:999px;
+  padding:4px 11px;color:#065fd4;font-weight:600;font-size:11.5px;flex:0 0 auto;white-space:nowrap}
+
+.html-stage .ytbody{display:flex;align-items:flex-start}
+.html-stage .ytrail{width:66px;flex:0 0 auto;padding:8px 0;display:flex;flex-direction:column;gap:2px}
+.html-stage .ytr-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 0 8px;
+  font-size:9px;color:#0f0f0f;border-radius:10px}
+.html-stage .ytr-item .ri{font-size:19px}
+.html-stage .ytr-item.on{background:#f2f2f2;font-weight:600}
+.html-stage .ytmain{flex:1;min-width:0;padding:8px 12px 12px 4px}
+
+/* sponsored card above the results */
+.html-stage .yad{display:flex;gap:11px;padding:9px;border-radius:10px;background:#f9f9f9;margin-bottom:10px}
+.html-stage .yad-th{width:132px;height:74px;border-radius:8px;flex:0 0 auto;
+  background:linear-gradient(135deg,#a78bfa,#7c3aed)}
+.html-stage .yad-tx{min-width:0;display:flex;flex-direction:column;gap:3px}
+.html-stage .yad-tx b{font-size:12.5px;color:#0f0f0f;line-height:1.25}
+.html-stage .yad-tx>span{font-size:10.5px;color:#606060}
+.html-stage .yad-btns{display:flex;gap:6px;margin-top:4px}
+.html-stage .yad-btns em{font-style:normal;border-radius:999px;padding:3px 12px;font-size:10.5px;
+  font-weight:600;background:#f2f2f2;color:#0f0f0f}
+.html-stage .yad-btns em.solid{background:#0f0f0f;color:#fff}
+
+/* the Shorts shelf: 9:16 tiles, the single most recognisable YouTube block */
+.html-stage .yshorts{padding:10px 0 12px;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;margin-bottom:10px}
+.html-stage .ysh-head{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.html-stage .ysh-logo{width:17px;height:17px;border-radius:5px;background:#f00;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:9px;flex:0 0 auto}
+.html-stage .ysh-head b{font-size:14px;font-weight:700;color:#0f0f0f;letter-spacing:-.01em}
+.html-stage .ysh-more{margin-left:auto;color:#606060}
+.html-stage .ysh-row{display:flex;gap:8px}
+.html-stage .ysh-card{width:25%;min-width:0;display:flex;flex-direction:column;gap:3px}
+.html-stage .ysh-th{position:relative;display:block;aspect-ratio:9/16;border-radius:10px;max-height:132px}
+.html-stage .ysh-th.s1{background:linear-gradient(135deg,#fcd34d,#ea580c)}
+.html-stage .ysh-th.s2{background:linear-gradient(135deg,#a3e635,#15803d)}
+.html-stage .ysh-th.s3{background:linear-gradient(135deg,#93c5fd,#1d4ed8)}
+.html-stage .ysh-th.s4{background:linear-gradient(135deg,#fda4af,#9f1239)}
+.html-stage .ysh-th u{position:absolute;left:4px;top:4px;background:rgba(0,0,0,.72);color:#fff;
+  border-radius:4px;padding:0 4px;font-size:8.5px;text-decoration:none;font-weight:600}
+.html-stage .ysh-card em{font-style:normal;font-size:10.5px;font-weight:600;color:#0f0f0f;line-height:1.25;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.html-stage .ysh-card>span{font-size:10px;color:#606060}
+
+/* real search results: big 16:9 thumb left, title and snippet right */
+.html-stage .yres{display:flex;flex-direction:column;gap:12px}
+.html-stage .yrow{display:flex;gap:11px;align-items:flex-start}
+.html-stage .yr-thumb{position:relative;width:168px;height:94px;border-radius:10px;flex:0 0 auto}
+.html-stage .yr-thumb.r1{background:linear-gradient(135deg,#fbbf24,#c2410c)}
+.html-stage .yr-thumb.r2{background:linear-gradient(135deg,#5eead4,#0f766e)}
+.html-stage .yr-thumb.r3{background:linear-gradient(135deg,#bef264,#3f6212)}
+.html-stage .yr-thumb.r4{background:linear-gradient(135deg,#fca5a5,#991b1b)}
+.html-stage .yr-len{position:absolute;right:5px;bottom:5px;background:rgba(0,0,0,.8);color:#fff;
+  border-radius:4px;padding:0 4px;font-size:9.5px;font-style:normal;font-weight:600}
+.html-stage .yr-info{min-width:0;display:flex;flex-direction:column;gap:3px}
+.html-stage .yr-info b{font-size:13.5px;color:#0f0f0f;font-weight:600;line-height:1.25;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.html-stage .yr-ch{display:flex;align-items:center;gap:5px;font-size:10.5px;color:#606060}
+.html-stage .yr-av{width:15px;height:15px;border-radius:50%;flex:0 0 auto;
+  background:linear-gradient(135deg,#f472b6,#be185d)}
+.html-stage .yr-snip{font-size:10.5px;color:#606060;line-height:1.3;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.html-stage .yalso{margin-top:12px;padding-top:10px;border-top:1px solid #e5e5e5;
+  display:flex;flex-direction:column;gap:10px}
+.html-stage .yalso-h{font-size:12.5px;font-weight:700;color:#0f0f0f}
+.html-stage .yrow.slim .yr-thumb{width:124px;height:70px}
+.html-stage .yrow.slim .yr-info b{font-size:12px}
+
+/* ══ YOUTUBE WATCH ═══════════════════════════════════════════════════════ */
+.html-stage .watchgrid{display:grid;grid-template-columns:1fr 208px;gap:14px;padding:12px;align-items:start;
+  transition:grid-template-columns .55s cubic-bezier(.4,0,.2,1)}
+/* once the rail is gone the player column takes the space back, the way it
+   does in a real browser once the sidebar nodes are removed */
+.html-stage.cleaned .watchgrid{grid-template-columns:1fr 0px}
+.html-stage.cleaned .w-rail{opacity:0;overflow:hidden}
+.html-stage .w-rail{transition:opacity .4s ease}
+.html-stage .w-player{position:relative;aspect-ratio:16/9;border-radius:11px;overflow:hidden;
+  background:linear-gradient(150deg,#3f4550,#11141a);display:flex;align-items:center;justify-content:center}
+.html-stage .w-play{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:17px}
+.html-stage .w-wm{position:absolute;right:9px;bottom:11px;color:#4ade80;font-weight:800;font-size:11px;
+  text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.html-stage .w-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.3)}
+.html-stage .w-bar i{display:block;width:38%;height:100%;background:#f00}
+.html-stage .w-title{margin:10px 0 0;font-size:15px;font-weight:700;color:#0f0f0f;line-height:1.28;letter-spacing:-.01em}
+.html-stage .w-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0;flex-wrap:wrap}
+.html-stage .w-chan{display:flex;align-items:center;gap:8px;min-width:0}
+.html-stage .w-avatar{width:30px;height:30px;border-radius:50%;flex:0 0 auto;
+  background:linear-gradient(135deg,#0f172a,#475569)}
+.html-stage .w-chan-tx{display:flex;flex-direction:column;min-width:0}
+.html-stage .w-chan-tx b{font-size:12.5px;color:#0f0f0f}
+.html-stage .w-chan-tx em{font-style:normal;font-size:10.5px;color:#606060}
+.html-stage .w-sub{background:#0f0f0f;color:#fff;border-radius:999px;padding:6px 14px;
+  font-size:11.5px;font-weight:600;white-space:nowrap;margin-left:4px}
+.html-stage .w-acts{display:flex;gap:6px;flex-wrap:wrap}
+.html-stage .w-pill{display:inline-flex;align-items:center;gap:6px;background:#f2f2f2;border-radius:999px;
+  padding:6px 12px;font-size:11.5px;font-weight:600;color:#0f0f0f;white-space:nowrap}
+.html-stage .w-sep{width:1px;height:13px;background:#d9d9d9}
+.html-stage .w-desc{background:#f2f2f2;border-radius:11px;padding:9px 12px;font-size:11.5px;color:#0f0f0f;
+  display:flex;flex-direction:column;gap:4px}
+.html-stage .w-desc b{font-size:11.5px}
+.html-stage .w-desc u{text-decoration:none;font-weight:700}
+.html-stage .w-comments{margin-top:12px}
+.html-stage .wc-head{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:700;
+  color:#0f0f0f;margin-bottom:10px}
+.html-stage .wc-sort{font-size:11px;font-weight:600;color:#0f0f0f}
+.html-stage .wc-row{display:flex;gap:9px;margin-bottom:10px}
+.html-stage .wc-av{width:24px;height:24px;border-radius:50%;flex:0 0 auto}
+.html-stage .wc-av.c1{background:linear-gradient(135deg,#fbcfe8,#9d174d)}
+.html-stage .wc-av.c2{background:linear-gradient(135deg,#bfdbfe,#1e3a8a)}
+.html-stage .wc-tx{min-width:0}
+.html-stage .wc-tx b{font-size:11px;color:#0f0f0f}
+.html-stage .wc-tx em{font-style:normal;font-size:10.5px;color:#606060;margin-left:6px}
+.html-stage .wc-tx p{margin:3px 0 0;font-size:11.5px;color:#0f0f0f;line-height:1.35}
+
+.html-stage .w-rail{display:flex;flex-direction:column;gap:10px;min-width:0}
+.html-stage .wr-ad{display:flex;gap:8px}
+.html-stage .wr-next,.html-stage .wr-more{display:flex;flex-direction:column;gap:10px}
+.html-stage .wr-label{display:flex;align-items:center;justify-content:space-between;gap:6px;
+  font-size:11.5px;font-weight:700;color:#0f0f0f}
+.html-stage .wr-auto{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:500;color:#606060}
+.html-stage .wr-toggle{width:22px;height:12px;border-radius:999px;background:#0f0f0f;position:relative;flex:0 0 auto}
+.html-stage .wr-toggle::after{content:"";position:absolute;right:1.5px;top:1.5px;width:9px;height:9px;
+  border-radius:50%;background:#fff}
+.html-stage .wr-item{display:flex;gap:8px;min-width:0}
+.html-stage .wr-thumb{position:relative;width:84px;height:47px;border-radius:7px;flex:0 0 auto;
   background:linear-gradient(135deg,#aab2be,#8b94a2)}
-.html-stage .wr-item b{display:block;font-size:11.5px;color:#0f0f0f;line-height:1.25}
-.html-stage .wr-item span:last-child{font-size:10.5px;color:#606060}
-@media(max-width:1100px){ .html-stage .watchgrid{grid-template-columns:1fr;grid-template-rows:auto auto} }
+.html-stage .wr-thumb.ad{background:linear-gradient(135deg,#60a5fa,#1e40af)}
+.html-stage .wr-thumb.n1{background:linear-gradient(135deg,#fcd34d,#b45309)}
+.html-stage .wr-thumb.n2{background:linear-gradient(135deg,#86efac,#166534)}
+.html-stage .wr-thumb.n3{background:linear-gradient(135deg,#c7d2fe,#3730a3)}
+.html-stage .wr-thumb.n4{background:linear-gradient(135deg,#fbcfe8,#9d174d)}
+.html-stage .wr-thumb i{position:absolute;right:3px;bottom:3px;background:rgba(0,0,0,.8);color:#fff;
+  border-radius:3px;padding:0 3px;font-size:8.5px;font-style:normal;font-weight:600}
+.html-stage .wr-tx{min-width:0;display:flex;flex-direction:column;gap:2px}
+.html-stage .wr-tx b{font-size:11px;color:#0f0f0f;line-height:1.25;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.html-stage .wr-tx span{font-size:9.5px;color:#606060}
+.html-stage .wr-spon{font-weight:600;color:#0f0f0f}
+.html-stage .wr-cta{font-style:normal;align-self:flex-start;margin-top:4px;background:#0f0f0f;color:#fff;
+  border-radius:999px;padding:4px 11px;font-size:10px;font-weight:600}
+
+/* ── narrow stage ────────────────────────────────────────────────────────
+   Under ~1100px the watch page stacks, so the rail becomes a row below the
+   player rather than a squeezed column. Under 760px the whole stage steps
+   down a type size, the YouTube icon rail collapses to icons, and every
+   thumbnail switches to a percentage width so nothing overflows the card. */
+@media(max-width:1100px){
+  .html-stage .watchgrid{grid-template-columns:1fr;grid-template-rows:auto auto}
+  .html-stage.cleaned .watchgrid{grid-template-columns:1fr}
+  .html-stage.cleaned .w-rail{display:none}
+  .html-stage .w-rail{flex-direction:row;flex-wrap:wrap;gap:10px}
+  .html-stage .wr-ad,.html-stage .wr-next,.html-stage .wr-more{flex:1 1 210px}
+}
 @media(max-width:760px){
-  .html-stage{min-height:340px;font-size:11.5px}
-  .html-stage .yrow .yr-thumb{width:84px;height:48px}
+  /* fill the stacked page box rather than forcing a height it may not have */
+  .html-stage{min-height:0;font-size:11.5px}
+  .html-stage .rp-title{font-size:13px}
+  .html-stage .rsub-name{font-size:15px}
+  .html-stage .rbanner{height:24px}
+  .html-stage .rp-thumb{width:58px;height:44px}
+  .html-stage .rn-ph,.html-stage .rsort-v{display:none}
+  .html-stage .ytr-item i{display:none}
+  .html-stage .ytrail{width:46px}
+  .html-stage .ytn-signin span,.html-stage .ytn-logo sup{display:none}
+  .html-stage .yr-thumb{width:38%;height:auto;aspect-ratio:16/9}
+  .html-stage .yrow.slim .yr-thumb{width:34%;height:auto}
+  .html-stage .yad-th{width:32%;height:auto;aspect-ratio:16/9}
+  .html-stage .ysh-card{width:33%}
+  .html-stage .ysh-th{max-height:104px}
+  .html-stage .yr-info b{font-size:12px}
+  .html-stage .w-title{font-size:13px}
+  .html-stage .w-sub{padding:5px 11px}
+  .html-stage .w-pill{padding:5px 9px}
+}
+/* Narrow YouTube chrome. The mic and overflow dots go first. On the watch page
+   the search field carries no text, so an empty stretched pill is just noise -
+   it becomes an icon button, which is what YouTube itself does at this width.
+   The results page keeps its query: "funny cats" is the reason the page exists. */
+@media(max-width:560px){
+  .html-stage .ytn-mic,.html-stage .ytn-more,.html-stage .ytn-burger{display:none}
+  /* the query is the reason the results page exists, so it gets the freed room:
+     the account pill drops to its icon rather than letting "funny cats" clip */
+  .html-stage .ytn-si-tx{display:none}
+  .html-stage .ytn-signin{padding:5px 8px}
+  .wstage .ytn-search{flex:0 0 auto;margin-left:auto;border:0;padding:0;background:transparent}
+  .wstage .ytn-ph{display:none}
+  .wstage .ytn-go{border-left:0;background:#f2f2f2;border-radius:999px;padding:6px 10px}
+}
+/* very narrow: the fourth Shorts tile and the snippet stop earning their space */
+@media(max-width:520px){
+  .html-stage .ysh-card:nth-child(4){display:none}
+  .html-stage .ysh-card{width:33.3%}
+  .html-stage .yr-snip{display:none}
+  .html-stage .rrail-card:nth-child(3){display:none}
+  .html-stage .rrail-card{width:50%}
 }
 
 /* full-scene block card (google-bad, gambling) */
@@ -932,13 +1185,31 @@ section[id],[id]{scroll-margin-top:84px}
   background:#f5f7fb;display:block}
 @media(max-width:760px){
   .extwin-body{flex-direction:column;height:auto}
-  .ext-page{max-height:340px;overflow:hidden}
+  /* .ext-page needs a real height here, not just a cap. Stacked, .extwin-body is
+     height:auto, so flex:1 on .ext-scenes had no free space to claim and (with
+     min-height:0) resolved to zero: the page under the status pill was 0px tall
+     and no scene ever rendered on a phone. */
+  .ext-page{flex:0 0 auto;height:430px;max-height:none;overflow:hidden}
   .esd{font-size:9px;padding:3px 6px}
   .ext-panel{width:auto;height:560px;border-left:0;border-top:1px solid rgba(15,23,42,.10)}
+}
+/* Narrow: the pill and the scene tabs stop fitting on one line, and the pill was
+   clipping its text mid-word. Tabs take the top line, the pill gets the full
+   width below it, and long status text ellipsises instead of being cut. */
+@media(max-width:560px){
+  .ext-topbar{flex-wrap:wrap;gap:7px}
+  .ext-scene-dots{order:1;margin-left:auto}
+  .ext-status{order:2;width:100%;max-width:100%}
+  .ext-page{height:470px}
 }
 @media(prefers-reduced-motion:reduce){
   .ext-page.scanning .ext-scan{animation:none;opacity:0}
   .epost,.blockable{transition:none}
+  /* the strip still happens, it just stops sliding; app.js also shortens the
+     beats so the sequence does not sit there waiting on absent animations */
+  .html-stage,.html-stage .bait{transition:none}
+  .html-stage .bait.targeting{animation:none}
+  .html-stage .watchgrid{transition:none}
   .ext-scene.on,.scene-block.on{animation:none}
   .blockable.flagged::after,.blockable.flagged::before,.gm-tile::after{animation:none}
   .blockable.flagged::after{opacity:0}
@@ -1034,4 +1305,122 @@ section[id],[id]{scroll-margin-top:84px}
 .rp-tag.good{color:var(--green);background:rgba(14,159,110,.08);border:1px solid rgba(14,159,110,.30)}
 @media(max-width:680px){
   .rp-row{grid-template-columns:1fr}
+}
+
+/* ============================================================================
+   WHY IT ACTUALLY WORKS — three cards under the live demo
+   Each card holds a fixed-height visual that loops a single claim. Rules to keep
+   if these are ever edited:
+   1. The animations are gated on `.reveal.in`, which app.js adds when the card
+      scrolls into view, so nothing loops off-screen.
+   2. Every animated part's BASE state is its finished state. The reduced-motion
+      block above is `*{animation:none!important}`, so a step that only exists
+      inside a keyframe would simply never appear for those visitors.
+   3. Heights are fixed so the three cards stay aligned no matter how the copy
+      wraps; the visuals must never push the headings out of line.
+   ========================================================================== */
+.why-grid{grid-template-columns:repeat(3,1fr)}
+.why-card{display:flex;flex-direction:column}
+.why-viz{position:relative;height:150px;margin-bottom:20px;padding:14px;border-radius:12px;
+  background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+  overflow:hidden;font-size:12px;line-height:1.35}
+.why-card h3{font-size:19px;margin-bottom:9px}
+.why-card p{color:var(--muted);font-size:14.5px}
+.why-card p b{color:var(--text)}
+
+/* ---- card 1: the same search engine, two different intents ---- */
+.viz-intent{display:flex;flex-direction:column;gap:7px;justify-content:center}
+.vi-q{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;
+  background:var(--panel);border:1px solid var(--line2);color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vi-q span{overflow:hidden;text-overflow:ellipsis}
+/* drawn, not an emoji: the glyph fonts differ per platform and broke the row height */
+.vi-mag{flex:none;width:11px;height:11px;border-radius:50%;border:1.5px solid var(--faint);position:relative}
+.vi-mag::after{content:"";position:absolute;right:-4px;bottom:-3px;width:5px;height:1.5px;
+  background:var(--faint);transform:rotate(45deg)}
+.vi-v{display:flex;align-items:center;gap:8px;padding-left:4px}
+.vi-v em{font-style:normal;color:var(--faint)}
+.vi-chip{font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 8px;border-radius:6px;font-weight:600}
+.vi-chip.ok{background:rgba(14,159,110,.13);color:var(--green)}
+.vi-chip.no{background:rgba(225,29,72,.11);color:var(--pink)}
+.vi-q2{opacity:.55}
+.reveal.in .viz-intent>*{animation:vi-cycle 9s cubic-bezier(.2,.7,.2,1) infinite backwards}
+.reveal.in .vi-q1{animation-delay:0s}
+.reveal.in .vi-v1{animation-delay:.55s}
+.reveal.in .vi-q2{animation-delay:2.9s}
+.reveal.in .vi-v2{animation-delay:3.45s}
+/* one shared cycle: rise in, hold most of the loop, drop out together at the end */
+@keyframes vi-cycle{
+  0%{opacity:0;transform:translateY(9px)}
+  7%,88%{opacity:1;transform:none}
+  100%{opacity:0;transform:translateY(-6px)}
+}
+.reveal.in .vi-q2{opacity:.55}
+
+/* ---- card 2: it learns, and it keeps shipping ---- */
+.viz-learn{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.vl-row{display:flex;align-items:center;gap:8px;color:var(--muted);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.vl-tick{flex:none;width:15px;height:15px;border-radius:5px;background:rgba(14,159,110,.15);position:relative}
+.vl-tick::after{content:"";position:absolute;left:5px;top:2.5px;width:4px;height:7px;
+  border:solid var(--green);border-width:0 1.6px 1.6px 0;transform:rotate(43deg)}
+.vl-meter{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
+.vl-meter i{display:block;height:100%;width:100%;border-radius:99px;background:var(--grad)}
+.vl-cap{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.reveal.in .vl-row{animation:vl-in 9s cubic-bezier(.2,.7,.2,1) infinite backwards}
+.reveal.in .vl-r1{animation-delay:.2s}
+.reveal.in .vl-r2{animation-delay:1.5s}
+.reveal.in .vl-r3{animation-delay:2.8s}
+.reveal.in .vl-meter i{animation:vl-fill 9s cubic-bezier(.2,.7,.2,1) infinite backwards}
+@keyframes vl-in{
+  0%{opacity:0;transform:translateX(-7px)}
+  6%,90%{opacity:1;transform:none}
+  100%{opacity:0;transform:translateX(-7px)}
+}
+/* the bar tracks the three signals above it, one step each, then resets with them */
+@keyframes vl-fill{
+  0%,3%{width:14%}
+  16%,18%{width:42%}
+  31%,33%{width:68%}
+  46%,90%{width:100%}
+  100%{width:14%}
+}
+
+/* ---- card 3: what stays put, and the four things that do not ----
+   The two groups have to read as two different places, or the struck-through
+   items look like part of the same list as the ones that get sent. Hence the
+   labelled divider between them rather than a gap. */
+.viz-data{display:flex;flex-direction:column;gap:9px;justify-content:center}
+.vd-group{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.vd-group b{width:100%;display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;
+  font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:1px}
+.vd-here span{padding:2.5px 7px;border-radius:6px;font-size:11px;background:var(--panel);
+  border:1px solid var(--line2);color:var(--faint);text-decoration:line-through;text-decoration-color:var(--line2)}
+.vd-lock{flex:none;width:9px;height:7px;border-radius:2px;background:var(--faint);position:relative;margin-top:3px}
+.vd-lock::after{content:"";position:absolute;left:1.6px;top:-4px;width:5.5px;height:5.5px;border-radius:99px 99px 0 0;
+  border:1.4px solid var(--faint);border-bottom:0}
+.vd-split{display:flex;align-items:center;gap:4px;border-top:1px dashed var(--line2);padding-top:8px}
+.vd-split i{width:13px;height:2px;border-radius:2px;background:var(--cyan);opacity:.18}
+.vd-split em{font-style:normal;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--cyan);opacity:.75;margin-left:2px}
+.vd-out span{padding:2.5px 7px;border-radius:6px;font-size:11px;font-weight:500;
+  background:rgba(99,102,241,.1);color:var(--cyan2);border:1px solid rgba(99,102,241,.18)}
+.reveal.in .vd-out span{animation:vd-send 9s cubic-bezier(.2,.7,.2,1) infinite backwards}
+.reveal.in .vd-out span.vd-c1{animation-delay:.4s}
+.reveal.in .vd-out span.vd-c2{animation-delay:.9s}
+.reveal.in .vd-out span.vd-c3{animation-delay:1.4s}
+.reveal.in .vd-out span.vd-c4{animation-delay:1.9s}
+.reveal.in .vd-split i{animation:vd-pulse 1.5s ease-in-out infinite}
+.reveal.in .vd-split i:nth-child(2){animation-delay:.18s}
+.reveal.in .vd-split i:nth-child(3){animation-delay:.36s}
+@keyframes vd-send{
+  0%{opacity:0;transform:translateY(6px) scale(.94)}
+  8%,90%{opacity:1;transform:none}
+  100%{opacity:0;transform:translateY(-4px)}
+}
+@keyframes vd-pulse{0%,100%{opacity:.18}50%{opacity:.85}}
+
+@media(max-width:980px){
+  .why-grid{grid-template-columns:1fr}
+  .why-viz{height:138px}
 }

@@ -142,52 +142,97 @@
         all.forEach(s => s.classList.toggle('on', s.dataset.scene === name));
         const sc = scenesWrap.querySelector('.ext-scene[data-scene="' + name + '"]');
         if (sc) {
-          sc.querySelectorAll('.bait').forEach(b => b.classList.remove('gone'));
-          sc.querySelectorAll('.scene-block').forEach(b => b.classList.remove('on'));
+          // Full reset, or the loop's second pass starts on an already-clean
+          // page: the classes go, and so does the inline height strip() pinned.
+          sc.querySelectorAll('.bait').forEach(b => {
+            b.classList.remove('gone', 'targeting');
+            b.style.height = '';
+          });
+          const stage = sc.querySelector('.html-stage');
+          if (stage) { stage.classList.remove('cleaned'); stage.scrollTop = 0; }
         }
         return sc;
       }
       const setDots = i => dots.forEach((d, k) => d.classList.toggle('on', k === i));
 
+      const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Collapse one bait element. A real blocker removes the node, so the rows
+      // below travel up into the space; fading in place left a hole that read as
+      // a broken page rather than a cleaned one. height:auto cannot be animated,
+      // so the current height is pinned first and the class drives it to zero.
+      function strip(el) {
+        const h = el.getBoundingClientRect().height;
+        el.style.height = h + 'px';
+        void el.offsetHeight;            // flush, so the start height is the one we measured
+        el.classList.add('gone');
+      }
+
+      // Keep the element about to be removed on screen. The stage scrolls, and a
+      // strip the visitor cannot see is the same as no strip at all.
+      function reveal(el, stage) {
+        if (!stage || stage.scrollHeight <= stage.clientHeight) return;
+        const top = el.offsetTop, h = el.offsetHeight;
+        const want = Math.max(0, top - Math.max(0, (stage.clientHeight - h) / 2));
+        if (Math.abs(want - stage.scrollTop) > 8) {
+          if (stage.scrollTo) stage.scrollTo({ top: want, behavior: REDUCED ? 'auto' : 'smooth' });
+          else stage.scrollTop = want;
+        }
+      }
+
       // ── scene runner: strip real bait elements from the live HTML page ──
+      // Beat order per element: look at it, name it, take it. Removing without
+      // the targeting beat reads as elements randomly vanishing; the outline is
+      // what makes it read as something deciding.
       function runReal(sc, cfg, next) {
+        const stage = sc.querySelector('.html-stage');
         setChrome(cfg.chrome);
         say(cfg.intro || 'Reading page context…');
-        after(500, scan);
+        after(320, scan);
+
         const baits = Array.prototype.slice.call(sc.querySelectorAll('.bait'));
         const reasons = baits.map(b => b.getAttribute('data-reason') || 'distraction');
-        after(2100, () => say('Found ' + reasons.length + ' distractions off your goal'));
-        const rs = 2600, step = 1600;
+        const n = reasons.length;
+        const noun = n === 1 ? 'distraction' : 'distractions';
+
+        after(1900, () => say('Found ' + n + ' ' + noun + ' off your goal'));
+
+        const rs = REDUCED ? 700 : 2500, step = REDUCED ? 420 : 1400, aim = REDUCED ? 0 : 560;
         baits.forEach((b, i) => {
-          after(rs + i * step, () => {
+          const at = rs + i * step;
+          after(at, () => {
+            reveal(b, stage);
+            if (!REDUCED) b.classList.add('targeting');
             say('Removing: ' + reasons[i]);
             if (badge) badge.textContent = String(i + 1);
           });
-          after(rs + i * step + 850, () => {
-            b.classList.add('gone');  // fade out; container reflows rows up
+          after(at + aim, () => {
+            b.classList.remove('targeting');
+            strip(b);
           });
         });
-        const done = rs + baits.length * step + 950;
+
+        const done = rs + n * step + (REDUCED ? 120 : 700);
         after(done, () => {
-          say(reasons.length + ' distractions removed · page cleaned', true);
+          if (stage) stage.classList.add('cleaned');
+          say(n + ' ' + noun + ' removed · page cleaned', true);
         });
-        after(done + 2600, next);
+        after(done + (REDUCED ? 1200 : 2600), next);
       }
 
       const SCENES = [
-        { name: 'reddit', mode: 'real', intro: 'Reading reddit.com…',
-          chrome: { host: 'reddit.com', path: '/r/technology', badge: 0, fav: '#ff4500' },
-          reasons: ['Off-goal home feed', 'Short-form video rail', 'Promoted posts'] },
-        { name: 'youtube', mode: 'real', intro: 'Reading youtube.com…',
-          chrome: { host: 'youtube.com', path: '/results?q=funny+cats', badge: 0, fav: '#ff0033' },
-          reasons: ['Shorts shelf', 'Recommended · off-goal', 'Fallback suggestions'] },
-        { name: 'ytwatch', mode: 'real', intro: 'Reading the watch page…',
-          chrome: { host: 'youtube.com', path: '/watch?v=…', badge: 0, fav: '#ff0033' },
-          reasons: ['Up next queue', 'Recommendation rail', 'Autoplay driver'] },
+        { name: 'reddit', intro: 'Reading reddit.com…',
+          chrome: { host: 'reddit.com', path: '/r/technology', badge: 0, fav: '#ff4500' } },
+        { name: 'youtube', intro: 'Reading youtube.com…',
+          chrome: { host: 'youtube.com', path: '/results?search_query=funny+cats', badge: 0, fav: '#ff0033' } },
+        { name: 'ytwatch', intro: 'Reading the watch page…',
+          chrome: { host: 'youtube.com', path: '/watch?v=8Xr7pTNPrGk', badge: 0, fav: '#ff0033' } },
       ];
 
+      let idx = 0;
       function playScene(i) {
         clearTimers();
+        idx = i;
         setDots(i);
         const cfg = SCENES[i], sc = showScene(cfg.name);
         const next = () => playScene((i + 1) % SCENES.length);
@@ -200,8 +245,34 @@
       const start = () => { if (started) return; started = true; playScene(0); };
       const extBtn = $('.ps-btn[data-prev="ext"]');
       if (extBtn) extBtn.addEventListener('click', start);
-      const pane = $('.preview-pane[data-pane="ext"]');
-      if (pane && !pane.classList.contains('hidden')) start();
+
+      // Let the scene tabs be used as tabs. They already read as controls, so
+      // leaving them inert was the odd part.
+      dots.forEach((d, k) => {
+        d.setAttribute('role', 'button');
+        d.setAttribute('tabindex', '0');
+        const jump = () => { started = true; playScene(k); };
+        d.addEventListener('click', jump);
+        d.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); jump(); }
+        });
+      });
+
+      // Only run while the demo is actually on screen. Off-screen the timers ran
+      // on regardless, so scrolling back mid-scene showed a half-stripped page
+      // with a status pill describing a different step.
+      const win = $('.extwin');
+      if (win && 'IntersectionObserver' in window) {
+        let live = false;
+        new IntersectionObserver(entries => {
+          const vis = entries[0].isIntersecting;
+          if (vis && !live) { live = true; started = true; playScene(idx); }
+          else if (!vis && live) { live = false; clearTimers(); }
+        }, { threshold: 0.12 }).observe(win);
+      } else {
+        const pane = $('.preview-pane[data-pane="ext"]');
+        if (pane && !pane.classList.contains('hidden')) start();
+      }
     })();
 
   // ---- Cloud checkout (pricing) ----

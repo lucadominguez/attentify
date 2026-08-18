@@ -31,7 +31,7 @@ Full quality, with narration:
 
 ## It cleans the page while you read it
 
-The feed, the Shorts shelf, the recommendation rail and the ad come out. The three posts you actually came for stay. On the right, it shows you exactly why it made each call.
+Three real pages, cleaned in front of you. The Reddit feed loses its promoted posts and its short-form video rail, a YouTube search loses the sponsored result and the Shorts shelf, and the watch page loses the autoplay queue and the recommendation rail. The posts and the video you actually came for stay. On the right is the real extension panel, naming every call as it makes it.
 
 ![The extension removing distractions from a live page](.github/media/extension.webp)
 

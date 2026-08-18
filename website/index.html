@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=fb82dc0f">
 <link rel="icon" href="attentify-logo.png">
 <!-- Force the embedded app demo (same-origin iframe) into light theme: its ThemeContext
      reads this shared localStorage key on mount, and this runs before the iframe loads. -->
@@ -108,9 +108,10 @@
       </div>
 
       <div class="extwin-body">
-        <!-- LEFT: REAL pages (Reddit / YouTube), each captured twice from the same
-             load - once with the extension's stylesheet off, once on. The demo wipes
-             the cluttered capture away as it narrates each removal (driven by app.js). -->
+        <!-- LEFT: the sites rebuilt as live HTML, matching the real captures in
+             website/real/ chunk for chunk. Each distraction carries class "bait"
+             and a data-reason; app.js reads the page, then collapses them one at
+             a time so the layout reflows the way it does in the real extension. -->
         <div class="ext-page" id="ext-page">
           <div class="ext-scan" id="ext-scan"></div>
           <div class="ext-topbar">
@@ -124,145 +125,376 @@
 
           <div class="ext-scenes" id="ext-scenes">
 
-            <!-- SCENE 1 · Real Reddit feed, live HTML (bait elements stripped) -->
+            <!-- Icon sprite for the scenes. Real sites are recognised by their
+                 chrome as much as their layout, so the nav glyphs are drawn
+                 rather than approximated with emoji, which render differently
+                 on every platform and broke the illusion on Windows. -->
+            <svg class="ext-sprite" aria-hidden="true" focusable="false"><defs>
+              <symbol id="ic-up" viewBox="0 0 24 24"><path d="M12 4l8 9h-5v7H9v-7H4l8-9z"/></symbol>
+              <symbol id="ic-dn" viewBox="0 0 24 24"><path d="M12 20l-8-9h5V4h6v7h5l-8 9z"/></symbol>
+              <symbol id="ic-cmt" viewBox="0 0 24 24"><path d="M12 3c5 0 9 3.2 9 7.2 0 4-4 7.2-9 7.2-.9 0-1.8-.1-2.6-.3L5 19.5l1.1-3A7.9 7.9 0 013 10.2C3 6.2 7 3 12 3z"/></symbol>
+              <symbol id="ic-share" viewBox="0 0 24 24"><path d="M13 7V3l8 7-8 7v-4.1c-4 0-7 1.1-9 4.1.6-4.6 3.3-8.6 9-9z"/></symbol>
+              <symbol id="ic-search" viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 015.9 12.1l4.3 4.3-1.4 1.4-4.3-4.3A7.5 7.5 0 1110.5 3zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></symbol>
+              <symbol id="ic-mic" viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V6a3 3 0 00-6 0v5a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.9V21h2v-3.1A7 7 0 0019 11h-2z"/></symbol>
+              <symbol id="ic-home" viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3l9-8z"/></symbol>
+              <symbol id="ic-shorts" viewBox="0 0 24 24"><path d="M14.5 3.2a4.2 4.2 0 013.9 6.9l-1.6.9 1 .5a4.2 4.2 0 01-3.9 7.4l-8-4.4a4.2 4.2 0 013.9-7.4l1.6.9V6.4c0-1.3.8-2.5 2-3.1zM10 9.1v5.8l5.3-2.9L10 9.1z"/></symbol>
+              <symbol id="ic-subs" viewBox="0 0 24 24"><path d="M4 8h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2V8zm2-4h12v2H6V4zm4 6.5v6l5-3-5-3z"/></symbol>
+              <symbol id="ic-you" viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-4 0-8 2-8 4.5V21h16v-2.5C20 16 16 14 12 14z"/></symbol>
+              <symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5l12 7-12 7V5z"/></symbol>
+              <symbol id="ic-like" viewBox="0 0 24 24"><path d="M2 10h4v11H2V10zm6 0l4.5-8c1.3.2 2.2 1.3 2 2.6L13.8 9H20a2 2 0 012 2.3l-1.4 7A2 2 0 0118.6 20H8V10z"/></symbol>
+              <symbol id="ic-dislike" viewBox="0 0 24 24"><path d="M22 14h-4V3h4v11zm-6 0l-4.5 8c-1.3-.2-2.2-1.3-2-2.6l.7-4.4H4a2 2 0 01-2-2.3l1.4-7A2 2 0 015.4 4H16v10z"/></symbol>
+              <symbol id="ic-save" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"/></symbol>
+            </defs></svg>
+
+            <!-- SCENE 1 · r/technology, rebuilt as live HTML from the real capture:
+                 white top bar, subreddit header, and posts whose actions sit in
+                 pills under the title (the old left-hand vote rail is pre-2020
+                 Reddit and was the biggest tell that this was a mockup). -->
             <div class="ext-scene on" data-scene="reddit">
-              <div class="html-stage" id="html-stage-reddit">
-                <div class="hnav">
-                  <span class="hn-logo">☰ <b>reddit</b></span>
-                  <span class="hn-search"><i>⌕</i><span>r/technology</span></span>
-                  <span class="hn-cta">Create post</span>
-                  <span class="hn-cta solid">Join</span>
-                </div>
-                <div class="hfeed">
-                  <div class="hcard">
-                    <div class="hc-vote"><span>▲</span><b>4.2k</b><span>▼</span></div>
-                    <div class="hc-body">
-                      <div class="hc-meta">r/technology · u/circuitbreaker · 3h ago</div>
-                      <div class="hc-title">Researchers build a chip that runs a full neural net on sunlight alone</div>
-                      <div class="hc-tags">74 comments</div>
-                    </div>
-                  </div>
-                  <div class="hcard bait" data-reason="Off-goal home feed">
-                    <div class="hc-vote"><span>▲</span><b>1.1k</b><span>▼</span></div>
-                    <div class="hc-body">
-                      <div class="hc-meta bailabel">Promoted</div>
-                      <div class="hc-title">Firefox is faster than ever. Try it now.</div>
-                      <div class="hc-tags">Export your bookmarks in one click</div>
-                    </div>
-                  </div>
-                  <div class="hcard bait" data-reason="Short-form video rail">
-                    <div class="hc-videorail">
-                      <span class="rail-chip">▶ Short · 0:47</span>
-                      <span class="rail-title">Best of r/oddlysatisfying this week</span>
-                    </div>
-                  </div>
-                  <div class="hcard">
-                    <div class="hc-vote"><span>▲</span><b>860</b><span>▼</span></div>
-                    <div class="hc-body">
-                      <div class="hc-meta">r/technology · u/siliconangle · 5h ago</div>
-                      <div class="hc-title">EU votes to standardise removable batteries across devices</div>
-                      <div class="hc-tags">312 comments</div>
-                    </div>
-                  </div>
-                  <div class="hcard bait" data-reason="Promoted posts">
-                    <div class="hc-vote"><span>▲</span><b>3</b><span>▼</span></div>
-                    <div class="hc-body">
-                      <div class="hc-meta bailabel">Promoted</div>
-                      <div class="hc-title">Your daily feed could fit on one screen</div>
-                    </div>
-                  </div>
-                  <div class="hcard">
-                    <div class="hc-vote"><span>▲</span><b>2.9k</b><span>▼</span></div>
-                    <div class="hc-body">
-                      <div class="hc-meta">r/programming · u/hn_bot · 11h ago</div>
-                      <div class="hc-title">Why your attention is the new oil, and what to do about it</div>
-                      <div class="hc-tags">author's own · 1.2k comments</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- SCENE 2 · Real YouTube search, live HTML -->
-            <div class="ext-scene" data-scene="youtube">
-              <div class="html-stage" id="html-stage-youtube">
-                <div class="ynav">
-                  <span class="yn-logo">▶ <b>YouTube</b></span>
-                  <span class="yn-rail-main">Home</span>
-                  <span class="yn-rail-main bait" data-reason="Shorts shelf">
-                    <span class="yn-shorts-chip">🩳 Shorts</span>
+              <div class="html-stage rstage" id="html-stage-reddit">
+                <div class="rnav">
+                  <span class="rn-burger">☰</span>
+                  <span class="rn-logo"><i class="rn-snoo"></i><b>reddit</b></span>
+                  <span class="rn-search">
+                    <svg class="ri rn-mag"><use href="#ic-search"/></svg>
+                    <span class="rn-chip">r/technology<em>✕</em></span>
+                    <span class="rn-ph">Search in r/technology</span>
                   </span>
-                  <span class="yn-rail-main">Subscriptions</span>
+                  <span class="rn-login">Log In</span>
+                  <span class="rn-more">···</span>
                 </div>
-                <div class="yband row-bait bait" data-reason="Recommended · off-goal">
-                  <div class="yshelf-label">Shorts</div>
-                  <div class="yshelf">
-                    <span class="yshort"><span class="yt-h"></span><i>Cats in boxes compilation #1</i></span>
-                    <span class="yshort"><span class="yt-h"></span><i>Try not to laugh challenge</i></span>
-                    <span class="yshort"><span class="yt-h"></span><i>Bro tries vegetable for first time</i></span>
-                  </div>
+
+                <div class="rbanner"></div>
+                <div class="rsub">
+                  <span class="rsub-av"></span>
+                  <span class="rsub-name">r/technology</span>
+                  <span class="rsub-btns"><span class="rbtn">+ Create Post</span><span class="rbtn solid">Join</span></span>
                 </div>
-                <div class="yfeed">
-                  <div class="yrow">
-                    <span class="yr-thumb"><i class="yr-len">9:14</i></span>
-                    <div class="yr-info"><b>Funny Cats Compilation - Best of 2026</b>
-                      <span class="yr-ch">YouCatSeeMe · 1.2M views · 2 weeks ago</span></div>
+                <div class="rsort"><span class="rsort-b">Best ⌄</span><span class="rsort-v">▤ ⌄</span></div>
+
+                <div class="rfeed">
+                  <article class="rpost">
+                    <div class="rp-head"><i class="rp-av a1"></i><b>u/marketrent</b><span>· 19 days ago</span><span class="rp-more">···</span></div>
+                    <div class="rp-body">
+                      <div class="rp-text">
+                        <h4 class="rp-title">High school teacher arrested for clapping in support of anti-data-centre activists</h4>
+                        <span class="rp-flair">Artificial Intelligence</span>
+                        <span class="rp-link">https://www.yahoo.com/news/us/articles/high-school-teacher-arrested…</span>
+                      </div>
+                      <span class="rp-thumb t1"></span>
+                    </div>
+                    <div class="rp-acts">
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-up"/></svg><b>37K</b><svg class="ri"><use href="#ic-dn"/></svg></span>
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-cmt"/></svg>1.3K</span>
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-share"/></svg>Share</span>
+                    </div>
+                  </article>
+
+                  <article class="rpost bait" data-reason="Promoted ad from u/firefox">
+                    <div class="rp-head"><i class="rp-av a2"></i><b>u/firefox</b><span>· Promoted</span><span class="rp-more">···</span></div>
+                    <div class="rp-body">
+                      <div class="rp-text">
+                        <h4 class="rp-title">Firefox is faster than ever. So you can waste less time when you're wasting time online.</h4>
+                        <span class="rp-adimg">Firefox is faster than ever</span>
+                      </div>
+                    </div>
+                    <div class="rp-acts"><span class="rp-pill wide">Install now</span></div>
+                  </article>
+
+                  <article class="rpost">
+                    <div class="rp-head"><i class="rp-av a3"></i><b>u/siliconangle</b><span>· 5 hours ago</span><span class="rp-more">···</span></div>
+                    <div class="rp-body">
+                      <div class="rp-text">
+                        <h4 class="rp-title">EU votes to standardise removable batteries across consumer devices by 2029</h4>
+                        <span class="rp-flair">Hardware</span>
+                      </div>
+                      <span class="rp-thumb t2"></span>
+                    </div>
+                    <div class="rp-acts">
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-up"/></svg><b>8.6K</b><svg class="ri"><use href="#ic-dn"/></svg></span>
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-cmt"/></svg>312</span>
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-share"/></svg>Share</span>
+                    </div>
+                  </article>
+
+                  <div class="rrail bait" data-reason="Short-form video rail">
+                    <div class="rrail-h">Short videos in r/technology</div>
+                    <div class="rrail-row">
+                      <span class="rrail-card"><i class="rrail-th v1"></i><em>Best of r/oddlysatisfying</em><u>0:47</u></span>
+                      <span class="rrail-card"><i class="rrail-th v2"></i><em>He fixed it with a paperclip</em><u>0:32</u></span>
+                      <span class="rrail-card"><i class="rrail-th v3"></i><em>Server room ASMR, 4 hours</em><u>1:05</u></span>
+                    </div>
                   </div>
-                  <div class="yrow">
-                    <span class="yr-thumb"><i class="yr-len">4:02</i></span>
-                    <div class="yr-info"><b>Cats absolutely losing it over a cucumber</b>
-                      <span class="yr-ch">DailyDoodles · 840K views · 1 month ago</span></div>
-                  </div>
-                  <div class="yrow bait" data-reason="Fallback suggestions">
-                    <span class="yr-thumb"><i class="yr-len">12:44</i></span>
-                    <div class="yr-info"><b>Results for "funny cats" you didn't click</b>
-                      <span class="yr-ch">YouTube · autogenerated</span></div>
+
+                  <article class="rpost">
+                    <div class="rp-head"><i class="rp-av a4"></i><b>u/hn_bot</b><span>· 11 hours ago</span><span class="rp-more">···</span></div>
+                    <div class="rp-body">
+                      <div class="rp-text">
+                        <h4 class="rp-title">Researchers build a chip that runs a full neural net on sunlight alone</h4>
+                        <span class="rp-flair">Artificial Intelligence</span>
+                      </div>
+                      <span class="rp-thumb t3"></span>
+                    </div>
+                    <div class="rp-acts">
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-up"/></svg><b>4.2K</b><svg class="ri"><use href="#ic-dn"/></svg></span>
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-cmt"/></svg>74</span>
+                      <span class="rp-pill"><svg class="ri"><use href="#ic-share"/></svg>Share</span>
+                    </div>
+                  </article>
+
+                  <article class="rpost bait" data-reason="Promoted post">
+                    <div class="rp-head"><i class="rp-av a5"></i><b>u/feedfeed</b><span>· Promoted</span><span class="rp-more">···</span></div>
+                    <div class="rp-body">
+                      <div class="rp-text">
+                        <h4 class="rp-title">Your daily feed could fit on one screen. See what you're missing.</h4>
+                      </div>
+                      <span class="rp-thumb t4"></span>
+                    </div>
+                    <div class="rp-acts"><span class="rp-pill wide">Learn more</span></div>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <!-- SCENE 2 · A real YouTube results page. The query stays deliberate:
+                 the user searched for this, so the results are kept. What goes is
+                 what YouTube injected around them - the ad, the Shorts shelf and
+                 the "people also watched" rail. Search results are never
+                 auto-hidden; that rule is enforced in content.js too. -->
+            <div class="ext-scene" data-scene="youtube">
+              <div class="html-stage ystage" id="html-stage-youtube">
+                <div class="ytnav">
+                  <span class="ytn-burger">☰</span>
+                  <span class="ytn-logo"><i class="ytn-play"><svg class="ri"><use href="#ic-play"/></svg></i><b>YouTube</b><sup>CA</sup></span>
+                  <span class="ytn-search">
+                    <span class="ytn-q">funny cats</span>
+                    <span class="ytn-x">✕</span>
+                    <span class="ytn-go"><svg class="ri"><use href="#ic-search"/></svg></span>
+                  </span>
+                  <span class="ytn-mic"><svg class="ri"><use href="#ic-mic"/></svg></span>
+                  <span class="ytn-more">⋮</span>
+                  <span class="ytn-signin"><svg class="ri"><use href="#ic-you"/></svg><span class="ytn-si-tx">Sign in</span></span>
+                </div>
+                <div class="ytbody">
+                  <nav class="ytrail">
+                    <span class="ytr-item on"><svg class="ri"><use href="#ic-home"/></svg><i>Home</i></span>
+                    <span class="ytr-item"><svg class="ri"><use href="#ic-shorts"/></svg><i>Shorts</i></span>
+                    <span class="ytr-item"><svg class="ri"><use href="#ic-subs"/></svg><i>Subscriptions</i></span>
+                    <span class="ytr-item"><svg class="ri"><use href="#ic-you"/></svg><i>You</i></span>
+                  </nav>
+                  <div class="ytmain">
+                    <div class="yad bait" data-reason="Sponsored result">
+                      <span class="yad-th"></span>
+                      <div class="yad-tx">
+                        <b>Happy Mother's Day - 30 years of comfort</b>
+                        <span>Sponsored · comfortbedding.example</span>
+                        <span class="yad-btns"><em>Watch</em><em class="solid">Visit site</em></span>
+                      </div>
+                    </div>
+
+                    <div class="yshorts bait" data-reason="Shorts shelf">
+                      <div class="ysh-head"><i class="ysh-logo"><svg class="ri"><use href="#ic-shorts"/></svg></i><b>Goofy Cats Compilation</b><span class="ysh-more">⋮</span></div>
+                      <div class="ysh-row">
+                        <span class="ysh-card"><i class="ysh-th s1"><u>New</u></i><em>Funny cats #cat #funnycats</em><span>22K views</span></span>
+                        <span class="ysh-card"><i class="ysh-th s2"><u>New</u></i><em>Top 5 Funny Cats For Fun</em><span>9.7K views</span></span>
+                        <span class="ysh-card"><i class="ysh-th s3"></i><em>Funny Cats Compilation #18</em><span>33K views</span></span>
+                        <span class="ysh-card"><i class="ysh-th s4"><u>New</u></i><em>Amazing cat funny videos</em><span>9.3K views</span></span>
+                      </div>
+                    </div>
+
+                    <div class="yres">
+                      <div class="yrow">
+                        <span class="yr-thumb r1"><i class="yr-len">9:14</i></span>
+                        <div class="yr-info">
+                          <b>Funny Cats Compilation | Funniest Cat Fails Caught On Camera</b>
+                          <span class="yr-ch">1M views · 10 months ago</span>
+                          <span class="yr-ch"><i class="yr-av"></i>YouCatSeeMe</span>
+                          <span class="yr-snip">Crazy Funny Cats Compilation! Try Not To Laugh At Extremely Unusual Cats.</span>
+                        </div>
+                      </div>
+                      <div class="yrow">
+                        <span class="yr-thumb r2"><i class="yr-len">4:02</i></span>
+                        <div class="yr-info">
+                          <b>Cats absolutely losing it over a cucumber</b>
+                          <span class="yr-ch">840K views · 1 month ago</span>
+                          <span class="yr-ch"><i class="yr-av"></i>DailyDoodles</span>
+                          <span class="yr-snip">The reaction that started a thousand copycat videos, in one cut.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="yalso bait" data-reason="“People also watched” rail">
+                      <div class="yalso-h">People also watched</div>
+                      <div class="yrow slim">
+                        <span class="yr-thumb r3"><i class="yr-len">12:44</i></span>
+                        <div class="yr-info">
+                          <b>Try not to laugh challenge - impossible edition</b>
+                          <span class="yr-ch">Laugh Trapped · 6.4M views</span>
+                        </div>
+                      </div>
+                      <div class="yrow slim">
+                        <span class="yr-thumb r4"><i class="yr-len">50:55</i></span>
+                        <div class="yr-info">
+                          <b>The situation just reached the point of no return</b>
+                          <span class="yr-ch">MR.ROMEO · 47K views · 6 hours ago</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- SCENE 3 · Real YouTube watch page, live HTML -->
+            <!-- SCENE 3 · The watch page. The video the user chose is never
+                 touched - only what surrounds it. Stripping the rail lets the
+                 player column widen, which is what the real extension does and
+                 is the moment the demo reads as genuine rather than a wipe. -->
             <div class="ext-scene" data-scene="ytwatch">
-              <div class="html-stage" id="html-stage-ytwatch">
-                <div class="ynav">
-                  <span class="yn-logo">▶ <b>YouTube</b></span>
-                  <span class="yn-rail-main">Home</span>
-                  <span class="yn-rail-main">Shorts</span>
-                  <span class="yn-rail-main">Subscriptions</span>
+              <div class="html-stage wstage" id="html-stage-ytwatch">
+                <div class="ytnav">
+                  <span class="ytn-burger">☰</span>
+                  <span class="ytn-logo"><i class="ytn-play"><svg class="ri"><use href="#ic-play"/></svg></i><b>YouTube</b><sup>CA</sup></span>
+                  <span class="ytn-search"><span class="ytn-ph">Search</span><span class="ytn-go"><svg class="ri"><use href="#ic-search"/></svg></span></span>
+                  <span class="ytn-mic"><svg class="ri"><use href="#ic-mic"/></svg></span>
+                  <span class="ytn-more">⋮</span>
+                  <span class="ytn-signin"><svg class="ri"><use href="#ic-you"/></svg><span class="ytn-si-tx">Sign in</span></span>
                 </div>
                 <div class="watchgrid">
                   <div class="w-main">
-                    <div class="w-player"><span class="w-play">▶</span></div>
-                    <b class="w-title">Funny Cats Compilation | Funniest Cat Fails Caught On Camera</b>
-                    <div class="w-meta">
-                      <span class="w-chan"><i class="w-avatar"></i><b>YouCatSeeMe</b><em>8.4k subscribers</em></span>
-                      <span class="w-stats">1M views · 10 months ago</span>
+                    <div class="w-player">
+                      <span class="w-play"><svg class="ri"><use href="#ic-play"/></svg></span>
+                      <span class="w-wm">YouCatSeeMe</span>
+                      <span class="w-bar"><i></i></span>
                     </div>
-                    <div class="w-desc">194 comments · if you love cats you're in the right place</div>
+                    <h4 class="w-title">Funny Cats Compilation | Funniest Cat Fails Caught On Camera</h4>
+                    <div class="w-row">
+                      <span class="w-chan">
+                        <i class="w-avatar"></i>
+                        <span class="w-chan-tx"><b>YouCatSeeMe</b><em>8.4K subscribers</em></span>
+                        <span class="w-sub">Subscribe</span>
+                      </span>
+                      <span class="w-acts">
+                        <span class="w-pill"><svg class="ri"><use href="#ic-like"/></svg>5.8K<i class="w-sep"></i><svg class="ri"><use href="#ic-dislike"/></svg></span>
+                        <span class="w-pill"><svg class="ri"><use href="#ic-share"/></svg>Share</span>
+                        <span class="w-pill"><svg class="ri"><use href="#ic-save"/></svg>Save</span>
+                      </span>
+                    </div>
+                    <div class="w-desc">
+                      <b>1M views · 10 months ago · UNITED STATES</b>
+                      <span>Crazy Funny Cats Compilation! Try Not To Laugh At Extremely Unusual Cats. Subscribe to You Cat See Me. <u>more</u></span>
+                    </div>
+                    <div class="w-comments">
+                      <div class="wc-head">194 Comments <span class="wc-sort">Sort by</span></div>
+                      <div class="wc-row"><i class="wc-av c1"></i><div class="wc-tx"><b>@CatDog-t2r</b><em>8 months ago</em><p>Cats don't need logic, they just exist and we adore them.</p></div></div>
+                      <div class="wc-row"><i class="wc-av c2"></i><div class="wc-tx"><b>@sin69plus</b><em>3 weeks ago</em><p>The one at 4:12 genuinely made me wake the whole house up.</p></div></div>
+                    </div>
                   </div>
-                  <div class="w-rail bait" data-reason="Up-next rail &amp; ads">
-                    <div class="wr-label">Up next</div>
-                    <div class="wr-item ad"><span class="wr-thumb"><i>ad</i></span><div><b>Chevrolet - Big. Bold.</b><span>Sponsored</span></div></div>
-                    <div class="wr-item"><span class="wr-thumb"></span><div><b>Trying the grandest pizza in Vancouver</b><span>FoodWaves · 1.4M views</span></div></div>
-                    <div class="wr-item"><span class="wr-thumb"></span><div><b>How attention works, explained by a neuroscientist</b><span>NeuroLab · 600K views</span></div></div>
-                    <div class="wr-item"><span class="wr-thumb"></span><div><b>Cats vs. cucumbers (extended cut)</b><span>DailyDoodles · 2.1M views</span></div></div>
+
+                  <div class="w-rail">
+                    <div class="wr-ad bait" data-reason="Sponsored ad">
+                      <span class="wr-thumb ad"></span>
+                      <div class="wr-tx"><b>2026 Chevrolet Silverado</b><span>Employee Pricing For You*</span><span class="wr-spon">Sponsored · Chevrolet</span><em class="wr-cta">Learn more</em></div>
+                    </div>
+                    <div class="wr-next bait" data-reason="Autoplay “Up next”">
+                      <div class="wr-label">Up next <span class="wr-auto">Autoplay <i class="wr-toggle"></i></span></div>
+                      <div class="wr-item">
+                        <span class="wr-thumb n1"><i>26:59</i></span>
+                        <div class="wr-tx"><b>American Reacts to "Why Canada is different"</b><span>Tyler Bucket</span><span>66K views · 1 day ago</span></div>
+                      </div>
+                    </div>
+                    <div class="wr-more bait" data-reason="Recommendation rail">
+                      <div class="wr-item">
+                        <span class="wr-thumb n2"><i>10:22</i></span>
+                        <div class="wr-tx"><b>Try Not To Laugh Challenge</b><span>Laugh Trapped</span><span>6.4M views · 1 year ago</span></div>
+                      </div>
+                      <div class="wr-item">
+                        <span class="wr-thumb n3"><i>39:14</i></span>
+                        <div class="wr-tx"><b>Catholic Mass 101: Learn Everything</b><span>Ascension Presents</span><span>1.6M views · 4 months ago</span></div>
+                      </div>
+                      <div class="wr-item">
+                        <span class="wr-thumb n4"><i>9:08</i></span>
+                        <div class="wr-tx"><b>Best Funny Cat Videos 2026</b><span>HOK fail</span><span>5.7K views · 8 days ago</span></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
           </div>
+        </div>
         <!-- RIGHT: the REAL extension side panel, running live on sample data -->
         <iframe class="ext-panel" src="./ext/popup.html" title="Attentify browser extension, live" loading="eager"></iframe>
       </div>
     </div>
-    <p class="appdemo-foot">On the left, Attentify works across <b>real pages, each captured twice</b>: the cluttered page as it loads,
-          then the same page the moment the extension strips the feed, the Shorts shelf and the recommendation rail -
-          explaining every call as it goes. On the right is the <b>actual extension</b>, running live. Nothing here is a mockup.</p>
+    <p class="appdemo-foot">On the left, <b>real pages rebuilt live in this browser</b>: the feed loads cluttered, then Attentify
+          strips the promoted posts, the Shorts shelf and the recommendation rail, naming every call as it makes it.
+          On the right is the <b>actual extension</b>, running live. Straight-from-the-browser captures are further down.</p>
   </div>
 
   <p class="hero-trustline">No setup hassle · your history stays on your device · open source, minus the AI · macOS and mobile soon</p>
+</section>
+
+<!-- ══════════════ WHAT THE AI IS ACTUALLY DOING (between the live demo and the app) ══════════════ -->
+<!-- Each card carries a small looping visual of the claim it makes. The animations are pure CSS and
+     gated on .reveal.in, so they start when the card is scrolled to rather than running off-screen
+     forever, and the un-animated base state of every part is its FINISHED state: the reduced-motion
+     block kills `animation` outright, so anything that only exists mid-keyframe would vanish. -->
+<section class="section why-ai" id="why-ai">
+  <div class="sec-head reveal">
+    <span class="kicker">Why it actually works</span>
+    <h2>It reads the intent, <span class="grad">not just the address.</span></h2>
+  </div>
+
+  <div class="grid why-grid">
+
+    <article class="card why-card reveal">
+      <div class="why-viz viz-intent" aria-hidden="true">
+        <div class="vi-q vi-q1"><i class="vi-mag"></i><span>postgres index performance</span></div>
+        <div class="vi-v vi-v1"><span class="vi-chip ok">Opens</span><em>on your goal</em></div>
+        <div class="vi-q vi-q2"><i class="vi-mag"></i><span>funniest fails of 2026</span></div>
+        <div class="vi-v vi-v2"><span class="vi-chip no">Blocked</span><em>before it loads</em></div>
+      </div>
+      <h3>It stops the page before it loads.</h3>
+      <p>The AI reads where a click is heading and weighs it against the goal you set, so a distraction
+         is gone before it ever renders. That's why one search opens and the next one doesn't:
+         <b>it judges the intent behind the query</b>, not the domain against a list. The same read runs
+         on a link before you click it, so the bait never gets its shot.</p>
+    </article>
+
+    <article class="card why-card reveal">
+      <div class="why-viz viz-learn" aria-hidden="true">
+        <div class="vl-row vl-r1"><i class="vl-tick"></i><span>you kept lo-fi playlists</span></div>
+        <div class="vl-row vl-r2"><i class="vl-tick"></i><span>Shorts slipped through once</span></div>
+        <div class="vl-row vl-r3"><i class="vl-tick"></i><span>reddit.com changed its feed</span></div>
+        <div class="vl-meter"><i></i></div>
+        <div class="vl-cap">tuned to you</div>
+      </div>
+      <h3>It gets sharper the longer you use it.</h3>
+      <p>Every block you keep and every one you undo teaches it where your line sits, and that carries
+         across sites. <b>The things that slipped past it stop slipping.</b> Updates ship continuously, so
+         when a site rewrites its feed the blocking heals instead of quietly breaking.</p>
+    </article>
+
+    <article class="card why-card reveal">
+      <div class="why-viz viz-data" aria-hidden="true">
+        <div class="vd-group vd-here">
+          <b><i class="vd-lock"></i>Stays on your device</b>
+          <span>full history</span><span>page contents</span><span>keystrokes</span>
+        </div>
+        <div class="vd-split"><i></i><i></i><i></i><em>only this leaves</em></div>
+        <div class="vd-group vd-out">
+          <span class="vd-c1">domain + path</span><span class="vd-c2">page title</span>
+          <span class="vd-c3">search terms</span><span class="vd-c4">your goals</span>
+        </div>
+      </div>
+      <h3>Your browsing stays on your machine.</h3>
+      <p>The detailed record sits in a local database we never receive. To judge one page the AI is given
+         four things and nothing else. <b>No full history, no page contents, no keystrokes, nothing sold and
+         no ad trackers.</b> Switch the AI off and blocking still works with nothing leaving at all.</p>
+    </article>
+
+  </div>
 </section>
 
 <!-- ══════════════ THE APP RUNS THE WHOLE SHOW (sits right under the live demo) ══════════════ -->
@@ -622,7 +854,7 @@
   </div>
 </footer>
 
-<script src="app.js"></script>
+<script src="app.js?v=4d5305f1"></script>
 <script>
   // If the visitor already has a website session, point "Sign in" at their dashboard.
   if (localStorage.getItem('attentify_session')) {

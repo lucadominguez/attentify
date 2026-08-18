@@ -1064,7 +1064,9 @@ renderers.actions = async function () {
 let chatHistory = [];  // {role, content}
 let chatPort = null;
 let chatConnected = false;  // daemon connected
-let freeAI = false;         // bundled free-AI credit available (no own key needed)
+let freeAI = false;         // AI can run right now (subscription or credit)
+let cloudCredits = null;    // credits left on the account, null when unknown
+let cloudSignedIn = false;  // is there an account at all (drives sign-in vs top-up)
 
 function showChat() {
   document.getElementById('main-view').style.display = 'none';
@@ -1094,7 +1096,10 @@ document.getElementById('chat-back-btn').addEventListener('click', hideChat);
 document.getElementById('chat-btn').addEventListener('click', showChat);
 document.getElementById('acct-btn').addEventListener('click', () => openAccountModal());
 
-async function initChat() {
+// Recompute whether AI can run and reflect it in the chat header. Split out of
+// initChat so that a top-up landing mid-session can re-open the chat immediately,
+// without replaying the greeting or needing the panel to be reopened.
+async function refreshChatAvailability() {
   // Check daemon status
   const status = await ask({ type: 'get:status' });
   chatConnected = status?.connected || false;
@@ -1104,15 +1109,30 @@ async function initChat() {
   const cloud = await ask({ type: 'get:cloud' });
   const u = cloud?.usage;
   const subscribed = !!u?.subscribed;
-  freeAI = !subscribed && !!u && !u.exhausted;
+  // AI is available when there is anything left to spend, whether that is a
+  // subscription or credit. This used to read `!subscribed && !u.exhausted`, which
+  // excluded the very people who could pay.
+  freeAI = !!u && !u.exhausted;
+  cloudCredits = typeof u?.credits === 'number' ? u.credits : null;
+  cloudSignedIn = !!u?.signedIn;
 
   const modeLabel = document.getElementById('chat-mode-label');
   const chatDot   = document.getElementById('chat-status-dot');
 
   if (chatConnected)      { modeLabel.textContent = '· via daemon';          chatDot.className = 'status-dot on'; }
   else if (subscribed)    { modeLabel.textContent = '· Cloud';               chatDot.className = 'status-dot on'; }
-  else if (freeAI)        { modeLabel.textContent = '· free AI included';    chatDot.className = 'status-dot ready'; }
-  else                    { modeLabel.textContent = '· free credit used up'; chatDot.className = 'status-dot off'; }
+  else if (freeAI)        {
+    // Say how much is left rather than "free AI included", so running low is visible
+    // before it becomes a wall.
+    modeLabel.textContent = cloudCredits != null ? `· ${cloudCredits.toLocaleString()} credits` : '· free AI included'
+    chatDot.className = 'status-dot ready'
+  }
+  else if (!u?.signedIn)  { modeLabel.textContent = '· sign in to use AI';   chatDot.className = 'status-dot off'; }
+  else                    { modeLabel.textContent = '· out of credits';      chatDot.className = 'status-dot off'; }
+}
+
+async function initChat() {
+  await refreshChatAvailability();
 
   if (chatHistory.length === 0) {
     addSysMsg('Hi! I can block specific things on a page. Try: "Block YouTube Shorts", "Hide rage-bait comments" or "No music videos".');
@@ -1268,7 +1288,18 @@ async function sendChat() {
   // and the free credit is spent.
   if (!chatConnected && !freeAI) {
     removeTypingIndicator();
-    addSysMsg("Your free AI credit is used up. Subscribe below to keep going.");
+    // This used to say "Subscribe below" and then return, so nothing was ever raised:
+    // the top-up buttons only appeared in response to a SERVER paywall error, and
+    // returning here meant the server was never called. The message pointed at
+    // something that did not exist.
+    if (!cloudSignedIn) {
+      addSysMsg('Sign in to use the AI. New accounts start with free credit.');
+      openAuthModal('Sign in to use the AI assistant. New accounts start with free credit.');
+    } else {
+      addSysMsg("You're out of AI credits. Top up or subscribe to keep going.");
+      openPayModal('You have run out of credits. Top up or subscribe to keep using the AI.');
+    }
+    renderCloud().catch(() => {});
     progDone('chat-progress-fill', false);
     sendBtn.disabled = false;
     return;
@@ -1581,6 +1612,42 @@ function openAuthModal(reason) {
   });
 }
 
+// ── Waiting for a top-up to land ─────────────────────────────────────────────
+// Checkout happens in another tab and the balance only moves once Stripe's webhook
+// reaches the backend, which took about twenty seconds in practice. The extension used
+// to show nothing at all in that window, so a paid-for top-up looked like it had failed
+// and the obvious next move was to pay again. Poll, and say plainly that we are waiting.
+let awaitingTopUp = false;
+async function awaitTopUp(beforeCredits) {
+  if (awaitingTopUp) return;
+  awaitingTopUp = true;
+  const summary = document.getElementById('cloud-summary');
+  const show = (text) => {
+    if (summary) summary.innerHTML =
+      `<span class="plan-dot pending"></span><span class="plan-name">Credits</span>` +
+      `<span class="plan-meta">${esc(text)}</span><span class="plan-cta spin">⟳</span>`;
+  };
+  show('waiting for payment…');
+  const deadline = Date.now() + 120000;
+  try {
+    while (Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, 2500));
+      const res = await ask({ type: 'get:cloud' });
+      const now = res?.cloudStatus?.credits;
+      if (typeof now === 'number' && now > (beforeCredits ?? -1)) {
+        addSysMsg?.(`Credits added. You now have ${now.toLocaleString()}.`);
+        const pay = document.getElementById('pay-modal');
+        if (pay) pay.hidden = true;         // the wall is gone, so stop showing it
+        await refreshChatAvailability();     // re-open the chat without a reload
+        break;
+      }
+    }
+  } finally {
+    awaitingTopUp = false;
+    renderCloud().catch(() => {});
+  }
+}
+
 // ── Out-of-credit paywall ────────────────────────────────────────────────────
 // One implementation, raised over whatever the user was doing, for the same reason
 // the sign-in form became a modal: the plan row is unreachable from the chat view.
@@ -1605,7 +1672,11 @@ function openPayModal(reason) {
     if (r?.url) chrome.tabs.create({ url: r.url });
   };
   el.querySelectorAll('.pay-buy').forEach((b) => {
-    b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack });
+    b.onclick = async () => {
+      const before = cloudCredits;
+      await openUrl('cloud:buy-credits', { pack: b.dataset.pack });
+      awaitTopUp(before);          // the balance moves only once Stripe's webhook lands
+    };
   });
   document.getElementById('pay-sub').onclick = () => openUrl('cloud:checkout');
 }
@@ -1674,7 +1745,13 @@ async function renderCloud() {
       </div>
       <button class="btn-primary cloud-subscribe" style="width:100%;margin-top:6px">Subscribe $9.99/mo, unlimited</button>
       <button class="btn-secondary cloud-signout" style="width:100%;margin-top:6px">Sign out</button>`, (t) => {
-      t.querySelectorAll('.buy-credit').forEach((b) => { b.onclick = () => openUrl('cloud:buy-credits', { pack: b.dataset.pack }); });
+      t.querySelectorAll('.buy-credit').forEach((b) => {
+        b.onclick = async () => {
+          const before = st?.credits ?? cloudCredits;
+          await openUrl('cloud:buy-credits', { pack: b.dataset.pack });
+          awaitTopUp(before);
+        };
+      });
       t.querySelector('.cloud-subscribe').onclick = () => openUrl('cloud:checkout');
       wireSignOut(t);
     });

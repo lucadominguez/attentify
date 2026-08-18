@@ -47,9 +47,13 @@
 
   <!-- Inline AI composer (chat-first): type and talk to the AI instantly, no extra click. -->
   <form class="askbox" id="askbox">
-    <span class="askbox-icon" aria-hidden="true">✦</span>
-    <textarea id="askbox-input" class="askbox-input" rows="1" placeholder="Ask AI to block something, or about your focus…" aria-label="Ask the AI assistant"></textarea>
-    <button type="submit" class="askbox-send" id="askbox-send" aria-label="Send message" title="Send">↑</button>
+    <textarea id="askbox-input" class="askbox-input" rows="1" placeholder="Tell Attentify what to hide on this page" aria-label="Tell Attentify what to hide"></textarea>
+    <button type="submit" class="askbox-send" id="askbox-send" aria-label="Send" title="Send">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+           stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h13M12 5l7 7-7 7"/>
+      </svg>
+    </button>
   </form>
 
   <div class="scroll-body">
